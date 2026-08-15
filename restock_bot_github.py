@@ -5682,6 +5682,51 @@ while True:
             f"{len(price_watch_candidates)} prislinjer i alt"
         )
 
+        # -------------------------
+        # PRICE WATCH DIAGNOSTIK
+        # -------------------------
+
+        print("\n--- PRICE WATCH DIAGNOSTIK ---")
+
+        diagnostic_groups = [
+            ("POKÉMON", "ETB"),
+            ("POKÉMON", "BOOSTER BOX"),
+            ("POKÉMON", "BOOSTER BUNDLE"),
+            ("POKÉMON", "BOOSTER PACK"),
+            ("LORCANA", "BOOSTER BOX"),
+            ("LORCANA", "BOOSTER BUNDLE"),
+            ("LORCANA", "BOOSTER PACK"),
+        ]
+
+        for game, product_type in diagnostic_groups:
+            matches = [
+                product
+                for product in price_watch_candidates
+                if product["game"] == game
+                and product["type"] == product_type
+            ]
+
+            matches.sort(
+                key=lambda product: (
+                    product["name"].lower(),
+                    product["price"]
+                )
+            )
+
+            print(
+                f"\n{game} | {product_type} | "
+                f"{len(matches)} prislinjer"
+            )
+
+            for product in matches[:10]:
+                print(
+                    f"  {format_price(product['price'])} | "
+                    f"{product['shop']} | "
+                    f"{product['name']}"
+                )
+
+        print("\n--- SLUT PRICE WATCH DIAGNOSTIK ---")
+
 
         # -------------------------
         # GEM STATE
