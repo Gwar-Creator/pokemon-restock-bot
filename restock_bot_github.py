@@ -437,6 +437,180 @@ def get_price_watch_type(name, game):
 
     return None
 
+def get_price_watch_availability(source_key, product):
+    # Proshop
+    if source_key == "proshop":
+        stock = product.get("stock")
+
+        if stock in ("PÅ LAGER", "FJERNLAGER"):
+            return stock
+
+        return None
+
+    # BR
+    if source_key == "br":
+        if product.get("online_stock"):
+            return "ONLINE"
+
+        if safe_int(product.get("kolding_stock")) > 0:
+            return "KOLDING"
+
+        if safe_int(product.get("esbjerg_stock")) > 0:
+            return "ESBJERG"
+
+        return None
+
+    # Bilka, Føtex og Elgiganten
+    if source_key in ("bilka", "foetex", "elgiganten"):
+        if product.get("online_stock"):
+            return "ONLINE"
+
+        local_stocks = product.get("local_stocks") or {}
+
+        for store in local_stocks.values():
+            if safe_int(store.get("stock")) > 0:
+                return store.get("name") or "LOKALT"
+
+        return None
+
+    # Coolshop
+    if source_key == "coolshop":
+        if product.get("online_stock"):
+            return "PÅ LAGER"
+
+        return None
+
+    # Shopify, WooCommerce, Epic Panda,
+    # Steffen-O og Next Level Games
+    # Preorders tæller ikke som aktuel bedste pris.
+    if product.get("preorder"):
+        return None
+
+    if product.get("in_stock"):
+        return "PÅ LAGER"
+
+    return None
+
+
+def collect_price_watch_candidates(current_state):
+    candidates = []
+
+    def add_products(shop, source_key, products, game_override=None):
+        for product in (products or {}).values():
+            name = product.get("name", "")
+            game = game_override or product.get("game")
+
+            if game not in ("POKÉMON", "LORCANA"):
+                continue
+
+            product_type = get_price_watch_type(name, game)
+
+            if not product_type:
+                continue
+
+            price = product.get("price")
+
+            if price is None or price <= 0:
+                continue
+
+            availability = get_price_watch_availability(
+                source_key,
+                product
+            )
+
+            if not availability:
+                continue
+
+            candidates.append({
+                "shop": shop,
+                "source": source_key,
+                "game": game,
+                "type": product_type,
+                "name": name,
+                "price": price,
+                "availability": availability,
+                "url": product.get("url", "")
+            })
+
+    add_products(
+        "COOLSHOP",
+        "coolshop",
+        current_state.get("coolshop", {})
+    )
+
+    add_products(
+        "PROSHOP",
+        "proshop",
+        current_state.get("proshop", {}),
+        "POKÉMON"
+    )
+
+    add_products(
+        "BR",
+        "br",
+        current_state.get("br", {}),
+        "POKÉMON"
+    )
+
+    add_products(
+        "BILKA",
+        "bilka",
+        current_state.get("bilka", {}),
+        "POKÉMON"
+    )
+
+    add_products(
+        "FØTEX",
+        "foetex",
+        current_state.get("foetex", {}),
+        "POKÉMON"
+    )
+
+    add_products(
+        "ELGIGANTEN",
+        "elgiganten",
+        current_state.get("elgiganten", {}),
+        "POKÉMON"
+    )
+
+    shopify_state = current_state.get("shopify", {})
+
+    for site_key, site in SHOPIFY_SITES.items():
+        add_products(
+            site["label"],
+            site_key,
+            shopify_state.get(site_key, {})
+        )
+
+    woocommerce_state = current_state.get("woocommerce", {})
+
+    for site_key, site in WOOCOMMERCE_SITES.items():
+        add_products(
+            site["label"],
+            site_key,
+            woocommerce_state.get(site_key, {})
+        )
+
+    add_products(
+        "EPIC PANDA",
+        "epicpanda",
+        current_state.get("epicpanda", {})
+    )
+
+    add_products(
+        "STEFFEN-O",
+        "steffeno",
+        current_state.get("steffeno", {}),
+        "POKÉMON"
+    )
+
+    add_products(
+        "NEXT LEVEL GAMES",
+        "nextlevel",
+        current_state.get("nextlevel", {})
+    )
+
+    return candidates
 
 # =========================================================
 # COOLSHOP FETCH
