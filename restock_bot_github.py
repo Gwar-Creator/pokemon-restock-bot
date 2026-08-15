@@ -9,6 +9,8 @@ import unicodedata
 
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin, unquote, urlencode
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
 
 # =========================================================
@@ -21,6 +23,23 @@ PRICE_WATCH_WEBHOOK_URL = os.getenv("PRICE_WATCH_WEBHOOK_URL", "").strip()
 RUN_ONCE = os.getenv("RUN_ONCE", "0").strip() == "1"
 CHECK_EVERY = int(os.getenv("CHECK_EVERY", "300"))
 STATE_FILE = "restock_state_v2.json"
+
+PRICE_WATCH_TIMEZONE = os.getenv(
+    "PRICE_WATCH_TIMEZONE",
+    "Europe/Copenhagen"
+).strip()
+
+try:
+    PRICE_WATCH_DAILY_HOUR = int(
+        os.getenv("PRICE_WATCH_DAILY_HOUR", "9")
+    )
+except ValueError:
+    PRICE_WATCH_DAILY_HOUR = 9
+
+PRICE_WATCH_DAILY_HOUR = max(
+    0,
+    min(23, PRICE_WATCH_DAILY_HOUR)
+)
 
 if not WEBHOOK_URL:
     raise RuntimeError(
@@ -686,18 +705,35 @@ def get_price_watch_availability(source_key, product):
     return None
 
 
-def collect_price_watch_candidates(current_state):
+def collect_price_watch_candidates(
+    current_state,
+    fresh_sources=None
+):
     candidates = []
 
-    def add_products(shop, source_key, products, game_override=None):
-        for product in (products or {}).values():
+    def add_products(
+        shop,
+        source_key,
+        products,
+        game_override=None
+    ):
+        if (
+            fresh_sources is not None
+            and source_key not in fresh_sources
+        ):
+            return
+
+        for product_key, product in (products or {}).items():
             name = product.get("name", "")
             game = game_override or product.get("game")
 
             if game not in ("POKÉMON", "LORCANA"):
                 continue
 
-            product_type = get_price_watch_type(name, game)
+            product_type = get_price_watch_type(
+                name,
+                game
+            )
 
             if not product_type:
                 continue
@@ -715,15 +751,25 @@ def collect_price_watch_candidates(current_state):
             if not availability:
                 continue
 
+            url = product.get("url", "")
+
+            # Coolshop gemmer URL'en som dictionary-key.
+            if (
+                not url
+                and isinstance(product_key, str)
+                and product_key.startswith(("http://", "https://"))
+            ):
+                url = product_key
+
             candidates.append({
                 "shop": shop,
                 "source": source_key,
                 "game": game,
                 "type": product_type,
                 "name": name,
-                "price": price,
+                "price": float(price),
                 "availability": availability,
-                "url": product.get("url", "")
+                "url": url
             })
 
     add_products(
@@ -805,6 +851,478 @@ def collect_price_watch_candidates(current_state):
     )
 
     return candidates
+
+
+# =========================================================
+# PRICE WATCH V1
+# =========================================================
+
+PRICE_WATCH_TYPE_ORDER = (
+    "ETB",
+    "BOOSTER BOX",
+    "BOOSTER BUNDLE",
+    "SLEEVED BOOSTER",
+    "BOOSTER PACK",
+)
+
+
+def build_price_watch_groups(candidates):
+    raw_groups = {}
+
+    for product in candidates:
+        product_key = get_price_watch_product_key(
+            product
+        )
+
+        if not product_key:
+            continue
+
+        raw_groups.setdefault(
+            product_key,
+            []
+        ).append(product)
+
+    comparable_groups = {}
+
+    for product_key, products in raw_groups.items():
+        # Samme shop kan i sjældne tilfælde have flere listings.
+        # Brug kun den billigste listing fra hver shop.
+        cheapest_by_shop = {}
+
+        for product in products:
+            shop = product["shop"]
+            current = cheapest_by_shop.get(shop)
+
+            if (
+                current is None
+                or product["price"] < current["price"]
+            ):
+                cheapest_by_shop[shop] = product
+
+        if len(cheapest_by_shop) < 2:
+            continue
+
+        comparable_groups[product_key] = sorted(
+            cheapest_by_shop.values(),
+            key=lambda product: (
+                product["price"],
+                product["shop"]
+            )
+        )
+
+    return comparable_groups
+
+
+def parse_price_watch_key(product_key):
+    parts = product_key.split(
+        "|",
+        3
+    )
+
+    if len(parts) != 4:
+        return {
+            "game": "",
+            "type": "",
+            "language": "",
+            "set_name": product_key
+        }
+
+    return {
+        "game": parts[0],
+        "type": parts[1],
+        "language": parts[2],
+        "set_name": parts[3]
+    }
+
+
+def price_watch_display_name(product_key):
+    info = parse_price_watch_key(
+        product_key
+    )
+
+    set_name = info["set_name"].strip()
+
+    if set_name:
+        display = " ".join(
+            word.upper()
+            if word in {"x", "y"}
+            else word.capitalize()
+            for word in set_name.split()
+        )
+    else:
+        display = "Ukendt produkt"
+
+    if info["language"] == "JP":
+        display += " (Japansk)"
+
+    return display
+
+
+def price_watch_game_label(game):
+    if game == "POKÉMON":
+        return "Pokémon"
+
+    if game == "LORCANA":
+        return "Lorcana"
+
+    return game
+
+
+def price_watch_type_label(product_type):
+    labels = {
+        "ETB": "ETB",
+        "BOOSTER BOX": "Booster Boxes",
+        "BOOSTER BUNDLE": "Booster Bundles",
+        "SLEEVED BOOSTER": "Sleeved Boosters",
+        "BOOSTER PACK": "Booster Packs",
+    }
+
+    return labels.get(
+        product_type,
+        product_type.title()
+    )
+
+
+def price_watch_best_entry(products):
+    return min(
+        products,
+        key=lambda product: (
+            product["price"],
+            product["shop"]
+        )
+    )
+
+
+def price_watch_lowest_shops(products):
+    if not products:
+        return []
+
+    best_price = min(
+        product["price"]
+        for product in products
+    )
+
+    return sorted(
+        {
+            product["shop"]
+            for product in products
+            if abs(product["price"] - best_price) < 0.005
+        }
+    )
+
+
+def send_price_watch_new_low(
+    product_key,
+    old_best,
+    products
+):
+    best = price_watch_best_entry(
+        products
+    )
+
+    info = parse_price_watch_key(
+        product_key
+    )
+
+    top = products[:3]
+    ranking_lines = []
+
+    for index, product in enumerate(
+        top,
+        start=1
+    ):
+        medal = {
+            1: "🥇",
+            2: "🥈",
+            3: "🥉"
+        }.get(index, "•")
+
+        ranking_lines.append(
+            f"{medal} {product['shop']} — "
+            f"**{format_price(product['price'])}**"
+        )
+
+    language_line = (
+        "\n🌐 Japansk"
+        if info["language"] == "JP"
+        else ""
+    )
+
+    link_line = (
+        f"\n🔗 {best['url']}"
+        if best.get("url")
+        else ""
+    )
+
+    send_price_watch(
+        "🔥 **NY LAVESTE PRIS**\n"
+        f"**{price_watch_game_label(info['game'])} · "
+        f"{price_watch_display_name(product_key)} · "
+        f"{price_watch_type_label(info['type'])}**"
+        f"{language_line}\n"
+        f"{format_price(old_best)} → "
+        f"**{format_price(best['price'])}**\n\n"
+        + "\n".join(ranking_lines)
+        + link_line
+    )
+
+
+def split_discord_message(message, limit=1900):
+    if len(message) <= limit:
+        return [message]
+
+    chunks = []
+    current = ""
+
+    for line in message.splitlines():
+        candidate = (
+            line
+            if not current
+            else current + "\n" + line
+        )
+
+        if len(candidate) <= limit:
+            current = candidate
+            continue
+
+        if current:
+            chunks.append(current)
+
+        current = line
+
+    if current:
+        chunks.append(current)
+
+    return chunks
+
+
+def send_price_watch_daily_summary(
+    comparable_groups,
+    now_local
+):
+    if not comparable_groups:
+        print(
+            "PRICE WATCH: ingen sammenlignelige produkter "
+            "til dagens oversigt."
+        )
+        return False
+
+    sent_any = False
+
+    for game in ("POKÉMON", "LORCANA"):
+        game_groups = {
+            key: products
+            for key, products in comparable_groups.items()
+            if parse_price_watch_key(key)["game"] == game
+        }
+
+        if not game_groups:
+            continue
+
+        lines = [
+            f"📊 **DAGENS BEDSTE PRISER — "
+            f"{price_watch_game_label(game).upper()}**",
+            (
+                f"*{now_local.strftime('%d.%m.%Y')} · "
+                "kun varer på lager hos mindst 2 butikker*"
+            ),
+        ]
+
+        for product_type in PRICE_WATCH_TYPE_ORDER:
+            type_groups = [
+                (key, products)
+                for key, products in game_groups.items()
+                if parse_price_watch_key(key)["type"] == product_type
+            ]
+
+            if not type_groups:
+                continue
+
+            type_groups.sort(
+                key=lambda item: price_watch_display_name(
+                    item[0]
+                ).lower()
+            )
+
+            lines.append("")
+            lines.append(
+                f"**{price_watch_type_label(product_type)}**"
+            )
+
+            for product_key, products in type_groups:
+                best = price_watch_best_entry(
+                    products
+                )
+
+                shops = " + ".join(
+                    price_watch_lowest_shops(
+                        products
+                    )
+                )
+
+                lines.append(
+                    f"• {price_watch_display_name(product_key)} — "
+                    f"**{format_price(best['price'])}** · "
+                    f"{shops}"
+                )
+
+        message = "\n".join(lines)
+
+        for chunk in split_discord_message(
+            message
+        ):
+            send_price_watch(
+                chunk
+            )
+            sent_any = True
+
+    return sent_any
+
+
+def process_price_watch(
+    old_price_watch_state,
+    current_state,
+    fresh_sources
+):
+    candidates = collect_price_watch_candidates(
+        current_state,
+        fresh_sources=fresh_sources
+    )
+
+    comparable_groups = build_price_watch_groups(
+        candidates
+    )
+
+    print(
+        f"PRICE WATCH V1: "
+        f"{len(candidates)} friske prislinjer | "
+        f"{len(comparable_groups)} produkter hos mindst 2 butikker | "
+        f"{len(fresh_sources)} friske kilder"
+    )
+
+    previous = (
+        old_price_watch_state
+        if isinstance(old_price_watch_state, dict)
+        else {}
+    )
+
+    previous_products = previous.get(
+        "products"
+    )
+
+    is_first_price_watch_run = not isinstance(
+        previous_products,
+        dict
+    )
+
+    if not isinstance(
+        previous_products,
+        dict
+    ):
+        previous_products = {}
+
+    next_products = dict(
+        previous_products
+    )
+
+    for product_key, products in comparable_groups.items():
+        best = price_watch_best_entry(
+            products
+        )
+
+        current_best = float(
+            best["price"]
+        )
+
+        old_entry = previous_products.get(
+            product_key
+        )
+
+        if isinstance(old_entry, dict):
+            old_best_ever = old_entry.get(
+                "best_ever"
+            )
+
+            try:
+                old_best_ever = float(
+                    old_best_ever
+                )
+            except (TypeError, ValueError):
+                old_best_ever = current_best
+
+            if current_best < old_best_ever - 0.005:
+                send_price_watch_new_low(
+                    product_key,
+                    old_best_ever,
+                    products
+                )
+
+                best_ever = current_best
+            else:
+                best_ever = old_best_ever
+
+        else:
+            # Nye Price Watch-produkter får en baseline.
+            # Det forhindrer falske "ny laveste pris"-alerts.
+            best_ever = current_best
+
+        next_products[product_key] = {
+            "best_ever": best_ever,
+            "current_best": current_best,
+            "current_shop": best["shop"],
+            "name": price_watch_display_name(
+                product_key
+            ),
+            "last_seen": datetime.now(
+                ZoneInfo(PRICE_WATCH_TIMEZONE)
+            ).isoformat()
+        }
+
+    try:
+        now_local = datetime.now(
+            ZoneInfo(PRICE_WATCH_TIMEZONE)
+        )
+    except Exception:
+        now_local = datetime.now(
+            ZoneInfo("Europe/Copenhagen")
+        )
+
+    today = now_local.date().isoformat()
+    last_daily_date = str(
+        previous.get(
+            "last_daily_date",
+            ""
+        )
+        or ""
+    )
+
+    daily_sent = False
+
+    if (
+        PRICE_WATCH_WEBHOOK_URL
+        and now_local.hour >= PRICE_WATCH_DAILY_HOUR
+        and last_daily_date != today
+    ):
+        daily_sent = send_price_watch_daily_summary(
+            comparable_groups,
+            now_local
+        )
+
+        if daily_sent:
+            last_daily_date = today
+
+    if is_first_price_watch_run:
+        print(
+            "PRICE WATCH V1 baseline oprettet uden "
+            "ny-laveste-pris alerts."
+        )
+
+    return {
+        "version": 1,
+        "products": next_products,
+        "last_daily_date": last_daily_date
+    }
+
 
 # =========================================================
 # COOLSHOP FETCH
@@ -4899,7 +5417,7 @@ if RUN_ONCE:
 else:
     print(
         f"Tjekker Coolshop + Proshop + BR + Bilka + Føtex + Elgiganten "
-        f"+ PokeHulen + Rogerz + MTGwebshop + Nostalgic + &Cards + Epic Panda "
+        f"+ PokeHulen + Rogerz + MTGwebshop + Luckbox + Nostalgic + &Cards + Epic Panda "
         f"+ Steffen-O + Next Level Games hvert {CHECK_EVERY}. sekund."
     )
 print()
@@ -5227,6 +5745,8 @@ while state is None:
 while True:
     try:
         new_state = dict(state)
+        price_watch_fresh_sources = set()
+        price_watch_nextlevel_live = None
 
         # -------------------------
         # COOLSHOP
@@ -5271,6 +5791,10 @@ while True:
                 "coolshop"
             ] = coolshop
 
+            price_watch_fresh_sources.add(
+                "coolshop"
+            )
+
         except Exception as error:
             print(
                 "Coolshop fejl:",
@@ -5302,6 +5826,10 @@ while True:
             new_state[
                 "proshop"
             ] = proshop
+
+            price_watch_fresh_sources.add(
+                "proshop"
+            )
 
         except Exception as error:
             print(
@@ -5376,6 +5904,10 @@ while True:
                 "br"
             ] = br
 
+            price_watch_fresh_sources.add(
+                "br"
+            )
+
         except Exception as error:
             print(
                 "BR fejl:",
@@ -5437,6 +5969,10 @@ while True:
             new_state[
                 "bilka"
             ] = bilka
+
+            price_watch_fresh_sources.add(
+                "bilka"
+            )
 
         except Exception as error:
             print(
@@ -5503,6 +6039,10 @@ while True:
                 "foetex"
             ] = foetex
 
+            price_watch_fresh_sources.add(
+                "foetex"
+            )
+
         except Exception as error:
             print(
                 "Føtex fejl:",
@@ -5560,6 +6100,10 @@ while True:
                 "elgiganten"
             ] = elgiganten
 
+            price_watch_fresh_sources.add(
+                "elgiganten"
+            )
+
         except Exception as error:
             print(
                 "Elgiganten fejl:",
@@ -5611,6 +6155,9 @@ while True:
                     )
 
                 new_shopify_all[site_key] = products
+                price_watch_fresh_sources.add(
+                    site_key
+                )
 
             except Exception as error:
                 print(
@@ -5669,6 +6216,9 @@ while True:
                     )
 
                 new_woocommerce_all[site_key] = products
+                price_watch_fresh_sources.add(
+                    site_key
+                )
 
             except Exception as error:
                 print(
@@ -5732,6 +6282,10 @@ while True:
                 "epicpanda"
             ] = epicpanda
 
+            price_watch_fresh_sources.add(
+                "epicpanda"
+            )
+
         except Exception as error:
             print(
                 "EPIC PANDA fejl:",
@@ -5788,6 +6342,10 @@ while True:
                 "steffeno"
             ] = steffeno
 
+            price_watch_fresh_sources.add(
+                "steffeno"
+            )
+
         except Exception as error:
             print(
                 "STEFFEN-O fejl:",
@@ -5802,6 +6360,7 @@ while True:
             nextlevel_was_initialized = "nextlevel" in state
             old_nextlevel = state.get("nextlevel", {})
             current_nextlevel = get_nextlevel_products()
+            price_watch_nextlevel_live = current_nextlevel
             nextlevel_counts = count_nextlevel_products(current_nextlevel)
 
             print(
@@ -5842,6 +6401,9 @@ while True:
                 merged_nextlevel = current_nextlevel
 
             new_state["nextlevel"] = merged_nextlevel
+            price_watch_fresh_sources.add(
+                "nextlevel"
+            )
 
         except Exception as error:
             print(
@@ -5850,141 +6412,23 @@ while True:
             )
 
         # -------------------------
-        # PRICE WATCH TEST
+        # PRICE WATCH V1
         # -------------------------
 
-        price_watch_candidates = collect_price_watch_candidates(
+        price_watch_current_state = dict(
             new_state
         )
 
-        pokemon_price_watch = sum(
-            1
-            for product in price_watch_candidates
-            if product["game"] == "POKÉMON"
+        if price_watch_nextlevel_live is not None:
+            price_watch_current_state[
+                "nextlevel"
+            ] = price_watch_nextlevel_live
+
+        new_state["price_watch"] = process_price_watch(
+            state.get("price_watch"),
+            price_watch_current_state,
+            price_watch_fresh_sources
         )
-
-        lorcana_price_watch = sum(
-            1
-            for product in price_watch_candidates
-            if product["game"] == "LORCANA"
-        )
-
-        print(
-            f"PRICE WATCH: "
-            f"{pokemon_price_watch} Pokémon | "
-            f"{lorcana_price_watch} Lorcana | "
-            f"{len(price_watch_candidates)} prislinjer i alt"
-        )
-
-        # -------------------------
-        # PRICE WATCH DIAGNOSTIK
-        # -------------------------
-
-        print("\n--- PRICE WATCH DIAGNOSTIK ---")
-
-        diagnostic_groups = [
-            ("POKÉMON", "ETB"),
-            ("POKÉMON", "BOOSTER BOX"),
-            ("POKÉMON", "BOOSTER BUNDLE"),
-            ("POKÉMON", "BOOSTER PACK"),
-            ("LORCANA", "BOOSTER BOX"),
-            ("LORCANA", "BOOSTER BUNDLE"),
-            ("LORCANA", "BOOSTER PACK"),
-        ]
-
-        for game, product_type in diagnostic_groups:
-            matches = [
-                product
-                for product in price_watch_candidates
-                if product["game"] == game
-                and product["type"] == product_type
-            ]
-
-            matches.sort(
-                key=lambda product: (
-                    product["name"].lower(),
-                    product["price"]
-                )
-            )
-
-            print(
-                f"\n{game} | {product_type} | "
-                f"{len(matches)} prislinjer"
-            )
-
-            for product in matches[:10]:
-                print(
-                    f"  {format_price(product['price'])} | "
-                    f"{product['shop']} | "
-                    f"{product['name']}"
-                )
-
-        print("\n--- SLUT PRICE WATCH DIAGNOSTIK ---")
-
-                # -------------------------
-        # PRICE WATCH MATCH-TEST
-        # -------------------------
-
-        price_watch_groups = {}
-
-        for product in price_watch_candidates:
-            product_key = get_price_watch_product_key(product)
-
-            if not product_key:
-                continue
-
-            price_watch_groups.setdefault(
-                product_key,
-                []
-            ).append(product)
-
-        matched_groups = []
-
-        for product_key, products in price_watch_groups.items():
-            shops = {
-                product["shop"]
-                for product in products
-            }
-
-            if len(shops) >= 2:
-                matched_groups.append(
-                    (
-                        product_key,
-                        products
-                    )
-                )
-
-        matched_groups.sort(
-            key=lambda item: item[0]
-        )
-
-        print(
-            f"\nPRICE WATCH MATCH: "
-            f"{len(price_watch_groups)} unikke produkter | "
-            f"{len(matched_groups)} findes hos mindst 2 butikker"
-        )
-
-        print("\n--- PRICE WATCH MATCH-TEST ---")
-
-        for product_key, products in matched_groups[:30]:
-            print(
-                f"\n{product_key}"
-            )
-
-            products_sorted = sorted(
-                products,
-                key=lambda product: product["price"]
-            )
-
-            for product in products_sorted:
-                print(
-                    f"  {format_price(product['price'])} | "
-                    f"{product['shop']} | "
-                    f"{product['name']}"
-                )
-
-        print("\n--- SLUT PRICE WATCH MATCH-TEST ---")
-
 
         # -------------------------
         # GEM STATE
