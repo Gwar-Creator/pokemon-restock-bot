@@ -404,6 +404,11 @@ def get_price_watch_type(name, game):
         "lodtrækning",
         "lottery",
         "reward",
+        "one piece",
+        "magic the gathering",
+        "magic: the gathering",
+        "yu-gi-oh",
+        "yugioh"
     )
 
     if any(word in text for word in blocked):
