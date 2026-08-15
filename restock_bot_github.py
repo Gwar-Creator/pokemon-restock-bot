@@ -16,6 +16,7 @@ from urllib.parse import urljoin, unquote, urlencode
 # =========================================================
 
 WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL", "").strip()
+PRICE_WATCH_WEBHOOK_URL = os.getenv("PRICE_WATCH_WEBHOOK_URL", "").strip()
 
 RUN_ONCE = os.getenv("RUN_ONCE", "0").strip() == "1"
 CHECK_EVERY = int(os.getenv("CHECK_EVERY", "300"))
