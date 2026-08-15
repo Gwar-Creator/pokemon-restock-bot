@@ -1764,6 +1764,17 @@ def is_relevant_shopify_tcg(product, game):
     else:
         return False
 
+    # Hard block: akryl-display/cases er tilbehør,
+    # selv hvis titlen også indeholder booster, ETB, bundle osv.
+    hard_accessory_markers = (
+        "akryl",
+        "acryl",
+        "acrylic",
+    )
+
+    if any(marker in title for marker in hard_accessory_markers):
+        return False
+    
     # Enkeltkort/gradede kort giver meget støj i en restock-bot.
     single_markers = (
         "graded",
@@ -3246,7 +3257,7 @@ def process_coolshop_changes(
     for url, product in new_products.items():
         if url not in old_products:
             send_discord(
-                f"🆕 **[{product['game']}] NYT PÅ COOLSHOP**\n"
+                f"🆕 **[{product['game']}] NYT FUNDET PÅ COOLSHOP**\n"
                 f"**{product['name']}**\n"
                 f"💰 {format_price(product['price'])}\n"
                 f"🔗 {url}"
@@ -3974,7 +3985,7 @@ def process_shopify_changes(site_key, old_products, new_products):
         if product.get("preorder"):
             headline = f"🚨 **[{game}] NY FORUDBESTILLING HOS {label}**"
         else:
-            headline = f"🆕 **[{game}] NYT HOS {label}**"
+            headline = f"🆕 **[{game}] NYT FUNDET HOS {label}**"
 
         send_discord(
             f"{headline}\n"
