@@ -35,6 +35,7 @@ jobs:
       - name: Run one restock scan
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          PRICE_WATCH_WEBHOOK_URL: ${{ secrets.PRICE_WATCH_WEBHOOK_URL }}
           RUN_ONCE: "1"
         run: python restock_bot_github.py
 
