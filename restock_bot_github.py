@@ -387,6 +387,7 @@ def safe_int(value, default=0):
 def get_price_watch_type(name, game):
     text = (name or "").lower()
 
+    # Produkter der aldrig må komme med i Price Watch.
     blocked = (
         "akryl",
         "acryl",
@@ -400,11 +401,23 @@ def get_price_watch_type(name, game):
         "sleeves",
         "deck box",
         "toploader",
+        "lodtrækning",
+        "lottery",
+        "reward",
     )
 
     if any(word in text for word in blocked):
         return None
 
+    # Større produkter der blot INDEHOLDER en booster box
+    # må ikke sammenlignes med en almindelig booster box.
+    if (
+        "with booster box" in text
+        or "med booster box" in text
+    ):
+        return None
+
+    # Pokémon ETB
     if game == "POKÉMON":
         if (
             "elite trainer box" in text
@@ -412,21 +425,34 @@ def get_price_watch_type(name, game):
         ):
             return "ETB"
 
+    # Booster Bundle Display er ikke samme produkt
+    # som én almindelig Booster Bundle.
+    if (
+        "booster bundle display" in text
+        or "bundle display" in text
+    ):
+        return "BOOSTER BUNDLE DISPLAY"
+
+    # Booster Box / Booster Display
     if (
         "booster box" in text
         or "booster display" in text
     ):
         return "BOOSTER BOX"
 
+    # Booster Bundle
     if "booster bundle" in text:
         return "BOOSTER BUNDLE"
 
-    if (
-        "booster pack" in text
-        or "sleeved booster" in text
-    ):
+    # Sleeved Booster holdes separat fra løs booster.
+    if "sleeved booster" in text:
+        return "SLEEVED BOOSTER"
+
+    # Booster Pack
+    if "booster pack" in text:
         return "BOOSTER PACK"
 
+    # Nogle butikker kalder enkeltpakker blot "Booster".
     if (
         "booster" in text
         and "box" not in text
