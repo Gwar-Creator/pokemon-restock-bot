@@ -378,6 +378,64 @@ def safe_int(value, default=0):
         return int(value)
     except (TypeError, ValueError):
         return default
+        
+
+# ============================================================
+# PRICE WATCH - PRODUKTTYPER
+# ============================================================
+
+def get_price_watch_type(name, game):
+    text = (name or "").lower()
+
+    blocked = (
+        "akryl",
+        "acryl",
+        "acrylic",
+        "protector",
+        "display case",
+        "opbevaring",
+        "storage",
+        "binder",
+        "portfolio",
+        "sleeves",
+        "deck box",
+        "toploader",
+    )
+
+    if any(word in text for word in blocked):
+        return None
+
+    if game == "POKÉMON":
+        if (
+            "elite trainer box" in text
+            or re.search(r"\betb\b", text)
+        ):
+            return "ETB"
+
+    if (
+        "booster box" in text
+        or "booster display" in text
+    ):
+        return "BOOSTER BOX"
+
+    if "booster bundle" in text:
+        return "BOOSTER BUNDLE"
+
+    if (
+        "booster pack" in text
+        or "sleeved booster" in text
+    ):
+        return "BOOSTER PACK"
+
+    if (
+        "booster" in text
+        and "box" not in text
+        and "bundle" not in text
+        and "display" not in text
+    ):
+        return "BOOSTER PACK"
+
+    return None
 
 
 # =========================================================
