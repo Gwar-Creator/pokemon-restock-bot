@@ -432,11 +432,13 @@ def get_price_watch_type(name, game):
 
     # Booster Bundle Display er ikke samme produkt
     # som én almindelig Booster Bundle.
+    
+    # Displays med flere Booster Bundles tæller ikke som én bundle.
     if (
         "booster bundle display" in text
         or "bundle display" in text
     ):
-        return "BOOSTER BUNDLE DISPLAY"
+        return None
 
     # Booster Box / Booster Display
     if (
@@ -486,7 +488,7 @@ def get_price_watch_language(name):
 def normalize_price_watch_set_name(name, game, product_type):
     text = (name or "").lower()
 
-    # Ensret apostroffer og specialtegn.
+    # Ensret tegn.
     text = (
         text
         .replace("’", "'")
@@ -495,57 +497,74 @@ def normalize_price_watch_set_name(name, game, product_type):
         .replace("&", " and ")
     )
 
-    # Fjern produktkoder som fx (POK10407-101).
+    # Apostroffer skal ikke skabe forskellige produktnøgler.
+    # Ursula's Return = Ursulas Return.
+    text = text.replace("'", "")
+
+    # Fjern webshop-produktkoder som POK10407-101.
     text = re.sub(
         r"\b(?:pok|dis|lor)[a-z0-9-]*\d[a-z0-9-]*\b",
         " ",
         text
     )
 
-    # Fjern antal-pakker, fx:
-    # (36 Booster Packs), 24 boosters, 6 Engelsk Boostere.
+    # Fjern setkoder som ME04, SV08 osv.
     text = re.sub(
-        r"\(?\b\d+\s*(?:booster\s*)?"
+        r"\b(?:me|sv)\d+(?:\.\d+)?[a-z]?\b",
+        " ",
+        text
+    )
+
+    # Fjern japanske produkt/setkoder som M5 og M2A.
+    # Sproget er allerede gemt separat som JP.
+    text = re.sub(
+        r"\bm\d+[a-z]?\b",
+        " ",
+        text
+    )
+
+    # Fjern normale antal-pakker.
+    # Vi bruger kun realistiske pack-counts, så Pokémon 151 bevares.
+    text = re.sub(
+        r"\(?\b(?:6|10|18|20|24|30|36)\s*"
+        r"(?:engelsk\s+)?"
+        r"(?:booster\s*)?"
         r"(?:packs?|boosters?|boostere|pakker)\b\)?",
         " ",
         text
     )
 
-    # Japanske setkoder som (m5), (m2a) osv.
-    text = re.sub(
-        r"\(\s*m\d+[a-z]?\s*\)",
-        " ",
-        text
-    )
-
+    # Længste produktfraser først.
     noise_phrases = (
         "pokemon trading card game",
         "pokémon trading card game",
-        "pokemon tcg",
-        "pokémon tcg",
-        "pokemon kort",
-        "pokémon kort",
         "disney lorcana tcg",
         "disney lorcana",
+        "pokemon tcg",
+        "pokémon tcg",
         "lorcana tcg",
-        "pokemon",
-        "pokémon",
-        "lorcana",
-        "elite trainer box",
         "booster bundle display",
-        "booster bundle",
-        "booster box display",
         "booster display box",
+        "booster box display",
+        "elite trainer box",
+        "booster bundle",
         "booster display",
         "booster box",
         "sleeved booster",
         "booster pack",
+        "pokemon kort",
+        "pokémon kort",
         "sealed set",
         "sealed",
         "engelsk",
         "english",
         "japansk",
         "japanese",
+        "pokemon",
+        "pokémon",
+        "lorcana",
+        "booster",
+        "tcg",
     )
 
     for phrase in noise_phrases:
@@ -554,16 +573,16 @@ def normalize_price_watch_set_name(name, game, product_type):
             " "
         )
 
-    # Fjern "Set 2", "Set 3" osv.
+    # Fjern Lorcana "Set 2", "Set 3" osv.
     text = re.sub(
         r"\bset\s+\d+\b",
         " ",
         text
     )
 
-    # Ryd tegn væk.
+    # Ryd øvrige tegn væk.
     text = re.sub(
-        r"[^a-z0-9æøå' ]+",
+        r"[^a-z0-9æøå ]+",
         " ",
         text
     )
@@ -574,20 +593,14 @@ def normalize_price_watch_set_name(name, game, product_type):
         text
     ).strip()
 
-    # Nogle butikker tilføjer serie-æra foran selve sætnavnet.
-    # Fx:
-    # "Mega Evolution Perfect Order" -> "Perfect Order"
-    # "Scarlet and Violet 151" -> "151"
+    # Fjern serie-æra når selve sætnavnet følger efter.
     era_prefixes = (
         "scarlet and violet",
         "mega evolution",
     )
 
     for prefix in era_prefixes:
-        if (
-            text.startswith(prefix + " ")
-            and len(text.split()) > len(prefix.split())
-        ):
+        if text.startswith(prefix + " "):
             text = text[len(prefix):].strip()
 
     return text
