@@ -5656,6 +5656,34 @@ while True:
             )
 
         # -------------------------
+        # PRICE WATCH TEST
+        # -------------------------
+
+        price_watch_candidates = collect_price_watch_candidates(
+            new_state
+        )
+
+        pokemon_price_watch = sum(
+            1
+            for product in price_watch_candidates
+            if product["game"] == "POKÉMON"
+        )
+
+        lorcana_price_watch = sum(
+            1
+            for product in price_watch_candidates
+            if product["game"] == "LORCANA"
+        )
+
+        print(
+            f"PRICE WATCH: "
+            f"{pokemon_price_watch} Pokémon | "
+            f"{lorcana_price_watch} Lorcana | "
+            f"{len(price_watch_candidates)} prislinjer i alt"
+        )
+
+
+        # -------------------------
         # GEM STATE
         # -------------------------
 
