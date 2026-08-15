@@ -164,6 +164,44 @@ SHOPIFY_SITES = {
                 "path": "/collections/disney-lorcana/products.json"
             }
         ]
+    },
+    "luckbox": {
+        "label": "LUCKBOX",
+        "base": "https://www.luckboxcardshop.dk",
+        "feeds": [
+            {
+                "game": "POKÉMON",
+                "path": "/collections/booster-box/products.json"
+            },
+            {
+                "game": "POKÉMON",
+                "path": "/collections/bundles-1/products.json"
+            },
+            {
+                "game": "POKÉMON",
+                "path": "/collections/booster-packs/products.json"
+            },
+            {
+                "game": "POKÉMON",
+                "path": "/collections/ex-box/products.json"
+            },
+            {
+                "game": "POKÉMON",
+                "path": "/collections/elite-trainer-box/products.json"
+            },
+            {
+                "game": "POKÉMON",
+                "path": "/collections/blisters/products.json"
+            },
+            {
+                "game": "POKÉMON",
+                "path": "/collections/tins/products.json"
+            },
+            {
+                "game": "POKÉMON",
+                "path": "/collections/japansk-sealed-produkter/products.json"
+            }
+        ]
     }
 }
 
