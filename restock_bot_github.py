@@ -319,6 +319,24 @@ def send_discord(message):
     response.raise_for_status()
 
 
+def send_price_watch(message):
+    if not PRICE_WATCH_WEBHOOK_URL:
+        print("PRICE_WATCH_WEBHOOK_URL mangler - springer Price Watch-besked over.")
+        return
+
+    response = requests.post(
+        PRICE_WATCH_WEBHOOK_URL,
+        json={"content": message},
+        headers={
+            "User-Agent": "Pokemon-Lorcana-Price-Watch/1.0"
+        },
+        timeout=20
+    )
+
+    response.raise_for_status()
+
+
+
 # =========================================================
 # PRIS
 # =========================================================
