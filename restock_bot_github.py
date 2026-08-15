@@ -1011,9 +1011,9 @@ def price_watch_lowest_shops(products):
     )
 
 
-def send_price_watch_new_low(
+def send_price_watch_change(
     product_key,
-    old_best,
+    old_entry,
     products
 ):
     best = price_watch_best_entry(
@@ -1023,6 +1023,53 @@ def send_price_watch_new_low(
     info = parse_price_watch_key(
         product_key
     )
+
+    try:
+        old_price = float(
+            old_entry.get("current_best")
+        )
+    except (TypeError, ValueError):
+        return
+
+    new_price = float(
+        best["price"]
+    )
+
+    old_shops = old_entry.get(
+        "current_shops"
+    )
+
+    if not isinstance(old_shops, list):
+        old_shop = old_entry.get(
+            "current_shop"
+        )
+        old_shops = [old_shop] if old_shop else []
+
+    new_shops = price_watch_lowest_shops(
+        products
+    )
+
+    price_changed = abs(
+        new_price - old_price
+    ) >= 0.005
+
+    # Butiksskift ved samme pris er kun relevant, hvis ingen af de
+    # tidligere billigste butikker stadig er billigst.
+    cheapest_shop_changed = (
+        not price_changed
+        and bool(old_shops)
+        and not set(old_shops).intersection(new_shops)
+    )
+
+    if not price_changed and not cheapest_shop_changed:
+        return
+
+    if new_price < old_price - 0.005:
+        headline = "🔥 **BEDRE PRIS FUNDET**"
+    elif new_price > old_price + 0.005:
+        headline = "📈 **BEDSTE PRIS ÆNDRET**"
+    else:
+        headline = "🔄 **BILLIGSTE BUTIK ÆNDRET**"
 
     top = products[:3]
     ranking_lines = []
@@ -1042,6 +1089,19 @@ def send_price_watch_new_low(
             f"**{format_price(product['price'])}**"
         )
 
+    if price_changed:
+        change_line = (
+            f"{format_price(old_price)} → "
+            f"**{format_price(new_price)}**"
+        )
+    else:
+        old_shop_text = " + ".join(old_shops)
+        new_shop_text = " + ".join(new_shops)
+        change_line = (
+            f"{old_shop_text} → **{new_shop_text}** "
+            f"({format_price(new_price)})"
+        )
+
     language_line = (
         "\n🌐 Japansk"
         if info["language"] == "JP"
@@ -1055,13 +1115,12 @@ def send_price_watch_new_low(
     )
 
     send_price_watch(
-        "🔥 **NY LAVESTE PRIS**\n"
+        f"{headline}\n"
         f"**{price_watch_game_label(info['game'])} · "
         f"{price_watch_display_name(product_key)} · "
         f"{price_watch_type_label(info['type'])}**"
         f"{language_line}\n"
-        f"{format_price(old_best)} → "
-        f"**{format_price(best['price'])}**\n\n"
+        f"{change_line}\n\n"
         + "\n".join(ranking_lines)
         + link_line
     )
@@ -1206,6 +1265,11 @@ def process_price_watch(
         else {}
     )
 
+    previous_version = safe_int(
+        previous.get("version"),
+        0
+    )
+
     previous_products = previous.get(
         "products"
     )
@@ -1220,63 +1284,6 @@ def process_price_watch(
         dict
     ):
         previous_products = {}
-
-    next_products = dict(
-        previous_products
-    )
-
-    for product_key, products in comparable_groups.items():
-        best = price_watch_best_entry(
-            products
-        )
-
-        current_best = float(
-            best["price"]
-        )
-
-        old_entry = previous_products.get(
-            product_key
-        )
-
-        if isinstance(old_entry, dict):
-            old_best_ever = old_entry.get(
-                "best_ever"
-            )
-
-            try:
-                old_best_ever = float(
-                    old_best_ever
-                )
-            except (TypeError, ValueError):
-                old_best_ever = current_best
-
-            if current_best < old_best_ever - 0.005:
-                send_price_watch_new_low(
-                    product_key,
-                    old_best_ever,
-                    products
-                )
-
-                best_ever = current_best
-            else:
-                best_ever = old_best_ever
-
-        else:
-            # Nye Price Watch-produkter får en baseline.
-            # Det forhindrer falske "ny laveste pris"-alerts.
-            best_ever = current_best
-
-        next_products[product_key] = {
-            "best_ever": best_ever,
-            "current_best": current_best,
-            "current_shop": best["shop"],
-            "name": price_watch_display_name(
-                product_key
-            ),
-            "last_seen": datetime.now(
-                ZoneInfo(PRICE_WATCH_TIMEZONE)
-            ).isoformat()
-        }
 
     try:
         now_local = datetime.now(
@@ -1296,13 +1303,17 @@ def process_price_watch(
         or ""
     )
 
-    daily_sent = False
-
-    if (
-        PRICE_WATCH_WEBHOOK_URL
+    # Dagens samlede oversigt har førsteprioritet.
+    # Hvis den sendes i dette scan, sender vi ikke samtidig ændringsalerts.
+    daily_due = (
+        bool(PRICE_WATCH_WEBHOOK_URL)
         and now_local.hour >= PRICE_WATCH_DAILY_HOUR
         and last_daily_date != today
-    ):
+    )
+
+    daily_sent = False
+
+    if daily_due:
         daily_sent = send_price_watch_daily_summary(
             comparable_groups,
             now_local
@@ -1311,14 +1322,140 @@ def process_price_watch(
         if daily_sent:
             last_daily_date = today
 
+    # Ændringsalerts er kun aktive EFTER dagens oversigt er sendt.
+    # Ved opgradering til denne version tager vi ét stille scan som baseline,
+    # så en kodeændring ikke giver falske alerts.
+    changes_enabled = (
+        bool(PRICE_WATCH_WEBHOOK_URL)
+        and last_daily_date == today
+        and not daily_sent
+        and not is_first_price_watch_run
+        and previous_version >= 2
+    )
+
+    next_products = dict(
+        previous_products
+    )
+
+    for product_key, products in comparable_groups.items():
+        best = price_watch_best_entry(
+            products
+        )
+
+        current_best = float(
+            best["price"]
+        )
+
+        current_shops = price_watch_lowest_shops(
+            products
+        )
+
+        current_sources = sorted(
+            {
+                product["source"]
+                for product in products
+                if abs(product["price"] - current_best) < 0.005
+            }
+        )
+
+        old_entry = previous_products.get(
+            product_key
+        )
+
+        if changes_enabled and isinstance(old_entry, dict):
+            try:
+                old_price = float(
+                    old_entry.get("current_best")
+                )
+            except (TypeError, ValueError):
+                old_price = None
+
+            old_shops = old_entry.get(
+                "current_shops"
+            )
+
+            if not isinstance(old_shops, list):
+                old_shop = old_entry.get(
+                    "current_shop"
+                )
+                old_shops = [old_shop] if old_shop else []
+
+            old_sources = old_entry.get(
+                "current_sources"
+            )
+
+            if not isinstance(old_sources, list):
+                old_sources = []
+
+            price_is_lower = (
+                old_price is not None
+                and current_best < old_price - 0.005
+            )
+
+            price_is_higher = (
+                old_price is not None
+                and current_best > old_price + 0.005
+            )
+
+            cheapest_shop_changed = (
+                old_price is not None
+                and abs(current_best - old_price) < 0.005
+                and bool(old_shops)
+                and not set(old_shops).intersection(current_shops)
+            )
+
+            # Prisfald er sikkert at sende: den nye lavere pris kommer fra
+            # en frisk kilde. Pris-stigninger/butiksskift sendes kun, hvis
+            # de tidligere billigste kilder også lykkedes i dette scan.
+            old_sources_are_fresh = (
+                bool(old_sources)
+                and all(
+                    source in fresh_sources
+                    for source in old_sources
+                )
+            )
+
+            should_alert = (
+                price_is_lower
+                or (
+                    old_sources_are_fresh
+                    and (
+                        price_is_higher
+                        or cheapest_shop_changed
+                    )
+                )
+            )
+
+            if should_alert:
+                send_price_watch_change(
+                    product_key,
+                    old_entry,
+                    products
+                )
+
+        next_products[product_key] = {
+            "current_best": current_best,
+            "current_shop": best["shop"],
+            "current_shops": current_shops,
+            "current_sources": current_sources,
+            "name": price_watch_display_name(
+                product_key
+            ),
+            "last_seen": now_local.isoformat()
+        }
+
     if is_first_price_watch_run:
         print(
             "PRICE WATCH V1 baseline oprettet uden "
-            "ny-laveste-pris alerts."
+            "ændringsalerts."
+        )
+    elif previous_version < 2:
+        print(
+            "PRICE WATCH V1 ændringsbaseline opdateret uden alerts."
         )
 
     return {
-        "version": 1,
+        "version": 2,
         "products": next_products,
         "last_daily_date": last_daily_date
     }
