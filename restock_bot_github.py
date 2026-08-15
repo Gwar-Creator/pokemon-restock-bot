@@ -5908,6 +5908,70 @@ while True:
 
         print("\n--- SLUT PRICE WATCH DIAGNOSTIK ---")
 
+                # -------------------------
+        # PRICE WATCH MATCH-TEST
+        # -------------------------
+
+        price_watch_groups = {}
+
+        for product in price_watch_candidates:
+            product_key = get_price_watch_product_key(product)
+
+            if not product_key:
+                continue
+
+            price_watch_groups.setdefault(
+                product_key,
+                []
+            ).append(product)
+
+        matched_groups = []
+
+        for product_key, products in price_watch_groups.items():
+            shops = {
+                product["shop"]
+                for product in products
+            }
+
+            if len(shops) >= 2:
+                matched_groups.append(
+                    (
+                        product_key,
+                        products
+                    )
+                )
+
+        matched_groups.sort(
+            key=lambda item: item[0]
+        )
+
+        print(
+            f"\nPRICE WATCH MATCH: "
+            f"{len(price_watch_groups)} unikke produkter | "
+            f"{len(matched_groups)} findes hos mindst 2 butikker"
+        )
+
+        print("\n--- PRICE WATCH MATCH-TEST ---")
+
+        for product_key, products in matched_groups[:30]:
+            print(
+                f"\n{product_key}"
+            )
+
+            products_sorted = sorted(
+                products,
+                key=lambda product: product["price"]
+            )
+
+            for product in products_sorted:
+                print(
+                    f"  {format_price(product['price'])} | "
+                    f"{product['shop']} | "
+                    f"{product['name']}"
+                )
+
+        print("\n--- SLUT PRICE WATCH MATCH-TEST ---")
+
 
         # -------------------------
         # GEM STATE
