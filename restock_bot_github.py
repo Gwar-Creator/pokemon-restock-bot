@@ -468,6 +468,156 @@ def get_price_watch_type(name, game):
 
     return None
 
+def get_price_watch_language(name):
+    text = (name or "").lower()
+
+    japanese_markers = (
+        "japansk",
+        "japanese",
+        "japan import",
+    )
+
+    if any(marker in text for marker in japanese_markers):
+        return "JP"
+
+    return "EN"
+
+
+def normalize_price_watch_set_name(name, game, product_type):
+    text = (name or "").lower()
+
+    # Ensret apostroffer og specialtegn.
+    text = (
+        text
+        .replace("’", "'")
+        .replace("–", " ")
+        .replace("—", " ")
+        .replace("&", " and ")
+    )
+
+    # Fjern produktkoder som fx (POK10407-101).
+    text = re.sub(
+        r"\b(?:pok|dis|lor)[a-z0-9-]*\d[a-z0-9-]*\b",
+        " ",
+        text
+    )
+
+    # Fjern antal-pakker, fx:
+    # (36 Booster Packs), 24 boosters, 6 Engelsk Boostere.
+    text = re.sub(
+        r"\(?\b\d+\s*(?:booster\s*)?"
+        r"(?:packs?|boosters?|boostere|pakker)\b\)?",
+        " ",
+        text
+    )
+
+    # Japanske setkoder som (m5), (m2a) osv.
+    text = re.sub(
+        r"\(\s*m\d+[a-z]?\s*\)",
+        " ",
+        text
+    )
+
+    noise_phrases = (
+        "pokemon trading card game",
+        "pokémon trading card game",
+        "pokemon tcg",
+        "pokémon tcg",
+        "pokemon kort",
+        "pokémon kort",
+        "disney lorcana tcg",
+        "disney lorcana",
+        "lorcana tcg",
+        "pokemon",
+        "pokémon",
+        "lorcana",
+        "elite trainer box",
+        "booster bundle display",
+        "booster bundle",
+        "booster box display",
+        "booster display box",
+        "booster display",
+        "booster box",
+        "sleeved booster",
+        "booster pack",
+        "sealed set",
+        "sealed",
+        "engelsk",
+        "english",
+        "japansk",
+        "japanese",
+    )
+
+    for phrase in noise_phrases:
+        text = text.replace(
+            phrase,
+            " "
+        )
+
+    # Fjern "Set 2", "Set 3" osv.
+    text = re.sub(
+        r"\bset\s+\d+\b",
+        " ",
+        text
+    )
+
+    # Ryd tegn væk.
+    text = re.sub(
+        r"[^a-z0-9æøå' ]+",
+        " ",
+        text
+    )
+
+    text = re.sub(
+        r"\s+",
+        " ",
+        text
+    ).strip()
+
+    # Nogle butikker tilføjer serie-æra foran selve sætnavnet.
+    # Fx:
+    # "Mega Evolution Perfect Order" -> "Perfect Order"
+    # "Scarlet and Violet 151" -> "151"
+    era_prefixes = (
+        "scarlet and violet",
+        "mega evolution",
+    )
+
+    for prefix in era_prefixes:
+        if (
+            text.startswith(prefix + " ")
+            and len(text.split()) > len(prefix.split())
+        ):
+            text = text[len(prefix):].strip()
+
+    return text
+
+
+def get_price_watch_product_key(product):
+    game = product.get("game", "")
+    product_type = product.get("type", "")
+    name = product.get("name", "")
+
+    language = get_price_watch_language(
+        name
+    )
+
+    set_name = normalize_price_watch_set_name(
+        name,
+        game,
+        product_type
+    )
+
+    if not set_name:
+        return None
+
+    return (
+        f"{game}|"
+        f"{product_type}|"
+        f"{language}|"
+        f"{set_name}"
+    )
+
 def get_price_watch_availability(source_key, product):
     # Proshop
     if source_key == "proshop":
