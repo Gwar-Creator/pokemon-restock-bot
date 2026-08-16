@@ -1016,7 +1016,137 @@ def collect_price_watch_candidates(
 
 
 # =========================================================
-# PRICE WATCH V3
+# PRICE WATCH V4 - SOURCE-CONFIRMED ANTI-FLAP
+# =========================================================
+
+def _price_watch_raw_products_for_source(current_state, source_key):
+    if source_key in {
+        "coolshop", "proshop", "br", "bilka", "foetex",
+        "elgiganten", "epicpanda", "steffeno", "nextlevel"
+    }:
+        products = current_state.get(source_key, {})
+        return products if isinstance(products, dict) else {}
+
+    shopify = current_state.get("shopify", {})
+    if isinstance(shopify, dict) and source_key in shopify:
+        products = shopify.get(source_key, {})
+        return products if isinstance(products, dict) else {}
+
+    woocommerce = current_state.get("woocommerce", {})
+    if isinstance(woocommerce, dict) and source_key in woocommerce:
+        products = woocommerce.get(source_key, {})
+        return products if isinstance(products, dict) else {}
+
+    return {}
+
+
+def build_price_watch_source_observations(current_state, fresh_sources):
+    """Build raw per-source observations, including unavailable products.
+
+    A fresh source alone is not proof that a missing listing disappeared.
+    We only confirm a negative price move when the former cheapest source
+    explicitly exposes the same normalized product as unavailable/preorder
+    or at a higher price.
+    """
+    observations = {}
+    pokemon_only = {"proshop", "br", "bilka", "foetex", "elgiganten", "steffeno"}
+
+    for source_key in fresh_sources:
+        source_rows = {}
+        raw_products = _price_watch_raw_products_for_source(current_state, source_key)
+
+        for _, product in raw_products.items():
+            if not isinstance(product, dict):
+                continue
+
+            name = product.get("name", "")
+            game = "POKÉMON" if source_key in pokemon_only else product.get("game")
+            if game not in ("POKÉMON", "LORCANA"):
+                continue
+
+            product_type = get_price_watch_type(name, game)
+            if not product_type:
+                continue
+
+            product_key = get_price_watch_product_key({
+                "game": game,
+                "type": product_type,
+                "name": name,
+            })
+            if not product_key:
+                continue
+
+            raw_price = product.get("price")
+            try:
+                price = float(raw_price) if raw_price is not None else None
+            except (TypeError, ValueError):
+                price = None
+
+            available = bool(get_price_watch_availability(source_key, product))
+
+            source_rows.setdefault(product_key, []).append({
+                "available": available,
+                "price": price,
+                "preorder": bool(product.get("preorder")),
+                "name": name,
+            })
+
+        observations[source_key] = source_rows
+
+    return observations
+
+
+def price_watch_old_offer_explicitly_gone(
+    source_observations,
+    old_sources,
+    product_key,
+    old_price,
+):
+    """Return True only when every former cheapest source explicitly
+    confirms that the old cheap offer is no longer available.
+
+    Missing from an otherwise fresh feed is UNKNOWN, not out of stock.
+    """
+    if not old_sources or old_price is None:
+        return False
+
+    for source_key in old_sources:
+        rows = (source_observations.get(source_key) or {}).get(product_key)
+
+        # Source fetched, but the product/listing vanished from the feed.
+        # That is exactly the condition that caused the old flap.
+        if not rows:
+            return False
+
+        available_rows = [row for row in rows if row.get("available")]
+
+        if not available_rows:
+            # Explicitly present but unavailable/preorder: old offer is gone.
+            continue
+
+        available_prices = [
+            row.get("price")
+            for row in available_rows
+            if isinstance(row.get("price"), (int, float)) and row.get("price") > 0
+        ]
+
+        # Available product without a trustworthy price is not enough evidence
+        # for a price increase.
+        if not available_prices:
+            return False
+
+        # If the old source still exposes the old/lower price, do not promote
+        # a more expensive competitor.
+        if min(available_prices) <= old_price + 0.005:
+            return False
+
+        # Otherwise this source explicitly moved to a higher price.
+
+    return True
+
+
+# =========================================================
+# PRICE WATCH V4
 # =========================================================
 
 PRICE_WATCH_TYPE_ORDER = (
@@ -1414,8 +1544,13 @@ def process_price_watch(
         candidates
     )
 
+    source_observations = build_price_watch_source_observations(
+        current_state,
+        fresh_sources
+    )
+
     print(
-        f"PRICE WATCH V3: "
+        f"PRICE WATCH V4: "
         f"{len(candidates)} friske prislinjer | "
         f"{len(comparable_groups)} produkter hos mindst 2 butikker | "
         f"{len(fresh_sources)} friske kilder"
@@ -1463,16 +1598,15 @@ def process_price_watch(
         if daily_sent:
             last_daily_date = today
 
-    # V3: En højere bedste pris / tab af billigste butik skal ses i
-    # to på hinanden følgende friske scans før den bliver bekræftet.
-    # Et enkelt midlertidigt manglende produkt kan derfor ikke længere
-    # få 1.479 -> 1.499 -> 1.479 til at spamme Discord.
+    # V4: Negative ændringer kræver både eksplicit kildebevis og to
+    # ens scans. En vare, der blot mangler fra et frisk kategori-feed,
+    # må aldrig løfte den registrerede bedste pris.
     changes_enabled = (
         bool(PRICE_WATCH_WEBHOOK_URL)
         and last_daily_date == today
         and not daily_sent
         and not is_first_price_watch_run
-        and previous_version >= 3
+        and previous_version >= 4
     )
 
     next_products = dict(previous_products)
@@ -1538,11 +1672,6 @@ def process_price_watch(
             and not set(old_shops).intersection(current_shops)
         )
 
-        old_sources_are_fresh = (
-            bool(old_sources)
-            and all(source in fresh_sources for source in old_sources)
-        )
-
         # En reel lavere pris er positiv information fra en frisk kilde
         # og kan derfor bekræftes med det samme.
         if price_is_lower:
@@ -1558,13 +1687,23 @@ def process_price_watch(
             )
             continue
 
-        # Pris op / billigste butik væk er negativ information og kan
-        # skyldes et midlertidigt hul i et produktfeed. Kræv 2 ens scans.
+        # Pris op / billigste butik væk er negativ information. Før vi
+        # overhovedet starter 2-scan confirmation, skal den tidligere
+        # billigste kilde eksplicit vise samme produkt som udsolgt/preorder
+        # eller dyrere. Mangler produktet bare fra feedet, er status UNKNOWN.
         if price_is_higher or cheapest_shop_changed:
-            if not old_sources_are_fresh:
+            old_offer_gone = price_watch_old_offer_explicitly_gone(
+                source_observations,
+                old_sources,
+                product_key,
+                old_price,
+            )
+
+            if not old_offer_gone:
                 kept = dict(old_entry)
                 kept.pop("pending_change", None)
                 kept["last_seen"] = now_local.isoformat()
+                kept["hold_reason"] = "former_cheapest_source_not_explicitly_resolved"
                 next_products[product_key] = kept
                 continue
 
@@ -1618,12 +1757,12 @@ def process_price_watch(
         )
 
     if is_first_price_watch_run:
-        print("PRICE WATCH V3 baseline oprettet uden ændringsalerts.")
-    elif previous_version < 3:
-        print("PRICE WATCH V3 anti-flap aktiveret uden overgangsalerts.")
+        print("PRICE WATCH V4 baseline oprettet uden ændringsalerts.")
+    elif previous_version < 4:
+        print("PRICE WATCH V4 source-confirmed anti-flap aktiveret uden overgangsalerts.")
 
     return {
-        "version": 3,
+        "version": 4,
         "products": next_products,
         "last_daily_date": last_daily_date
     }
