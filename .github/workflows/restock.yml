@@ -44,6 +44,9 @@ jobs:
           if [ -f patch_v19_sources.py ]; then
             python patch_v19_sources.py
           fi
+          if [ -f patch_v20_proshop_reader.py ]; then
+            python patch_v20_proshop_reader.py
+          fi
 
       - name: Validate Python
         run: |
