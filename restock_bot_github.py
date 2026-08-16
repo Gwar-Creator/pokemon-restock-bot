@@ -17,6 +17,7 @@ import os
 import re
 import base64
 import html
+import hashlib
 import unicodedata
 
 from bs4 import BeautifulSoup
@@ -32,6 +33,39 @@ from zoneinfo import ZoneInfo
 WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL", "").strip()
 PRICE_WATCH_WEBHOOK_URL = os.getenv("PRICE_WATCH_WEBHOOK_URL", "").strip()
 PRICE_HISTORY_WEBHOOK_URL = os.getenv("PRICE_HISTORY_WEBHOOK_URL", "").strip()
+
+# Persistent alert memory is hydrated from state before scanning starts.
+# It prevents a flapping source from repeating the same Discord alert.
+RESTOCK_ALERT_MEMORY = {}
+PRICE_ALERT_MEMORY = {}
+
+RESTOCK_DUPLICATE_COOLDOWN_SECONDS = 60 * 60
+RESTOCK_NEW_PRODUCT_COOLDOWN_SECONDS = 24 * 60 * 60
+PRICE_ALERT_COOLDOWN_SECONDS = 24 * 60 * 60
+PRICE_ALERT_MIN_IMPROVEMENT_DKK = 10.0
+PRICE_ALERT_MIN_IMPROVEMENT_PCT = 0.02
+
+SOURCE_MIN_PRODUCTS = {
+    "coolshop": 10,
+    "proshop": 5,
+    "br": 5,
+    "bilka": 5,
+    "foetex": 5,
+    "elgiganten": 5,
+    "pokehulen": 10,
+    "rogerz": 20,
+    "mtgwebshop": 10,
+    "luckbox": 5,
+    "spilforsyningen": 5,
+    "musenogslottet": 5,
+    "nostalgic": 5,
+    "andcards": 5,
+    "pokecards": 10,
+    "epicpanda": 10,
+    "steffeno": 5,
+    "nextlevel": 5,
+}
+SOURCE_MAX_DROP_RATIO = 0.60
 
 CARDMARKET_APP_TOKEN = os.getenv("CARDMARKET_APP_TOKEN", "").strip()
 CARDMARKET_APP_SECRET = os.getenv("CARDMARKET_APP_SECRET", "").strip()
@@ -260,6 +294,26 @@ SHOPIFY_SITES = {
                 "path": "/collections/japansk-sealed-produkter/products.json"
             }
         ]
+    },
+    "spilforsyningen": {
+        "label": "SPILFORSYNINGEN",
+        "base": "https://spilforsyningen.dk",
+        "feeds": [
+            {"game": "POKÉMON", "path": "/collections/pokemon-boosters/products.json"},
+            {"game": "POKÉMON", "path": "/collections/pokemon-boxes/products.json"},
+            {"game": "POKÉMON", "path": "/collections/pokemon-decks/products.json"},
+            {"game": "POKÉMON", "path": "/collections/pokemon-displays-og-boosters/products.json"},
+            {"game": "POKÉMON", "path": "/collections/pokemon-tins/products.json"},
+            {"game": "LORCANA", "path": "/collections/disney-lorcana/products.json"}
+        ]
+    },
+    "musenogslottet": {
+        "label": "MUSEN & SLOTTET",
+        "base": "https://www.musenogslottet.dk",
+        "feeds": [
+            {"game": "POKÉMON", "path": "/collections/pokemon-tcg/products.json"},
+            {"game": "LORCANA", "path": "/collections/disney-lorcana/products.json"}
+        ]
     }
 }
 
@@ -286,6 +340,13 @@ WOOCOMMERCE_SITES = {
         "categories": {
             "POKÉMON": 21,
             "LORCANA": 1264
+        }
+    },
+    "pokecards": {
+        "label": "POKECARDS.DK",
+        "base": "https://pokecards.dk",
+        "categories": {
+            "POKÉMON": 16
         }
     },
 }
@@ -436,11 +497,21 @@ def _post_discord(webhook_url, message, kind):
 
 
 def send_discord(message):
+    alert_decision = restock_alert_decision(message)
+
+    if not alert_decision:
+        print("RESTOCK ALERT: dublet/flap undertrykt")
+        return False
+
     _post_discord(
         WEBHOOK_URL,
         message,
         "restock",
     )
+    alert_key, alert_entry = alert_decision
+    if alert_key:
+        RESTOCK_ALERT_MEMORY[alert_key] = alert_entry
+    return True
 
 
 def send_price_watch(message):
@@ -449,13 +520,23 @@ def send_price_watch(message):
             "PRICE_WATCH_WEBHOOK_URL mangler - "
             "springer Price Watch-besked over."
         )
-        return
+        return False
+
+    alert_decision = price_alert_decision(message)
+
+    if not alert_decision:
+        print("PRICE WATCH: gentaget prisalert undertrykt")
+        return False
 
     _post_discord(
         PRICE_WATCH_WEBHOOK_URL,
         message,
         "price",
     )
+    alert_key, alert_entry = alert_decision
+    if alert_key:
+        PRICE_ALERT_MEMORY[alert_key] = alert_entry
+    return True
 
 
 def send_price_history_embed(title, description, color=0x5865F2, footer=None):
@@ -531,6 +612,241 @@ def safe_int(value, default=0):
         return int(value)
     except (TypeError, ValueError):
         return default
+
+
+def _now_epoch():
+    return int(time.time())
+
+
+def _alert_memory_cleanup(memory, max_age_seconds=7 * 24 * 60 * 60):
+    cutoff = _now_epoch() - max_age_seconds
+    return {
+        key: value
+        for key, value in (memory or {}).items()
+        if isinstance(value, dict)
+        and safe_int(value.get("sent_at"), 0) >= cutoff
+    }
+
+
+def _alert_identity(message, channel):
+    lines = [
+        line.replace("**", "").strip()
+        for line in str(message or "").splitlines()
+        if line.strip()
+    ]
+    headline = lines[0].upper() if lines else "UNKNOWN"
+    product = lines[1].lower() if len(lines) > 1 else "unknown"
+    url_match = re.search(r"https?://\S+", str(message or ""))
+    url = url_match.group(0).rstrip(").,>") if url_match else ""
+
+    if "PRISFALD" in headline or "BEDRE PRIS" in headline:
+        event_type = "PRICE"
+    elif "RESTOCK" in headline:
+        event_type = "RESTOCK"
+    elif "FORUDBESTILLING" in headline or "PREORDER" in headline:
+        event_type = "PREORDER"
+    elif "NYT" in headline:
+        event_type = "NEW"
+    elif "BILLIGSTE BUTIK" in headline:
+        event_type = "SHOP"
+    else:
+        event_type = headline[:80]
+
+    raw = "|".join((channel, event_type, product, url))
+    return hashlib.sha256(raw.encode("utf-8")).hexdigest()[:32], event_type
+
+
+def _price_values_from_change(message):
+    for line in str(message or "").splitlines():
+        if "→" not in line or "kr" not in line.lower():
+            continue
+
+        values = []
+        for raw in re.findall(
+            r"(\d{1,3}(?:\.\d{3})*(?:,\d{1,2})?|\d+(?:,\d{1,2})?)\s*kr",
+            line,
+            flags=re.IGNORECASE,
+        ):
+            try:
+                values.append(float(raw.replace(".", "").replace(",", ".")))
+            except ValueError:
+                continue
+
+        if len(values) >= 2:
+            return values[0], values[-1]
+
+    return None, None
+
+
+def _price_beats_recent_alert(previous, new_price):
+    if not isinstance(previous, dict):
+        return True
+
+    sent_at = safe_int(previous.get("sent_at"), 0)
+    if _now_epoch() - sent_at >= PRICE_ALERT_COOLDOWN_SECONDS:
+        return True
+
+    try:
+        old_alert_price = float(previous.get("price"))
+    except (TypeError, ValueError):
+        return False
+
+    required_improvement = max(
+        PRICE_ALERT_MIN_IMPROVEMENT_DKK,
+        old_alert_price * PRICE_ALERT_MIN_IMPROVEMENT_PCT,
+    )
+    return new_price <= old_alert_price - required_improvement
+
+
+def restock_alert_decision(message):
+    global RESTOCK_ALERT_MEMORY
+    RESTOCK_ALERT_MEMORY = _alert_memory_cleanup(RESTOCK_ALERT_MEMORY)
+    key, event_type = _alert_identity(message, "restock")
+    previous = RESTOCK_ALERT_MEMORY.get(key)
+    now_epoch = _now_epoch()
+
+    if event_type == "PRICE":
+        _, new_price = _price_values_from_change(message)
+        if new_price is None:
+            cooldown = PRICE_ALERT_COOLDOWN_SECONDS
+            if (
+                isinstance(previous, dict)
+                and now_epoch - safe_int(previous.get("sent_at"), 0) < cooldown
+            ):
+                return None
+        elif not _price_beats_recent_alert(previous, new_price):
+            return None
+
+        return key, {"sent_at": now_epoch, "price": new_price}
+
+    cooldown = (
+        RESTOCK_NEW_PRODUCT_COOLDOWN_SECONDS
+        if event_type in ("NEW", "PREORDER")
+        else RESTOCK_DUPLICATE_COOLDOWN_SECONDS
+    )
+    if (
+        isinstance(previous, dict)
+        and now_epoch - safe_int(previous.get("sent_at"), 0) < cooldown
+    ):
+        return None
+
+    return key, {"sent_at": now_epoch}
+
+
+def price_alert_decision(message):
+    global PRICE_ALERT_MEMORY
+    upper = str(message or "").upper()
+
+    # Daily summaries are intentionally not deduplicated here; their own
+    # last_daily_date gate already guarantees one summary per day.
+    if "BEDRE PRIS FUNDET" not in upper and "BILLIGSTE BUTIK ÆNDRET" not in upper:
+        return "", {}
+
+    PRICE_ALERT_MEMORY = _alert_memory_cleanup(PRICE_ALERT_MEMORY)
+    key, event_type = _alert_identity(message, "price")
+    previous = PRICE_ALERT_MEMORY.get(key)
+    now_epoch = _now_epoch()
+
+    if event_type == "PRICE":
+        _, new_price = _price_values_from_change(message)
+        if new_price is None or not _price_beats_recent_alert(previous, new_price):
+            return None
+        return key, {"sent_at": now_epoch, "price": new_price}
+
+    if (
+        isinstance(previous, dict)
+        and now_epoch - safe_int(previous.get("sent_at"), 0) < 6 * 60 * 60
+    ):
+        return None
+
+    return key, {"sent_at": now_epoch}
+
+
+def _source_health_update(state_target, source_key, **updates):
+    health = dict(state_target.get("_source_health") or {})
+    entry = dict(health.get(source_key) or {})
+    entry.update(updates)
+    health[source_key] = entry
+    state_target["_source_health"] = health
+    return entry
+
+
+def _source_failure(state_target, source_key, error, observed_count=None):
+    old_entry = (state_target.get("_source_health") or {}).get(source_key) or {}
+    failures = safe_int(old_entry.get("consecutive_failures"), 0) + 1
+    entry = _source_health_update(
+        state_target,
+        source_key,
+        status="failed",
+        last_attempt=datetime.now(ZoneInfo("UTC")).isoformat(),
+        consecutive_failures=failures,
+        last_error=str(error)[:500],
+        observed_count=observed_count,
+    )
+
+    if failures == 3:
+        send_discord(
+            "⚠️ **SCANNERKILDE HAR FEJLET 3 GANGE**\n"
+            f"**{source_key.upper()}**\n"
+            f"Fejl: {entry['last_error']}"
+        )
+
+
+def fetch_source_products(source_key, old_products, fetcher, state_target):
+    try:
+        products = fetcher()
+    except Exception as error:
+        _source_failure(state_target, source_key, error)
+        raise
+
+    if not isinstance(products, dict):
+        error = RuntimeError("kilden returnerede ikke et produkt-dictionary")
+        _source_failure(state_target, source_key, error)
+        raise error
+
+    new_count = len(products)
+    old_count = len(old_products) if isinstance(old_products, dict) else 0
+    minimum = SOURCE_MIN_PRODUCTS.get(source_key, 1)
+
+    if new_count < minimum:
+        error = RuntimeError(
+            f"mistænkeligt lavt produktantal: {new_count} < {minimum}"
+        )
+        _source_failure(state_target, source_key, error, new_count)
+        raise error
+
+    if (
+        old_count >= minimum
+        and new_count < old_count * (1.0 - SOURCE_MAX_DROP_RATIO)
+    ):
+        error = RuntimeError(
+            f"mistænkeligt produktfald: {old_count} → {new_count}"
+        )
+        _source_failure(state_target, source_key, error, new_count)
+        raise error
+
+    old_health = (state_target.get("_source_health") or {}).get(source_key) or {}
+    was_failed = safe_int(old_health.get("consecutive_failures"), 0) >= 3
+    _source_health_update(
+        state_target,
+        source_key,
+        status="ok",
+        last_attempt=datetime.now(ZoneInfo("UTC")).isoformat(),
+        last_success=datetime.now(ZoneInfo("UTC")).isoformat(),
+        last_count=new_count,
+        observed_count=new_count,
+        consecutive_failures=0,
+        last_error="",
+    )
+
+    if was_failed:
+        send_discord(
+            "✅ **SCANNERKILDE KØRER IGEN**\n"
+            f"**{source_key.upper()}**\n"
+            f"Produkter fundet: {new_count}"
+        )
+
+    return products
         
 
 # ============================================================
@@ -4305,6 +4621,7 @@ def is_relevant_shopify_tcg(product, game):
         "portfolio",
         "playmat",
         "deck box",
+        "deckbox",
         "toploader",
         "top loader",
         "akryl",
@@ -4319,10 +4636,14 @@ def is_relevant_shopify_tcg(product, game):
     is_sealed = any(marker in title for marker in sealed_markers)
     is_accessory = any(marker in title for marker in accessory_markers)
 
-    if is_accessory and not is_sealed:
+    if any(marker in title for marker in ("league night", "draft night")):
         return False
 
-    return True
+    if is_accessory:
+        # Officielle Binder Collections indeholder boosters og er sealed.
+        return "binder" in title and "collection" in title
+
+    return is_sealed
 
 
 def shopify_variant_available(product):
@@ -6903,13 +7224,22 @@ if RUN_ONCE:
 else:
     print(
         f"Tjekker Coolshop + Proshop + BR + Bilka + Føtex + Elgiganten "
-        f"+ PokeHulen + Rogerz + MTGwebshop + Luckbox + Nostalgic + &Cards + Epic Panda "
+        f"+ PokeHulen + Rogerz + MTGwebshop + Luckbox + Spilforsyningen "
+        f"+ Musen & Slottet + Nostalgic + &Cards + Pokecards.dk + Epic Panda "
         f"+ Steffen-O + Next Level Games hvert {CHECK_EVERY}. sekund."
     )
 print()
 
 
 state = load_state()
+
+if isinstance(state, dict):
+    RESTOCK_ALERT_MEMORY = _alert_memory_cleanup(
+        state.get("_restock_alert_memory") or {}
+    )
+    PRICE_ALERT_MEMORY = _alert_memory_cleanup(
+        state.get("_price_alert_memory") or {}
+    )
 
 # Persist the public Elgiganten signed Algolia key between GitHub Action
 # runs. Without this, process-memory cache resets every five minutes.
@@ -7034,6 +7364,9 @@ while state is None:
             "epicpanda": epicpanda,
             "steffeno": steffeno,
             "nextlevel": nextlevel,
+            "_source_health": {},
+            "_restock_alert_memory": RESTOCK_ALERT_MEMORY,
+            "_price_alert_memory": PRICE_ALERT_MEMORY,
             "_elgiganten_key_cache": dict(ELGIGANTEN_KEY_CACHE)
         }
 
@@ -7258,8 +7591,12 @@ while True:
         # -------------------------
 
         try:
-            coolshop = (
-                get_coolshop_products()
+            old_coolshop = state.get("coolshop", {})
+            coolshop = fetch_source_products(
+                "coolshop",
+                old_coolshop,
+                get_coolshop_products,
+                new_state,
             )
 
             pokemon_count = sum(
@@ -7285,10 +7622,7 @@ while True:
             )
 
             process_coolshop_changes(
-                state.get(
-                    "coolshop",
-                    {}
-                ),
+                old_coolshop,
                 coolshop
             )
 
@@ -7311,8 +7645,12 @@ while True:
         # -------------------------
 
         try:
-            proshop = (
-                get_proshop_products()
+            old_proshop = state.get("proshop", {})
+            proshop = fetch_source_products(
+                "proshop",
+                old_proshop,
+                get_proshop_products,
+                new_state,
             )
 
             print(
@@ -7321,10 +7659,7 @@ while True:
             )
 
             process_proshop_changes(
-                state.get(
-                    "proshop",
-                    {}
-                ),
+                old_proshop,
                 proshop
             )
 
@@ -7356,8 +7691,11 @@ while True:
                 {}
             )
 
-            br = get_br_products(
-                old_products=old_br
+            br = fetch_source_products(
+                "br",
+                old_br,
+                lambda: get_br_products(old_products=old_br),
+                new_state,
             )
 
             br_kolding_count = sum(
@@ -7433,9 +7771,14 @@ while True:
                 {}
             )
 
-            bilka = get_salling_products(
+            bilka = fetch_source_products(
                 "bilka",
-                old_products=old_bilka
+                old_bilka,
+                lambda: get_salling_products(
+                    "bilka",
+                    old_products=old_bilka,
+                ),
+                new_state,
             )
 
             bilka_local_counts = count_salling_local_products(
@@ -7499,9 +7842,14 @@ while True:
                 {}
             )
 
-            foetex = get_salling_products(
+            foetex = fetch_source_products(
                 "foetex",
-                old_products=old_foetex
+                old_foetex,
+                lambda: get_salling_products(
+                    "foetex",
+                    old_products=old_foetex,
+                ),
+                new_state,
             )
 
             foetex_local_counts = count_salling_local_products(
@@ -7568,7 +7916,12 @@ while True:
                 {}
             )
 
-            elgiganten = get_elgiganten_products()
+            elgiganten = fetch_source_products(
+                "elgiganten",
+                old_elgiganten,
+                get_elgiganten_products,
+                new_state,
+            )
 
             elgiganten_local_counts = (
                 count_elgiganten_local_products(elgiganten)
@@ -7626,7 +7979,12 @@ while True:
             try:
                 was_initialized = site_key in old_shopify_all
                 old_products = old_shopify_all.get(site_key, {})
-                products = get_shopify_products(site_key)
+                products = fetch_source_products(
+                    site_key,
+                    old_products,
+                    lambda site_key=site_key: get_shopify_products(site_key),
+                    new_state,
+                )
                 counts = count_shopify_products(products)
 
                 print(
@@ -7687,7 +8045,12 @@ while True:
             try:
                 was_initialized = site_key in old_woocommerce_all
                 old_products = old_woocommerce_all.get(site_key, {})
-                products = get_woocommerce_products(site_key)
+                products = fetch_source_products(
+                    site_key,
+                    old_products,
+                    lambda site_key=site_key: get_woocommerce_products(site_key),
+                    new_state,
+                )
                 counts = count_woocommerce_products(products)
 
                 print(
@@ -7747,7 +8110,12 @@ while True:
                 {}
             )
 
-            epicpanda = get_epicpanda_products()
+            epicpanda = fetch_source_products(
+                "epicpanda",
+                old_epicpanda,
+                get_epicpanda_products,
+                new_state,
+            )
             epic_counts = count_epicpanda_products(
                 epicpanda
             )
@@ -7811,7 +8179,12 @@ while True:
                 {}
             )
 
-            steffeno = get_steffeno_products()
+            steffeno = fetch_source_products(
+                "steffeno",
+                old_steffeno,
+                get_steffeno_products,
+                new_state,
+            )
 
             steffeno_counts = count_steffeno_products(
                 steffeno
@@ -7864,7 +8237,12 @@ while True:
         try:
             nextlevel_was_initialized = "nextlevel" in state
             old_nextlevel = state.get("nextlevel", {})
-            current_nextlevel = get_nextlevel_products()
+            current_nextlevel = fetch_source_products(
+                "nextlevel",
+                old_nextlevel,
+                get_nextlevel_products,
+                new_state,
+            )
             price_watch_nextlevel_live = current_nextlevel
             nextlevel_counts = count_nextlevel_products(current_nextlevel)
 
@@ -7951,6 +8329,12 @@ while True:
 
         new_state["_elgiganten_key_cache"] = dict(
             ELGIGANTEN_KEY_CACHE
+        )
+        new_state["_restock_alert_memory"] = _alert_memory_cleanup(
+            RESTOCK_ALERT_MEMORY
+        )
+        new_state["_price_alert_memory"] = _alert_memory_cleanup(
+            PRICE_ALERT_MEMORY
         )
 
         save_state(

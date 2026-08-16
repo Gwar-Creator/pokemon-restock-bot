@@ -78,6 +78,8 @@ jobs:
           PRICE_HISTORY_WEBHOOK_URL: ${{ secrets.PRICE_HISTORY_WEBHOOK_URL }}
           CARDMARKET_TIMEZONE: "Europe/Copenhagen"
           CARDMARKET_DAILY_HOUR: "8"
+          CARDMARKET_MAX_DAILY_REQUESTS: "98"
+          CARDMARKET_ROTATION_DAYS: "3"
         run: |
           if [ -f cardmarket_v16_replay.py ]; then
             python cardmarket_v16_replay.py

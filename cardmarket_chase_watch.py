@@ -27,6 +27,15 @@ WATCH = Path("cardmarket_chase_watchlist.json")
 RESTOCK_STATE = Path("restock_state_v2.json")
 SOURCE = "https://www.tcg-cardmarket-api.com/"
 HISTORY_DAYS = 35
+MAX_DAILY_REQUESTS = max(
+    1,
+    int(os.getenv("CARDMARKET_MAX_DAILY_REQUESTS", "98") or 98),
+)
+MIN_ROTATION_DAYS = max(
+    1,
+    int(os.getenv("CARDMARKET_ROTATION_DAYS", "3") or 3),
+)
+RUN_COVERAGE_TEXT = ""
 
 GAME_COLOR = {"POKÉMON": 0x5865F2, "LORCANA": 0x9B59B6}
 GAME_ICON = {"POKÉMON": "⚡", "LORCANA": "✨"}
@@ -268,6 +277,77 @@ def fetch_cards(watch):
     return output, used, remaining, limit
 
 
+def watch_totals(watch):
+    sets = [
+        set_info
+        for game in watch.get("games", [])
+        for set_info in game.get("sets", [])
+    ]
+    return (
+        len(sets),
+        sum(len(set_info.get("cardIds", [])) for set_info in sets),
+        sum(math.ceil(len(set_info.get("cardIds", [])) / 10) for set_info in sets),
+    )
+
+
+def rotation_watch(watch, current_day):
+    """Select a stable daily slice without ever exceeding the API budget."""
+    indexed_sets = []
+    for game in watch.get("games", []):
+        for set_info in game.get("sets", []):
+            indexed_sets.append((game, set_info))
+
+    total_requests = sum(
+        math.ceil(len(set_info.get("cardIds", [])) / 10)
+        for _, set_info in indexed_sets
+    )
+    rotation_days = max(
+        MIN_ROTATION_DAYS,
+        math.ceil(total_requests / MAX_DAILY_REQUESTS),
+    )
+    bucket = current_day.toordinal() % rotation_days
+    selected = [
+        (game, set_info)
+        for index, (game, set_info) in enumerate(indexed_sets)
+        if index % rotation_days == bucket
+    ]
+
+    selected_requests = sum(
+        math.ceil(len(set_info.get("cardIds", [])) / 10)
+        for _, set_info in selected
+    )
+    if selected_requests > MAX_DAILY_REQUESTS:
+        raise RuntimeError(
+            "Cardmarket-rotation overstiger request-budgettet: "
+            f"{selected_requests}/{MAX_DAILY_REQUESTS}"
+        )
+
+    selected_by_game = {}
+    for game, set_info in selected:
+        game_key = (game.get("game"), game.get("slug"))
+        selected_by_game.setdefault(game_key, []).append(set_info)
+
+    rotated = {
+        key: value
+        for key, value in watch.items()
+        if key != "games"
+    }
+    rotated["games"] = [
+        {"game": game_name, "slug": slug, "sets": sets}
+        for (game_name, slug), sets in selected_by_game.items()
+    ]
+    return rotated, rotation_days, bucket
+
+
+def watched_card_keys(watch):
+    return {
+        game.get("game", "") + "|" + str(card_id)
+        for game in watch.get("games", [])
+        for set_info in game.get("sets", [])
+        for card_id in set_info.get("cardIds", [])
+    }
+
+
 def history_change(history, days, current_market, current_day):
     if not history or current_market is None:
         return None
@@ -289,9 +369,14 @@ def history_change(history, days, current_market, current_day):
     return pct(current_market, baseline)
 
 
-def add_history(cards, old, stamp, current_day):
+def add_history(cards, old, stamp, current_day, allowed_keys=None):
     previous = old.get("cards", {}) if isinstance(old, dict) else {}
-    next_cards = {}
+    allowed_keys = set(allowed_keys or [])
+    next_cards = {
+        key: {**value, "daily": None}
+        for key, value in previous.items()
+        if isinstance(value, dict) and (not allowed_keys or key in allowed_keys)
+    }
     lows = []
 
     for card in cards:
@@ -584,7 +669,8 @@ def quiet_summary(game, rows, summaries, used):
     hottest = sorted(summaries, key=lambda row: row["score"], reverse=True)[:3]
     text = (
         f"**{len({row['set'] for row in rows})} sæt** · **{len(rows)} chase cards** · "
-        f"**{used} API requests i alt**\n\n"
+        f"**{used} API requests i dag**\n"
+        f"{RUN_COVERAGE_TEXT}\n\n"
         "✅ Ingen større prisbevægelser, nye lows eller stærke opportunity-signaler i dag.\n\n"
         "**Hottest lige nu**\n\n"
         + "\n\n".join(set_block(row, index) for index, row in enumerate(hottest, 1))
@@ -635,7 +721,8 @@ def discord_market_pulse(cards, game, summaries, opportunities, first_scores, lo
         f"🔥 HOT sets: **{hot_count}**\n"
         f"💎 Stærke sealed-signaler: **{len(strong_opportunities)}**\n"
         f"🏷️ Nye observerede lows: **{len(game_lows)}**\n"
-        f"📊 API: **{used} requests i alt**\n\n"
+        f"📊 API: **{used} requests i dag**\n"
+        f"{RUN_COVERAGE_TEXT}\n\n"
         "*Heat Score kombinerer 7d/30d momentum, breadth, Top-3 momentum og kortsigtet acceleration.*"
     )
 
@@ -822,12 +909,13 @@ def workbook(cards, summaries, opportunities, stamp, used, remaining):
         ("Source", SOURCE),
         ("API requests", used),
         ("Rate remaining", remaining),
-        ("Selection", "20 recent mainstream Pokémon sets + all 13 mainstream Lorcana booster sets"),
+        ("Selection", "Top 20 cards from every tracked English Pokémon and Disney Lorcana set"),
+        ("Rotation", RUN_COVERAGE_TEXT),
         ("Heat Score", "0-100 score using 7d/30d momentum, breadth, Top-3 momentum and 1d/7d acceleration."),
         ("Opportunity", "Combines Heat Score with current Danish sealed price distance from this bot's observed historical low."),
         ("Observed Low", "Lowest API Low observed by this bot; shipping excluded."),
         ("History", f"Stores up to {HISTORY_DAYS} daily observations per tracked card."),
-        ("Top 20 method", "Seeded from Cardmarket snapshot 2026-08-07; reranked daily inside the tracked 20. Discovery outside the seed is not automated yet."),
+        ("Top 20 method", "Seeded from Cardmarket snapshot 2026-08-07. Every set is refreshed within the configured multi-day API rotation."),
         ("Limitation", "Aggregate Cardmarket data only; no seller country/condition/sales filters."),
     ]
     for row_index, (label, value) in enumerate(info, 1):
@@ -1008,6 +1096,8 @@ def current_score_state(summaries):
 
 
 def main():
+    global RUN_COVERAGE_TEXT
+
     if not KEY:
         print("CARD MARKET: TCG_CARDMARKET_API_KEY mangler")
         return
@@ -1030,24 +1120,32 @@ def main():
     save(STATE, old)
 
     watch = load(WATCH, {})
-    planned = sum(
-        len(set_info["cardIds"])
-        for game in watch.get("games", [])
-        for set_info in game.get("sets", [])
+    total_sets, total_cards, total_requests = watch_totals(watch)
+    todays_watch, rotation_days, rotation_bucket = rotation_watch(watch, today)
+    planned_sets, planned, planned_requests = watch_totals(todays_watch)
+    RUN_COVERAGE_TEXT = (
+        f"🔄 **{rotation_days}-dages rotation:** "
+        f"{planned_sets}/{total_sets} sæt og {planned}/{total_cards} kort opdateret i dag"
     )
-    planned_requests = sum(
-        math.ceil(len(set_info["cardIds"]) / 10)
-        for game in watch.get("games", [])
-        for set_info in game.get("sets", [])
+    print(
+        "CARD MARKET V1.7: "
+        f"{total_cards} kort / {total_sets} sæt i alt | "
+        f"dagens bucket {rotation_bucket + 1}/{rotation_days}: "
+        f"{planned} kort / {planned_requests} requests"
     )
-    print(f"CARD MARKET V1.6: {planned} kort / {planned_requests} requests")
 
-    cards, used, remaining, limit = fetch_cards(watch)
+    cards, used, remaining, limit = fetch_cards(todays_watch)
     if len(cards) < planned * 0.8:
         raise RuntimeError(f"Kun {len(cards)}/{planned} kort hentet; state gemmes ikke")
 
     stamp = now.isoformat()
-    next_cards, lows = add_history(cards, old, stamp, today)
+    next_cards, lows = add_history(
+        cards,
+        old,
+        stamp,
+        today,
+        allowed_keys=watched_card_keys(watch),
+    )
     ranked_cards = ranked(list(next_cards.values()))
 
     old_scores = old.get("set_scores", {}) if isinstance(old.get("set_scores", {}), dict) else {}
@@ -1097,6 +1195,12 @@ def main():
             "requests_used": used,
             "rate_limit": limit,
             "rate_remaining": remaining,
+            "rotation_days": rotation_days,
+            "rotation_bucket": rotation_bucket,
+            "tracked_sets": total_sets,
+            "tracked_cards": total_cards,
+            "sets_refreshed": planned_sets,
+            "cards_refreshed": len(cards),
             "set_scores": current_score_state(summaries),
             "set_history": set_history,
             "cards": next_cards,
