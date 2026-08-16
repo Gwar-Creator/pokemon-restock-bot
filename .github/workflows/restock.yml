@@ -35,6 +35,9 @@ jobs:
           if [ -f patch_v17_pricewatch.py ]; then
             python patch_v17_pricewatch.py
           fi
+          if [ -f patch_v17_finalize.py ]; then
+            python patch_v17_finalize.py
+          fi
 
       - name: Validate Python
         run: |
