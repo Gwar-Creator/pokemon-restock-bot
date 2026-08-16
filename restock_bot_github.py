@@ -1,4 +1,9 @@
 import requests
+
+try:
+    from curl_cffi import requests as curl_requests
+except ImportError:
+    curl_requests = None
 import json
 import time
 import os
@@ -325,35 +330,99 @@ BROWSER_HEADERS = {
 # DISCORD
 # =========================================================
 
-def send_discord(message):
+def _discord_embed_color(message, kind="restock"):
+    upper = (message or "").upper()
+
+    if "FORUDBESTILLING" in upper or "PREORDER" in upper:
+        return 0xFEE75C
+
+    if (
+        "BEDRE PRIS" in upper
+        or "PRISFALD" in upper
+        or "RESTOCK" in upper
+    ):
+        return 0x57F287
+
+    if "BEDSTE PRIS ÆNDRET" in upper:
+        return 0xF0B232
+
+    if "NYT" in upper or "DAGENS BEDSTE PRISER" in upper:
+        return 0x5865F2
+
+    return 0x5865F2 if kind == "restock" else 0x57F287
+
+
+def _discord_embed_payload(message, kind="restock"):
+    lines = (message or "").splitlines()
+
+    if lines:
+        title = lines[0].replace("**", "").strip()
+        description = "\n".join(lines[1:]).strip()
+    else:
+        title = "MasterBot"
+        description = ""
+
+    if not title:
+        title = "MasterBot"
+
+    # Discord limits: title 256, description 4096.
+    title = title[:256]
+    description = (description or " ")[:4096]
+
+    footer = (
+        "MasterBot · Price Watch"
+        if kind == "price"
+        else "MasterBot · Restock Watch"
+    )
+
+    return {
+        "username": "MasterBot",
+        "allowed_mentions": {"parse": []},
+        "embeds": [
+            {
+                "title": title,
+                "description": description,
+                "color": _discord_embed_color(message, kind),
+                "footer": {"text": footer},
+            }
+        ],
+    }
+
+
+def _post_discord(webhook_url, message, kind):
     response = requests.post(
-        WEBHOOK_URL,
-        json={"content": message},
+        webhook_url,
+        json=_discord_embed_payload(message, kind),
         headers={
-            "User-Agent": "Pokemon-Lorcana-Restock-Bot/1.0"
+            "User-Agent": "Pokemon-Lorcana-MasterBot/1.3"
         },
-        timeout=20
+        timeout=20,
     )
 
     response.raise_for_status()
+
+
+def send_discord(message):
+    _post_discord(
+        WEBHOOK_URL,
+        message,
+        "restock",
+    )
 
 
 def send_price_watch(message):
     if not PRICE_WATCH_WEBHOOK_URL:
-        print("PRICE_WATCH_WEBHOOK_URL mangler - springer Price Watch-besked over.")
+        print(
+            "PRICE_WATCH_WEBHOOK_URL mangler - "
+            "springer Price Watch-besked over."
+        )
         return
 
-    response = requests.post(
+    _post_discord(
         PRICE_WATCH_WEBHOOK_URL,
-        json={"content": message},
-        headers={
-            "User-Agent": "Pokemon-Lorcana-Price-Watch/1.0"
-        },
-        timeout=20
+        message,
+        "price",
     )
-
-    response.raise_for_status()
-
 
 
 # =========================================================
@@ -886,7 +955,7 @@ def collect_price_watch_candidates(
 
 
 # =========================================================
-# PRICE WATCH V1
+# PRICE WATCH V3
 # =========================================================
 
 PRICE_WATCH_TYPE_ORDER = (
@@ -1285,7 +1354,7 @@ def process_price_watch(
     )
 
     print(
-        f"PRICE WATCH V1: "
+        f"PRICE WATCH V3: "
         f"{len(candidates)} friske prislinjer | "
         f"{len(comparable_groups)} produkter hos mindst 2 butikker | "
         f"{len(fresh_sources)} friske kilder"
@@ -1646,13 +1715,99 @@ def clean_proshop_name(href):
 
 
 def get_proshop_products():
-    response = requests.get(
-        PROSHOP_URL,
-        headers=BROWSER_HEADERS,
-        timeout=20
-    )
+    headers = {
+        **BROWSER_HEADERS,
+        "Accept": (
+            "text/html,application/xhtml+xml,application/xml;q=0.9,"
+            "image/avif,image/webp,*/*;q=0.8"
+        ),
+        "Accept-Language": "da-DK,da;q=0.9,en-US;q=0.7,en;q=0.6",
+        "Cache-Control": "no-cache",
+        "Pragma": "no-cache",
+        "Referer": PROSHOP_BASE + "/",
+        "Upgrade-Insecure-Requests": "1",
+    }
 
-    response.raise_for_status()
+    response = None
+    last_error = None
+
+    # GitHub-hosted runners are sometimes blocked when using the plain
+    # requests TLS fingerprint. curl_cffi impersonates a normal Chrome
+    # browser while keeping the scan rate unchanged.
+    if curl_requests is not None:
+        try:
+            session = curl_requests.Session(
+                impersonate="chrome"
+            )
+
+            try:
+                session.get(
+                    PROSHOP_BASE + "/",
+                    headers=headers,
+                    timeout=20,
+                )
+            except Exception:
+                pass
+
+            for attempt in range(3):
+                candidate = session.get(
+                    PROSHOP_URL,
+                    headers=headers,
+                    timeout=30,
+                )
+
+                if candidate.status_code == 200:
+                    response = candidate
+                    break
+
+                last_error = RuntimeError(
+                    f"Proshop HTTP {candidate.status_code}"
+                )
+
+                if candidate.status_code not in (403, 429):
+                    candidate.raise_for_status()
+
+                time.sleep(2 + attempt * 2)
+
+        except Exception as error:
+            last_error = error
+
+    # Conservative fallback if curl_cffi is unavailable or Proshop changes.
+    if response is None:
+        session = requests.Session()
+        session.headers.update(headers)
+
+        try:
+            session.get(
+                PROSHOP_BASE + "/",
+                timeout=20,
+            )
+        except requests.RequestException:
+            pass
+
+        for attempt in range(3):
+            candidate = session.get(
+                PROSHOP_URL,
+                timeout=30,
+            )
+
+            if candidate.status_code == 200:
+                response = candidate
+                break
+
+            last_error = RuntimeError(
+                f"Proshop HTTP {candidate.status_code}"
+            )
+
+            if candidate.status_code not in (403, 429):
+                candidate.raise_for_status()
+
+            time.sleep(3 + attempt * 3)
+
+    if response is None:
+        if last_error:
+            raise last_error
+        raise RuntimeError("Proshop kunne ikke hentes efter retries")
 
     soup = BeautifulSoup(
         response.text,
@@ -1689,7 +1844,7 @@ def get_proshop_products():
 
         product_id = match.group(1)
 
-        text = card.get_text(
+        text_card = card.get_text(
             " ",
             strip=True
         )
@@ -1699,18 +1854,15 @@ def get_proshop_products():
         )
 
         price = parse_price(
-            text
+            text_card
         )
 
-        if "På lager" in text:
+        if "På lager" in text_card:
             stock = "PÅ LAGER"
-
-        elif "Fjernlager" in text:
+        elif "Fjernlager" in text_card:
             stock = "FJERNLAGER"
-
-        elif "Bestillingsvare" in text:
+        elif "Bestillingsvare" in text_card:
             stock = "BESTILLINGSVARE"
-
         else:
             stock = "UKENDT"
 
@@ -1725,6 +1877,11 @@ def get_proshop_products():
             "stock": stock,
             "url": url
         }
+
+    if not products:
+        raise RuntimeError(
+            "Proshop svarede 200, men produktlisten kunne ikke parses"
+        )
 
     return products
 
@@ -2660,28 +2817,63 @@ def get_elgiganten_signed_key(force=False):
     headers = {
         **BROWSER_HEADERS,
         "Accept": "application/json, text/plain, */*",
+        "Accept-Language": "da-DK,da;q=0.9,en;q=0.8",
         "Referer": ELGIGANTEN_HOME
     }
 
-    response = session.get(
-        ELGIGANTEN_SIGNED_KEY_URL,
-        headers=headers,
-        timeout=20
-    )
+    response = None
 
-    # Hvis direkte kald bliver afvist, etabler browser-session først.
-    if response.status_code in (401, 403):
-        session.get(
-            ELGIGANTEN_HOME,
-            headers=BROWSER_HEADERS,
-            timeout=20
-        )
-
+    for attempt in range(3):
         response = session.get(
             ELGIGANTEN_SIGNED_KEY_URL,
             headers=headers,
             timeout=20
         )
+
+        if response.status_code in (401, 403):
+            try:
+                session.get(
+                    ELGIGANTEN_HOME,
+                    headers=BROWSER_HEADERS,
+                    timeout=20
+                )
+            except requests.RequestException:
+                pass
+
+            response = session.get(
+                ELGIGANTEN_SIGNED_KEY_URL,
+                headers=headers,
+                timeout=20
+            )
+
+        if response.status_code != 429:
+            break
+
+        retry_after = safe_int(
+            response.headers.get("Retry-After"),
+            0
+        )
+
+        wait_seconds = retry_after or (5 * (attempt + 1))
+        wait_seconds = max(3, min(wait_seconds, 30))
+
+        print(
+            f"ELGIGANTEN signed-key rate limit (429) - "
+            f"retry om {wait_seconds}s"
+        )
+        time.sleep(wait_seconds)
+
+    if response is None:
+        raise RuntimeError("Elgiganten signed-api-key gav intet svar")
+
+    # If the endpoint itself is rate limited but we have a recently cached
+    # public signed key, prefer trying it instead of dropping the source.
+    if response.status_code == 429 and cached_key:
+        if valid_until == 0 or time.time() < valid_until + 300:
+            print(
+                "ELGIGANTEN: bruger cached signed key under 429 rate limit."
+            )
+            return cached_key
 
     response.raise_for_status()
 
@@ -5614,6 +5806,24 @@ print()
 
 state = load_state()
 
+# Persist the public Elgiganten signed Algolia key between GitHub Action
+# runs. Without this, process-memory cache resets every five minutes.
+if isinstance(state, dict):
+    saved_elgiganten_cache = state.get(
+        "_elgiganten_key_cache"
+    )
+
+    if isinstance(saved_elgiganten_cache, dict):
+        cached_api_key = saved_elgiganten_cache.get("api_key")
+        cached_valid_until = safe_int(
+            saved_elgiganten_cache.get("valid_until"),
+            0
+        )
+
+        if cached_api_key:
+            ELGIGANTEN_KEY_CACHE["api_key"] = cached_api_key
+            ELGIGANTEN_KEY_CACHE["valid_until"] = cached_valid_until
+
 
 # =========================================================
 # FØRSTE KØRSEL
@@ -5718,7 +5928,8 @@ while state is None:
             "woocommerce": woocommerce,
             "epicpanda": epicpanda,
             "steffeno": steffeno,
-            "nextlevel": nextlevel
+            "nextlevel": nextlevel,
+            "_elgiganten_key_cache": dict(ELGIGANTEN_KEY_CACHE)
         }
 
         save_state(
@@ -6601,7 +6812,7 @@ while True:
             )
 
         # -------------------------
-        # PRICE WATCH V1
+        # PRICE WATCH V3
         # -------------------------
 
         price_watch_current_state = dict(
@@ -6622,6 +6833,10 @@ while True:
         # -------------------------
         # GEM STATE
         # -------------------------
+
+        new_state["_elgiganten_key_cache"] = dict(
+            ELGIGANTEN_KEY_CACHE
+        )
 
         save_state(
             new_state
