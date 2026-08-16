@@ -164,12 +164,13 @@ def workbook(cards,stamp,used,remaining):
 def main():
     if not KEY:print("CARD MARKET: TCG_CARDMARKET_API_KEY mangler");return
     now=datetime.now(ZoneInfo(TZ));today=now.date().isoformat();old=load(STATE,{})
-    if not FORCE and (now.hour<HOUR or old.get("last_run_date")==today):print("CARD MARKET: ikke tid til ny daglig kørsel");return
+    if not FORCE and (now.hour<HOUR or old.get("last_run_date")==today or old.get("last_attempt_date")==today):print("CARD MARKET: ikke tid til ny daglig kørsel");return
+    old["last_attempt_date"]=today;old["last_attempt_at"]=now.isoformat();save(STATE,old)
     watch=load(WATCH,{});planned=sum(len(s["cardIds"]) for g in watch.get("games",[]) for s in g.get("sets",[]));print(f"CARD MARKET V1: {planned} kort / {math.ceil(planned/10)} requests")
     cards,used,remaining,limit=fetch_cards(watch)
     if len(cards)<planned*.8:raise RuntimeError(f"Kun {len(cards)}/{planned} kort hentet; state gemmes ikke")
     stamp=now.isoformat();nextcards,lows=add_history(cards,old,stamp);file,allr=workbook(list(nextcards.values()),stamp,used,remaining);first=not bool(old.get("cards"))
     discord(allr,"POKÉMON",first,lows,used);discord(allr,"LORCANA",first,lows,used);post(content="📎 **Card Market Watch · fuld Excel**\nTop 20 pr. sæt med Low, Trend, 1d/7d/30d, foil-data, movers og observeret historik.",file=file)
-    save(STATE,{"version":1,"last_run_date":today,"last_run_at":stamp,"requests_used":used,"rate_limit":limit,"rate_remaining":remaining,"cards":nextcards});print(f"CARD MARKET færdig: {len(cards)} kort | {used} requests | remaining={remaining}")
+    save(STATE,{"version":1,"last_attempt_date":today,"last_attempt_at":stamp,"last_run_date":today,"last_run_at":stamp,"requests_used":used,"rate_limit":limit,"rate_remaining":remaining,"cards":nextcards});print(f"CARD MARKET færdig: {len(cards)} kort | {used} requests | remaining={remaining}")
 
 if __name__=="__main__":main()
