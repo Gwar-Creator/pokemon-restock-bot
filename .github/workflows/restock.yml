@@ -34,6 +34,9 @@ jobs:
         run: |
           python -m py_compile restock_bot_github.py
           python -m py_compile cardmarket_chase_watch.py
+          if [ -f cardmarket_v16_replay.py ]; then
+            python -m py_compile cardmarket_v16_replay.py
+          fi
 
       - name: Run one restock scan
         env:
@@ -51,7 +54,11 @@ jobs:
           PRICE_HISTORY_WEBHOOK_URL: ${{ secrets.PRICE_HISTORY_WEBHOOK_URL }}
           CARDMARKET_TIMEZONE: "Europe/Copenhagen"
           CARDMARKET_DAILY_HOUR: "8"
-        run: python cardmarket_chase_watch.py
+        run: |
+          if [ -f cardmarket_v16_replay.py ]; then
+            python cardmarket_v16_replay.py
+          fi
+          python cardmarket_chase_watch.py
 
       - name: Save updated state
         run: |
