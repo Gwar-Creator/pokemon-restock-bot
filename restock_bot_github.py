@@ -165,6 +165,10 @@ ELGIGANTEN_BASE = "https://www.elgiganten.dk"
 ELGIGANTEN_SIGNED_KEY_URL = (
     "https://www.elgiganten.dk/api/algolia/signed-api-key"
 )
+ELGIGANTEN_CATEGORY_URL = (
+    "https://www.elgiganten.dk/sport-fritid-hobby/"
+    "samleobjekter-merchandise/samlekort/pokemon-kort-tcg"
+)
 ELGIGANTEN_ALGOLIA_APP_ID = "Z0FL7R8UBH"
 ELGIGANTEN_ALGOLIA_INDEX = "commerce_b2c_OCDKELG"
 ELGIGANTEN_KOLDING_STORE_ID = "3003"
@@ -2721,6 +2725,66 @@ def clean_proshop_name(href):
     return slug
 
 
+def _parse_proshop_products(response):
+    soup = BeautifulSoup(response.text, "html.parser")
+    products = {}
+
+    cards = soup.select("li.site-productlist-item")
+
+    for card in cards:
+        link = card.find(
+            "a",
+            href=re.compile(
+                r"/Pokemon/[^?#]+/\d+(?:[?#].*)?$",
+                re.IGNORECASE,
+            ),
+        )
+        if not link:
+            continue
+
+        href = link["href"]
+        match = re.search(r"/(\d+)(?:[?#].*)?$", href)
+        if not match:
+            continue
+
+        product_id = match.group(1)
+        text_card = card.get_text(" ", strip=True)
+        name = clean_proshop_name(href)
+
+        # /Pokemon is a broad fallback with figures, games etc. Keep only
+        # trading-card-related rows when that route is used.
+        tcg_text = (name + " " + text_card).lower()
+        tcg_markers = (
+            " tcg ", "tcg ", " tcg", "booster", "elite trainer",
+            "battle deck", "world championships deck", "samlekort",
+            "poké ball tin", "poke ball tin", "premium collection",
+            "illustration collection", "trainer box", "trainer toolkit",
+            "portfolio", "card game",
+        )
+        if not any(marker in tcg_text for marker in tcg_markers):
+            continue
+
+        price = parse_price(text_card)
+
+        if "På lager" in text_card:
+            stock = "PÅ LAGER"
+        elif "Fjernlager" in text_card:
+            stock = "FJERNLAGER"
+        elif "Bestillingsvare" in text_card or "Bestilt" in text_card:
+            stock = "BESTILLINGSVARE"
+        else:
+            stock = "UKENDT"
+
+        products[product_id] = {
+            "name": name,
+            "price": price,
+            "stock": stock,
+            "url": urljoin(PROSHOP_BASE, href),
+        }
+
+    return products
+
+
 def get_proshop_products():
     headers = {
         **BROWSER_HEADERS,
@@ -2729,168 +2793,68 @@ def get_proshop_products():
             "image/avif,image/webp,*/*;q=0.8"
         ),
         "Accept-Language": "da-DK,da;q=0.9,en-US;q=0.7,en;q=0.6",
-        "Cache-Control": "no-cache",
-        "Pragma": "no-cache",
         "Referer": PROSHOP_BASE + "/",
         "Upgrade-Insecure-Requests": "1",
     }
 
-    response = None
-    last_error = None
+    urls = [
+        (PROSHOP_URL, "pokemon-kort"),
+        (PROSHOP_BASE + "/Pokemon", "Pokemon fallback"),
+    ]
+    errors = []
 
-    # GitHub-hosted runners are sometimes blocked when using the plain
-    # requests TLS fingerprint. curl_cffi impersonates a normal Chrome
-    # browser while keeping the scan rate unchanged.
+    # Prefer Chrome TLS/browser fingerprint. Do not immediately repeat the
+    # same 403 three times; try the second official route instead.
     if curl_requests is not None:
         try:
-            session = curl_requests.Session(
-                impersonate="chrome"
-            )
+            session = curl_requests.Session(impersonate="chrome")
+            for url, label in urls:
+                try:
+                    response = session.get(url, headers=headers, timeout=25)
+                except Exception as error:
+                    errors.append(f"{label}: {error}")
+                    continue
 
-            try:
-                session.get(
-                    PROSHOP_BASE + "/",
-                    headers=headers,
-                    timeout=20,
-                )
-            except Exception:
-                pass
+                if response.status_code != 200:
+                    errors.append(f"{label}: HTTP {response.status_code}")
+                    continue
 
-            for attempt in range(3):
-                candidate = session.get(
-                    PROSHOP_URL,
-                    headers=headers,
-                    timeout=30,
-                )
+                products = _parse_proshop_products(response)
+                if products:
+                    if url != PROSHOP_URL:
+                        print(
+                            f"PROSHOP: primær route blokeret; bruger {label} "
+                            f"({len(products)} TCG-produkter)"
+                        )
+                    return products
 
-                if candidate.status_code == 200:
-                    response = candidate
-                    break
-
-                last_error = RuntimeError(
-                    f"Proshop HTTP {candidate.status_code}"
-                )
-
-                if candidate.status_code not in (403, 429):
-                    candidate.raise_for_status()
-
-                time.sleep(2 + attempt * 2)
-
+                errors.append(f"{label}: 200 men ingen TCG-produkter parsed")
         except Exception as error:
-            last_error = error
+            errors.append(f"curl_cffi: {error}")
 
-    # Conservative fallback if curl_cffi is unavailable or Proshop changes.
-    if response is None:
+    # Plain requests is only a fallback when curl_cffi is unavailable or
+    # failed unexpectedly. One request per route, no sleep/retry storm.
+    if curl_requests is None:
         session = requests.Session()
         session.headers.update(headers)
+        for url, label in urls:
+            try:
+                response = session.get(url, timeout=25)
+            except requests.RequestException as error:
+                errors.append(f"{label}: {error}")
+                continue
 
-        try:
-            session.get(
-                PROSHOP_BASE + "/",
-                timeout=20,
-            )
-        except requests.RequestException:
-            pass
+            if response.status_code != 200:
+                errors.append(f"{label}: HTTP {response.status_code}")
+                continue
 
-        for attempt in range(3):
-            candidate = session.get(
-                PROSHOP_URL,
-                timeout=30,
-            )
+            products = _parse_proshop_products(response)
+            if products:
+                return products
+            errors.append(f"{label}: 200 men ingen TCG-produkter parsed")
 
-            if candidate.status_code == 200:
-                response = candidate
-                break
-
-            last_error = RuntimeError(
-                f"Proshop HTTP {candidate.status_code}"
-            )
-
-            if candidate.status_code not in (403, 429):
-                candidate.raise_for_status()
-
-            time.sleep(3 + attempt * 3)
-
-    if response is None:
-        if last_error:
-            raise last_error
-        raise RuntimeError("Proshop kunne ikke hentes efter retries")
-
-    soup = BeautifulSoup(
-        response.text,
-        "html.parser"
-    )
-
-    products = {}
-
-    cards = soup.select(
-        "li.site-productlist-item"
-    )
-
-    for card in cards:
-        link = card.find(
-            "a",
-            href=re.compile(
-                r"/Pokemon/[^?#]+/\d+(?:[?#].*)?$",
-                re.IGNORECASE
-            )
-        )
-
-        if not link:
-            continue
-
-        href = link["href"]
-
-        match = re.search(
-            r"/(\d+)(?:[?#].*)?$",
-            href
-        )
-
-        if not match:
-            continue
-
-        product_id = match.group(1)
-
-        text_card = card.get_text(
-            " ",
-            strip=True
-        )
-
-        name = clean_proshop_name(
-            href
-        )
-
-        price = parse_price(
-            text_card
-        )
-
-        if "På lager" in text_card:
-            stock = "PÅ LAGER"
-        elif "Fjernlager" in text_card:
-            stock = "FJERNLAGER"
-        elif "Bestillingsvare" in text_card:
-            stock = "BESTILLINGSVARE"
-        else:
-            stock = "UKENDT"
-
-        url = urljoin(
-            PROSHOP_BASE,
-            href
-        )
-
-        products[product_id] = {
-            "name": name,
-            "price": price,
-            "stock": stock,
-            "url": url
-        }
-
-    if not products:
-        raise RuntimeError(
-            "Proshop svarede 200, men produktlisten kunne ikke parses"
-        )
-
-    return products
+    short = "; ".join(errors[-4:]) if errors else "ukendt fejl"
+    raise RuntimeError(f"Proshop utilgængelig fra GitHub runner ({short})")
 
 
 # =========================================================
@@ -3807,95 +3771,80 @@ def get_elgiganten_key_valid_until(api_key):
 
 def get_elgiganten_signed_key(force=False):
     cached_key = ELGIGANTEN_KEY_CACHE.get("api_key")
-    valid_until = safe_int(
-        ELGIGANTEN_KEY_CACHE.get("valid_until"),
-        0
+    retry_after_epoch = safe_int(
+        ELGIGANTEN_KEY_CACHE.get("retry_after"),
+        0,
     )
 
-    if (
-        not force
-        and cached_key
-        and (valid_until == 0 or time.time() < valid_until - 120)
-    ):
+    # Let Algolia be the authority on whether the signed key still works.
+    # This avoids refreshing a usable key simply because our decoded expiry
+    # estimate is conservative.
+    if cached_key and not force:
         return cached_key
 
-    session = requests.Session()
+    if not force and retry_after_epoch and time.time() < retry_after_epoch:
+        remaining = max(1, int(retry_after_epoch - time.time()))
+        raise RuntimeError(
+            f"Elgiganten signed-key cooldown aktiv ({remaining}s tilbage)"
+        )
 
     headers = {
         **BROWSER_HEADERS,
         "Accept": "application/json, text/plain, */*",
         "Accept-Language": "da-DK,da;q=0.9,en;q=0.8",
-        "Referer": ELGIGANTEN_HOME
+        "Referer": ELGIGANTEN_CATEGORY_URL,
+        "Origin": ELGIGANTEN_BASE,
     }
 
-    response = None
+    if curl_requests is not None:
+        session = curl_requests.Session(impersonate="chrome")
+    else:
+        session = requests.Session()
 
-    for attempt in range(3):
-        response = session.get(
-            ELGIGANTEN_SIGNED_KEY_URL,
-            headers=headers,
-            timeout=20
+    # Warm the exact public category route first. Elgiganten documents an
+    # algolia-refresh-nonce cookie used for secure search-key rotation; using
+    # one browser session lets necessary cookies flow automatically.
+    try:
+        session.get(
+            ELGIGANTEN_CATEGORY_URL,
+            headers={
+                **BROWSER_HEADERS,
+                "Accept-Language": "da-DK,da;q=0.9,en;q=0.8",
+            },
+            timeout=25,
         )
+    except Exception:
+        pass
 
-        if response.status_code in (401, 403):
-            try:
-                session.get(
-                    ELGIGANTEN_HOME,
-                    headers=BROWSER_HEADERS,
-                    timeout=20
-                )
-            except requests.RequestException:
-                pass
+    response = session.get(
+        ELGIGANTEN_SIGNED_KEY_URL,
+        headers=headers,
+        timeout=20,
+    )
 
-            response = session.get(
-                ELGIGANTEN_SIGNED_KEY_URL,
-                headers=headers,
-                timeout=20
-            )
-
-        if response.status_code != 429:
-            break
-
-        retry_after = safe_int(
-            response.headers.get("Retry-After"),
-            0
-        )
-
-        wait_seconds = retry_after or (5 * (attempt + 1))
-        wait_seconds = max(3, min(wait_seconds, 30))
-
+    if response.status_code == 429:
+        retry_after = safe_int(response.headers.get("Retry-After"), 0)
+        # If the server gives no explicit window, give it 30 minutes. This is
+        # far healthier than three immediate retries every five minutes.
+        cooldown = retry_after if retry_after > 0 else 1800
+        cooldown = max(300, min(cooldown, 21600))
+        ELGIGANTEN_KEY_CACHE["retry_after"] = int(time.time() + cooldown)
         print(
-            f"ELGIGANTEN signed-key rate limit (429) - "
-            f"retry om {wait_seconds}s"
+            f"ELGIGANTEN signed-key 429 - cooldown {cooldown}s; "
+            "ingen immediate retries"
         )
-        time.sleep(wait_seconds)
-
-    if response is None:
-        raise RuntimeError("Elgiganten signed-api-key gav intet svar")
-
-    # If the endpoint itself is rate limited but we have a recently cached
-    # public signed key, prefer trying it instead of dropping the source.
-    if response.status_code == 429 and cached_key:
-        if valid_until == 0 or time.time() < valid_until + 300:
-            print(
-                "ELGIGANTEN: bruger cached signed key under 429 rate limit."
-            )
-            return cached_key
+        response.raise_for_status()
 
     response.raise_for_status()
 
     data = response.json()
     api_key = data.get("apiKey")
-
     if not api_key:
-        raise RuntimeError(
-            "Elgiganten signed-api-key svarede uden apiKey."
-        )
+        raise RuntimeError("Elgiganten signed-api-key svarede uden apiKey.")
 
     ELGIGANTEN_KEY_CACHE["api_key"] = api_key
-    ELGIGANTEN_KEY_CACHE["valid_until"] = (
-        get_elgiganten_key_valid_until(api_key)
-    )
+    ELGIGANTEN_KEY_CACHE["valid_until"] = get_elgiganten_key_valid_until(api_key)
+    ELGIGANTEN_KEY_CACHE["retry_after"] = 0
 
     return api_key
 
