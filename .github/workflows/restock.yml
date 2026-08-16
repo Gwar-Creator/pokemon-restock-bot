@@ -41,6 +41,9 @@ jobs:
           if [ -f patch_v18_no_price_rises.py ]; then
             python patch_v18_no_price_rises.py
           fi
+          if [ -f patch_v19_sources.py ]; then
+            python patch_v19_sources.py
+          fi
 
       - name: Validate Python
         run: |
