@@ -57,4 +57,22 @@ jobs:
 
           git add -A
           git commit -m "Apply V1.3 Discord and source resilience"
-          git push
+
+          for attempt in 1 2 3; do
+            echo "Push attempt $attempt/3"
+            git fetch origin main
+
+            if git rebase origin/main && git push origin HEAD:main; then
+              echo "State pushed successfully."
+              exit 0
+            fi
+
+            git rebase --abort || true
+
+            if [ "$attempt" -lt 3 ]; then
+              sleep $((attempt * 5))
+            fi
+          done
+
+          echo "Failed to push after 3 attempts."
+          exit 1
