@@ -38,6 +38,9 @@ jobs:
           if [ -f patch_v17_finalize.py ]; then
             python patch_v17_finalize.py
           fi
+          if [ -f patch_v18_no_price_rises.py ]; then
+            python patch_v18_no_price_rises.py
+          fi
 
       - name: Validate Python
         run: |
