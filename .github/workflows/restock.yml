@@ -47,6 +47,9 @@ jobs:
           if [ -f patch_v20_proshop_reader.py ]; then
             python patch_v20_proshop_reader.py
           fi
+          if [ -f patch_v21_cleanup_price_history_log.py ]; then
+            python patch_v21_cleanup_price_history_log.py
+          fi
 
       - name: Validate Python
         run: |
