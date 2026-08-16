@@ -2567,8 +2567,7 @@ def process_price_history(old_history_state, current_state, fresh_sources):
 
     print(
         f"PRICE HISTORY V1: {len(active_keys)} aktive produkter | "
-        f"{len(new_lows)} nye historiske lows | "
-        f"Cardmarket {'aktiv' if cardmarket_enabled() else 'ikke konfigureret'}"
+        f"{len(new_lows)} nye historiske lows"
     )
 
     return {
@@ -2753,15 +2752,8 @@ def _parse_proshop_products(response):
 
         # /Pokemon is a broad fallback with figures, games etc. Keep only
         # trading-card-related rows when that route is used.
-        tcg_text = (name + " " + text_card).lower()
-        tcg_markers = (
-            " tcg ", "tcg ", " tcg", "booster", "elite trainer",
-            "battle deck", "world championships deck", "samlekort",
-            "poké ball tin", "poke ball tin", "premium collection",
-            "illustration collection", "trainer box", "trainer toolkit",
-            "portfolio", "card game",
-        )
-        if not any(marker in tcg_text for marker in tcg_markers):
+        tcg_text = name + " " + text_card
+        if not _proshop_is_tcg_text(tcg_text):
             continue
 
         price = parse_price(text_card)
@@ -2789,15 +2781,35 @@ PROSHOP_READER_URL = "https://r.jina.ai/" + PROSHOP_URL
 
 
 def _proshop_is_tcg_text(value):
-    low = (value or "").lower()
-    markers = (
-        " tcg ", "tcg ", " tcg", "booster", "elite trainer",
-        "battle deck", "world championships deck", "samlekort",
-        "poké ball tin", "poke ball tin", "premium collection",
-        "illustration collection", "trainer box", "trainer toolkit",
-        "portfolio", "card game", "ultra-premium collection",
+    """Keep real Pokemon TCG products; reject binders/sleeves/accessories.
+
+    Stock status is deliberately NOT part of this filter. Out-of-stock and
+    orderable products remain in state so later restocks can be detected.
+    """
+    low = " " + re.sub(r"\s+", " ", (value or "").lower()) + " "
+
+    blocked = (
+        "portfolio", "binder", "mappe", "album", "pocket page",
+        "pocket pages", "kortlomme", "kortlommer", "sleeve", "sleeves",
+        "dragonshield", "dragon shield", "ultrapro", "ultra pro",
+        "playmat", "deck protector", "deck box", "storage box",
+        "toploader", "top loader", "card case", "display case",
+        "card holder", "kortbeskytter", "kortbeskyttelse",
     )
-    return any(marker in low for marker in markers)
+    if any(marker in low for marker in blocked):
+        return False
+
+    wanted = (
+        "booster pack", "booster packs", "booster box", "booster display",
+        "booster bundle", "sleeved booster", "elite trainer box", " etb ",
+        "blister", "poké ball tin", "poke ball tin", "mini tin", " tin ",
+        "premium collection", "illustration collection", "collection box",
+        "collection", "ultra-premium collection", "ultra premium collection",
+        "league battle deck", "deluxe battle deck", "ex battle deck",
+        "battle deck", "world championships deck", "championship deck",
+        "trainer toolkit", "battle academy", "build & battle", "build and battle",
+    )
+    return any(marker in low for marker in wanted)
 
 
 def _parse_proshop_reader_markdown(markdown):
@@ -2890,20 +2902,27 @@ def get_proshop_products_via_reader():
     )
     response.raise_for_status()
 
-    products = _parse_proshop_reader_markdown(response.text)
+    raw_link_pattern = re.compile(
+        r"(?:https?://(?:www\.)?proshop\.dk)?/Pokemon/[^)\s?#]+/\d+",
+        re.IGNORECASE,
+    )
+    raw_product_links = len(set(raw_link_pattern.findall(response.text or "")))
 
-    # Fail closed. A partial/broken Reader response must not become a fresh
-    # Proshop snapshot and trigger false out-of-stock/restock transitions.
-    priced = sum(1 for product in products.values() if product.get("price"))
-    if len(products) < 5 or priced < 5:
+    # Fail closed if Reader did not return a plausible Proshop product page.
+    # The number of relevant TCG products may legitimately be zero.
+    if raw_product_links < 5:
         raise RuntimeError(
-            f"Jina Reader returned too little usable Proshop data "
-            f"({len(products)} products / {priced} prices)"
+            f"Jina Reader returned too little raw Proshop data "
+            f"({raw_product_links} product links)"
         )
+
+    products = _parse_proshop_reader_markdown(response.text)
+    priced = sum(1 for product in products.values() if product.get("price"))
 
     print(
         f"PROSHOP: bruger Jina Reader fallback "
-        f"({len(products)} TCG-produkter)"
+        f"({len(products)} relevante TCG-produkter; "
+        f"{raw_product_links} rå produktlinks)"
     )
     return products
 
