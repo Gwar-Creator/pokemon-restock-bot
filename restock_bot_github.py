@@ -8054,6 +8054,11 @@ while True:
                     new_state,
                 )
                 counts = count_woocommerce_products(products)
+                scope_expansion = (
+                    site_key == "pokecards"
+                    and 0 < len(old_products) <= WOOCOMMERCE_PAGE_SIZE
+                    and len(products) >= len(old_products) * 3
+                )
 
                 print(
                     f"{site['label']}: "
@@ -8063,11 +8068,25 @@ while True:
                     f"{counts['POKÉMON_STOCK'] + counts['LORCANA_STOCK']}"
                 )
 
-                if was_initialized:
+                if was_initialized and not scope_expansion:
                     process_woocommerce_changes(
                         site_key,
                         old_products,
                         products
+                    )
+                elif scope_expansion:
+                    print(
+                        f"{site['label']} fuld katalogbaseline: "
+                        f"{len(old_products)} → {len(products)} produkter; "
+                        "historiske produkt-alerts undertrykkes."
+                    )
+
+                    send_discord(
+                        f"🟢 **{site['label']} fuld katalogdækning aktiveret**\n"
+                        f"⚡ Pokémon: {counts['POKÉMON']} produkter "
+                        f"({counts['POKÉMON_STOCK']} på lager)\n"
+                        "Historiske produkter blev indlæst som baseline uden "
+                        "produkt-alerts."
                     )
                 else:
                     print(
