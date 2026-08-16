@@ -13,7 +13,7 @@ concurrency:
 jobs:
   scan:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
 
     steps:
       - name: Checkout repository
@@ -30,51 +30,32 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Apply V1.4 patches
+      - name: Validate Python
         run: |
-          if [ -f patch_v14.py ]; then
-            python patch_v14.py
-          else
-            echo "V1.4 patch already applied."
-          fi
-
-          if [ -f patch_v141.py ]; then
-            python - <<'PY'
-          from pathlib import Path
-
-          patch = Path("patch_v141.py")
-          text = patch.read_text(encoding="utf-8")
-          old = "new_daily = '''    if daily_due:"
-          new = "new_daily = r'''    if daily_due:"
-
-          if old in text:
-              text = text.replace(old, new, 1)
-              patch.write_text(text, encoding="utf-8")
-              print("Fixed V1.4.1 newline escaping before patching.")
-          PY
-            python patch_v141.py
-          else
-            echo "V1.4.1 layout patch already applied."
-          fi
-
-      - name: Validate bot syntax
-        run: python -m py_compile restock_bot_github.py
+          python -m py_compile restock_bot_github.py
+          python -m py_compile cardmarket_chase_watch.py
 
       - name: Run one restock scan
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           PRICE_WATCH_WEBHOOK_URL: ${{ secrets.PRICE_WATCH_WEBHOOK_URL }}
           PRICE_HISTORY_WEBHOOK_URL: ${{ secrets.PRICE_HISTORY_WEBHOOK_URL }}
-          CARDMARKET_APP_TOKEN: ${{ secrets.CARDMARKET_APP_TOKEN }}
-          CARDMARKET_APP_SECRET: ${{ secrets.CARDMARKET_APP_SECRET }}
-          CARDMARKET_ACCESS_TOKEN: ${{ secrets.CARDMARKET_ACCESS_TOKEN }}
-          CARDMARKET_ACCESS_SECRET: ${{ secrets.CARDMARKET_ACCESS_SECRET }}
           RUN_ONCE: "1"
         run: python restock_bot_github.py
 
-      - name: Save updated state and patch
+      - name: Run daily Card Market Watch
+        continue-on-error: true
+        env:
+          TCG_CARDMARKET_API_KEY: ${{ secrets.TCG_CARDMARKET_API_KEY }}
+          CARDMARKET_WEBHOOK_URL: ${{ secrets.CARDMARKET_WEBHOOK_URL }}
+          PRICE_HISTORY_WEBHOOK_URL: ${{ secrets.PRICE_HISTORY_WEBHOOK_URL }}
+          CARDMARKET_TIMEZONE: "Europe/Copenhagen"
+          CARDMARKET_DAILY_HOUR: "8"
+        run: python cardmarket_chase_watch.py
+
+      - name: Save updated state
         run: |
-          if git diff --quiet; then
+          if [ -z "$(git status --porcelain)" ]; then
             echo "No changes to save."
             exit 0
           fi
@@ -83,7 +64,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           git add -A
-          git commit -m "Apply V1.4.1 price history dashboard"
+          git commit -m "Update restock and market state"
 
           for attempt in 1 2 3; do
             echo "Push attempt $attempt/3"
