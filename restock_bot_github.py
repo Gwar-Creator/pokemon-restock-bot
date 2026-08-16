@@ -1327,6 +1327,12 @@ def send_price_watch_change(
         best["price"]
     )
 
+    # Price Watch is action-oriented: price increases are still persisted
+    # by process_price_watch, but they must never create a Discord alert.
+    # Price History/Excel keeps the upward movement for context.
+    if new_price > old_price + 0.005:
+        return
+
     old_shops = old_entry.get(
         "current_shops"
     )
@@ -1358,8 +1364,6 @@ def send_price_watch_change(
 
     if new_price < old_price - 0.005:
         headline = "🔥 **BEDRE PRIS FUNDET**"
-    elif new_price > old_price + 0.005:
-        headline = "📈 **BEDSTE PRIS ÆNDRET**"
     else:
         headline = "🔄 **BILLIGSTE BUTIK ÆNDRET**"
 
