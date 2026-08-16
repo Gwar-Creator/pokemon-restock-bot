@@ -345,6 +345,7 @@ WOOCOMMERCE_SITES = {
     "pokecards": {
         "label": "POKECARDS.DK",
         "base": "https://pokecards.dk",
+        "trust_total_pages": False,
         "categories": {
             "POKÉMON": 16
         }
@@ -4966,7 +4967,7 @@ def woocommerce_is_preorder(product):
     )
 
 
-def fetch_woocommerce_category(base, category_id):
+def fetch_woocommerce_category(base, category_id, trust_total_pages=True):
     collected = {}
 
     for page in range(1, WOOCOMMERCE_MAX_PAGES + 1):
@@ -5000,7 +5001,7 @@ def fetch_woocommerce_category(base, category_id):
 
         total_pages = response.headers.get("X-WP-TotalPages")
 
-        if total_pages:
+        if total_pages and trust_total_pages:
             try:
                 if page >= int(total_pages):
                     break
@@ -5020,7 +5021,8 @@ def get_woocommerce_products(site_key):
     for game, category_id in site["categories"].items():
         raw_products = fetch_woocommerce_category(
             site["base"],
-            category_id
+            category_id,
+            trust_total_pages=site.get("trust_total_pages", True),
         )
 
         for raw in raw_products:
