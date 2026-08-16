@@ -30,18 +30,23 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Apply V1.3 patch
+      - name: Apply V1.4 patch
         run: |
-          if [ -f patch_v13.py ]; then
-            python patch_v13.py
+          if [ -f patch_v14.py ]; then
+            python patch_v14.py
           else
-            echo "V1.3 patch already applied."
+            echo "V1.4 patch already applied."
           fi
 
       - name: Run one restock scan
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           PRICE_WATCH_WEBHOOK_URL: ${{ secrets.PRICE_WATCH_WEBHOOK_URL }}
+          PRICE_HISTORY_WEBHOOK_URL: ${{ secrets.PRICE_HISTORY_WEBHOOK_URL }}
+          CARDMARKET_APP_TOKEN: ${{ secrets.CARDMARKET_APP_TOKEN }}
+          CARDMARKET_APP_SECRET: ${{ secrets.CARDMARKET_APP_SECRET }}
+          CARDMARKET_ACCESS_TOKEN: ${{ secrets.CARDMARKET_ACCESS_TOKEN }}
+          CARDMARKET_ACCESS_SECRET: ${{ secrets.CARDMARKET_ACCESS_SECRET }}
           RUN_ONCE: "1"
         run: python restock_bot_github.py
 
@@ -56,7 +61,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           git add -A
-          git commit -m "Apply V1.3 Discord and source resilience"
+          git commit -m "Apply V1.4 price history tracker"
 
           for attempt in 1 2 3; do
             echo "Push attempt $attempt/3"
