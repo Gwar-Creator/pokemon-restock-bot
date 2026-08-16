@@ -33,6 +33,27 @@ jobs:
       - name: Apply V1.2 patch
         run: |
           if [ -f patch_v12.py ]; then
+            python - <<'PY'
+          from pathlib import Path
+
+          patch = Path("patch_v12.py")
+          text = patch.read_text(encoding="utf-8")
+          text = text.replace(
+              'WORKFLOW = Path(".github/workflows/restock.yml")\n',
+              ''
+          )
+
+          start = text.find("\nfinal_workflow = '''")
+          end_marker = '\nWORKFLOW.write_text(final_workflow, encoding="utf-8")\n'
+
+          if start != -1:
+              end = text.find(end_marker, start)
+              if end == -1:
+                  raise RuntimeError("Could not isolate workflow-writing block")
+              text = text[:start] + "\n" + text[end + len(end_marker):]
+
+          patch.write_text(text, encoding="utf-8")
+          PY
             python patch_v12.py
           else
             echo "V1.2 patch already applied."
