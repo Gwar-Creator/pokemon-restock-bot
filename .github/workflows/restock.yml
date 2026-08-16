@@ -39,10 +39,26 @@ jobs:
           fi
 
           if [ -f patch_v141.py ]; then
+            python - <<'PY'
+          from pathlib import Path
+
+          patch = Path("patch_v141.py")
+          text = patch.read_text(encoding="utf-8")
+          old = "new_daily = '''    if daily_due:"
+          new = "new_daily = r'''    if daily_due:"
+
+          if old in text:
+              text = text.replace(old, new, 1)
+              patch.write_text(text, encoding="utf-8")
+              print("Fixed V1.4.1 newline escaping before patching.")
+          PY
             python patch_v141.py
           else
             echo "V1.4.1 layout patch already applied."
           fi
+
+      - name: Validate bot syntax
+        run: python -m py_compile restock_bot_github.py
 
       - name: Run one restock scan
         env:
