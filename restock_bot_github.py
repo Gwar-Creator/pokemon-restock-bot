@@ -400,6 +400,38 @@ def safe_int(value, default=0):
         
 
 # ============================================================
+# RESTOCK ALERT FILTER
+# ============================================================
+
+def restock_alert_allowed(product, game_override=None):
+    """Keep low-signal products in state, but silence them on Discord."""
+    name = str((product or {}).get("name", "")).lower()
+    game = game_override or (product or {}).get("game")
+
+    if game == "POKÉMON" and any(
+        marker in name
+        for marker in ("checklane", "check lane")
+    ):
+        return False
+
+    if game == "LORCANA" and any(
+        marker in name
+        for marker in ("starter deck", "starterdeck", "starter decks")
+    ):
+        return False
+
+    return True
+
+
+def filter_restock_alert_products(products, game_override=None):
+    return {
+        key: product
+        for key, product in (products or {}).items()
+        if restock_alert_allowed(product, game_override)
+    }
+
+
+# ============================================================
 # PRICE WATCH - PRODUKTTYPER
 # ============================================================
 
@@ -1270,41 +1302,20 @@ def process_price_watch(
         0
     )
 
-    previous_products = previous.get(
-        "products"
-    )
+    previous_products = previous.get("products")
+    is_first_price_watch_run = not isinstance(previous_products, dict)
 
-    is_first_price_watch_run = not isinstance(
-        previous_products,
-        dict
-    )
-
-    if not isinstance(
-        previous_products,
-        dict
-    ):
+    if not isinstance(previous_products, dict):
         previous_products = {}
 
     try:
-        now_local = datetime.now(
-            ZoneInfo(PRICE_WATCH_TIMEZONE)
-        )
+        now_local = datetime.now(ZoneInfo(PRICE_WATCH_TIMEZONE))
     except Exception:
-        now_local = datetime.now(
-            ZoneInfo("Europe/Copenhagen")
-        )
+        now_local = datetime.now(ZoneInfo("Europe/Copenhagen"))
 
     today = now_local.date().isoformat()
-    last_daily_date = str(
-        previous.get(
-            "last_daily_date",
-            ""
-        )
-        or ""
-    )
+    last_daily_date = str(previous.get("last_daily_date", "") or "")
 
-    # Dagens samlede oversigt har førsteprioritet.
-    # Hvis den sendes i dette scan, sender vi ikke samtidig ændringsalerts.
     daily_due = (
         bool(PRICE_WATCH_WEBHOOK_URL)
         and now_local.hour >= PRICE_WATCH_DAILY_HOUR
@@ -1322,140 +1333,167 @@ def process_price_watch(
         if daily_sent:
             last_daily_date = today
 
-    # Ændringsalerts er kun aktive EFTER dagens oversigt er sendt.
-    # Ved opgradering til denne version tager vi ét stille scan som baseline,
-    # så en kodeændring ikke giver falske alerts.
+    # V3: En højere bedste pris / tab af billigste butik skal ses i
+    # to på hinanden følgende friske scans før den bliver bekræftet.
+    # Et enkelt midlertidigt manglende produkt kan derfor ikke længere
+    # få 1.479 -> 1.499 -> 1.479 til at spamme Discord.
     changes_enabled = (
         bool(PRICE_WATCH_WEBHOOK_URL)
         and last_daily_date == today
         and not daily_sent
         and not is_first_price_watch_run
-        and previous_version >= 2
+        and previous_version >= 3
     )
 
-    next_products = dict(
-        previous_products
-    )
+    next_products = dict(previous_products)
 
-    for product_key, products in comparable_groups.items():
-        best = price_watch_best_entry(
-            products
-        )
-
-        current_best = float(
-            best["price"]
-        )
-
-        current_shops = price_watch_lowest_shops(
-            products
-        )
-
-        current_sources = sorted(
-            {
-                product["source"]
-                for product in products
-                if abs(product["price"] - current_best) < 0.005
-            }
-        )
-
-        old_entry = previous_products.get(
-            product_key
-        )
-
-        if changes_enabled and isinstance(old_entry, dict):
-            try:
-                old_price = float(
-                    old_entry.get("current_best")
-                )
-            except (TypeError, ValueError):
-                old_price = None
-
-            old_shops = old_entry.get(
-                "current_shops"
-            )
-
-            if not isinstance(old_shops, list):
-                old_shop = old_entry.get(
-                    "current_shop"
-                )
-                old_shops = [old_shop] if old_shop else []
-
-            old_sources = old_entry.get(
-                "current_sources"
-            )
-
-            if not isinstance(old_sources, list):
-                old_sources = []
-
-            price_is_lower = (
-                old_price is not None
-                and current_best < old_price - 0.005
-            )
-
-            price_is_higher = (
-                old_price is not None
-                and current_best > old_price + 0.005
-            )
-
-            cheapest_shop_changed = (
-                old_price is not None
-                and abs(current_best - old_price) < 0.005
-                and bool(old_shops)
-                and not set(old_shops).intersection(current_shops)
-            )
-
-            # Prisfald er sikkert at sende: den nye lavere pris kommer fra
-            # en frisk kilde. Pris-stigninger/butiksskift sendes kun, hvis
-            # de tidligere billigste kilder også lykkedes i dette scan.
-            old_sources_are_fresh = (
-                bool(old_sources)
-                and all(
-                    source in fresh_sources
-                    for source in old_sources
-                )
-            )
-
-            should_alert = (
-                price_is_lower
-                or (
-                    old_sources_are_fresh
-                    and (
-                        price_is_higher
-                        or cheapest_shop_changed
-                    )
-                )
-            )
-
-            if should_alert:
-                send_price_watch_change(
-                    product_key,
-                    old_entry,
-                    products
-                )
-
-        next_products[product_key] = {
+    def confirmed_entry(product_key, best, current_best, current_shops, current_sources):
+        return {
             "current_best": current_best,
             "current_shop": best["shop"],
             "current_shops": current_shops,
             "current_sources": current_sources,
-            "name": price_watch_display_name(
-                product_key
-            ),
+            "name": price_watch_display_name(product_key),
             "last_seen": now_local.isoformat()
         }
 
-    if is_first_price_watch_run:
-        print(
-            "PRICE WATCH V1 baseline oprettet uden "
-            "ændringsalerts."
+    for product_key, products in comparable_groups.items():
+        best = price_watch_best_entry(products)
+        current_best = float(best["price"])
+        current_shops = price_watch_lowest_shops(products)
+        current_sources = sorted({
+            product["source"]
+            for product in products
+            if abs(product["price"] - current_best) < 0.005
+        })
+
+        old_entry = previous_products.get(product_key)
+
+        if not isinstance(old_entry, dict):
+            next_products[product_key] = confirmed_entry(
+                product_key,
+                best,
+                current_best,
+                current_shops,
+                current_sources
+            )
+            continue
+
+        try:
+            old_price = float(old_entry.get("current_best"))
+        except (TypeError, ValueError):
+            old_price = None
+
+        old_shops = old_entry.get("current_shops")
+        if not isinstance(old_shops, list):
+            old_shop = old_entry.get("current_shop")
+            old_shops = [old_shop] if old_shop else []
+
+        old_sources = old_entry.get("current_sources")
+        if not isinstance(old_sources, list):
+            old_sources = []
+
+        price_is_lower = (
+            old_price is not None
+            and current_best < old_price - 0.005
         )
-    elif previous_version < 2:
-        print(
-            "PRICE WATCH V1 ændringsbaseline opdateret uden alerts."
+        price_is_higher = (
+            old_price is not None
+            and current_best > old_price + 0.005
+        )
+        cheapest_shop_changed = (
+            old_price is not None
+            and abs(current_best - old_price) < 0.005
+            and bool(old_shops)
+            and not set(old_shops).intersection(current_shops)
         )
 
+        old_sources_are_fresh = (
+            bool(old_sources)
+            and all(source in fresh_sources for source in old_sources)
+        )
+
+        # En reel lavere pris er positiv information fra en frisk kilde
+        # og kan derfor bekræftes med det samme.
+        if price_is_lower:
+            if changes_enabled:
+                send_price_watch_change(product_key, old_entry, products)
+
+            next_products[product_key] = confirmed_entry(
+                product_key,
+                best,
+                current_best,
+                current_shops,
+                current_sources
+            )
+            continue
+
+        # Pris op / billigste butik væk er negativ information og kan
+        # skyldes et midlertidigt hul i et produktfeed. Kræv 2 ens scans.
+        if price_is_higher or cheapest_shop_changed:
+            if not old_sources_are_fresh:
+                kept = dict(old_entry)
+                kept.pop("pending_change", None)
+                kept["last_seen"] = now_local.isoformat()
+                next_products[product_key] = kept
+                continue
+
+            signature = (
+                f"{current_best:.2f}|"
+                + ",".join(sorted(current_shops))
+            )
+            pending = old_entry.get("pending_change")
+
+            if (
+                isinstance(pending, dict)
+                and pending.get("signature") == signature
+            ):
+                pending_count = safe_int(pending.get("count"), 0) + 1
+            else:
+                pending_count = 1
+
+            if pending_count >= 2:
+                if changes_enabled:
+                    send_price_watch_change(product_key, old_entry, products)
+
+                next_products[product_key] = confirmed_entry(
+                    product_key,
+                    best,
+                    current_best,
+                    current_shops,
+                    current_sources
+                )
+            else:
+                kept = dict(old_entry)
+                kept["pending_change"] = {
+                    "signature": signature,
+                    "count": pending_count,
+                    "observed_best": current_best,
+                    "observed_shops": current_shops,
+                    "observed_sources": current_sources,
+                    "first_seen": now_local.isoformat()
+                }
+                kept["last_seen"] = now_local.isoformat()
+                next_products[product_key] = kept
+
+            continue
+
+        # Stabilt scan: opdater metadata og nulstil evt. pending flap.
+        next_products[product_key] = confirmed_entry(
+            product_key,
+            best,
+            current_best,
+            current_shops,
+            current_sources
+        )
+
+    if is_first_price_watch_run:
+        print("PRICE WATCH V3 baseline oprettet uden ændringsalerts.")
+    elif previous_version < 3:
+        print("PRICE WATCH V3 anti-flap aktiveret uden overgangsalerts.")
+
     return {
-        "version": 2,
+        "version": 3,
         "products": next_products,
         "last_daily_date": last_daily_date
     }
@@ -4391,6 +4429,8 @@ def process_coolshop_changes(
     old_products,
     new_products
 ):
+    new_products = filter_restock_alert_products(new_products)
+
     # NYE PRODUKTER
     for url, product in new_products.items():
         if url not in old_products:
@@ -4460,6 +4500,8 @@ def process_proshop_changes(
     old_products,
     new_products
 ):
+    new_products = filter_restock_alert_products(new_products, "POKÉMON")
+
     # NYE PRODUKTER
     for product_id, product in new_products.items():
         if product_id not in old_products:
@@ -4572,6 +4614,8 @@ def process_br_changes(
     old_products,
     new_products
 ):
+    new_products = filter_restock_alert_products(new_products, "POKÉMON")
+
     # NYE PRODUKTER
     for product_id, product in new_products.items():
         if product_id not in old_products:
@@ -4776,6 +4820,7 @@ def process_salling_changes(
     old_products,
     new_products
 ):
+    new_products = filter_restock_alert_products(new_products, "POKÉMON")
     site = SALLING_SITES[site_key]
     label = site["label"]
 
@@ -4968,6 +5013,8 @@ def elgiganten_status_lines(product):
 
 
 def process_elgiganten_changes(old_products, new_products):
+    new_products = filter_restock_alert_products(new_products, "POKÉMON")
+
     for product_id, product in new_products.items():
         if product_id not in old_products:
             send_discord(
@@ -5110,6 +5157,7 @@ def shopify_status_lines(product):
 
 
 def process_shopify_changes(site_key, old_products, new_products):
+    new_products = filter_restock_alert_products(new_products)
     site = SHOPIFY_SITES[site_key]
     label = site["label"]
 
@@ -5189,6 +5237,7 @@ def woocommerce_status_lines(product):
 
 
 def process_woocommerce_changes(site_key, old_products, new_products):
+    new_products = filter_restock_alert_products(new_products)
     site = WOOCOMMERCE_SITES[site_key]
     label = site["label"]
 
@@ -5255,6 +5304,7 @@ def process_woocommerce_changes(site_key, old_products, new_products):
 # =========================================================
 
 def process_nextlevel_changes(old_products, current_products):
+    current_products = filter_restock_alert_products(current_products)
     label = "NEXT LEVEL GAMES"
 
     for product_id, product in current_products.items():
@@ -5323,6 +5373,7 @@ def process_epicpanda_changes(
     old_products,
     new_products
 ):
+    new_products = filter_restock_alert_products(new_products)
     label = "EPIC PANDA"
 
     # Nye produkter / nye preorders
@@ -5424,6 +5475,7 @@ def process_steffeno_changes(
     old_products,
     new_products
 ):
+    new_products = filter_restock_alert_products(new_products, "POKÉMON")
     label = "STEFFEN-O"
 
     # Nye produkter / nye preorders
