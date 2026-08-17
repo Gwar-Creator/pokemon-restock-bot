@@ -2576,10 +2576,53 @@ def _send_price_history_embed_batches(embeds):
     if not PRICE_HISTORY_WEBHOOK_URL or not embeds:
         return False
 
+    # Discord tillader højst 10 embeds og 6.000 samlede embed-tegn pr.
+    # webhook-besked. Den gamle kode begrænsede kun antallet og kunne
+    # derfor få HTTP 400, når kataloget voksede.
+    def embed_text_length(embed):
+        total = len(str(embed.get("title") or ""))
+        total += len(str(embed.get("description") or ""))
+
+        footer = embed.get("footer")
+        if isinstance(footer, dict):
+            total += len(str(footer.get("text") or ""))
+
+        author = embed.get("author")
+        if isinstance(author, dict):
+            total += len(str(author.get("name") or ""))
+
+        for field in embed.get("fields") or []:
+            if not isinstance(field, dict):
+                continue
+            total += len(str(field.get("name") or ""))
+            total += len(str(field.get("value") or ""))
+
+        return total
+
+    batches = []
+    current_batch = []
+    current_chars = 0
+
+    for embed in embeds:
+        embed_chars = embed_text_length(embed)
+
+        if current_batch and (
+            len(current_batch) >= 10
+            or current_chars + embed_chars > 5500
+        ):
+            batches.append(current_batch)
+            current_batch = []
+            current_chars = 0
+
+        current_batch.append(embed)
+        current_chars += embed_chars
+
+    if current_batch:
+        batches.append(current_batch)
+
     sent = False
 
-    for index in range(0, len(embeds), 10):
-        batch = embeds[index:index + 10]
+    for batch in batches:
         response = requests.post(
             PRICE_HISTORY_WEBHOOK_URL,
             json={
@@ -2741,6 +2784,9 @@ def process_price_history(old_history_state, current_state, fresh_sources):
     today = now_local.date().isoformat()
     started_at = str(previous.get("started_at") or now_local.isoformat())
     last_daily_date = str(previous.get("last_daily_date") or "")
+    last_daily_attempt_date = str(
+        previous.get("last_daily_attempt_date") or ""
+    )
     first_run = not bool(previous_products)
     next_products = dict(previous_products)
     active_keys = set(groups.keys())
@@ -2749,6 +2795,7 @@ def process_price_history(old_history_state, current_state, fresh_sources):
         bool(PRICE_HISTORY_WEBHOOK_URL)
         and now_local.hour >= PRICE_HISTORY_DAILY_HOUR
         and last_daily_date != today
+        and last_daily_attempt_date != today
     )
 
     new_lows = []
@@ -2846,6 +2893,8 @@ def process_price_history(old_history_state, current_state, fresh_sources):
             )
 
     if daily_due:
+        last_daily_attempt_date = today
+
         if first_run:
             pokemon_count = sum(
                 1 for key in active_keys
@@ -2891,6 +2940,7 @@ def process_price_history(old_history_state, current_state, fresh_sources):
         "version": 1,
         "started_at": started_at,
         "last_daily_date": last_daily_date,
+        "last_daily_attempt_date": last_daily_attempt_date,
         "products": next_products,
     }
 
@@ -8338,11 +8388,34 @@ while True:
         # PRICE HISTORY V1
         # -------------------------
 
-        new_state["price_history"] = process_price_history(
-            state.get("price_history"),
-            price_watch_current_state,
-            price_watch_fresh_sources
-        )
+        try:
+            new_state["price_history"] = process_price_history(
+                state.get("price_history"),
+                price_watch_current_state,
+                price_watch_fresh_sources
+            )
+        except Exception as error:
+            # Price History er et ekstra dashboard og må aldrig blokere
+            # lagring af restock- eller Price Watch-state. Ellers sendes
+            # dagens Price Watch igen ved næste femminutterskørsel.
+            print("PRICE HISTORY fejl (isoleret):", error)
+            failed_history = dict(state.get("price_history") or {})
+
+            try:
+                failed_today = datetime.now(
+                    ZoneInfo(PRICE_WATCH_TIMEZONE)
+                ).date().isoformat()
+            except Exception:
+                failed_today = datetime.now(
+                    ZoneInfo("Europe/Copenhagen")
+                ).date().isoformat()
+
+            failed_history["last_daily_attempt_date"] = failed_today
+            failed_history["last_error"] = str(error)[:500]
+            failed_history["last_error_at"] = datetime.now(
+                ZoneInfo("UTC")
+            ).isoformat()
+            new_state["price_history"] = failed_history
 
         # -------------------------
         # GEM STATE
