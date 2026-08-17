@@ -869,7 +869,12 @@ def restock_alert_allowed(product, game_override=None):
 
     if game == "POKÉMON" and any(
         marker in name
-        for marker in ("checklane", "check lane")
+        for marker in (
+            "checklane",
+            "check lane",
+            "battle deck",
+            "battledeck",
+        )
     ):
         return False
 
