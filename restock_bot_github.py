@@ -874,6 +874,8 @@ def restock_alert_allowed(product, game_override=None):
             "check lane",
             "battle deck",
             "battledeck",
+            "premium ex box mega zygarde",
+            "mega zygarde ex premium collection",
         )
     ):
         return False
