@@ -45,6 +45,10 @@ PRICE_ALERT_COOLDOWN_SECONDS = 24 * 60 * 60
 PRICE_ALERT_MIN_IMPROVEMENT_DKK = 10.0
 PRICE_ALERT_MIN_IMPROVEMENT_PCT = 0.02
 
+# Kanalroller: Restock viser lagerhændelser. Prisændringer hører hjemme i
+# Price Watch / Price History, så samme prisfald ikke støjer i flere kanaler.
+RESTOCK_PRICE_ALERTS_ENABLED = False
+
 SOURCE_MIN_PRODUCTS = {
     "coolshop": 10,
     "proshop": 5,
@@ -707,6 +711,10 @@ def restock_alert_decision(message):
     now_epoch = _now_epoch()
 
     if event_type == "PRICE":
+        if not RESTOCK_PRICE_ALERTS_ENABLED:
+            print("RESTOCK ALERT: prisændring håndteres i priskanalerne")
+            return None
+
         _, new_price = _price_values_from_change(message)
         if new_price is None:
             cooldown = PRICE_ALERT_COOLDOWN_SECONDS
@@ -1478,6 +1486,14 @@ PRICE_WATCH_TYPE_ORDER = (
     "BOOSTER PACK",
 )
 
+PRICE_WATCH_DAILY_MAX_SIGNALS_PER_GAME = 5
+PRICE_WATCH_DAILY_MIN_SAVING_DKK = 20.0
+PRICE_WATCH_DAILY_MIN_SAVING_PCT = 3.0
+PRICE_HISTORY_DAILY_MAX_BUY_PER_GAME = 3
+PRICE_HISTORY_DAILY_MAX_WAIT_PER_GAME = 2
+PRICE_HISTORY_NEW_LOW_MIN_DKK = 20.0
+PRICE_HISTORY_NEW_LOW_MIN_PCT = 3.0
+
 
 def build_price_watch_groups(candidates):
     raw_groups = {}
@@ -1648,45 +1664,17 @@ def send_price_watch_change(
         best["price"]
     )
 
-    # Price Watch is action-oriented: price increases are still persisted
-    # by process_price_watch, but they must never create a Discord alert.
-    # Price History/Excel keeps the upward movement for context.
-    if new_price > old_price + 0.005:
+    # Price Watch er handlingsorienteret. Prisopgang og butiksskift ved
+    # samme pris gemmes i historikken, men er ikke Discord-alerts.
+    price_drop = old_price - new_price
+    price_drop_pct = price_drop / old_price if old_price > 0 else 0.0
+    if (
+        price_drop < PRICE_ALERT_MIN_IMPROVEMENT_DKK
+        or price_drop_pct < PRICE_ALERT_MIN_IMPROVEMENT_PCT
+    ):
         return
 
-    old_shops = old_entry.get(
-        "current_shops"
-    )
-
-    if not isinstance(old_shops, list):
-        old_shop = old_entry.get(
-            "current_shop"
-        )
-        old_shops = [old_shop] if old_shop else []
-
-    new_shops = price_watch_lowest_shops(
-        products
-    )
-
-    price_changed = abs(
-        new_price - old_price
-    ) >= 0.005
-
-    # Butiksskift ved samme pris er kun relevant, hvis ingen af de
-    # tidligere billigste butikker stadig er billigst.
-    cheapest_shop_changed = (
-        not price_changed
-        and bool(old_shops)
-        and not set(old_shops).intersection(new_shops)
-    )
-
-    if not price_changed and not cheapest_shop_changed:
-        return
-
-    if new_price < old_price - 0.005:
-        headline = "🔥 **BEDRE PRIS FUNDET**"
-    else:
-        headline = "🔄 **BILLIGSTE BUTIK ÆNDRET**"
+    headline = "🔥 **BEDRE PRIS FUNDET**"
 
     top = products[:3]
     ranking_lines = []
@@ -1706,18 +1694,11 @@ def send_price_watch_change(
             f"**{format_price(product['price'])}**"
         )
 
-    if price_changed:
-        change_line = (
-            f"{format_price(old_price)} → "
-            f"**{format_price(new_price)}**"
-        )
-    else:
-        old_shop_text = " + ".join(old_shops)
-        new_shop_text = " + ".join(new_shops)
-        change_line = (
-            f"{old_shop_text} → **{new_shop_text}** "
-            f"({format_price(new_price)})"
-        )
+    change_line = (
+        f"{format_price(old_price)} → "
+        f"**{format_price(new_price)}** "
+        f"(-{price_drop_pct * 100.0:.0f}%)"
+    )
 
     language_line = (
         "\n🌐 Japansk"
@@ -1783,76 +1764,96 @@ def send_price_watch_daily_summary(
         )
         return False
 
-    sent_any = False
+    signals_by_game = {"POKÉMON": [], "LORCANA": []}
 
-    for game in ("POKÉMON", "LORCANA"):
-        game_groups = {
-            key: products
-            for key, products in comparable_groups.items()
-            if parse_price_watch_key(key)["game"] == game
-        }
-
-        if not game_groups:
+    for product_key, products in comparable_groups.items():
+        info = parse_price_watch_key(product_key)
+        game = info["game"]
+        if game not in signals_by_game:
             continue
 
-        lines = [
-            f"📊 **DAGENS BEDSTE PRISER — "
-            f"{price_watch_game_label(game).upper()}**",
-            (
-                f"*{now_local.strftime('%d.%m.%Y')} · "
-                "kun varer på lager hos mindst 2 butikker*"
-            ),
+        ordered = sorted(
+            products,
+            key=lambda product: (product["price"], product["shop"])
+        )
+        best = ordered[0]
+        best_price = float(best["price"])
+        next_prices = [
+            float(product["price"])
+            for product in ordered
+            if float(product["price"]) > best_price + 0.005
         ]
 
-        for product_type in PRICE_WATCH_TYPE_ORDER:
-            type_groups = [
-                (key, products)
-                for key, products in game_groups.items()
-                if parse_price_watch_key(key)["type"] == product_type
-            ]
+        # Samme pris hos alle butikker er ikke et beslutningssignal.
+        if not next_prices:
+            continue
 
-            if not type_groups:
-                continue
+        next_price = min(next_prices)
+        saving_dkk = next_price - best_price
+        saving_pct = (
+            saving_dkk / next_price * 100.0
+            if next_price > 0
+            else 0.0
+        )
 
-            type_groups.sort(
-                key=lambda item: price_watch_display_name(
-                    item[0]
-                ).lower()
-            )
-
-            lines.append("")
-            lines.append(
-                f"**{price_watch_type_label(product_type)}**"
-            )
-
-            for product_key, products in type_groups:
-                best = price_watch_best_entry(
-                    products
-                )
-
-                shops = " + ".join(
-                    price_watch_lowest_shops(
-                        products
-                    )
-                )
-
-                lines.append(
-                    f"• {price_watch_display_name(product_key)} — "
-                    f"**{format_price(best['price'])}** · "
-                    f"{shops}"
-                )
-
-        message = "\n".join(lines)
-
-        for chunk in split_discord_message(
-            message
+        if (
+            saving_dkk < PRICE_WATCH_DAILY_MIN_SAVING_DKK
+            or saving_pct < PRICE_WATCH_DAILY_MIN_SAVING_PCT
         ):
-            send_price_watch(
-                chunk
-            )
-            sent_any = True
+            continue
 
-    return sent_any
+        signals_by_game[game].append({
+            "product_key": product_key,
+            "best": best,
+            "shops": price_watch_lowest_shops(products),
+            "next_price": next_price,
+            "saving_dkk": saving_dkk,
+            "saving_pct": saving_pct,
+        })
+
+    lines = [
+        "🎯 **DAGENS KØBSOVERSIGT**",
+        (
+            f"*{now_local.strftime('%d.%m.%Y')} · kun tydelige prisfordele "
+            "på varer hos mindst 2 butikker*"
+        ),
+    ]
+    signal_count = 0
+
+    for game in ("POKÉMON", "LORCANA"):
+        signals = sorted(
+            signals_by_game[game],
+            key=lambda row: (row["saving_pct"], row["saving_dkk"]),
+            reverse=True,
+        )[:PRICE_WATCH_DAILY_MAX_SIGNALS_PER_GAME]
+
+        lines.append("")
+        lines.append(f"**{price_watch_game_label(game)}**")
+
+        if not signals:
+            lines.append("• Ingen tydelige prisfordele i dag")
+            continue
+
+        for index, signal in enumerate(signals, start=1):
+            info = parse_price_watch_key(signal["product_key"])
+            shops = " + ".join(signal["shops"])
+            lines.append(
+                f"{index}. **{price_watch_display_name(signal['product_key'])} · "
+                f"{price_watch_type_label(info['type'])}** — "
+                f"{format_price(signal['best']['price'])} hos {shops} · "
+                f"næste {format_price(signal['next_price'])} · "
+                f"spar **{signal['saving_pct']:.0f}%**"
+            )
+            signal_count += 1
+
+    lines.append("")
+    lines.append(
+        "*Fuld prisliste og historik ligger i Price History-filen.*"
+    )
+
+    sent = send_price_watch("\n".join(lines))
+    print(f"PRICE WATCH: daglig oversigt med {signal_count} købssignaler")
+    return bool(sent)
 
 
 def process_price_watch(
@@ -2726,38 +2727,153 @@ def _price_history_daily_summary(products, active_keys, now_local, started_at):
     if not PRICE_HISTORY_WEBHOOK_URL:
         return False
 
-    active_entries = []
+    signals_by_game = {
+        "POKÉMON": {"buy": [], "wait": []},
+        "LORCANA": {"buy": [], "wait": []},
+    }
+    today = now_local.date().isoformat()
 
     for product_key in active_keys:
         entry = products.get(product_key)
         if not isinstance(entry, dict):
             continue
-        row = dict(entry)
-        row["product_key"] = product_key
-        row["label"] = price_watch_display_name(product_key)
-        active_entries.append(row)
 
-    if not active_entries:
-        return False
-
-    sent_any = False
-
-    # One categorized dashboard per game. Discord supports up to 10 embeds
-    # per webhook message; categories are automatically chunked if needed.
-    for game in ("POKÉMON", "LORCANA"):
-        game_entries = [
-            entry for entry in active_entries
-            if parse_price_watch_key(entry["product_key"])["game"] == game
-        ]
-
-        if not game_entries:
+        info = parse_price_watch_key(product_key)
+        game = info["game"]
+        if game not in signals_by_game:
             continue
 
-        embeds = _price_history_category_embeds(game, game_entries)
-        if _send_price_history_embed_batches(embeds):
-            sent_any = True
+        # En baseline er ikke en prisbevægelse. Vi viser først et signal,
+        # når produktet er observeret på mindst to dage og prisen faktisk
+        # har ændret sig siden tracking start.
+        if safe_int(entry.get("observation_days"), 0) < 2:
+            continue
+        if safe_int(entry.get("price_changes"), 0) < 1:
+            continue
 
-    # Full untruncated Excel-friendly export once per daily dashboard.
+        last_change_date = str(entry.get("last_change_date") or "")[:10]
+        last_signal_date = str(entry.get("last_daily_signal_date") or "")[:10]
+        if not last_change_date or last_signal_date >= last_change_date:
+            continue
+
+        diff = _history_pct(
+            entry.get("current_best"),
+            entry.get("historical_low")
+        )
+        if diff is None:
+            continue
+
+        row = {
+            "product_key": product_key,
+            "entry": entry,
+            "diff": diff,
+            "last_change_pct": float(entry.get("last_change_pct") or 0.0),
+        }
+
+        if diff <= 3.0:
+            signals_by_game[game]["buy"].append(row)
+        elif diff >= 10.0:
+            signals_by_game[game]["wait"].append(row)
+
+    selected_by_game = {}
+    selected_rows = []
+    handled_rows = []
+
+    for game in ("POKÉMON", "LORCANA"):
+        handled_rows.extend(signals_by_game[game]["buy"])
+        handled_rows.extend(signals_by_game[game]["wait"])
+        buy = sorted(
+            signals_by_game[game]["buy"],
+            key=lambda row: (
+                row["diff"],
+                row["last_change_pct"],
+                price_watch_display_name(row["product_key"]).lower(),
+            ),
+        )[:PRICE_HISTORY_DAILY_MAX_BUY_PER_GAME]
+        wait = sorted(
+            signals_by_game[game]["wait"],
+            key=lambda row: (
+                row["diff"],
+                abs(row["last_change_pct"]),
+            ),
+            reverse=True,
+        )[:PRICE_HISTORY_DAILY_MAX_WAIT_PER_GAME]
+        selected_by_game[game] = {"buy": buy, "wait": wait}
+        selected_rows.extend(buy)
+        selected_rows.extend(wait)
+
+    lines = [
+        (
+            f"*{now_local.strftime('%d.%m.%Y')} · kun nye, dokumenterede "
+            "prisbevægelser*"
+        )
+    ]
+
+    for game in ("POKÉMON", "LORCANA"):
+        game_signals = selected_by_game[game]
+        lines.append("")
+        lines.append(f"**{price_watch_game_label(game)}**")
+
+        if not game_signals["buy"] and not game_signals["wait"]:
+            lines.append("• Ingen nye signaler i dag")
+            continue
+
+        if game_signals["buy"]:
+            lines.append("🟢 **SLÅ TIL**")
+            for row in game_signals["buy"]:
+                entry = row["entry"]
+                shops = " + ".join(entry.get("current_shops") or [])
+                shops = shops or entry.get("current_shop") or "ukendt butik"
+                change = row["last_change_pct"]
+                change_text = (
+                    f" · seneste ændring {change:+.0f}%"
+                    if abs(change) >= 0.5
+                    else ""
+                )
+                lines.append(
+                    f"• **{_history_product_label(row['product_key'])}** — "
+                    f"{format_price(entry.get('current_best'))} hos {shops} · "
+                    f"{row['diff']:.0f}% over historisk low{change_text}"
+                )
+
+        if game_signals["wait"]:
+            lines.append("🟠 **AFVENT**")
+            for row in game_signals["wait"]:
+                entry = row["entry"]
+                lines.append(
+                    f"• **{_history_product_label(row['product_key'])}** — "
+                    f"{format_price(entry.get('current_best'))} · "
+                    f"{row['diff']:.0f}% over historisk low"
+                )
+
+    if not selected_rows:
+        lines.append("")
+        lines.append(
+            "✅ Ingen nye købssignaler eller tydelige afvent-priser i dag."
+        )
+
+    embed = {
+        "title": "🎯 PRISUDVIKLING & KØBSSIGNALER",
+        "description": "\n".join(lines)[:4096],
+        "color": 0x2ECC71 if selected_rows else 0x95A5A6,
+        "footer": {
+            "text": (
+                "Slå til = højst 3% over historisk low · "
+                "Afvent = mindst 10% over historisk low"
+            )
+        },
+    }
+
+    sent_any = _send_price_history_embed_batches([embed])
+
+    if sent_any:
+        # Også de signaler, der lå under dagens topgrænse, markeres som
+        # behandlet. Ellers kan et stort katalog skabe en flerugers kø af
+        # gamle signaler i Discord.
+        for row in handled_rows:
+            row["entry"]["last_daily_signal_date"] = today
+
+    # Fuld, utrunkeret Excel-venlig eksport bevares til fordybelse.
     if _send_price_history_csv(products, active_keys, now_local):
         sent_any = True
 
@@ -2819,9 +2935,46 @@ def process_price_history(old_history_state, current_state, fresh_sources):
                 "historical_low_url": best.get("url") or "",
                 "first_seen": now_local.isoformat(),
                 "last_seen": now_local.isoformat(),
+                "baseline_price": current_best,
+                "observation_days": 1,
+                "last_observation_date": today,
+                "price_changes": 0,
             }
         else:
             entry = dict(old_entry)
+
+            try:
+                old_current = float(entry.get("current_best"))
+            except (TypeError, ValueError):
+                old_current = current_best
+
+            observation_days = safe_int(entry.get("observation_days"), 0)
+            if observation_days < 1:
+                first_seen_date = str(entry.get("first_seen") or "")[:10]
+                observation_days = 2 if first_seen_date and first_seen_date < today else 1
+
+            if str(entry.get("last_observation_date") or "")[:10] != today:
+                observation_days += 1
+
+            entry.setdefault(
+                "baseline_price",
+                entry.get("historical_low", old_current)
+            )
+            entry.setdefault("price_changes", 0)
+            entry["observation_days"] = observation_days
+            entry["last_observation_date"] = today
+
+            if abs(current_best - old_current) > 0.005:
+                entry["previous_best"] = old_current
+                entry["last_change_pct"] = _history_pct(
+                    current_best,
+                    old_current,
+                )
+                entry["last_change_date"] = today
+                entry["price_changes"] = safe_int(
+                    entry.get("price_changes"), 0
+                ) + 1
+
             entry.update({
                 "name": price_watch_display_name(product_key),
                 "current_best": current_best,
@@ -2873,6 +3026,18 @@ def process_price_history(old_history_state, current_state, fresh_sources):
 
     if not first_run and PRICE_HISTORY_WEBHOOK_URL:
         for product_key, old_low, entry, best in new_lows:
+            improvement_dkk = old_low - float(entry["historical_low"])
+            improvement_pct = (
+                improvement_dkk / old_low * 100.0
+                if old_low > 0
+                else 0.0
+            )
+            if (
+                improvement_dkk < PRICE_HISTORY_NEW_LOW_MIN_DKK
+                or improvement_pct < PRICE_HISTORY_NEW_LOW_MIN_PCT
+            ):
+                continue
+
             info = parse_price_watch_key(product_key)
             shops = " + ".join(entry.get("historical_low_shops") or [best["shop"]])
             description = (
@@ -2880,17 +3045,21 @@ def process_price_history(old_history_state, current_state, fresh_sources):
                 f"{_history_product_label(product_key)}**\n\n"
                 f"Tidligere rekord: {format_price(old_low)}\n"
                 f"Ny rekord: **{format_price(entry['historical_low'])}**\n"
+                f"Fald: **{format_price(improvement_dkk)} "
+                f"({improvement_pct:.0f}%)**\n"
                 f"Butik: **{shops}**"
             )
             if best.get("url"):
                 description += f"\n🔗 {best['url']}"
 
-            send_price_history_embed(
+            if send_price_history_embed(
                 "🏆 NY HISTORISK LAVESTE PRIS",
                 description,
                 color=0xF1C40F,
                 footer="MasterBot · Price History · dansk retail",
-            )
+            ):
+                # Det samme prisfald skal ikke gentages i næste dags digest.
+                entry["last_daily_signal_date"] = today
 
     if daily_due:
         last_daily_attempt_date = today
@@ -2912,7 +3081,7 @@ def process_price_history(old_history_state, current_state, fresh_sources):
                     f"⚡ Pokémon: **{pokemon_count}**\n"
                     f"✨ Lorcana: **{lorcana_count}**\n\n"
                     "Fra nu registreres nye historiske lavpunkter. "
-                    "Den kategoriserede oversigt sendes én gang dagligt."
+                    "En kort signaloversigt sendes én gang dagligt."
                 ),
                 color=0x5865F2,
                 footer=f"Historik startet {started_at[:10]}",
