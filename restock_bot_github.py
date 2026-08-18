@@ -859,6 +859,73 @@ def fetch_source_products(source_key, old_products, fetcher, state_target):
         
 
 # ============================================================
+# SHARED RELEVANCE FILTER
+# ============================================================
+
+ACCESSORY_HARD_BLOCK_MARKERS = (
+    "penalhus",
+    "pencil case",
+    "repack",
+)
+
+ACCESSORY_BLOCK_MARKERS = (
+    "portfolio",
+    "binder",
+    "mappe",
+    "samlemappe",
+    "album",
+    "pocket page",
+    "kortlomme",
+    "kortlommer",
+    "sleeve",
+    "dragonshield",
+    "dragon shield",
+    "ultrapro",
+    "ultra pro",
+    "playmat",
+    "play mat",
+    "deck protector",
+    "deck box",
+    "deckbox",
+    "storage box",
+    "opbevaring",
+    "toploader",
+    "top loader",
+    "card saver",
+    "card case",
+    "display case",
+    "card holder",
+    "kortbeskytter",
+    "kortbeskyttelse",
+    "acrylic",
+    "acryl",
+    "akryl",
+)
+
+# These are real sealed TCG products with boosters, not loose accessories.
+ACCESSORY_COLLECTION_EXCEPTIONS = (
+    "binder collection",
+    "playmat collection",
+    "play mat collection",
+    "accessory pouch special collection",
+    "sleeved booster",
+)
+
+
+def is_low_signal_accessory_name(name):
+    """Return True for accessories/repack products that should stay silent."""
+    text = " " + re.sub(r"\s+", " ", str(name or "").lower()) + " "
+
+    if any(marker in text for marker in ACCESSORY_HARD_BLOCK_MARKERS):
+        return True
+
+    if any(marker in text for marker in ACCESSORY_COLLECTION_EXCEPTIONS):
+        return False
+
+    return any(marker in text for marker in ACCESSORY_BLOCK_MARKERS)
+
+
+# ============================================================
 # RESTOCK ALERT FILTER
 # ============================================================
 
@@ -866,6 +933,9 @@ def restock_alert_allowed(product, game_override=None):
     """Keep low-signal products in state, but silence them on Discord."""
     name = str((product or {}).get("name", "")).lower()
     game = game_override or (product or {}).get("game")
+
+    if is_low_signal_accessory_name(name):
+        return False
 
     if game == "POKÉMON" and any(
         marker in name
@@ -903,6 +973,9 @@ def filter_restock_alert_products(products, game_override=None):
 
 def get_price_watch_type(name, game):
     text = (name or "").lower()
+
+    if is_low_signal_accessory_name(text):
+        return None
 
     # Produkter der aldrig må komme med i Price Watch.
     blocked = (
