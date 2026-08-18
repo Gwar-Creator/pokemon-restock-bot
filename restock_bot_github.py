@@ -51,7 +51,7 @@ RESTOCK_PRICE_ALERTS_ENABLED = False
 
 SOURCE_MIN_PRODUCTS = {
     "coolshop": 10,
-    "proshop": 5,
+    "proshop": 2,
     "br": 5,
     "bilka": 5,
     "foetex": 5,
@@ -3344,20 +3344,17 @@ def _parse_proshop_products(response):
     soup = BeautifulSoup(response.text, "html.parser")
     products = {}
 
-    cards = soup.select("li.site-productlist-item")
+    # Product card class names change regularly. Anchor the parser on the
+    # stable public product URL and only use the surrounding card for price
+    # and stock text.
+    link_pattern = re.compile(
+        r"/Pokemon/[^?#]+/\d+(?:[?#].*)?$",
+        re.IGNORECASE,
+    )
+    links = soup.find_all("a", href=link_pattern)
 
-    for card in cards:
-        link = card.find(
-            "a",
-            href=re.compile(
-                r"/Pokemon/[^?#]+/\d+(?:[?#].*)?$",
-                re.IGNORECASE,
-            ),
-        )
-        if not link:
-            continue
-
-        href = link["href"]
+    for link in links:
+        href = link.get("href") or ""
         match = re.search(r"/(\d+)(?:[?#].*)?$", href)
         if not match:
             continue
@@ -3368,7 +3365,10 @@ def _parse_proshop_products(response):
 
         # /Pokemon is a broad fallback with figures, games etc. Keep only
         # trading-card-related rows when that route is used.
-        tcg_text = name + " " + text_card
+        # Classify from the product title/link label, not the full
+        # description. Legitimate sealed collections often mention sleeves,
+        # playmats or deck boxes in their included contents.
+        tcg_text = name + " " + link.get_text(" ", strip=True)
         if not _proshop_is_tcg_text(tcg_text):
             continue
 
@@ -3397,12 +3397,25 @@ PROSHOP_READER_URL = "https://r.jina.ai/" + PROSHOP_URL
 
 
 def _proshop_is_tcg_text(value):
-    """Keep real Pokemon TCG products; reject binders/sleeves/accessories.
-
-    Stock status is deliberately NOT part of this filter. Out-of-stock and
-    orderable products remain in state so later restocks can be detected.
-    """
+    """Keep real sealed/playable Pokemon TCG products, not accessories."""
     low = " " + re.sub(r"\s+", " ", (value or "").lower()) + " "
+
+    # These are genuine sealed products even when their names contain words
+    # that can also describe accessories.
+    sealed_allow = (
+        "booster pack", "booster packs", "booster box", "booster display",
+        "booster bundle", "sleeved booster", "elite trainer box", " etb ",
+        "blister", "poké ball tin", "poke ball tin", "mini tin", " tin ",
+        "binder collection", "playmat collection",
+        "accessory pouch special collection",
+        "premium collection", "illustration collection", "collection box",
+        "ultra-premium collection", "ultra premium collection",
+        "league battle deck", "deluxe battle deck", "ex battle deck",
+        "battle deck", "world championships deck", "championship deck",
+        "trainer toolkit", "battle academy", "build & battle", "build and battle",
+    )
+    if any(marker in low for marker in sealed_allow):
+        return True
 
     blocked = (
         "portfolio", "binder", "mappe", "album", "pocket page",
@@ -3415,17 +3428,8 @@ def _proshop_is_tcg_text(value):
     if any(marker in low for marker in blocked):
         return False
 
-    wanted = (
-        "booster pack", "booster packs", "booster box", "booster display",
-        "booster bundle", "sleeved booster", "elite trainer box", " etb ",
-        "blister", "poké ball tin", "poke ball tin", "mini tin", " tin ",
-        "premium collection", "illustration collection", "collection box",
-        "collection", "ultra-premium collection", "ultra premium collection",
-        "league battle deck", "deluxe battle deck", "ex battle deck",
-        "battle deck", "world championships deck", "championship deck",
-        "trainer toolkit", "battle academy", "build & battle", "build and battle",
-    )
-    return any(marker in low for marker in wanted)
+    # Some Proshop titles are simply named "Collection".
+    return " collection " in low
 
 
 def _parse_proshop_reader_markdown(markdown):
@@ -3459,7 +3463,7 @@ def _parse_proshop_reader_markdown(markdown):
         label = re.sub(r"\s+", " ", match.group("label") or "").strip()
         name = clean_proshop_name(href)
 
-        if not _proshop_is_tcg_text(name + " " + label + " " + segment[:800]):
+        if not _proshop_is_tcg_text(name + " " + label):
             continue
 
         price_match = re.search(
@@ -3467,17 +3471,20 @@ def _parse_proshop_reader_markdown(markdown):
             segment,
             flags=re.IGNORECASE,
         )
-        if not price_match:
-            continue
+        price = None
 
-        raw_price = price_match.group(1).replace(".", "").replace(",", ".")
-        try:
-            price = float(raw_price)
-        except ValueError:
-            continue
+        if price_match:
+            raw_price = price_match.group(1).replace(".", "").replace(",", ".")
 
-        if price <= 0:
-            continue
+            try:
+                price = float(raw_price)
+            except ValueError:
+                price = None
+
+        # Keep real products without a current price. Proshop uses this for
+        # unavailable preorders, which must remain in state for later restock.
+        if price is not None and price <= 0:
+            price = None
 
         stock_text = segment.lower()
         if "på lager" in stock_text or "pa lager" in stock_text:
@@ -3535,10 +3542,18 @@ def get_proshop_products_via_reader():
     products = _parse_proshop_reader_markdown(response.text)
     priced = sum(1 for product in products.values() if product.get("price"))
 
+    # A page with many raw links but zero parsed products is a parser failure,
+    # not a valid empty shop snapshot.
+    if not products:
+        raise RuntimeError(
+            f"Jina Reader parser extracted 0 products from "
+            f"{raw_product_links} raw product links"
+        )
+
     print(
         f"PROSHOP: bruger Jina Reader fallback "
         f"({len(products)} relevante TCG-produkter; "
-        f"{raw_product_links} rå produktlinks)"
+        f"{priced} med pris; {raw_product_links} rå produktlinks)"
     )
     return products
 
