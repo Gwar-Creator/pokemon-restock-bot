@@ -100,8 +100,8 @@ Før levering:
 
 Senest observeret 2026-08-18:
 
-- Proshop har haft langvarige fejl på grund af for lavt produktantal.
-- Elgiganten har været rate-limited med HTTP 429.
+- Proshop blev gendannet som sund kilde med 7 relevante produkter efter en robust parserrettelse.
+- Elgiganten er fortsat rate-limited med HTTP 429, men cooldown og eksponentiel backoff gemmes nu korrekt mellem GitHub-runs. Eksisterende 17 produkter bevares, indtil en frisk Algolia-nøgle kan hentes.
 - Workflowet committer state ved ændringer og kan derfor skabe mange commits.
 - Enkelte lokale lagerdata fra BR/Føtex kan være mistænkelige og bør diagnosticeres før ændringer.
 - Workflowet har historisk haft trin til engangs-patches; primær kode skal være den varige løsning.
@@ -123,6 +123,8 @@ Gode næste trin, som skal indføres enkeltvis og sikkert:
 
 - 2026-08-18: Mega Zygarde-produktet blev gjort tavst i restock.
 - 2026-08-18: Central filtrering af portfolios, penalhuse og øvrigt tilbehør blev indført med undtagelser for legitime forseglede collections.
+- 2026-08-18: Proshop-parseren blev gjort linkbaseret og begyndte igen at levere 7 levende produkter; pris-løse preorders bevares.
+- 2026-08-18: Elgigantens rate-limit-cooldown blev gjort persistent med eksponentiel backoff, og lokal `in_stock` blev rettet til Price Watch.
 - Lav-signal-produkter skal normalt forblive i state, men ikke sendes til Discord.
 
 ## Kommunikation
