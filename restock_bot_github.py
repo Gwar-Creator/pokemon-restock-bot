@@ -214,7 +214,9 @@ ELGIGANTEN_ESBJERG_STORE_ID = "3022"
 
 ELGIGANTEN_KEY_CACHE = {
     "api_key": None,
-    "valid_until": 0
+    "valid_until": 0,
+    "retry_after": 0,
+    "rate_limit_failures": 0,
 }
 
 
@@ -1244,8 +1246,8 @@ def get_price_watch_availability(source_key, product):
 
         return None
 
-    # Bilka, Føtex og Elgiganten
-    if source_key in ("bilka", "foetex", "elgiganten"):
+    # Bilka and Føtex expose numeric local stock.
+    if source_key in ("bilka", "foetex"):
         if product.get("online_stock"):
             return "ONLINE"
 
@@ -1253,6 +1255,20 @@ def get_price_watch_availability(source_key, product):
 
         for store in local_stocks.values():
             if safe_int(store.get("stock")) > 0:
+                return store.get("name") or "LOKALT"
+
+        return None
+
+    # Elgiganten exposes local availability as in_stock/display instead of a
+    # numeric stock field.
+    if source_key == "elgiganten":
+        if product.get("online_stock"):
+            return "ONLINE"
+
+        local_stocks = product.get("local_stocks") or {}
+
+        for store in local_stocks.values():
+            if store.get("in_stock"):
                 return store.get("name") or "LOKALT"
 
         return None
@@ -4604,14 +4620,25 @@ def get_elgiganten_signed_key(force=False):
 
     if response.status_code == 429:
         retry_after = safe_int(response.headers.get("Retry-After"), 0)
-        # If the server gives no explicit window, give it 30 minutes. This is
-        # far healthier than three immediate retries every five minutes.
-        cooldown = retry_after if retry_after > 0 else 1800
-        cooldown = max(300, min(cooldown, 21600))
+        failures = (
+            safe_int(ELGIGANTEN_KEY_CACHE.get("rate_limit_failures"), 0)
+            + 1
+        )
+
+        # Persisted exponential backoff prevents each new five-minute GitHub
+        # runner from hammering the same public key endpoint. An explicit
+        # Retry-After header always wins.
+        if retry_after > 0:
+            cooldown = retry_after
+        else:
+            cooldown = min(12 * 60 * 60, 30 * 60 * (2 ** min(failures - 1, 4)))
+
+        cooldown = max(300, min(cooldown, 12 * 60 * 60))
         ELGIGANTEN_KEY_CACHE["retry_after"] = int(time.time() + cooldown)
+        ELGIGANTEN_KEY_CACHE["rate_limit_failures"] = failures
         print(
-            f"ELGIGANTEN signed-key 429 - cooldown {cooldown}s; "
-            "ingen immediate retries"
+            f"ELGIGANTEN signed-key 429 - cooldown {cooldown}s "
+            f"(rate-limit #{failures}); ingen immediate retries"
         )
         response.raise_for_status()
 
@@ -4625,6 +4652,7 @@ def get_elgiganten_signed_key(force=False):
     ELGIGANTEN_KEY_CACHE["api_key"] = api_key
     ELGIGANTEN_KEY_CACHE["valid_until"] = get_elgiganten_key_valid_until(api_key)
     ELGIGANTEN_KEY_CACHE["retry_after"] = 0
+    ELGIGANTEN_KEY_CACHE["rate_limit_failures"] = 0
 
     return api_key
 
@@ -4633,22 +4661,28 @@ def is_real_elgiganten_pokemon_tcg(product):
     title = (product.get("title") or "").lower()
     brand = (product.get("brand") or "").lower()
 
-    # Mapper/bindere og lignende tilbehør skal ikke give restock-alerts.
     if brand == "ultrapro":
         return False
+
+    # Official sealed collections remain valid even when a binder/playmat is
+    # part of the product.
+    allowed_collections = (
+        "binder collection",
+        "playmat collection",
+        "accessory pouch special collection",
+    )
+    if any(phrase in title for phrase in allowed_collections):
+        return True
 
     blocked_words = (
         "binder",
         "mappe",
         "portfolio",
         "sleeve",
-        "kortlommer"
+        "kortlommer",
     )
 
-    if any(word in title for word in blocked_words):
-        return False
-
-    return True
+    return not any(word in title for word in blocked_words)
 
 
 def get_elgiganten_store_stock(product, store_id, store_name):
@@ -7570,10 +7604,25 @@ if isinstance(state, dict):
             saved_elgiganten_cache.get("valid_until"),
             0
         )
+        cached_retry_after = safe_int(
+            saved_elgiganten_cache.get("retry_after"),
+            0
+        )
+        cached_rate_limit_failures = safe_int(
+            saved_elgiganten_cache.get("rate_limit_failures"),
+            0
+        )
 
         if cached_api_key:
             ELGIGANTEN_KEY_CACHE["api_key"] = cached_api_key
             ELGIGANTEN_KEY_CACHE["valid_until"] = cached_valid_until
+
+        # The cooldown is just as important as the key. Without hydrating it,
+        # every short-lived GitHub runner repeats the same rate-limited call.
+        ELGIGANTEN_KEY_CACHE["retry_after"] = cached_retry_after
+        ELGIGANTEN_KEY_CACHE[
+            "rate_limit_failures"
+        ] = cached_rate_limit_failures
 
 
 # =========================================================
