@@ -40,6 +40,7 @@ RESTOCK_ALERT_MEMORY = {}
 PRICE_ALERT_MEMORY = {}
 
 PRICE_SIGNAL_CLEANUP_V23 = True
+RETAILER_CLEANUP_V25 = True
 RESTOCK_DUPLICATE_COOLDOWN_SECONDS = 6 * 60 * 60
 RESTOCK_NEW_PRODUCT_COOLDOWN_SECONDS = 24 * 60 * 60
 PRICE_ALERT_COOLDOWN_SECONDS = 24 * 60 * 60
@@ -56,7 +57,6 @@ SOURCE_MIN_PRODUCTS = {
     "br": 5,
     "bilka": 5,
     "foetex": 5,
-    "elgiganten": 5,
     "pokehulen": 10,
     "rogerz": 20,
     "mtgwebshop": 10,
@@ -1419,13 +1419,6 @@ def collect_price_watch_candidates(
         "POKÉMON"
     )
 
-    add_products(
-        "ELGIGANTEN",
-        "elgiganten",
-        current_state.get("elgiganten", {}),
-        "POKÉMON"
-    )
-
     shopify_state = current_state.get("shopify", {})
 
     for site_key, site in SHOPIFY_SITES.items():
@@ -1473,7 +1466,7 @@ def collect_price_watch_candidates(
 def _price_watch_raw_products_for_source(current_state, source_key):
     if source_key in {
         "coolshop", "proshop", "br", "bilka", "foetex",
-        "elgiganten", "epicpanda", "steffeno", "nextlevel"
+        "epicpanda", "steffeno", "nextlevel"
     }:
         products = current_state.get(source_key, {})
         return products if isinstance(products, dict) else {}
@@ -1500,7 +1493,7 @@ def build_price_watch_source_observations(current_state, fresh_sources):
     or at a higher price.
     """
     observations = {}
-    pokemon_only = {"proshop", "br", "bilka", "foetex", "elgiganten", "steffeno"}
+    pokemon_only = {"proshop", "br", "bilka", "foetex", "steffeno"}
 
     for source_key in fresh_sources:
         source_rows = {}
@@ -3633,7 +3626,9 @@ def get_proshop_products_via_reader():
         PROSHOP_READER_URL,
         headers={
             "Accept": "text/plain, text/markdown;q=0.9, */*;q=0.5",
-            "User-Agent": "Pokemon-Lorcana-MasterBot/2.0 ProshopFallback",
+            "User-Agent": "Pokemon-Lorcana-MasterBot/2.5 ProshopPrimary",
+            "x-no-cache": "true",
+            "x-engine": "browser",
         },
         timeout=50,
     )
@@ -3665,7 +3660,7 @@ def get_proshop_products_via_reader():
         )
 
     print(
-        f"PROSHOP: bruger Jina Reader fallback "
+        f"PROSHOP: bruger Jina Reader primary "
         f"({len(products)} relevante TCG-produkter; "
         f"{priced} med pris; {raw_product_links} rå produktlinks)"
     )
@@ -3673,6 +3668,22 @@ def get_proshop_products_via_reader():
 
 
 def get_proshop_products():
+    errors = []
+
+    # GitHub-hosted requests are consistently blocked with HTTP 403, while
+    # Jina/browser rendering exposes the public category reliably. Treat it
+    # as the production transport instead of pretending it is an emergency
+    # fallback.
+    try:
+        products = get_proshop_products_via_reader()
+        if products:
+            return products
+        errors.append("Jina Reader: 0 produkter")
+    except Exception as error:
+        errors.append(f"Jina Reader: {error}")
+
+    # Safety fallback only: if Reader is temporarily unavailable, try the two
+    # public Proshop routes once each. No retry storm.
     headers = {
         **BROWSER_HEADERS,
         "Accept": (
@@ -3683,15 +3694,11 @@ def get_proshop_products():
         "Referer": PROSHOP_BASE + "/",
         "Upgrade-Insecure-Requests": "1",
     }
-
     urls = [
         (PROSHOP_URL, "pokemon-kort"),
         (PROSHOP_BASE + "/Pokemon", "Pokemon fallback"),
     ]
-    errors = []
 
-    # Prefer Chrome TLS/browser fingerprint. Do not immediately repeat the
-    # same 403 three times; try the second official route instead.
     if curl_requests is not None:
         try:
             session = curl_requests.Session(impersonate="chrome")
@@ -3701,51 +3708,19 @@ def get_proshop_products():
                 except Exception as error:
                     errors.append(f"{label}: {error}")
                     continue
-
                 if response.status_code != 200:
                     errors.append(f"{label}: HTTP {response.status_code}")
                     continue
-
                 products = _parse_proshop_products(response)
                 if products:
-                    if url != PROSHOP_URL:
-                        print(
-                            f"PROSHOP: primær route blokeret; bruger {label} "
-                            f"({len(products)} TCG-produkter)"
-                        )
+                    print(
+                        f"PROSHOP: Reader utilgængelig; direct fallback {label} "
+                        f"gav {len(products)} TCG-produkter"
+                    )
                     return products
-
                 errors.append(f"{label}: 200 men ingen TCG-produkter parsed")
         except Exception as error:
             errors.append(f"curl_cffi: {error}")
-
-    # Plain requests is only a fallback when curl_cffi is unavailable or
-    # failed unexpectedly. One request per route, no sleep/retry storm.
-    if curl_requests is None:
-        session = requests.Session()
-        session.headers.update(headers)
-        for url, label in urls:
-            try:
-                response = session.get(url, timeout=25)
-            except requests.RequestException as error:
-                errors.append(f"{label}: {error}")
-                continue
-
-            if response.status_code != 200:
-                errors.append(f"{label}: HTTP {response.status_code}")
-                continue
-
-            products = _parse_proshop_products(response)
-            if products:
-                return products
-            errors.append(f"{label}: 200 men ingen TCG-produkter parsed")
-
-    # Direct GitHub egress is frequently blocked by Proshop. Use Jina Reader
-    # as a low-rate browser/proxy fallback for the same public category page.
-    try:
-        return get_proshop_products_via_reader()
-    except Exception as reader_error:
-        errors.append(f"Jina Reader: {reader_error}")
 
     short = "; ".join(errors[-5:]) if errors else "ukendt fejl"
     raise RuntimeError(f"Proshop utilgængelig ({short})")
@@ -8512,89 +8487,27 @@ while True:
             )
 
         # -------------------------
-        # ELGIGANTEN
+        # ELGIGANTEN - RETIRED V25
         # -------------------------
 
-        try:
-            elgiganten_was_initialized = (
-                "elgiganten" in state
-            )
-
-            old_elgiganten = state.get(
-                "elgiganten",
-                {}
-            )
-
-            elgiganten = fetch_source_products(
-                "elgiganten",
-                old_elgiganten,
-                lambda: get_elgiganten_products(old_products=old_elgiganten),
-                new_state,
-            )
-
-            if ELGIGANTEN_LAST_FETCH_MODE != "algolia":
-                _source_health_update(
-                    new_state,
-                    "elgiganten",
-                    status="degraded",
-                    consecutive_failures=0,
-                    last_error=(
-                        "Signed Algolia key unavailable; rotating public "
-                        "product-page fallback active"
-                    ),
-                    observed_count=len(elgiganten),
-                )
-
-            elgiganten_local_counts = (
-                count_elgiganten_local_products(elgiganten)
-            )
-
-            print(
-                f"ELGIGANTEN: {len(elgiganten)} Pokémon TCG | "
-                f"Kolding {elgiganten_local_counts.get('3003', 0)} | "
-                f"Esbjerg {elgiganten_local_counts.get('3022', 0)}"
-            )
-
-            if elgiganten_was_initialized:
-                process_elgiganten_changes(
-                    old_elgiganten,
-                    elgiganten
-                )
-
-            else:
-                print(
-                    "Elgiganten baseline tilføjet uden historiske alerts."
-                )
-
-                send_discord(
-                    "🟢 **Elgiganten overvågning aktiveret**\n"
-                    f"⚡ Pokémon TCG: {len(elgiganten)} produkter\n"
-                    f"📍 Elgiganten Kolding: "
-                    f"{elgiganten_local_counts.get('3003', 0)} produkter\n"
-                    f"📍 Elgiganten Esbjerg: "
-                    f"{elgiganten_local_counts.get('3022', 0)} produkter\n"
-                    "🌐 Online lager + nationalt butikstal overvåges også."
-                )
-
-            new_state[
-                "elgiganten"
-            ] = elgiganten
-
-            if ELGIGANTEN_LAST_FETCH_MODE == "algolia":
-                price_watch_fresh_sources.add(
-                    "elgiganten"
-                )
-            else:
-                print(
-                    "ELGIGANTEN: partial fallback holdes ude af Price Watch/History "
-                    "indtil fuld Algolia-scan er frisk igen."
-                )
-
-        except Exception as error:
-            print(
-                "Elgiganten fejl:",
-                error
-            )
+        # Public product pages, signed Algolia and the anonymous orchestrator
+        # are all blocked/rate-limited from the runner. Preserve historical
+        # data, but make no network calls and never expose stale Elgiganten
+        # prices/stock as live signals.
+        old_elgiganten = state.get("elgiganten", {})
+        new_state["elgiganten"] = old_elgiganten
+        _source_health_update(
+            new_state,
+            "elgiganten",
+            status="retired",
+            consecutive_failures=0,
+            last_error="Retired V25: no reliable public live-stock path",
+            observed_count=len(old_elgiganten) if isinstance(old_elgiganten, dict) else 0,
+        )
+        print(
+            "ELGIGANTEN: retired fra aktiv scanning; historisk state bevares "
+            "og bruges ikke i Price Watch/History."
+        )
 
         # -------------------------
         # SHOPIFY-WEBSHOPS
