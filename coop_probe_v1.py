@@ -8,10 +8,19 @@ import requests
 WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL", "").strip()
 BASE_URL = "https://api.etilbudsavis.dk/v2"
 
-# Fast geografisk sanity check omkring Kolding.
+# Hent bredt nok til også at få Esbjerg med, men filtrer bagefter hårdt til
+# de fire byer vi vil teste først.
 KOLDING_LAT = 55.4904
 KOLDING_LNG = 9.4722
-LOCAL_RADIUS_METERS = 55000
+LOCAL_RADIUS_METERS = 100000
+TARGET_CITY_MARKERS = (
+    "brørup",
+    "brorup",
+    "vejen",
+    "kolding",
+    "esbjerg",
+)
+TARGET_CITY_LABEL = "Brørup · Vejen · Kolding · Esbjerg"
 
 COOP_CHAIN_MARKERS = (
     "kvickly",
@@ -21,8 +30,6 @@ COOP_CHAIN_MARKERS = (
     "365 discount",
 )
 
-# Tjek/eTilbudsavis public business IDs. Disse er ikke afhængige af, at der
-# tilfældigvis findes et Pokemon-tilbud i kæden lige nu.
 KNOWN_COOP_DEALERS = {
     "c1edq": "Kvickly",
     "0b1e8": "SuperBrugsen",
@@ -30,7 +37,6 @@ KNOWN_COOP_DEALERS = {
     "DWZE1w": "365discount",
 }
 
-# Alle søgninger indeholder Pokemon. Det løse ord "booster" bruges aldrig.
 POKEMON_QUERIES = (
     "pokemon",
     "pokémon",
@@ -42,7 +48,6 @@ POKEMON_QUERIES = (
     "pokemon tin",
 )
 
-# V1-scope er kun de sealed produkttyper brugeren bad om.
 SEALED_PRODUCT_MARKERS = (
     "booster",
     "elite trainer",
@@ -55,9 +60,7 @@ SEALED_PRODUCT_MARKERS = (
     "poke ball tin",
 )
 
-HEADERS = {
-    "User-Agent": "Pokemon-Lorcana-MasterBot/coop-probe-v1.2"
-}
+HEADERS = {"User-Agent": "Pokemon-Lorcana-MasterBot/coop-probe-v1.3"}
 
 
 def get_json(path, params=None):
@@ -82,6 +85,11 @@ def is_coop_name(value):
     return any(marker in text for marker in COOP_CHAIN_MARKERS)
 
 
+def is_target_city(name, city, postal=""):
+    text = normalize(f"{name} {city} {postal}")
+    return any(marker in text for marker in TARGET_CITY_MARKERS)
+
+
 def offer_text(offer):
     return normalize(
         " ".join(
@@ -94,9 +102,7 @@ def offer_text(offer):
 
 
 def is_pokemon_tcg_offer(offer):
-    """Require BOTH Pokemon and a requested sealed product type."""
     text = offer_text(offer)
-
     if "pokemon" not in text:
         return False
 
@@ -142,10 +148,7 @@ def format_price(offer):
 
 
 def fetch_dealers():
-    raw = get_json(
-        "/dealers",
-        {"country_id": "DK", "limit": 250},
-    )
+    raw = get_json("/dealers", {"country_id": "DK", "limit": 250})
     if not isinstance(raw, list):
         raise RuntimeError("Tjek /dealers returnerede ikke en liste")
 
@@ -167,17 +170,13 @@ def fetch_coop_offer_signals(dealers_by_id):
     offers = {}
     discovered_coop_dealers = {}
     query_errors = []
-    rejected_coop_pokemon_rows = 0
+    rejected_rows = 0
 
     for query in POKEMON_QUERIES:
         try:
             raw = get_json(
                 "/offers/search",
-                {
-                    "query": query,
-                    "limit": 100,
-                    "country_id": "DK",
-                },
+                {"query": query, "limit": 100, "country_id": "DK"},
             )
         except Exception as error:
             query_errors.append(f"{query}: {type(error).__name__}")
@@ -199,7 +198,7 @@ def fetch_coop_offer_signals(dealers_by_id):
                 )
 
             if not is_pokemon_tcg_offer(offer):
-                rejected_coop_pokemon_rows += 1
+                rejected_rows += 1
                 continue
 
             offer_id = str(offer.get("id") or "")
@@ -208,17 +207,10 @@ def fetch_coop_offer_signals(dealers_by_id):
                 f"{(offer.get('pricing') or {}).get('price')}"
             )
             row = dict(offer)
-            row["_chain_name"] = (
-                KNOWN_COOP_DEALERS.get(dealer_id) or name
-            )
+            row["_chain_name"] = KNOWN_COOP_DEALERS.get(dealer_id) or name
             offers[key] = row
 
-    return (
-        list(offers.values()),
-        discovered_coop_dealers,
-        query_errors,
-        rejected_coop_pokemon_rows,
-    )
+    return list(offers.values()), discovered_coop_dealers, query_errors, rejected_rows
 
 
 def fetch_local_stores(coop_dealers):
@@ -234,7 +226,7 @@ def fetch_local_stores(coop_dealers):
                     "r_lat": KOLDING_LAT,
                     "r_lng": KOLDING_LNG,
                     "r_radius": LOCAL_RADIUS_METERS,
-                    "limit": 100,
+                    "limit": 200,
                 },
             )
         except Exception as error:
@@ -250,6 +242,9 @@ def fetch_local_stores(coop_dealers):
             city = str(address.get("city") or store.get("city") or "")
             postal = str(address.get("zip_code") or address.get("zip") or "")
             store_id = str(store.get("id") or "")
+
+            if not is_target_city(name, city, postal):
+                continue
 
             found.append(
                 {
@@ -282,18 +277,14 @@ def send_report(
     if not WEBHOOK_URL:
         raise RuntimeError("DISCORD_WEBHOOK_URL mangler")
 
-    combined_coop_dealers = dict(KNOWN_COOP_DEALERS)
-    combined_coop_dealers.update(api_coop_dealers)
-    combined_coop_dealers.update(discovered_coop_dealers)
-
     store_counts = Counter(store["chain"] for store in stores)
 
     lines = [
         "**Isoleret probe - ingen ændring af normal restock-logik.**",
+        f"🎯 Område: **{TARGET_CITY_LABEL}**",
         "",
-        f"✅ /dealers returnerede: **{len(dealers)} danske kæder**",
-        f"🏪 Coop-kæder vi kender sikkert: **{len(KNOWN_COOP_DEALERS)}**",
-        f"📍 Lokale Coop-butikker via /stores: **{len(stores)}**",
+        f"🏪 Coop-kæder vi tester: **{len(KNOWN_COOP_DEALERS)}**",
+        f"📍 Matchende Coop-butikker: **{len(stores)}**",
         f"🎴 Reelle booster/ETB/tin-signaler: **{len(offers)}**",
         f"🧹 Frasorterede brede/irrelevante Coop-hits: **{rejected_rows}**",
     ]
@@ -303,12 +294,11 @@ def send_report(
             f"⚠️ /stores fejl på {len(store_errors)} kæde(r): "
             + ", ".join(store_errors)
         )
-
     if query_errors:
         lines.append(f"⚠️ Offer-query fejl: {len(query_errors)}")
 
     lines.append("")
-    lines.append("**Kædedækning i lokalområdet:**")
+    lines.append("**Kædedækning i de fire byer:**")
     for dealer_id, chain_name in KNOWN_COOP_DEALERS.items():
         lines.append(
             f"• {chain_name}: **{store_counts.get(chain_name, 0)} butikker** · `{dealer_id}`"
@@ -316,15 +306,19 @@ def send_report(
 
     if stores:
         lines.append("")
-        lines.append("**Lokale butikker fundet:**")
-        priority_terms = ("kolding", "vejen", "brørup", "brorup", "fredericia")
+        lines.append("**Butikker i scope:**")
+
+        city_order = {"brørup": 0, "brorup": 0, "vejen": 1, "kolding": 2, "esbjerg": 3}
 
         def store_priority(row):
             text = normalize(f"{row['name']} {row['city']}")
-            preferred = 0 if any(term in text for term in priority_terms) else 1
-            return (preferred, row["chain"], row["city"], row["name"])
+            rank = 99
+            for marker, value in city_order.items():
+                if marker in text:
+                    rank = min(rank, value)
+            return (rank, row["chain"], row["name"])
 
-        for store in sorted(stores, key=store_priority)[:24]:
+        for store in sorted(stores, key=store_priority):
             location = " ".join(
                 x for x in (store["postal"], store["city"]) if x
             ).strip()
@@ -362,12 +356,10 @@ def send_report(
     lines.extend(
         [
             "",
-            "**Stock-status:**",
-            "Tjek-data giver butikker + tilbud, men ikke fysisk lagerantal. "
-            "Coop Scan&Betal kan slå en scannet vare op i den valgte butik og "
-            "vise butiksspecifik pris, så der findes et separat produkt/POS-lag. "
-            "Næste tekniske spor er at finde et offentligt anvendeligt app-endpoint "
-            "for produkt/availability; vi kalder det ikke stock før det er bevist.",
+            "**Næste stock-spor:**",
+            "De fundne store-ID'er i Brørup, Vejen, Kolding og Esbjerg bliver vores "
+            "testgrundlag til Coop-appens produkt/EAN-opslag. Målet er at se, om "
+            "svaret indeholder availability/quantity/stock - ikke kun lokal pris.",
         ]
     )
 
@@ -376,10 +368,10 @@ def send_report(
         "allowed_mentions": {"parse": []},
         "embeds": [
             {
-                "title": "🧪 COOP PROBE V1.2 - ALLE KÆDER",
+                "title": "🧪 COOP PROBE V1.3 - 4 BYER",
                 "description": "\n".join(lines)[:4090],
                 "color": 0xF1C40F,
-                "footer": {"text": "MasterBot · Coop probe · all chain IDs"},
+                "footer": {"text": "MasterBot · Coop probe · Brørup/Vejen/Kolding/Esbjerg"},
             }
         ],
     }
@@ -400,10 +392,6 @@ if __name__ == "__main__":
 
     try:
         dealers, api_coop_dealers = fetch_dealers()
-        print(
-            f"COOP PROBE: {len(dealers)} dealers | "
-            f"{len(api_coop_dealers)} Coop dealers via /dealers"
-        )
     except Exception as error:
         print(f"COOP PROBE dealers FEJL: {error}")
 
@@ -414,11 +402,6 @@ if __name__ == "__main__":
             query_errors,
             rejected_rows,
         ) = fetch_coop_offer_signals(dealers)
-        print(
-            f"COOP PROBE offers: {len(offers)} sealed TCG-signaler | "
-            f"{len(discovered_coop_dealers)} Coop dealer-ID'er via offers | "
-            f"{rejected_rows} frasorteret | {len(query_errors)} query-fejl"
-        )
     except Exception as error:
         query_errors.append(str(error))
         print(f"COOP PROBE offers FEJL: {error}")
@@ -429,7 +412,7 @@ if __name__ == "__main__":
 
     stores, store_errors = fetch_local_stores(combined_coop_dealers)
     print(
-        f"COOP PROBE stores: {len(stores)} lokale fund | "
+        f"COOP PROBE V1.3: {len(stores)} butikker i {TARGET_CITY_LABEL} | "
         f"{len(store_errors)} fejl"
     )
 
