@@ -1,5 +1,6 @@
 import os
 import re
+import json
 from urllib.parse import urlencode, urljoin
 
 import requests
@@ -38,12 +39,73 @@ TARGET_STORE_MARKERS = (
     "brorup",
 )
 
+# Salling bruger ofte generiske produkttitler som "Pokemon TCG booster pack".
+# Serien ligger dog ofte et andet sted i Algolia-recorden (beskrivelse, slug,
+# kampagnetekst osv.). Vi søger derfor hele recorden efter kendte set-navne.
+# Længste/mest specifikke aliases først for at undgå fejlmatch.
+KNOWN_SET_ALIASES = (
+    ("Mega Evolution: Chaos Rising", ("chaos rising", "mega evolution chaos rising")),
+    ("Mega Evolution: Perfect Order", ("perfect order", "mega evolution perfect order")),
+    ("Scarlet & Violet: Destined Rivals", ("destined rivals", "rivals booster", "pokemon rivals booster")),
+    ("Mega Evolution: Pitch Black", ("pitch black",)),
+    ("Mega Evolution: Ascended Heroes", ("ascended heroes",)),
+    ("Scarlet & Violet: Black Bolt", ("black bolt",)),
+    ("Scarlet & Violet: White Flare", ("white flare",)),
+    ("Scarlet & Violet: Journey Together", ("journey together",)),
+    ("Scarlet & Violet: Prismatic Evolutions", ("prismatic evolutions",)),
+    ("Scarlet & Violet: Surging Sparks", ("surging sparks",)),
+    ("Scarlet & Violet: Stellar Crown", ("stellar crown",)),
+    ("Scarlet & Violet: Shrouded Fable", ("shrouded fable",)),
+    ("Scarlet & Violet: Twilight Masquerade", ("twilight masquerade",)),
+    ("Scarlet & Violet: Temporal Forces", ("temporal forces",)),
+    ("Scarlet & Violet: Paldean Fates", ("paldean fates",)),
+    ("Scarlet & Violet: Paradox Rift", ("paradox rift",)),
+    ("Scarlet & Violet: 151", ("pokemon 151", "pokémon 151", "scarlet violet 151")),
+    ("Scarlet & Violet: Obsidian Flames", ("obsidian flames",)),
+    ("Scarlet & Violet: Paldea Evolved", ("paldea evolved",)),
+)
+
+# Kendte Salling-varenumre hvor den offentlige titel er generisk, men den
+# offentlige produktside entydigt dokumenterer serien.
+KNOWN_PRODUCT_SERIES = {
+    "200356078": "Mega Evolution: Perfect Order",
+    "11221188-EA": "Mega Evolution: Perfect Order",
+    "200366277": "Mega Evolution: Chaos Rising",
+    "11263280-EA": "Mega Evolution: Chaos Rising",
+}
+
 
 def safe_int(value, default=0):
     try:
         return int(value)
     except (TypeError, ValueError):
         return default
+
+
+def normalize_search_text(value):
+    text = str(value or "").lower()
+    text = text.replace("pokémon", "pokemon")
+    text = text.replace("–", " ").replace("—", " ")
+    text = re.sub(r"[^a-z0-9æøå:]+", " ", text)
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def infer_series(product):
+    """Best-effort set identification from the complete Salling record."""
+    raw_text = json.dumps(product, ensure_ascii=False, sort_keys=True)
+    normalized = normalize_search_text(raw_text)
+
+    # Exact product/ERP IDs win over fuzzy text.
+    for marker, series_name in KNOWN_PRODUCT_SERIES.items():
+        if normalize_search_text(marker) in normalized:
+            return series_name, "product-id"
+
+    for series_name, aliases in KNOWN_SET_ALIASES:
+        for alias in aliases:
+            if normalize_search_text(alias) in normalized:
+                return series_name, "metadata"
+
+    return None, None
 
 
 def extract_config_value(text, key):
@@ -228,12 +290,15 @@ def get_algolia_candidates(site_key, config):
         product_url = product.get("product_url") or ""
         exposed_raw = product.get("is_exposed")
         exposed = exposed_raw is True or str(exposed_raw).lower() == "true"
+        series_name, series_source = infer_series(product)
 
         candidates.append(
             {
                 "id": str(product.get("id") or product.get("objectID") or sku),
                 "name": str(product.get("name") or "Ukendt produkt"),
                 "type": product_type,
+                "series": series_name,
+                "series_source": series_source,
                 "sku": str(sku),
                 "price": product.get("sales_price"),
                 "pre_publish": not exposed,
@@ -315,11 +380,13 @@ def scan_site(site_key):
         stocked.append(row)
 
     hidden_candidates = sum(1 for product in candidates if product["pre_publish"])
+    identified_stocked = sum(1 for product in stocked if product.get("series"))
     print(
         f"LOCAL STOCK TEST {SITES[site_key]['label']}: "
         f"{raw_hits} Algolia hits | {len(candidates)} V1 candidates | "
         f"{hidden_candidates} pre-publish candidates | "
-        f"{len(stocked)} lokale fund | {errors} availability-fejl"
+        f"{len(stocked)} lokale fund | {identified_stocked} med serie | "
+        f"{errors} availability-fejl"
     )
     return stocked, len(candidates), hidden_candidates, errors
 
@@ -332,6 +399,14 @@ def format_price(value):
     return f"{value:,.2f} kr.".replace(",", "X").replace(".", ",").replace("X", ".")
 
 
+def short_series_name(value):
+    value = str(value or "Serie ukendt")
+    for prefix in ("Mega Evolution: ", "Scarlet & Violet: "):
+        if value.startswith(prefix):
+            return value[len(prefix):]
+    return value
+
+
 def send_test_report(all_stocked, stats):
     if not WEBHOOK_URL:
         raise RuntimeError("DISCORD_WEBHOOK_URL mangler")
@@ -339,6 +414,7 @@ def send_test_report(all_stocked, stats):
     all_stocked.sort(
         key=lambda row: (
             not row["pre_publish"],
+            row.get("series") or "zzzz",
             row["type"],
             row["site"],
             row["name"],
@@ -348,6 +424,7 @@ def send_test_report(all_stocked, stats):
     total_candidates = sum(row["candidates"] for row in stats.values())
     total_hidden = sum(row["hidden"] for row in stats.values())
     total_errors = sum(row["errors"] for row in stats.values())
+    identified_stocked = sum(1 for row in all_stocked if row.get("series"))
 
     lines = [
         "**Isoleret test — ændrer ikke den normale restock-bot.**",
@@ -357,6 +434,7 @@ def send_test_report(all_stocked, stats):
         f"🔎 V1-kandidater: **{total_candidates}**",
         f"🟡 PRE-PUBLISH kandidater: **{total_hidden}**",
         f"📦 Produkter med lokal stock nu: **{len(all_stocked)}**",
+        f"🏷️ Lokale fund med identificeret serie: **{identified_stocked}/{len(all_stocked)}**",
         f"⚠️ Availability-fejl: **{total_errors}**",
     ]
 
@@ -366,10 +444,15 @@ def send_test_report(all_stocked, stats):
 
         for row in all_stocked[:12]:
             status = "🔥 PRE-PUBLISH" if row["pre_publish"] else "📍 LIVE"
+            series = short_series_name(row.get("series"))
+            series_icon = "🏷️" if row.get("series") else "❓"
             lines.append(
-                f"\n{status} · **{row['site']} · {row['type']}**\n"
+                f"\n{status} · **{row['site']} · {series.upper()} · {row['type']}**\n"
+                f"{series_icon} Serie: **{series}**\n"
                 f"{row['name']} · {format_price(row['price'])}"
             )
+            if not row.get("series"):
+                lines.append(f"🔎 SKU: `{row['sku']}`")
             for store in row["stores"]:
                 lines.append(f"🏪 {store['name']}: **{store['stock']} stk.**")
     else:
@@ -387,10 +470,10 @@ def send_test_report(all_stocked, stats):
         "allowed_mentions": {"parse": []},
         "embeds": [
             {
-                "title": "🧪 LOCAL STOCK V1 TEST",
+                "title": "🧪 LOCAL STOCK V1 — SERIETEST",
                 "description": description,
                 "color": 0xF1C40F,
-                "footer": {"text": "MasterBot · Local Stock V1 · test"},
+                "footer": {"text": "MasterBot · Local Stock V1 · serietest"},
             }
         ],
     }
