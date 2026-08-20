@@ -57,10 +57,9 @@ jobs:
       - name: Validate Python
         run: |
           python -m py_compile restock_bot_github.py
+          python -m py_compile local_stock_watch.py
+          python -m py_compile scanner_health_audit.py
           python -m py_compile cardmarket_chase_watch.py
-          python -m py_compile local_stock_v1_test.py
-          python -m py_compile coop_probe_v1.py
-          python -m py_compile coop_app_endpoint_probe_v1.py
           if [ -f cardmarket_v16_replay.py ]; then
             python -m py_compile cardmarket_v16_replay.py
           fi
@@ -73,45 +72,15 @@ jobs:
           RUN_ONCE: "1"
         run: python restock_bot_github.py
 
-      - name: Run one-time Local Stock V1 test
-        if: ${{ hashFiles('local_stock_v1_test_done.json') == '' }}
-        env:
-          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-        run: |
-          python local_stock_v1_test.py
-          python - <<'PY'
-          import json
-          from datetime import datetime, timezone
-          with open('local_stock_v1_test_done.json', 'w', encoding='utf-8') as f:
-              json.dump({'completed_at': datetime.now(timezone.utc).isoformat()}, f, indent=2)
-          PY
-
-      - name: Run one-time Coop probe V1
-        if: ${{ hashFiles('coop_probe_v1_done.json') == '' }}
-        env:
-          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-        run: |
-          python coop_probe_v1.py
-          python - <<'PY'
-          import json
-          from datetime import datetime, timezone
-          with open('coop_probe_v1_done.json', 'w', encoding='utf-8') as f:
-              json.dump({'completed_at': datetime.now(timezone.utc).isoformat()}, f, indent=2)
-          PY
-
-      - name: Run one-time Coop app endpoint probe
-        if: ${{ hashFiles('coop_app_endpoint_probe_v1_done.json') == '' }}
+      - name: Run Local Stock Watch
         continue-on-error: true
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-        run: |
-          python coop_app_endpoint_probe_v1.py
-          python - <<'PY'
-          import json
-          from datetime import datetime, timezone
-          with open('coop_app_endpoint_probe_v1_done.json', 'w', encoding='utf-8') as f:
-              json.dump({'completed_at': datetime.now(timezone.utc).isoformat()}, f, indent=2)
-          PY
+        run: python local_stock_watch.py
+
+      - name: Audit scanner health
+        continue-on-error: true
+        run: python scanner_health_audit.py
 
       - name: Run daily Card Market Watch
         continue-on-error: true
