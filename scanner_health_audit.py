@@ -1,5 +1,4 @@
 import json
-import os
 from datetime import datetime, timezone
 
 STATE_FILE = "restock_state_v2.json"
@@ -93,25 +92,8 @@ def main():
     else:
         print("AUDIT OK: alle 18 kilder er over minimum og uden registrerede failures.")
 
-    report = {
-        "checked_at": datetime.now(timezone.utc).isoformat(),
-        "sources": {
-            source: {
-                "count": count,
-                "health": status,
-                "consecutive_failures": failures,
-                "last_success": last_success,
-            }
-            for source, count, status, failures, last_success in rows
-        },
-        "issues": issues,
-    }
-
-    with open("scanner_health_report.json", "w", encoding="utf-8") as file:
-        json.dump(report, file, ensure_ascii=False, indent=2)
-
-    # Audit is diagnostic: it must not kill the scanner because a retail
-    # source is temporarily unavailable. The report is committed with state.
+    # Diagnostic only. Source-health already owns Discord failure alerts, so
+    # this audit does not create an extra noisy channel or a changing report file.
     return 0
 
 
