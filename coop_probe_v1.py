@@ -1,5 +1,7 @@
 import os
 import re
+from collections import Counter
+
 import requests
 
 
@@ -19,8 +21,16 @@ COOP_CHAIN_MARKERS = (
     "365 discount",
 )
 
-# Vigtigt: Alle søgninger indeholder Pokemon. Vi søger aldrig længere på det
-# løse ord "booster", så Faxe Kondi Booster/Pepsi osv. ikke kan komme med.
+# Tjek/eTilbudsavis public business IDs. Disse er ikke afhængige af, at der
+# tilfældigvis findes et Pokemon-tilbud i kæden lige nu.
+KNOWN_COOP_DEALERS = {
+    "c1edq": "Kvickly",
+    "0b1e8": "SuperBrugsen",
+    "d311fg": "Brugsen",
+    "DWZE1w": "365discount",
+}
+
+# Alle søgninger indeholder Pokemon. Det løse ord "booster" bruges aldrig.
 POKEMON_QUERIES = (
     "pokemon",
     "pokémon",
@@ -46,7 +56,7 @@ SEALED_PRODUCT_MARKERS = (
 )
 
 HEADERS = {
-    "User-Agent": "Pokemon-Lorcana-MasterBot/coop-probe-v1.1"
+    "User-Agent": "Pokemon-Lorcana-MasterBot/coop-probe-v1.2"
 }
 
 
@@ -87,7 +97,6 @@ def is_pokemon_tcg_offer(offer):
     """Require BOTH Pokemon and a requested sealed product type."""
     text = offer_text(offer)
 
-    # Pokémon skal stå i selve vareteksten. Kæden/branding må ikke være nok.
     if "pokemon" not in text:
         return False
 
@@ -114,7 +123,13 @@ def dealer_name(offer, dealers_by_id):
     dealer_id = str(offer.get("dealer_id") or "")
     branding = (offer.get("branding") or {}).get("name")
     nested = (offer.get("dealer") or {}).get("name")
-    return str(branding or nested or dealers_by_id.get(dealer_id) or "Ukendt")
+    return str(
+        branding
+        or nested
+        or dealers_by_id.get(dealer_id)
+        or KNOWN_COOP_DEALERS.get(dealer_id)
+        or "Ukendt"
+    )
 
 
 def format_price(offer):
@@ -149,7 +164,6 @@ def fetch_dealers():
 
 
 def fetch_coop_offer_signals(dealers_by_id):
-    """Use offer payloads both as TCG signal and fallback dealer discovery."""
     offers = {}
     discovered_coop_dealers = {}
     query_errors = []
@@ -176,13 +190,13 @@ def fetch_coop_offer_signals(dealers_by_id):
             dealer_id = str(offer.get("dealer_id") or "")
             name = dealer_name(offer, dealers_by_id)
 
-            if not is_coop_name(name):
+            if not is_coop_name(name) and dealer_id not in KNOWN_COOP_DEALERS:
                 continue
 
-            # /dealers gav 0 i første test, men offer-payloaden indeholder
-            # faktisk dealer_id + kædenavn. Brug det som fallback discovery.
             if dealer_id:
-                discovered_coop_dealers[dealer_id] = name
+                discovered_coop_dealers[dealer_id] = (
+                    KNOWN_COOP_DEALERS.get(dealer_id) or name
+                )
 
             if not is_pokemon_tcg_offer(offer):
                 rejected_coop_pokemon_rows += 1
@@ -194,7 +208,9 @@ def fetch_coop_offer_signals(dealers_by_id):
                 f"{(offer.get('pricing') or {}).get('price')}"
             )
             row = dict(offer)
-            row["_chain_name"] = name
+            row["_chain_name"] = (
+                KNOWN_COOP_DEALERS.get(dealer_id) or name
+            )
             offers[key] = row
 
     return (
@@ -206,8 +222,6 @@ def fetch_coop_offer_signals(dealers_by_id):
 
 
 def fetch_local_stores(coop_dealers):
-    # /stores er et separat probe-lag. Dealer IDs kan nu komme enten fra
-    # /dealers eller direkte fra offer-payloads.
     found = []
     errors = []
 
@@ -268,15 +282,17 @@ def send_report(
     if not WEBHOOK_URL:
         raise RuntimeError("DISCORD_WEBHOOK_URL mangler")
 
-    combined_coop_dealers = dict(api_coop_dealers)
+    combined_coop_dealers = dict(KNOWN_COOP_DEALERS)
+    combined_coop_dealers.update(api_coop_dealers)
     combined_coop_dealers.update(discovered_coop_dealers)
+
+    store_counts = Counter(store["chain"] for store in stores)
 
     lines = [
         "**Isoleret probe - ingen ændring af normal restock-logik.**",
         "",
         f"✅ /dealers returnerede: **{len(dealers)} danske kæder**",
-        f"🏪 Coop dealer-ID'er via /dealers: **{len(api_coop_dealers)}**",
-        f"🔎 Coop dealer-ID'er fundet via offers: **{len(discovered_coop_dealers)}**",
+        f"🏪 Coop-kæder vi kender sikkert: **{len(KNOWN_COOP_DEALERS)}**",
         f"📍 Lokale Coop-butikker via /stores: **{len(stores)}**",
         f"🎴 Reelle booster/ETB/tin-signaler: **{len(offers)}**",
         f"🧹 Frasorterede brede/irrelevante Coop-hits: **{rejected_rows}**",
@@ -284,28 +300,31 @@ def send_report(
 
     if store_errors:
         lines.append(
-            f"⚠️ /stores fejl på {len(store_errors)} dealer-ID(er)."
+            f"⚠️ /stores fejl på {len(store_errors)} kæde(r): "
+            + ", ".join(store_errors)
         )
 
     if query_errors:
         lines.append(f"⚠️ Offer-query fejl: {len(query_errors)}")
 
-    if combined_coop_dealers:
-        lines.append("")
-        lines.append("**Coop-kæder/dealer-ID'er vi kan se:**")
-        for dealer_id, name in sorted(
-            combined_coop_dealers.items(),
-            key=lambda item: (item[1], item[0]),
-        ):
-            lines.append(f"• {name} · `{dealer_id}`")
+    lines.append("")
+    lines.append("**Kædedækning i lokalområdet:**")
+    for dealer_id, chain_name in KNOWN_COOP_DEALERS.items():
+        lines.append(
+            f"• {chain_name}: **{store_counts.get(chain_name, 0)} butikker** · `{dealer_id}`"
+        )
 
     if stores:
         lines.append("")
         lines.append("**Lokale butikker fundet:**")
-        for store in sorted(
-            stores,
-            key=lambda row: (row["chain"], row["city"], row["name"]),
-        )[:15]:
+        priority_terms = ("kolding", "vejen", "brørup", "brorup", "fredericia")
+
+        def store_priority(row):
+            text = normalize(f"{row['name']} {row['city']}")
+            preferred = 0 if any(term in text for term in priority_terms) else 1
+            return (preferred, row["chain"], row["city"], row["name"])
+
+        for store in sorted(stores, key=store_priority)[:24]:
             location = " ".join(
                 x for x in (store["postal"], store["city"]) if x
             ).strip()
@@ -343,11 +362,12 @@ def send_report(
     lines.extend(
         [
             "",
-            "**Konklusion på proben:**",
-            "Faxe Kondi/Pepsi og bredt Pokémon-legetøj er nu filtreret væk. "
-            "Offer-data bruges også til at hente Coop dealer-ID'er, så vi kan "
-            "teste /stores selv når /dealers returnerer 0. Fysisk lagerantal er "
-            "stadig ikke dokumenteret og kræver et separat Coop/app-endpoint.",
+            "**Stock-status:**",
+            "Tjek-data giver butikker + tilbud, men ikke fysisk lagerantal. "
+            "Coop Scan&Betal kan slå en scannet vare op i den valgte butik og "
+            "vise butiksspecifik pris, så der findes et separat produkt/POS-lag. "
+            "Næste tekniske spor er at finde et offentligt anvendeligt app-endpoint "
+            "for produkt/availability; vi kalder det ikke stock før det er bevist.",
         ]
     )
 
@@ -356,10 +376,10 @@ def send_report(
         "allowed_mentions": {"parse": []},
         "embeds": [
             {
-                "title": "🧪 COOP PROBE V1.1",
+                "title": "🧪 COOP PROBE V1.2 - ALLE KÆDER",
                 "description": "\n".join(lines)[:4090],
                 "color": 0xF1C40F,
-                "footer": {"text": "MasterBot · Coop probe · strict TCG filter"},
+                "footer": {"text": "MasterBot · Coop probe · all chain IDs"},
             }
         ],
     }
@@ -403,15 +423,15 @@ if __name__ == "__main__":
         query_errors.append(str(error))
         print(f"COOP PROBE offers FEJL: {error}")
 
-    combined_coop_dealers = dict(api_coop_dealers)
+    combined_coop_dealers = dict(KNOWN_COOP_DEALERS)
+    combined_coop_dealers.update(api_coop_dealers)
     combined_coop_dealers.update(discovered_coop_dealers)
 
-    if combined_coop_dealers:
-        stores, store_errors = fetch_local_stores(combined_coop_dealers)
-        print(
-            f"COOP PROBE stores: {len(stores)} lokale fund | "
-            f"{len(store_errors)} fejl"
-        )
+    stores, store_errors = fetch_local_stores(combined_coop_dealers)
+    print(
+        f"COOP PROBE stores: {len(stores)} lokale fund | "
+        f"{len(store_errors)} fejl"
+    )
 
     send_report(
         dealers,
