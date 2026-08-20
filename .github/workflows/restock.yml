@@ -53,6 +53,9 @@ jobs:
           if [ -f patch_v22_proshop_filter.py ]; then
             python patch_v22_proshop_filter.py
           fi
+          if [ -f patch_v23_signal_cleanup.py ]; then
+            python patch_v23_signal_cleanup.py
+          fi
 
       - name: Validate Python
         run: |
