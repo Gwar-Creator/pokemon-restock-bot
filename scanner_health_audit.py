@@ -9,7 +9,6 @@ SOURCE_MINIMUMS = {
     "br": 5,
     "bilka": 5,
     "foetex": 5,
-    "elgiganten": 5,
     "pokehulen": 10,
     "rogerz": 20,
     "mtgwebshop": 10,
@@ -90,7 +89,10 @@ def main():
         for issue in issues:
             print(f"! {issue}")
     else:
-        print("AUDIT OK: alle 18 kilder er over minimum og uden registrerede failures.")
+        print(
+            "AUDIT OK: alle 17 aktive kilder er over minimum og uden "
+            "registrerede failures."
+        )
 
     # Diagnostic only. Source-health already owns Discord failure alerts, so
     # this audit does not create an extra noisy channel or a changing report file.
