@@ -63,9 +63,21 @@ jobs:
           python -m py_compile local_stock_watch.py
           python -m py_compile scanner_health_audit.py
           python -m py_compile cardmarket_chase_watch.py
+          python -m py_compile retailer_probe_v24.py
           if [ -f cardmarket_v16_replay.py ]; then
             python -m py_compile cardmarket_v16_replay.py
           fi
+
+      - name: Run one-time retailer path probe V24
+        if: ${{ hashFiles('retailer_probe_v24_done.json') == '' }}
+        run: |
+          python retailer_probe_v24.py
+          python - <<'PY'
+          import json
+          from datetime import datetime, timezone
+          with open('retailer_probe_v24_done.json', 'w', encoding='utf-8') as f:
+              json.dump({'completed_at': datetime.now(timezone.utc).isoformat()}, f, indent=2)
+          PY
 
       - name: Run one restock scan
         env:
