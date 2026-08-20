@@ -42,7 +42,9 @@ GAME_ICON = {"POKÉMON": "⚡", "LORCANA": "✨"}
 OPPORTUNITY_TYPES = {"BOOSTER BOX", "ETB", "BOOSTER BUNDLE"}
 FOREIGN_MARKERS = {
     "japansk", "japanese", "kinesisk", "chinese", "korean", "koreansk",
-    "german", "tysk", "french", "fransk", "spanish", "spansk", "italian",
+    "german", "tysk", "deutsch", "french", "fransk", "spanish", "spansk",
+    "italian", "italiensk", "portuguese", "portugisisk", "dutch", "hollandsk",
+    "thai", "indonesian", "indonesisk", "simplified", "traditional",
 }
 
 

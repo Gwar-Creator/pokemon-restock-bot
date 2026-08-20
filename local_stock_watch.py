@@ -15,6 +15,19 @@ SITES = {
     "foetex": {"label": "FØTEX", "home": "https://www.foetex.dk/", "base": "https://www.foetex.dk"},
 }
 TARGET_STORE_MARKERS = ("kolding", "fredericia", "vejen", "brørup", "brorup", "esbjerg")
+
+NON_ENGLISH_CARD_MARKERS = (
+    "japansk", "japanese", "japan import",
+    "kinesisk", "chinese", "simplified chinese", "traditional chinese",
+    "koreansk", "korean", "tysk", "german", "deutsch",
+    "fransk", "french", "italiensk", "italian", "spansk", "spanish",
+    "portugisisk", "portuguese", "hollandsk", "dutch",
+    "thai", "thailand", "indonesisk", "indonesian",
+)
+
+def is_english_card_product(name):
+    text = " " + re.sub(r"\s+", " ", str(name or "").lower()) + " "
+    return not any(marker in text for marker in NON_ENGLISH_CARD_MARKERS)
 KNOWN_SET_ALIASES = (
     ("Mega Evolution: Chaos Rising", ("chaos rising", "mega evolution chaos rising")),
     ("Mega Evolution: Perfect Order", ("perfect order", "mega evolution perfect order")),
@@ -143,6 +156,8 @@ def get_algolia_candidates(site_key, config):
     candidates = []
     for product in hits:
         if not is_pokemon_hit(product):
+            continue
+        if not is_english_card_product(product.get("name")):
             continue
         product_type = pokemon_product_type(product.get("name"))
         if not product_type:

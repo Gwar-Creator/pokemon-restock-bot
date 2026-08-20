@@ -51,6 +51,19 @@ SHOPIFY_SOURCES = {
 WOOCOMMERCE_SOURCES = {"nostalgic", "andcards", "pokecards"}
 POKEMON_ONLY_SOURCES = {"proshop", "br", "bilka", "foetex", "steffeno"}
 
+NON_ENGLISH_CARD_MARKERS = (
+    "japansk", "japanese", "japan import",
+    "kinesisk", "chinese", "simplified chinese", "traditional chinese",
+    "koreansk", "korean", "tysk", "german", "deutsch",
+    "fransk", "french", "italiensk", "italian", "spansk", "spanish",
+    "portugisisk", "portuguese", "hollandsk", "dutch",
+    "thai", "thailand", "indonesisk", "indonesian",
+)
+
+def is_english_card_product(name):
+    text = " " + re.sub(r"\s+", " ", str(name or "").lower()) + " "
+    return not any(marker in text for marker in NON_ENGLISH_CARD_MARKERS)
+
 ACCESSORY_MARKERS = (
     "akryl", "acryl", "acrylic", "protector", "display case", "opbevaring",
     "storage", "binder", "portfolio", "sleeves", "deck box", "toploader",
@@ -115,6 +128,8 @@ def is_low_signal_accessory_name(name):
 
 def get_price_watch_type(name, game):
     text = str(name or "").lower()
+    if not is_english_card_product(text):
+        return None
     if is_low_signal_accessory_name(text):
         return None
 

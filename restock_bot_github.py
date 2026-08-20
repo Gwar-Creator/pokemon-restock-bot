@@ -41,6 +41,7 @@ PRICE_ALERT_MEMORY = {}
 
 PRICE_SIGNAL_CLEANUP_V23 = True
 RETAILER_CLEANUP_V25 = True
+ENGLISH_ONLY_V26 = True
 RESTOCK_DUPLICATE_COOLDOWN_SECONDS = 6 * 60 * 60
 RESTOCK_NEW_PRODUCT_COOLDOWN_SECONDS = 24 * 60 * 60
 PRICE_ALERT_COOLDOWN_SECONDS = 24 * 60 * 60
@@ -934,6 +935,40 @@ def is_low_signal_accessory_name(name):
     return any(marker in text for marker in ACCESSORY_BLOCK_MARKERS)
 
 
+NON_ENGLISH_CARD_MARKERS = (
+    "japansk", "japanese", "japan import",
+    "kinesisk", "chinese", "simplified chinese", "traditional chinese",
+    "koreansk", "korean",
+    "tysk", "german", "deutsch",
+    "fransk", "french",
+    "italiensk", "italian",
+    "spansk", "spanish",
+    "portugisisk", "portuguese",
+    "hollandsk", "dutch",
+    "thai", "thailand",
+    "indonesisk", "indonesian",
+)
+
+
+def is_english_card_product(name):
+    """Allow English/unspecified card language; block explicit foreign editions."""
+    text = " " + re.sub(r"\s+", " ", str(name or "").lower()) + " "
+
+    if any(marker in text for marker in NON_ENGLISH_CARD_MARKERS):
+        return False
+
+    # Only bracketed/separated short codes are treated as language markers,
+    # avoiding false positives from ordinary Danish words.
+    if re.search(
+        r"(?:\(|\[|\{|\-|/)\s*(?:jp|jpn|cn|chs|cht|kr|kor)\s*(?:\)|\]|\}|\-|/)",
+        text,
+        flags=re.IGNORECASE,
+    ):
+        return False
+
+    return True
+
+
 # ============================================================
 # RESTOCK ALERT FILTER
 # ============================================================
@@ -942,6 +977,9 @@ def restock_alert_allowed(product, game_override=None):
     """Keep low-signal products in state, but silence them on Discord."""
     name = str((product or {}).get("name", "")).lower()
     game = game_override or (product or {}).get("game")
+
+    if not is_english_card_product(name):
+        return False
 
     if is_low_signal_accessory_name(name):
         return False
@@ -982,6 +1020,9 @@ def filter_restock_alert_products(products, game_override=None):
 
 def get_price_watch_type(name, game):
     text = (name or "").lower()
+
+    if not is_english_card_product(text):
+        return None
 
     if is_low_signal_accessory_name(text):
         return None
