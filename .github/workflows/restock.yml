@@ -58,6 +58,7 @@ jobs:
         run: |
           python -m py_compile restock_bot_github.py
           python -m py_compile cardmarket_chase_watch.py
+          python -m py_compile local_stock_v1_test.py
           if [ -f cardmarket_v16_replay.py ]; then
             python -m py_compile cardmarket_v16_replay.py
           fi
@@ -69,6 +70,19 @@ jobs:
           PRICE_HISTORY_WEBHOOK_URL: ${{ secrets.PRICE_HISTORY_WEBHOOK_URL }}
           RUN_ONCE: "1"
         run: python restock_bot_github.py
+
+      - name: Run one-time Local Stock V1 test
+        if: ${{ hashFiles('local_stock_v1_test_done.json') == '' }}
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          python local_stock_v1_test.py
+          python - <<'PY'
+          import json
+          from datetime import datetime, timezone
+          with open('local_stock_v1_test_done.json', 'w', encoding='utf-8') as f:
+              json.dump({'completed_at': datetime.now(timezone.utc).isoformat()}, f, indent=2)
+          PY
 
       - name: Run daily Card Market Watch
         continue-on-error: true
