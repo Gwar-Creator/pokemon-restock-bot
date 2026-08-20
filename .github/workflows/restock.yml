@@ -56,6 +56,9 @@ jobs:
           if [ -f patch_v23_signal_cleanup.py ]; then
             python patch_v23_signal_cleanup.py
           fi
+          if [ -f patch_v25_retailer_cleanup.py ]; then
+            python patch_v25_retailer_cleanup.py
+          fi
 
       - name: Validate Python
         run: |
@@ -64,6 +67,7 @@ jobs:
           python -m py_compile scanner_health_audit.py
           python -m py_compile cardmarket_chase_watch.py
           python -m py_compile retailer_probe_v24.py
+          python -m py_compile preview_price_channels_v25.py
           if [ -f cardmarket_v16_replay.py ]; then
             python -m py_compile cardmarket_v16_replay.py
           fi
@@ -86,6 +90,17 @@ jobs:
           PRICE_HISTORY_WEBHOOK_URL: ${{ secrets.PRICE_HISTORY_WEBHOOK_URL }}
           RUN_ONCE: "1"
         run: python restock_bot_github.py
+
+      - name: Generate one-time V25 price channel preview
+        if: ${{ hashFiles('price_channels_preview_v25_done.json') == '' }}
+        run: |
+          python preview_price_channels_v25.py
+          python - <<'PY'
+          import json
+          from datetime import datetime, timezone
+          with open('price_channels_preview_v25_done.json', 'w', encoding='utf-8') as f:
+              json.dump({'completed_at': datetime.now(timezone.utc).isoformat()}, f, indent=2)
+          PY
 
       - name: Run Local Stock Watch
         continue-on-error: true
