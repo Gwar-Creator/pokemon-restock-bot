@@ -39,11 +39,12 @@ PRICE_HISTORY_WEBHOOK_URL = os.getenv("PRICE_HISTORY_WEBHOOK_URL", "").strip()
 RESTOCK_ALERT_MEMORY = {}
 PRICE_ALERT_MEMORY = {}
 
-RESTOCK_DUPLICATE_COOLDOWN_SECONDS = 60 * 60
+PRICE_SIGNAL_CLEANUP_V23 = True
+RESTOCK_DUPLICATE_COOLDOWN_SECONDS = 6 * 60 * 60
 RESTOCK_NEW_PRODUCT_COOLDOWN_SECONDS = 24 * 60 * 60
 PRICE_ALERT_COOLDOWN_SECONDS = 24 * 60 * 60
-PRICE_ALERT_MIN_IMPROVEMENT_DKK = 10.0
-PRICE_ALERT_MIN_IMPROVEMENT_PCT = 0.02
+PRICE_ALERT_MIN_IMPROVEMENT_DKK = 25.0
+PRICE_ALERT_MIN_IMPROVEMENT_PCT = 0.05
 
 # Kanalroller: Restock viser lagerhændelser. Prisændringer hører hjemme i
 # Price Watch / Price History, så samme prisfald ikke støjer i flere kanaler.
@@ -659,7 +660,8 @@ def _alert_identity(message, channel):
     else:
         event_type = headline[:80]
 
-    raw = "|".join((channel, event_type, product, url))
+    identity_url = "" if channel == "price" else url
+    raw = "|".join((channel, event_type, product, identity_url))
     return hashlib.sha256(raw.encode("utf-8")).hexdigest()[:32], event_type
 
 
@@ -757,6 +759,11 @@ def price_alert_decision(message):
     key, event_type = _alert_identity(message, "price")
     previous = PRICE_ALERT_MEMORY.get(key)
     now_epoch = _now_epoch()
+
+    # A retailer becoming cheapest at the same price is not actionable enough
+    # for an intraday Discord alert. Price/history state still records it.
+    if event_type == "SHOP":
+        return None
 
     if event_type == "PRICE":
         _, new_price = _price_values_from_change(message)
@@ -1011,6 +1018,16 @@ def get_price_watch_type(name, game):
     if (
         "with booster box" in text
         or "med booster box" in text
+    ):
+        return None
+
+    # Cases / multi-displays are wholesale-style products and must not be
+    # compared with one normal retail booster box.
+    if (
+        "booster box case" in text
+        or "booster case" in text
+        or "case of booster" in text
+        or re.search(r"\b(?:4|6|8|10|12)\s*[x×]\s*36\b", text)
     ):
         return None
 
@@ -1327,7 +1344,16 @@ def collect_price_watch_candidates(
 
             price = product.get("price")
 
-            if price is None or price <= 0:
+            try:
+                price_value = float(price)
+            except (TypeError, ValueError):
+                continue
+
+            if price_value <= 0:
+                continue
+
+            max_price = PRICE_WATCH_MAX_PRICE.get(product_type)
+            if max_price is not None and price_value > max_price:
                 continue
 
             availability = get_price_watch_availability(
@@ -1354,7 +1380,7 @@ def collect_price_watch_candidates(
                 "game": game,
                 "type": product_type,
                 "name": name,
-                "price": float(price),
+                "price": price_value,
                 "availability": availability,
                 "url": url
             })
@@ -1582,13 +1608,22 @@ PRICE_WATCH_TYPE_ORDER = (
     "BOOSTER PACK",
 )
 
-PRICE_WATCH_DAILY_MAX_SIGNALS_PER_GAME = 5
-PRICE_WATCH_DAILY_MIN_SAVING_DKK = 20.0
-PRICE_WATCH_DAILY_MIN_SAVING_PCT = 3.0
-PRICE_HISTORY_DAILY_MAX_BUY_PER_GAME = 3
-PRICE_HISTORY_DAILY_MAX_WAIT_PER_GAME = 2
-PRICE_HISTORY_NEW_LOW_MIN_DKK = 20.0
-PRICE_HISTORY_NEW_LOW_MIN_PCT = 3.0
+PRICE_WATCH_DAILY_MAX_SIGNALS_PER_GAME = 3
+PRICE_WATCH_DAILY_MIN_SAVING_DKK = 25.0
+PRICE_WATCH_DAILY_MIN_SAVING_PCT = 5.0
+PRICE_HISTORY_DAILY_MAX_SIGNALS_TOTAL = 3
+PRICE_HISTORY_NEW_LOW_MIN_DKK = 25.0
+PRICE_HISTORY_NEW_LOW_MIN_PCT = 5.0
+
+# User-defined retail relevance ceilings. Products above these prices remain
+# in raw restock state, but are excluded from Price Watch + Price History.
+PRICE_WATCH_MAX_PRICE = {
+    "BOOSTER PACK": 150.0,
+    "SLEEVED BOOSTER": 175.0,
+    "BOOSTER BUNDLE": 750.0,
+    "ETB": 1500.0,
+    "BOOSTER BOX": 1750.0,
+}
 
 
 def build_price_watch_groups(candidates):
@@ -2852,6 +2887,23 @@ def _price_history_daily_summary(products, active_keys, now_local, started_at):
         if not last_change_date or last_signal_date >= last_change_date:
             continue
 
+        try:
+            previous_best = float(entry.get("previous_best"))
+            current_best = float(entry.get("current_best"))
+            movement_dkk = abs(current_best - previous_best)
+        except (TypeError, ValueError):
+            movement_dkk = 0.0
+
+        movement_pct = abs(float(entry.get("last_change_pct") or 0.0))
+        if (
+            movement_dkk < PRICE_ALERT_MIN_IMPROVEMENT_DKK
+            or movement_pct < PRICE_ALERT_MIN_IMPROVEMENT_PCT * 100.0
+        ):
+            # Preserve the exact movement in history, but mark this change as
+            # handled so it cannot keep resurfacing in future daily digests.
+            entry["last_daily_signal_date"] = today
+            continue
+
         diff = _history_pct(
             entry.get("current_best"),
             entry.get("historical_low")
@@ -2871,32 +2923,54 @@ def _price_history_daily_summary(products, active_keys, now_local, started_at):
         elif diff >= 10.0:
             signals_by_game[game]["wait"].append(row)
 
-    selected_by_game = {}
+    selected_by_game = {
+        "POKÉMON": {"buy": [], "wait": []},
+        "LORCANA": {"buy": [], "wait": []},
+    }
     selected_rows = []
     handled_rows = []
+    candidate_rows = []
 
     for game in ("POKÉMON", "LORCANA"):
-        handled_rows.extend(signals_by_game[game]["buy"])
-        handled_rows.extend(signals_by_game[game]["wait"])
-        buy = sorted(
-            signals_by_game[game]["buy"],
-            key=lambda row: (
+        for row in signals_by_game[game]["buy"]:
+            handled_rows.append(row)
+            candidate = dict(row)
+            candidate["signal_kind"] = "buy"
+            candidate_rows.append(candidate)
+
+        for row in signals_by_game[game]["wait"]:
+            handled_rows.append(row)
+            candidate = dict(row)
+            candidate["signal_kind"] = "wait"
+            candidate_rows.append(candidate)
+
+    def signal_priority(row):
+        # Buy signals win ties; within each class show the strongest signal.
+        if row["signal_kind"] == "buy":
+            return (
+                0,
                 row["diff"],
                 row["last_change_pct"],
                 price_watch_display_name(row["product_key"]).lower(),
-            ),
-        )[:PRICE_HISTORY_DAILY_MAX_BUY_PER_GAME]
-        wait = sorted(
-            signals_by_game[game]["wait"],
-            key=lambda row: (
-                row["diff"],
-                abs(row["last_change_pct"]),
-            ),
-            reverse=True,
-        )[:PRICE_HISTORY_DAILY_MAX_WAIT_PER_GAME]
-        selected_by_game[game] = {"buy": buy, "wait": wait}
-        selected_rows.extend(buy)
-        selected_rows.extend(wait)
+            )
+
+        return (
+            1,
+            -row["diff"],
+            -abs(row["last_change_pct"]),
+            price_watch_display_name(row["product_key"]).lower(),
+        )
+
+    selected_rows = sorted(
+        candidate_rows,
+        key=signal_priority,
+    )[:PRICE_HISTORY_DAILY_MAX_SIGNALS_TOTAL]
+
+    for row in selected_rows:
+        game = parse_price_watch_key(row["product_key"])["game"]
+        if game not in selected_by_game:
+            continue
+        selected_by_game[game][row["signal_kind"]].append(row)
 
     lines = [
         (
@@ -2969,9 +3043,11 @@ def _price_history_daily_summary(products, active_keys, now_local, started_at):
         for row in handled_rows:
             row["entry"]["last_daily_signal_date"] = today
 
-    # Fuld, utrunkeret Excel-venlig eksport bevares til fordybelse.
-    if _send_price_history_csv(products, active_keys, now_local):
-        sent_any = True
+    # Den fulde statistik bevares, men Discord får kun CSV én gang om
+    # ugen (søndag) i stedet for hver dag.
+    if now_local.weekday() == 6:
+        if _send_price_history_csv(products, active_keys, now_local):
+            sent_any = True
 
     return sent_any
 
@@ -3376,6 +3452,28 @@ def _parse_proshop_products(response):
             continue
 
         product_id = match.group(1)
+
+        # Find the smallest useful ancestor containing stock/price text.
+        # The previous implementation referenced an undefined `card` variable,
+        # forcing an otherwise healthy direct response into the Jina fallback.
+        card = None
+        for parent in link.parents:
+            if parent is soup:
+                break
+            parent_text = parent.get_text(" ", strip=True)
+            low_parent = parent_text.lower()
+            if (
+                "kr" in low_parent
+                or "på lager" in low_parent
+                or "fjernlager" in low_parent
+                or "bestillingsvare" in low_parent
+            ):
+                card = parent
+                break
+
+        if card is None:
+            card = link.parent or link
+
         text_card = card.get_text(" ", strip=True)
         name = clean_proshop_name(href)
 
@@ -4696,7 +4794,133 @@ def get_elgiganten_store_stock(product, store_id, store_name):
     }
 
 
-def get_elgiganten_products():
+ELGIGANTEN_LAST_FETCH_MODE = "algolia"
+ELGIGANTEN_FALLBACK_BATCH_SIZE = 6
+
+
+def get_elgiganten_products_from_public_pages(old_products):
+    if not isinstance(old_products, dict) or not old_products:
+        raise RuntimeError("Elgiganten public fallback mangler tidligere produktstate")
+
+    products = {
+        str(product_id): dict(product)
+        for product_id, product in old_products.items()
+        if isinstance(product, dict)
+    }
+    product_ids = [
+        product_id
+        for product_id in sorted(products)
+        if str(products[product_id].get("url") or "").startswith("https://www.elgiganten.dk/product/")
+    ]
+
+    if not product_ids:
+        raise RuntimeError("Elgiganten public fallback har ingen kendte produkt-URL'er")
+
+    batch_size = min(ELGIGANTEN_FALLBACK_BATCH_SIZE, len(product_ids))
+    bucket = int(time.time() // max(CHECK_EVERY, 300))
+    start = (bucket * batch_size) % len(product_ids)
+    selected = [
+        product_ids[(start + offset) % len(product_ids)]
+        for offset in range(batch_size)
+    ]
+
+    if curl_requests is not None:
+        session = curl_requests.Session(impersonate="chrome")
+    else:
+        session = requests.Session()
+
+    checked = 0
+    changed = 0
+    errors = 0
+
+    for product_id in selected:
+        old = products[product_id]
+        url = old.get("url")
+        try:
+            response = session.get(
+                url,
+                headers={
+                    **BROWSER_HEADERS,
+                    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+                    "Accept-Language": "da-DK,da;q=0.9,en;q=0.8",
+                },
+                timeout=25,
+            )
+            response.raise_for_status()
+        except Exception as error:
+            errors += 1
+            print(f"ELGIGANTEN public fallback {product_id}: {error}")
+            continue
+
+        checked += 1
+        soup = BeautifulSoup(response.text, "html.parser")
+        page_text = re.sub(r"\s+", " ", soup.get_text(" ", strip=True)).strip()
+        low = page_text.lower()
+
+        explicit_out = any(
+            marker in low
+            for marker in (
+                "denne vare er desværre udsolgt",
+                "begrænsede lager nu er solgt",
+                "varen er udsolgt",
+            )
+        )
+        explicit_in = any(
+            marker in low
+            for marker in (
+                "læg i kurv",
+                "tilføj til kurv",
+                "på lager online",
+                "kan leveres",
+            )
+        )
+
+        new = dict(old)
+        if explicit_out:
+            new["online_stock"] = False
+            new["online_display"] = "0"
+        elif explicit_in:
+            new["online_stock"] = True
+            if not str(new.get("online_display") or "").strip() or str(new.get("online_display")) == "0":
+                new["online_display"] = "1+"
+
+        # Product pages expose a human-readable DKK price. Only accept a
+        # plausible first match; otherwise preserve the last trusted price.
+        price_match = re.search(
+            r"(?<!\d)(\d{1,5}(?:[.,]\d{1,2})?)\s*(?:DKK|kr\.?)",
+            page_text,
+            flags=re.IGNORECASE,
+        )
+        if price_match:
+            try:
+                parsed_price = float(price_match.group(1).replace(".", "").replace(",", "."))
+                if 5 <= parsed_price <= 50000:
+                    new["price"] = parsed_price
+            except ValueError:
+                pass
+
+        new["fetch_via"] = "public_product_page_fallback"
+        new["fallback_checked_at"] = datetime.now(ZoneInfo("UTC")).isoformat()
+        if (
+            new.get("online_stock") != old.get("online_stock")
+            or new.get("price") != old.get("price")
+        ):
+            changed += 1
+        products[product_id] = new
+
+    if checked == 0:
+        raise RuntimeError(
+            f"Elgiganten public fallback kunne ikke læse nogen af {batch_size} valgte produktsider"
+        )
+
+    print(
+        f"ELGIGANTEN: public product-page fallback | "
+        f"{checked}/{batch_size} tjekket | {changed} ændringer | {errors} fejl"
+    )
+    return products
+
+
+def _get_elgiganten_products_algolia():
     api_key = get_elgiganten_signed_key()
 
     algolia_url = (
@@ -4832,6 +5056,26 @@ def get_elgiganten_products():
         }
 
     return products
+
+
+def get_elgiganten_products(old_products=None):
+    global ELGIGANTEN_LAST_FETCH_MODE
+
+    try:
+        products = _get_elgiganten_products_algolia()
+        ELGIGANTEN_LAST_FETCH_MODE = "algolia"
+        return products
+    except Exception as algolia_error:
+        print(f"ELGIGANTEN Algolia utilgængelig: {algolia_error}")
+        try:
+            products = get_elgiganten_products_from_public_pages(old_products or {})
+        except Exception as fallback_error:
+            raise RuntimeError(
+                f"Elgiganten både Algolia og public fallback fejlede: "
+                f"{algolia_error}; fallback: {fallback_error}"
+            ) from fallback_error
+        ELGIGANTEN_LAST_FETCH_MODE = "public_product_pages"
+        return products
 
 
 def count_elgiganten_local_products(products):
@@ -8284,9 +8528,22 @@ while True:
             elgiganten = fetch_source_products(
                 "elgiganten",
                 old_elgiganten,
-                get_elgiganten_products,
+                lambda: get_elgiganten_products(old_products=old_elgiganten),
                 new_state,
             )
+
+            if ELGIGANTEN_LAST_FETCH_MODE != "algolia":
+                _source_health_update(
+                    new_state,
+                    "elgiganten",
+                    status="degraded",
+                    consecutive_failures=0,
+                    last_error=(
+                        "Signed Algolia key unavailable; rotating public "
+                        "product-page fallback active"
+                    ),
+                    observed_count=len(elgiganten),
+                )
 
             elgiganten_local_counts = (
                 count_elgiganten_local_products(elgiganten)
@@ -8323,9 +8580,15 @@ while True:
                 "elgiganten"
             ] = elgiganten
 
-            price_watch_fresh_sources.add(
-                "elgiganten"
-            )
+            if ELGIGANTEN_LAST_FETCH_MODE == "algolia":
+                price_watch_fresh_sources.add(
+                    "elgiganten"
+                )
+            else:
+                print(
+                    "ELGIGANTEN: partial fallback holdes ude af Price Watch/History "
+                    "indtil fuld Algolia-scan er frisk igen."
+                )
 
         except Exception as error:
             print(
