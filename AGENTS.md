@@ -13,10 +13,13 @@ Produktionsgren: `main`
 
 Vigtige filer:
 
-- `restock_bot_github.py`: primær scanner, filtre, Discord-output og Price Watch.
+- `restock_bot_github.py`: primær scanner, filtre, Discord-output, Price Watch og Price History.
 - `restock_state_v2.json`: vedvarende lager-, pris-, historik- og source-health-state.
+- `local_stock_watch.py`: separat lokal Salling-stock/PRE-PUBLISH overvågning.
+- `local_stock_state_v1.json`: vedvarende state for Local Stock Watch, når baseline er oprettet.
+- `scanner_health_audit.py`: log-only audit af de 18 scannerkilder.
 - `.github/workflows/restock.yml`: GitHub Actions-kørsel og commit af state.
-- `cardmarket_chase_watch.py`: Cardmarket-/Price History-overvågning.
+- `cardmarket_chase_watch.py`: Cardmarket-overvågning.
 - `cardmarket_v16_replay.py`: historisk replay/hjælpeværktøj, hvis filen findes.
 
 Læs altid de live filer i GitHub. Stol ikke alene på en ældre chat, lokal kopi eller handover-fil.
@@ -25,14 +28,14 @@ Læs altid de live filer i GitHub. Stol ikke alene på en ældre chat, lokal kop
 
 - Ekstern scheduler udløser normalt `.github/workflows/restock.yml` cirka hvert 5. minut.
 - Workflowet scanner butikker, sender relevante Discord-events og committer ændret state tilbage til `main`.
-- Restock-kanalen er til lagerændringer.
-- Price Watch er en kompakt daglig prisoversigt.
-- Price History/Cardmarket er til historik og markedsdata.
+- Restock-kanalen er til lagerændringer og nye relevante varer.
+- Price Watch er handlingsorienteret og skal være kompakt.
+- Price History bevarer statistik, men Discord-output skal være let; fuld detalje hører til data/CSV.
 - Webhooks, tokens og andre secrets må aldrig skrives i kode, logs, dokumentation eller commits.
 
 ## Overvågede kilder
 
-Scannerens nuværende kilder omfatter blandt andet Coolshop, Proshop, BR, Bilka, Føtex, Elgiganten, PokeHulen, Rogerz, MTGwebshop, Luckbox, Spilforsyningen, Musen & Slottet, Nostalgic, &Cards, Pokecards.dk, Epic Panda, Steffen-O og Next Level Games.
+Scannerens nuværende kilder omfatter Coolshop, Proshop, BR, Bilka, Føtex, Elgiganten, PokeHulen, Rogerz, MTGwebshop, Luckbox, Spilforsyningen, Musen & Slottet, Nostalgic, &Cards, Pokecards.dk, Epic Panda, Steffen-O og Next Level Games.
 
 Butikslisten kan ændre sig. Koden og den seneste state er altid autoritative.
 
@@ -64,16 +67,50 @@ Filtrér helst notifikationer uden at slette produktet fra state. Det bevarer hi
 
 ## Lokalt fokus
 
-Lokale fund er især relevante omkring Kolding/Fredericia samt Brørup og cirka 20 km omkring Vejen. Den nuværende kode har historisk haft eksplicit dækning for Kolding og Esbjerg; udvidelser skal verificeres mod butikkernes faktiske lagerdata og må ikke gættes.
+Local Stock Watch fokuserer på Kolding, Fredericia, Vejen, Brørup og Esbjerg. Den bruger offentlige Salling-produktdata og Click & Collect availability. PRE-PUBLISH må kun bruges, når `is_exposed=false` er eksplicit; manglende/ukendt felt må ikke kaldes PRE-PUBLISH.
+
+Den almindelige restock-scanner har fortsat eksplicit lokal dækning for Kolding og Esbjerg hos flere kæder. Udvidelser skal verificeres mod butikkernes faktiske lagerdata og må ikke gættes.
 
 ## Price Watch og historik
 
 - Price Watch skal kun bruge aktuelt køb-bare produkter og friske, sunde kilder.
-- Produkter fra en fejlet eller forældet kilde må ikke fremstå som aktuelle tilbud.
-- Oversigten skal være kompakt og undgå støj; detaljer hører hjemme i historik/Excel.
+- Produkter fra en fejlet eller degraded/partiel kilde må ikke fremstå som aktuelle prisreference, medmindre datagrundlaget er fuldt nok til det.
 - Prisnormalisering skal tage højde for sprog, produkttype, sæt og antal pakker.
+- Cases/multi-displays må ikke sammenlignes med én normal Booster Box.
 - Eksisterende pris- og Cardmarket-historik må ikke slettes, nulstilles eller migreres uden udtrykkelig godkendelse.
-- Kendt legacy-data kan indeholde støjende nøgler og fejlklassifikationer, eksempelvis cases, checklanes eller forkert sprog.
+- Små prisbevægelser må gerne gemmes i historikken uden at blive Discord-signaler.
+- Price Watch intraday skal kræve mindst 25 kr. OG 5% reel forbedring.
+- Price Watch dagsoversigt må højst vise 3 Pokémon + 3 Lorcana-signaler.
+- Price History Discord må højst vise 3 væsentlige signaler i alt pr. dag.
+- Fuld Price History CSV sendes højst ugentligt; data beholdes løbende i state.
+
+### Prislofter for Price Watch / Price History
+
+Produkter over disse grænser bliver i rå restock-state og kan fortsat give restock-signaler, men skal ikke fylde Price Watch eller Price History:
+
+- Booster Pack: 150 kr.
+- Sleeved Booster: 175 kr.
+- Booster Bundle: 750 kr.
+- ETB: 1.500 kr.
+- Booster Box: 1.750 kr.
+
+## Anti-spam
+
+- Restock-dubletter har 6 timers cooldown for samme dedupe-identitet.
+- Nye produkter/preorders har fortsat 24 timers cooldown.
+- Price alerts har 24 timers memory og dedupes på produkt/event, ikke retailer-URL.
+- Et rent skift af billigste butik ved samme pris er ikke et intraday Discord-signal.
+- Price Watch/Price History skal prioritere menneskelig beslutningsværdi over komplet Discord-output.
+
+## Elgiganten
+
+Signed Algolia er fortsat den foretrukne og eneste fulde kilde til Elgigantens katalog + lokale lagerdata. Ved signed-key cooldown/rate-limit kan en roterende, read-only fallback kontrollere kendte offentlige produkt-URL'er for tydelige online stock-/pris-signaler. Fallbacken må ikke opfinde lokale lagertal og må ikke gøre Elgiganten til en frisk Price Watch/History-kilde, før et fuldt Algolia-scan igen lykkes.
+
+Cooldown er en degraded driftstilstand, ikke tusindvis af meningsfulde separate scannerfejl.
+
+## Proshop
+
+Direkte Proshop-parser er førstevalg. Jina Reader er fallback. Den direkte parser skal være link-baseret og finde den nærmeste relevante produktcontainer omkring hvert produktlink; den må ikke afhænge af skiftende CSS-klassenavne. Price-løse kommende produkter må bevares i state.
 
 ## Sikker ændringsproces
 
@@ -98,12 +135,13 @@ Før levering:
 
 ## Kendte driftsforhold
 
-Senest observeret 2026-08-18:
+Senest observeret 2026-08-20:
 
-- Proshop blev gendannet som sund kilde med 7 relevante produkter efter en robust parserrettelse.
-- Elgiganten er fortsat rate-limited med HTTP 429, men cooldown og eksponentiel backoff gemmes nu korrekt mellem GitHub-runs. Eksisterende 17 produkter bevares, indtil en frisk Algolia-nøgle kan hentes.
+- Proshop er sund med 7 relevante produkter via Jina Reader, men en latent fejl i den direkte HTML-parser blev identificeret og rettes i V23.
+- Elgiganten har værdifulde produkter i seneste state, men signed-key endpointet har været rate-limited. V23 tilføjer en konservativ public-product-page fallback for kendte varer og klassificerer denne mode som degraded, ikke frisk Price Watch-data.
 - Workflowet committer state ved ændringer og kan derfor skabe mange commits.
-- Enkelte lokale lagerdata fra BR/Føtex kan være mistænkelige og bør diagnosticeres før ændringer.
+- Local Stock Watch er sat i produktion for Bilka/Føtex med Kolding, Fredericia, Vejen, Brørup og Esbjerg i scope.
+- Coop app/live-stock reverse-engineering-sporet er lukket og eksperimentfilerne er fjernet.
 - Workflowet har historisk haft trin til engangs-patches; primær kode skal være den varige løsning.
 
 Kontrollér altid aktuel state, da disse forhold kan være løst eller ændret.
@@ -112,19 +150,20 @@ Kontrollér altid aktuel state, da disse forhold kan være løst eller ændret.
 
 Gode næste trin, som skal indføres enkeltvis og sikkert:
 
-1. Relevansscore i shadow mode før automatisk filtrering.
-2. Bedre source-health, backoff og særskilte fejlalarmer.
-3. Datakvalitetskontrol for urimelige priser, lagertal og produktantal.
-4. Købssignaler baseret på pris, efterspørgsel, lager og produkttype.
-5. Release-/preorder-radar.
-6. Mere præcis lokal dækning omkring brugerens prioriterede områder.
+1. Verificér V23 i produktionsrun og evaluér støjniveau over 1-2 døgn.
+2. Bedre datakvalitetskontrol for urimelige priser, lagertal og produktantal.
+3. Release-/preorder-radar.
+4. Relevansscore i shadow mode før eventuel yderligere automatisk filtrering.
 
 ## Beslutningslog
 
 - 2026-08-18: Mega Zygarde-produktet blev gjort tavst i restock.
 - 2026-08-18: Central filtrering af portfolios, penalhuse og øvrigt tilbehør blev indført med undtagelser for legitime forseglede collections.
-- 2026-08-18: Proshop-parseren blev gjort linkbaseret og begyndte igen at levere 7 levende produkter; pris-løse preorders bevares.
-- 2026-08-18: Elgigantens rate-limit-cooldown blev gjort persistent med eksponentiel backoff, og lokal `in_stock` blev rettet til Price Watch.
+- 2026-08-18: Proshop-parseren blev gjort linkbaseret; Jina Reader bruges som fallback.
+- 2026-08-18: Elgigantens rate-limit-cooldown blev gjort persistent med eksponentiel backoff.
+- 2026-08-20: Local Stock Watch blev produktionsgjort for Bilka/Føtex med Kolding, Fredericia, Vejen, Brørup og Esbjerg.
+- 2026-08-20: Coop live-stock/app reverse-engineering-sporet blev lukket og eksperimentfiler fjernet.
+- 2026-08-20: V23 fastsatte prislofter, 25 kr./5% prisændringsgate, 6 timers restock-dedupe, kompaktere Price Watch/History, ugentlig fuld CSV, Proshop direct-parser fix og konservativ Elgiganten-fallback.
 - Lav-signal-produkter skal normalt forblive i state, men ikke sendes til Discord.
 
 ## Kommunikation
