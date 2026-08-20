@@ -60,6 +60,7 @@ jobs:
           python -m py_compile cardmarket_chase_watch.py
           python -m py_compile local_stock_v1_test.py
           python -m py_compile coop_probe_v1.py
+          python -m py_compile coop_app_endpoint_probe_v1.py
           if [ -f cardmarket_v16_replay.py ]; then
             python -m py_compile cardmarket_v16_replay.py
           fi
@@ -95,6 +96,20 @@ jobs:
           import json
           from datetime import datetime, timezone
           with open('coop_probe_v1_done.json', 'w', encoding='utf-8') as f:
+              json.dump({'completed_at': datetime.now(timezone.utc).isoformat()}, f, indent=2)
+          PY
+
+      - name: Run one-time Coop app endpoint probe
+        if: ${{ hashFiles('coop_app_endpoint_probe_v1_done.json') == '' }}
+        continue-on-error: true
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          python coop_app_endpoint_probe_v1.py
+          python - <<'PY'
+          import json
+          from datetime import datetime, timezone
+          with open('coop_app_endpoint_probe_v1_done.json', 'w', encoding='utf-8') as f:
               json.dump({'completed_at': datetime.now(timezone.utc).isoformat()}, f, indent=2)
           PY
 
