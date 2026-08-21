@@ -35,9 +35,11 @@ Læs altid de live filer i GitHub. Stol ikke alene på en ældre chat, lokal kop
 
 ## Overvågede kilder
 
-Scannerens nuværende kilder omfatter Coolshop, Proshop, BR, Bilka, Føtex, Elgiganten (historisk/retired), PokeHulen, Rogerz, MTGwebshop, Luckbox, Spilforsyningen, Musen & Slottet, Symbizon, CardX, Matraws, Halmes Hule, CardsDirect, Nostalgic, &Cards, Pokecards.dk, Epic Panda, Steffen-O og Next Level Games.
+Scannerens nuværende kilder omfatter Coolshop, Proshop, BR, Bilka, Føtex, Elgiganten (historisk/retired), PokeHulen, Rogerz, MTGwebshop, Luckbox, Spilforsyningen, Musen & Slottet, Symbizon, CardX, Matraws, Halmes Hule, CardsDirect, Baltzer Games, TCG Shoppen, Pokemons.dk, Pocket Monster, CardstoreCPH, Nostalgic, &Cards, Pokecards.dk, Epic Panda, Steffen-O og Next Level Games.
 
-Wave 1-udvidelsen fra 2026-08-21 tilføjer Symbizon, CardX, Matraws, Halmes Hule og CardsDirect som Shopify-kilder. Nye kilder baseline-indlæses uden historiske produkt-alerts og går derefter ind i normal restock-, preorder-, Price Watch- og Price History-logik, når de er friske og sunde.
+Wave 1-udvidelsen fra 2026-08-21 tilføjede Symbizon, CardX, Matraws, Halmes Hule og CardsDirect som Shopify-kilder.
+
+Wave 2-udvidelsen fra 2026-08-21 tilføjer Baltzer Games og TCG Shoppen som Shopify-kilder, Pokemons.dk og Pocket Monster via målrettede WooCommerce Store API-søgninger samt CardstoreCPH via en separat linkbaseret kategori-parser. Nye kilder baseline-indlæses uden historiske produkt-alerts og går derefter ind i normal restock-/Price Watch-/Price History-logik, når de er friske og sunde.
 
 Butikslisten kan ændre sig. Koden og den seneste state er altid autoritative.
 
@@ -139,7 +141,10 @@ Før levering:
 
 Senest observeret 2026-08-21:
 
-- Wave 1 med Symbizon, CardX, Matraws, Halmes Hule og CardsDirect er koblet på via eksisterende Shopify-parser og skal verificeres i produktionsstate efter første succesfulde baseline-run.
+- Wave 1 med Symbizon, CardX, Matraws, Halmes Hule og CardsDirect har gennemført baseline-run og skrevet state.
+- Wave 2 med Baltzer Games, TCG Shoppen, Pokemons.dk, Pocket Monster og CardstoreCPH er lagt i workflowet og skal verificeres på første efterfølgende produktionsrun.
+- Pokemons.dk og Pocket Monster bruger målrettet WooCommerce-søgning for at undgå at hente enorme single-card-kataloger.
+- CardstoreCPH bruger en særskilt linkbaseret HTML-parser, fordi shoppen ikke følger de eksisterende Shopify/WooCommerce-feedmønstre.
 - Proshop er sund via Jina Reader, mens direkte HTML fortsat kan være mere skrøbelig.
 - Elgiganten aktiv scanning er retired; historisk state bevares.
 - Workflowet committer state ved ændringer og kan derfor skabe mange commits.
@@ -153,10 +158,11 @@ Kontrollér altid aktuel state, da disse forhold kan være løst eller ændret.
 
 Gode næste trin, som skal indføres enkeltvis og sikkert:
 
-1. Verificér Wave 1-kilderne i produktionsrun og ret evt. collection handles, hvis en butik giver for få produkter.
-2. Bedre datakvalitetskontrol for urimelige priser, lagertal og produktantal.
-3. Release-/preorder-radar.
-4. Relevansscore i shadow mode før eventuel yderligere automatisk filtrering.
+1. Verificér Wave 2-kilderne i produktionsrun og ret evt. collection/search paths, hvis en butik giver for få produkter.
+2. Evaluér støjniveau og datakvalitet over 12-24 timer efter Wave 1 + Wave 2.
+3. Bedre datakvalitetskontrol for urimelige priser, lagertal og produktantal.
+4. Release-/preorder-radar.
+5. Relevansscore i shadow mode før eventuel yderligere automatisk filtrering.
 
 ## Beslutningslog
 
@@ -169,6 +175,7 @@ Gode næste trin, som skal indføres enkeltvis og sikkert:
 - 2026-08-20: V23 fastsatte prislofter, 25 kr./5% prisændringsgate, 6 timers restock-dedupe, kompaktere Price Watch/History, ugentlig fuld CSV, Proshop direct-parser fix og konservativ Elgiganten-fallback.
 - 2026-08-21: V27 fjernede individuelle Price History new-low Discord-beskeder, så dagsoutput holder sig kompakt.
 - 2026-08-21: V28 tilføjede Symbizon, CardX, Matraws, Halmes Hule og CardsDirect som Wave 1-kilder via Shopify-scanneren.
+- 2026-08-21: V29 tilføjede Baltzer Games, TCG Shoppen, Pokemons.dk, Pocket Monster og CardstoreCPH som Wave 2-kilder med platformstilpassede fetch-metoder.
 - Lav-signal-produkter skal normalt forblive i state, men ikke sendes til Discord.
 
 ## Kommunikation
