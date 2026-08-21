@@ -45,6 +45,7 @@ ENGLISH_ONLY_V26 = True
 PRICE_HISTORY_COMPACT_V27 = True
 WAVE1_RETAILERS_V28 = True
 WAVE2_RETAILERS_V29 = True
+CARDSTORECPH_RETIRED_V30 = True
 RESTOCK_DUPLICATE_COOLDOWN_SECONDS = 6 * 60 * 60
 RESTOCK_NEW_PRODUCT_COOLDOWN_SECONDS = 24 * 60 * 60
 PRICE_ALERT_COOLDOWN_SECONDS = 24 * 60 * 60
@@ -76,7 +77,6 @@ SOURCE_MIN_PRODUCTS = {
     "tcgshoppen": 5,
     "pokemonsdk": 5,
     "pocketmonster": 5,
-    "cardstorecph": 3,
     "nostalgic": 5,
     "andcards": 5,
     "pokecards": 10,
@@ -1731,12 +1731,6 @@ def collect_price_watch_candidates(
         current_state.get("nextlevel", {})
     )
 
-    add_products(
-        "CARDSTORECPH",
-        "cardstorecph",
-        current_state.get("cardstorecph", {})
-    )
-
     return candidates
 
 
@@ -1747,7 +1741,7 @@ def collect_price_watch_candidates(
 def _price_watch_raw_products_for_source(current_state, source_key):
     if source_key in {
         "coolshop", "proshop", "br", "bilka", "foetex",
-        "epicpanda", "steffeno", "nextlevel", "cardstorecph"
+        "epicpanda", "steffeno", "nextlevel"
     }:
         products = current_state.get(source_key, {})
         return products if isinstance(products, dict) else {}
@@ -8106,7 +8100,7 @@ else:
         f"+ PokeHulen + Rogerz + MTGwebshop + Luckbox + Spilforsyningen "
         f"+ Musen & Slottet + Symbizon + CardX + Matraws + Halmes Hule "
         f"+ CardsDirect + Baltzer Games + TCG Shoppen + Pokemons.dk "
-        f"+ Pocket Monster + CardstoreCPH + Nostalgic + &Cards + Pokecards.dk "
+        f"+ Pocket Monster + Nostalgic + &Cards + Pokecards.dk "
         f"+ Epic Panda + Steffen-O + Next Level Games hvert {CHECK_EVERY}. sekund."
     )
 print()
@@ -9168,45 +9162,30 @@ while True:
 
 
         # -------------------------
-        # CARDSTORECPH
+        # CARDSTORECPH - RETIRED
         # -------------------------
 
-        try:
-            cardstore_was_initialized = "cardstorecph" in state
-            old_cardstore = state.get("cardstorecph", {})
-            cardstore = fetch_source_products(
-                "cardstorecph",
-                old_cardstore,
-                get_cardstorecph_products,
-                new_state,
-            )
-            cardstore_counts = count_cardstorecph_products(cardstore)
-
-            print(
-                f"CARDSTORECPH: {cardstore_counts['POKÉMON']} Pokémon | "
-                f"{cardstore_counts['LORCANA']} Lorcana | "
-                f"på lager "
-                f"{cardstore_counts['POKÉMON_STOCK'] + cardstore_counts['LORCANA_STOCK']}"
-            )
-
-            if cardstore_was_initialized:
-                process_cardstorecph_changes(old_cardstore, cardstore)
-            else:
-                print("CARDSTORECPH baseline tilføjet uden historiske alerts.")
-                send_discord(
-                    "🟢 **CARDSTORECPH overvågning aktiveret**\n"
-                    f"⚡ Pokémon: {cardstore_counts['POKÉMON']} produkter "
-                    f"({cardstore_counts['POKÉMON_STOCK']} på lager)\n"
-                    f"✨ Lorcana: {cardstore_counts['LORCANA']} produkter "
-                    f"({cardstore_counts['LORCANA_STOCK']} på lager)\n"
-                    "🆕 Nye produkter og restocks overvåges."
-                )
-
-            new_state["cardstorecph"] = cardstore
-            price_watch_fresh_sources.add("cardstorecph")
-
-        except Exception as error:
-            print("CARDSTORECPH fejl:", error)
+        old_cardstore = state.get("cardstorecph", {})
+        new_state["cardstorecph"] = old_cardstore
+        _source_health_update(
+            new_state,
+            "cardstorecph",
+            status="retired",
+            consecutive_failures=0,
+            last_error=(
+                "Retired V30: shoppen er primært enkeltkort og gav 0 "
+                "relevante sealed produkter"
+            ),
+            observed_count=(
+                len(old_cardstore)
+                if isinstance(old_cardstore, dict)
+                else 0
+            ),
+        )
+        print(
+            "CARDSTORECPH: retired fra aktiv scanning; primært enkeltkort, "
+            "historisk state bevares."
+        )
 
         # -------------------------
         # PRICE WATCH V3
