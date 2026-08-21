@@ -43,6 +43,7 @@ PRICE_SIGNAL_CLEANUP_V23 = True
 RETAILER_CLEANUP_V25 = True
 ENGLISH_ONLY_V26 = True
 PRICE_HISTORY_COMPACT_V27 = True
+WAVE1_RETAILERS_V28 = True
 RESTOCK_DUPLICATE_COOLDOWN_SECONDS = 6 * 60 * 60
 RESTOCK_NEW_PRODUCT_COOLDOWN_SECONDS = 24 * 60 * 60
 PRICE_ALERT_COOLDOWN_SECONDS = 24 * 60 * 60
@@ -65,6 +66,11 @@ SOURCE_MIN_PRODUCTS = {
     "luckbox": 5,
     "spilforsyningen": 5,
     "musenogslottet": 5,
+    "symbizon": 10,
+    "cardx": 10,
+    "matraws": 20,
+    "halmeshule": 5,
+    "cardsdirect": 5,
     "nostalgic": 5,
     "andcards": 5,
     "pokecards": 10,
@@ -322,6 +328,45 @@ SHOPIFY_SITES = {
         "feeds": [
             {"game": "POKÉMON", "path": "/collections/pokemon-tcg/products.json"},
             {"game": "LORCANA", "path": "/collections/disney-lorcana/products.json"}
+        ]
+    },
+    "symbizon": {
+        "label": "SYMBIZON",
+        "base": "https://symbizon.dk",
+        "feeds": [
+            {"game": "POKÉMON", "path": "/collections/pokemon-kort/products.json"}
+        ]
+    },
+    "cardx": {
+        "label": "CARDX",
+        "base": "https://www.cardx.dk",
+        "feeds": [
+            {"game": "POKÉMON", "path": "/collections/pokemon/products.json"},
+            {"game": "LORCANA", "path": "/collections/disney-lorcana/products.json"}
+        ]
+    },
+    "matraws": {
+        "label": "MATRAWS",
+        "base": "https://matraws.dk",
+        "feeds": [
+            {"game": "POKÉMON", "path": "/collections/alt-pokemon/products.json"},
+            {"game": "LORCANA", "path": "/collections/disney-lorcana-tcg/products.json"}
+        ]
+    },
+    "halmeshule": {
+        "label": "HALMES HULE",
+        "base": "https://halmeshule.dk",
+        "feeds": [
+            {"game": "POKÉMON", "path": "/collections/pokemon-produkter/products.json"},
+            {"game": "LORCANA", "path": "/collections/disney-lorcana/products.json"},
+            {"game": None, "path": "/collections/preorder/products.json", "preorder": True}
+        ]
+    },
+    "cardsdirect": {
+        "label": "CARDSDIRECT",
+        "base": "https://cardsdirect.dk",
+        "feeds": [
+            {"game": "POKÉMON", "path": "/collections/all/products.json"}
         ]
     }
 }
@@ -5343,7 +5388,7 @@ def get_shopify_products(site_key):
                 "game": game,
                 "price": shopify_min_price(raw),
                 "in_stock": shopify_variant_available(raw),
-                "preorder": shopify_is_preorder(raw),
+                "preorder": bool(feed.get("preorder")) or shopify_is_preorder(raw),
                 "url": f"{site['base']}/products/{handle}"
             }
 
@@ -7803,7 +7848,8 @@ else:
     print(
         f"Tjekker Coolshop + Proshop + BR + Bilka + Føtex + Elgiganten "
         f"+ PokeHulen + Rogerz + MTGwebshop + Luckbox + Spilforsyningen "
-        f"+ Musen & Slottet + Nostalgic + &Cards + Pokecards.dk + Epic Panda "
+        f"+ Musen & Slottet + Symbizon + CardX + Matraws + Halmes Hule "
+        f"+ CardsDirect + Nostalgic + &Cards + Pokecards.dk + Epic Panda "
         f"+ Steffen-O + Next Level Games hvert {CHECK_EVERY}. sekund."
     )
 print()
