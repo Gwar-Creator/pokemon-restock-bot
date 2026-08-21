@@ -17,7 +17,7 @@ Vigtige filer:
 - `restock_state_v2.json`: vedvarende lager-, pris-, historik- og source-health-state.
 - `local_stock_watch.py`: separat lokal Salling-stock/PRE-PUBLISH overvågning.
 - `local_stock_state_v1.json`: vedvarende state for Local Stock Watch, når baseline er oprettet.
-- `scanner_health_audit.py`: log-only audit af de 18 scannerkilder.
+- `scanner_health_audit.py`: log-only audit af de aktive scannerkilder.
 - `.github/workflows/restock.yml`: GitHub Actions-kørsel og commit af state.
 - `cardmarket_chase_watch.py`: Cardmarket-overvågning.
 - `cardmarket_v16_replay.py`: historisk replay/hjælpeværktøj, hvis filen findes.
@@ -35,7 +35,9 @@ Læs altid de live filer i GitHub. Stol ikke alene på en ældre chat, lokal kop
 
 ## Overvågede kilder
 
-Scannerens nuværende kilder omfatter Coolshop, Proshop, BR, Bilka, Føtex, Elgiganten, PokeHulen, Rogerz, MTGwebshop, Luckbox, Spilforsyningen, Musen & Slottet, Nostalgic, &Cards, Pokecards.dk, Epic Panda, Steffen-O og Next Level Games.
+Scannerens nuværende kilder omfatter Coolshop, Proshop, BR, Bilka, Føtex, Elgiganten (historisk/retired), PokeHulen, Rogerz, MTGwebshop, Luckbox, Spilforsyningen, Musen & Slottet, Symbizon, CardX, Matraws, Halmes Hule, CardsDirect, Nostalgic, &Cards, Pokecards.dk, Epic Panda, Steffen-O og Next Level Games.
+
+Wave 1-udvidelsen fra 2026-08-21 tilføjer Symbizon, CardX, Matraws, Halmes Hule og CardsDirect som Shopify-kilder. Nye kilder baseline-indlæses uden historiske produkt-alerts og går derefter ind i normal restock-, preorder-, Price Watch- og Price History-logik, når de er friske og sunde.
 
 Butikslisten kan ændre sig. Koden og den seneste state er altid autoritative.
 
@@ -106,9 +108,7 @@ Produkter over disse grænser bliver i rå restock-state og kan fortsat give res
 
 ## Elgiganten
 
-Signed Algolia er fortsat den foretrukne og eneste fulde kilde til Elgigantens katalog + lokale lagerdata. Ved signed-key cooldown/rate-limit kan en roterende, read-only fallback kontrollere kendte offentlige produkt-URL'er for tydelige online stock-/pris-signaler. Fallbacken må ikke opfinde lokale lagertal og må ikke gøre Elgiganten til en frisk Price Watch/History-kilde, før et fuldt Algolia-scan igen lykkes.
-
-Cooldown er en degraded driftstilstand, ikke tusindvis af meningsfulde separate scannerfejl.
+Signed Algolia var den foretrukne fulde kilde, men aktiv scanning er senere retired, fordi ingen stabil offentlig live-stock-path kunne dokumenteres fra GitHub-runneren. Historisk state bevares, men må ikke bruges som frisk Price Watch/History-data.
 
 ## Proshop
 
@@ -137,12 +137,13 @@ Før levering:
 
 ## Kendte driftsforhold
 
-Senest observeret 2026-08-20:
+Senest observeret 2026-08-21:
 
-- Proshop er sund med 7 relevante produkter via Jina Reader, men en latent fejl i den direkte HTML-parser blev identificeret og rettes i V23.
-- Elgiganten har værdifulde produkter i seneste state, men signed-key endpointet har været rate-limited. V23 tilføjer en konservativ public-product-page fallback for kendte varer og klassificerer denne mode som degraded, ikke frisk Price Watch-data.
+- Wave 1 med Symbizon, CardX, Matraws, Halmes Hule og CardsDirect er koblet på via eksisterende Shopify-parser og skal verificeres i produktionsstate efter første succesfulde baseline-run.
+- Proshop er sund via Jina Reader, mens direkte HTML fortsat kan være mere skrøbelig.
+- Elgiganten aktiv scanning er retired; historisk state bevares.
 - Workflowet committer state ved ændringer og kan derfor skabe mange commits.
-- Local Stock Watch er sat i produktion for Bilka/Føtex med Kolding, Fredericia, Vejen, Brørup og Esbjerg i scope.
+- Local Stock Watch er i produktion for Bilka/Føtex med Kolding, Fredericia, Vejen, Brørup og Esbjerg.
 - Coop app/live-stock reverse-engineering-sporet er lukket og eksperimentfilerne er fjernet.
 - Workflowet har historisk haft trin til engangs-patches; primær kode skal være den varige løsning.
 
@@ -152,7 +153,7 @@ Kontrollér altid aktuel state, da disse forhold kan være løst eller ændret.
 
 Gode næste trin, som skal indføres enkeltvis og sikkert:
 
-1. Verificér V23 i produktionsrun og evaluér støjniveau over 1-2 døgn.
+1. Verificér Wave 1-kilderne i produktionsrun og ret evt. collection handles, hvis en butik giver for få produkter.
 2. Bedre datakvalitetskontrol for urimelige priser, lagertal og produktantal.
 3. Release-/preorder-radar.
 4. Relevansscore i shadow mode før eventuel yderligere automatisk filtrering.
@@ -166,6 +167,8 @@ Gode næste trin, som skal indføres enkeltvis og sikkert:
 - 2026-08-20: Local Stock Watch blev produktionsgjort for Bilka/Føtex med Kolding, Fredericia, Vejen, Brørup og Esbjerg.
 - 2026-08-20: Coop live-stock/app reverse-engineering-sporet blev lukket og eksperimentfiler fjernet.
 - 2026-08-20: V23 fastsatte prislofter, 25 kr./5% prisændringsgate, 6 timers restock-dedupe, kompaktere Price Watch/History, ugentlig fuld CSV, Proshop direct-parser fix og konservativ Elgiganten-fallback.
+- 2026-08-21: V27 fjernede individuelle Price History new-low Discord-beskeder, så dagsoutput holder sig kompakt.
+- 2026-08-21: V28 tilføjede Symbizon, CardX, Matraws, Halmes Hule og CardsDirect som Wave 1-kilder via Shopify-scanneren.
 - Lav-signal-produkter skal normalt forblive i state, men ikke sendes til Discord.
 
 ## Kommunikation
