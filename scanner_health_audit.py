@@ -34,6 +34,11 @@ SOURCE_MINIMUMS = {
     "pokemonportalen": 10,
     "tcgbruus": 5,
     "pokemonplaza": 5,
+    "kelz0r": 20,
+    "faraos": 5,
+    "goblingames": 10,
+    "zzgames": 3,
+    "hyggeonkel": 5,
     "nostalgic": 5,
     "andcards": 5,
     "pokecards": 10,
@@ -62,6 +67,7 @@ SHOPIFY = {
     "pbcards",
     "vaulted",
     "pokedexet",
+    "zzgames",
 }
 WOOCOMMERCE = {
     "nostalgic",
@@ -73,6 +79,10 @@ WOOCOMMERCE = {
     "pokemonportalen",
     "tcgbruus",
     "pokemonplaza",
+    "kelz0r",
+    "faraos",
+    "goblingames",
+    "hyggeonkel",
 }
 
 
