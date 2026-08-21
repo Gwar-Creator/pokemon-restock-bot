@@ -53,6 +53,7 @@ WAVE4_RETAILERS_V35 = True
 WAVE4_HTML_FALLBACKS_V36 = True
 TCGBRUUS_BROWSER_PARSER_V37 = True
 WAVE5_RETAILERS_V38 = True
+WAVE5_SOURCE_FIXES_V39 = True
 RESTOCK_DUPLICATE_COOLDOWN_SECONDS = 6 * 60 * 60
 RESTOCK_NEW_PRODUCT_COOLDOWN_SECONDS = 24 * 60 * 60
 PRICE_ALERT_COOLDOWN_SECONDS = 24 * 60 * 60
@@ -5959,7 +5960,15 @@ def get_shopify_products(site_key):
             if not game:
                 continue
 
-            if not is_relevant_shopify_tcg(raw, game):
+            relevance_raw = raw
+            if site_key == "zzgames":
+                relevance_raw = dict(raw)
+                tags = relevance_raw.get("tags") or []
+                if not isinstance(tags, list):
+                    tags = [tags]
+                relevance_raw["tags"] = [*tags, "Pokemon"]
+
+            if not is_relevant_shopify_tcg(relevance_raw, game):
                 continue
 
             product_id = str(raw.get("id", "")).strip()
@@ -7240,7 +7249,8 @@ def get_kelz0r_products():
                     "meddela", "notify", "giv mig besked", "udsolgt", "ikke på lager", "ikke pa lager"
                 ))
                 explicit_in = any(marker in low for marker in (
-                    "køb nu", "koeb nu", "læg i indkøbskurv", "laeg i indkoebskurv",
+                    "køb nu", "koeb nu", "köp nu", "kop nu", "buy now",
+                    "læg i indkøbskurv", "laeg i indkoebskurv",
                     "læg i kurv", "laeg i kurv", "add to cart"
                 ))
 
@@ -7403,55 +7413,166 @@ def get_hyggeonkel_products():
     products = {}
     seen_urls = set()
     session = requests.Session()
-    session.headers.update({**BROWSER_HEADERS, "Accept-Language": "da-DK,da;q=0.9,en;q=0.8"})
+    session.headers.update(
+        {
+            **BROWSER_HEADERS,
+            "Accept-Language": "da-DK,da;q=0.9,en;q=0.8",
+        }
+    )
 
     def is_product_url(value):
         return "/produkt/" in (value or "")
 
-    for page in range(1, 6):
-        separator = "&" if "?" in HYGGEONKEL_LORCANA_URL else "?"
-        page_url = (
-            HYGGEONKEL_LORCANA_URL
-            if page == 1
-            else f"{HYGGEONKEL_LORCANA_URL}{separator}page={page}"
-        )
-        response = session.get(page_url, timeout=30)
-        response.raise_for_status()
-        soup = BeautifulSoup(response.text, "html.parser")
-        found = 0
+    def nearest_card(anchor, page_url, product_url):
+        node = anchor
+        best = anchor.parent or anchor
 
+        for _ in range(10):
+            node = node.parent
+            if node is None:
+                break
+
+            links = set()
+            for child in node.find_all("a", href=True):
+                href = urljoin(page_url, child.get("href"))
+                href = href.split("#", 1)[0].split("?", 1)[0].rstrip("/")
+                if is_product_url(href):
+                    links.add(href)
+
+            if product_url not in links:
+                continue
+            if len(links) > 1:
+                break
+
+            best = node
+            low = woocommerce_clean_text(node.get_text(" ", strip=True)).lower()
+            if any(
+                marker in low
+                for marker in (
+                    " kr", "på lager", "pa lager", "ikke på lager", "ikke pa lager",
+                    "udsolgt", "læg i kurv", "laeg i kurv", "er på vej"
+                )
+            ):
+                return node
+
+        return best
+
+    def best_name(anchors, card):
+        candidates = []
+
+        for selector in ("h2", "h3", "h4", ".product-title", ".product-name"):
+            node = card.select_one(selector)
+            if node:
+                candidates.append(woocommerce_clean_text(node.get_text(" ", strip=True)))
+
+        for anchor in anchors:
+            candidates.append(woocommerce_clean_text(anchor.get_text(" ", strip=True)))
+            image = anchor.find("img", alt=True)
+            if image:
+                candidates.append(woocommerce_clean_text(image.get("alt")))
+
+        ignored = {
+            "", "nyhed", "fri fragt", "læs mere", "laes mere", "se produkt",
+            "læg i kurv", "laeg i kurv", "image"
+        }
+        candidates = [
+            value for value in candidates
+            if len(value) >= 4 and value.lower() not in ignored
+        ]
+        if not candidates:
+            return ""
+
+        # Prefer a descriptive Lorcana title; otherwise the longest useful text.
+        candidates.sort(
+            key=lambda value: (
+                "lorcana" in value.lower(),
+                any(marker in value.lower() for marker in (
+                    "booster", "display", "collection", "trove", "gift", "starter", "quest"
+                )),
+                len(value),
+            ),
+            reverse=True,
+        )
+        return candidates[0]
+
+    for page in range(1, 7):
+        params = {
+            "brand_filter": "ZLorcana",
+            "isgoodprice": "false",
+            "isinstock": "false",
+            "onlynew": "false",
+            "order": "newestfirst",
+            "page": page,
+        }
+        response = session.get(HYGGEONKEL_LORCANA_URL, params=params, timeout=30)
+        response.raise_for_status()
+        page_url = response.url
+        soup = BeautifulSoup(response.text, "html.parser")
+
+        anchors_by_url = {}
         for anchor in soup.find_all("a", href=True):
             href = urljoin(page_url, anchor.get("href"))
+            href = href.split("#", 1)[0].split("?", 1)[0].rstrip("/")
             if not is_product_url(href):
                 continue
-            product_url = href.split("#", 1)[0].split("?", 1)[0].rstrip("/")
+            anchors_by_url.setdefault(href, []).append(anchor)
+
+        new_on_page = 0
+        for product_url, anchors in anchors_by_url.items():
             if product_url in seen_urls:
                 continue
 
-            card = _wave5_nearest_card(anchor, is_product_url)
-            name = _wave5_anchor_name(anchor, card)
-            if not name or not woocommerce_is_relevant_sealed(_wave5_synthetic(name, "LORCANA")):
-                seen_urls.add(product_url)
+            # Start from the anchor with the most descriptive text/image alt.
+            anchor = max(
+                anchors,
+                key=lambda item: len(
+                    woocommerce_clean_text(item.get_text(" ", strip=True))
+                    + woocommerce_clean_text((item.find("img", alt=True) or {}).get("alt") if item.find("img", alt=True) else "")
+                ),
+            )
+            card = nearest_card(anchor, page_url, product_url)
+            name = best_name(anchors, card)
+            seen_urls.add(product_url)
+
+            if not name:
+                continue
+            if not woocommerce_is_relevant_sealed(_wave5_synthetic(name, "LORCANA")):
                 continue
 
             card_text = woocommerce_clean_text(card.get_text(" ", strip=True))
             low = card_text.lower()
-            preorder = any(marker in low for marker in (
-                "er på vej", "forventes på lager", "forudbestil", "preorder", "pre-order"
-            ))
-            explicit_out = "ikke på lager" in low or "ikke pa lager" in low or "udsolgt" in low
-            explicit_in = "på lager" in low or "pa lager" in low or "læg i kurv" in low or "laeg i kurv" in low
+            preorder = any(
+                marker in low
+                for marker in (
+                    "er på vej", "forventes på lager", "forudbestil", "forudbestilling",
+                    "preorder", "pre-order"
+                )
+            )
+            explicit_out = any(
+                marker in low
+                for marker in ("ikke på lager", "ikke pa lager", "udsolgt")
+            )
+            explicit_in = any(
+                marker in low
+                for marker in ("på lager", "pa lager", "læg i kurv", "laeg i kurv")
+            )
 
             product_id = _wave5_stable_id("hyggeonkel", name, product_url)
             products[product_id] = _wave5_product(
-                name, "LORCANA", _wave5_price(card_text),
-                explicit_in and not explicit_out, preorder, product_url
+                name,
+                "LORCANA",
+                _wave5_price(card_text),
+                explicit_in and not explicit_out,
+                preorder,
+                product_url,
             )
-            seen_urls.add(product_url)
-            found += 1
+            new_on_page += 1
 
-        if found == 0:
+        if not anchors_by_url or new_on_page == 0:
             break
+
+    if not products:
+        raise RuntimeError("Hyggeonkel parser fandt 0 relevante Lorcana sealed produkter")
 
     return products
 
