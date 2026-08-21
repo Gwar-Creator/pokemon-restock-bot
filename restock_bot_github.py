@@ -46,6 +46,7 @@ PRICE_HISTORY_COMPACT_V27 = True
 WAVE1_RETAILERS_V28 = True
 WAVE2_RETAILERS_V29 = True
 CARDSTORECPH_RETIRED_V30 = True
+WAVE3_RETAILERS_V31 = True
 RESTOCK_DUPLICATE_COOLDOWN_SECONDS = 6 * 60 * 60
 RESTOCK_NEW_PRODUCT_COOLDOWN_SECONDS = 24 * 60 * 60
 PRICE_ALERT_COOLDOWN_SECONDS = 24 * 60 * 60
@@ -77,6 +78,11 @@ SOURCE_MIN_PRODUCTS = {
     "tcgshoppen": 5,
     "pokemonsdk": 5,
     "pocketmonster": 5,
+    "funshop": 10,
+    "pokepulls": 10,
+    "staalz": 5,
+    "pbcards": 10,
+    "kocardz": 5,
     "nostalgic": 5,
     "andcards": 5,
     "pokecards": 10,
@@ -393,6 +399,36 @@ SHOPIFY_SITES = {
         "feeds": [
             {"game": "POKÉMON", "path": "/collections/hele-vores-udvalg-af-pokemon/products.json"}
         ]
+    },
+    "funshop": {
+        "label": "FUN-SHOP",
+        "base": "https://www.fun-shop.dk",
+        "feeds": [
+            {"game": "POKÉMON", "path": "/collections/boosters-1/products.json"},
+            {"game": "POKÉMON", "path": "/collections/pokemon-bokse-og-tins/products.json"}
+        ]
+    },
+    "pokepulls": {
+        "label": "POKÉPULLS",
+        "base": "https://pokepulls.dk",
+        "feeds": [
+            {"game": None, "path": "/collections/all/products.json"}
+        ]
+    },
+    "staalz": {
+        "label": "STAALZ",
+        "base": "https://staalz.dk",
+        "feeds": [
+            {"game": None, "path": "/products.json"}
+        ]
+    },
+    "pbcards": {
+        "label": "PBCARDS",
+        "base": "https://pbcards.dk",
+        "feeds": [
+            {"game": "POKÉMON", "path": "/collections/pokemon/products.json"},
+            {"game": None, "path": "/collections/new-releases/products.json"}
+        ]
     }
 }
 
@@ -443,6 +479,30 @@ WOOCOMMERCE_SITES = {
         "categories": {},
         "searches": {
             "POKÉMON": ["booster", "elite trainer", "tin", "collection", "box"]
+        }
+    },
+    "kocardz": {
+        "label": "KOCARDZ",
+        "base": "https://www.kocardz.dk",
+        "categories": {},
+        "search_max_pages": 3,
+        "searches": {
+            "POKÉMON": [
+                "pokemon booster",
+                "pokemon elite trainer",
+                "pokemon tin",
+                "pokemon collection",
+                "pokemon box",
+                "pokemon bundle",
+                "pokemon blister",
+                "pokemon upc"
+            ],
+            "LORCANA": [
+                "lorcana booster",
+                "lorcana trove",
+                "lorcana gift set",
+                "lorcana collection"
+            ]
         }
     },
 }
@@ -8100,8 +8160,9 @@ else:
         f"+ PokeHulen + Rogerz + MTGwebshop + Luckbox + Spilforsyningen "
         f"+ Musen & Slottet + Symbizon + CardX + Matraws + Halmes Hule "
         f"+ CardsDirect + Baltzer Games + TCG Shoppen + Pokemons.dk "
-        f"+ Pocket Monster + Nostalgic + &Cards + Pokecards.dk "
-        f"+ Epic Panda + Steffen-O + Next Level Games hvert {CHECK_EVERY}. sekund."
+        f"+ Pocket Monster + Fun-shop + PokéPulls + Staalz + PBCards + KoCardz "
+        f"+ Nostalgic + &Cards + Pokecards.dk + Epic Panda + Steffen-O "
+        f"+ Next Level Games hvert {CHECK_EVERY}. sekund."
     )
 print()
 
