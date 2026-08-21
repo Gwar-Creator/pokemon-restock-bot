@@ -20,6 +20,11 @@ SOURCE_MINIMUMS = {
     "matraws": 20,
     "halmeshule": 5,
     "cardsdirect": 5,
+    "baltzer": 5,
+    "tcgshoppen": 5,
+    "pokemonsdk": 5,
+    "pocketmonster": 5,
+    "cardstorecph": 3,
     "nostalgic": 5,
     "andcards": 5,
     "pokecards": 10,
@@ -40,8 +45,16 @@ SHOPIFY = {
     "matraws",
     "halmeshule",
     "cardsdirect",
+    "baltzer",
+    "tcgshoppen",
 }
-WOOCOMMERCE = {"nostalgic", "andcards", "pokecards"}
+WOOCOMMERCE = {
+    "nostalgic",
+    "andcards",
+    "pokecards",
+    "pokemonsdk",
+    "pocketmonster",
+}
 
 
 def load_state():
