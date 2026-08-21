@@ -62,6 +62,9 @@ jobs:
           if [ -f patch_v26_english_only.py ]; then
             python patch_v26_english_only.py
           fi
+          if [ -f patch_v27_compact_price_history.py ]; then
+            python patch_v27_compact_price_history.py
+          fi
 
       - name: Validate Python
         run: |
