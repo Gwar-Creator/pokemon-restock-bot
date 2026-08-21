@@ -48,6 +48,7 @@ WAVE2_RETAILERS_V29 = True
 CARDSTORECPH_RETIRED_V30 = True
 WAVE3_RETAILERS_V31 = True
 WAVE3_SOURCE_FIX_V33 = True
+KOCARDZ_ANCHOR_PARSER_V34 = True
 RESTOCK_DUPLICATE_COOLDOWN_SECONDS = 6 * 60 * 60
 RESTOCK_NEW_PRODUCT_COOLDOWN_SECONDS = 24 * 60 * 60
 PRICE_ALERT_COOLDOWN_SECONDS = 24 * 60 * 60
@@ -6254,6 +6255,98 @@ def _kocardz_product_id(card, product_url):
     return hashlib.sha256(product_url.encode("utf-8")).hexdigest()[:20]
 
 
+
+def _kocardz_anchor_name(anchor):
+    name = woocommerce_clean_text(anchor.get_text(" ", strip=True))
+    if name and name.lower() not in {
+        "image", "se produkt", "laes mere", "læs mere", "foej til kurv", "føj til kurv"
+    }:
+        return name
+
+    image = anchor.find("img", alt=True)
+    if image:
+        alt = woocommerce_clean_text(image.get("alt"))
+        if len(alt) >= 4:
+            return alt
+
+    node = anchor.parent
+    for _ in range(4):
+        if node is None:
+            break
+        for selector in ("h2", "h3", ".product-title", ".wd-entities-title"):
+            title_node = node.select_one(selector)
+            if title_node:
+                title = woocommerce_clean_text(title_node.get_text(" ", strip=True))
+                if len(title) >= 4:
+                    return title
+        node = node.parent
+
+    return ""
+
+
+def _kocardz_product_links(node):
+    links = set()
+    for child in node.find_all("a", href=True):
+        href = urljoin("https://www.kocardz.dk", child.get("href"))
+        href = href.split("#", 1)[0].split("?", 1)[0]
+        if "/vare/" in href and "/vare-kategori/" not in href:
+            links.add(href.rstrip("/") + "/")
+    return links
+
+
+def _kocardz_nearest_product_node(anchor, product_url):
+    node = anchor
+    best = anchor.parent or anchor
+
+    for _ in range(9):
+        node = node.parent
+        if node is None:
+            break
+
+        links = _kocardz_product_links(node)
+        if product_url not in links:
+            continue
+
+        if len(links) > 1:
+            break
+
+        best = node
+        low = woocommerce_clean_text(node.get_text(" ", strip=True)).lower()
+        if any(
+            marker in low
+            for marker in (
+                "på lager", "pa lager", "udsolgt", "ikke på lager", "ikke pa lager",
+                "kommer snart", "forudbestil", "føj til kurv", "foej til kurv", ",-", "kr."
+            )
+        ):
+            return node
+
+    return best
+
+
+def _kocardz_price_from_text(value):
+    text_value = woocommerce_clean_text(value)
+    price_pattern = re.compile(
+        r"kr\.?\s*(\d{1,3}(?:\.\d{3})*(?:,\d{1,2})?|\d+(?:,\d{1,2})?)"
+        r"|(\d{1,3}(?:\.\d{3})*(?:,\d{1,2})?|\d+(?:,\d{1,2})?)\s*(?:,-|kr\.?|DKK)",
+        flags=re.IGNORECASE,
+    )
+
+    values = []
+    for match in price_pattern.finditer(text_value):
+        raw = match.group(1) or match.group(2)
+        if not raw:
+            continue
+        try:
+            price = float(raw.replace(".", "").replace(",", "."))
+        except ValueError:
+            continue
+        if price > 0:
+            values.append(price)
+
+    return values[-1] if values else None
+
+
 def get_kocardz_products():
     products = {}
     session = requests.Session()
@@ -6265,7 +6358,7 @@ def get_kocardz_products():
     )
 
     for game, category_url in KOCARDZ_CATEGORY_FEEDS.items():
-        seen_ids = set()
+        seen_urls = set()
 
         for page in range(1, KOCARDZ_MAX_PAGES + 1):
             page_url = (
@@ -6279,29 +6372,36 @@ def get_kocardz_products():
             response.raise_for_status()
 
             soup = BeautifulSoup(response.text, "html.parser")
-            cards = soup.select(
-                "li.product, .product-grid-item, .wd-product, .products .product"
-            )
-            if not cards:
+            anchors = []
+            for anchor in soup.find_all("a", href=True):
+                href = urljoin("https://www.kocardz.dk", anchor.get("href"))
+                href = href.split("#", 1)[0].split("?", 1)[0]
+                if "/vare/" not in href or "/vare-kategori/" in href:
+                    continue
+                product_url = href.rstrip("/") + "/"
+                anchors.append((anchor, product_url))
+
+            if not anchors:
                 if page == 1:
                     raise RuntimeError(
-                        f"KoCardz category parser fandt ingen produktkort: {page_url}"
+                        f"KoCardz category parser fandt ingen produktlinks: {page_url}"
                     )
                 break
 
             new_on_page = 0
-            for card in cards:
-                product_url = _kocardz_card_url(card)
-                if not product_url:
+            page_urls = set()
+
+            for anchor, product_url in anchors:
+                if product_url in seen_urls or product_url in page_urls:
                     continue
 
-                product_id = _kocardz_product_id(card, product_url)
-                if product_id in seen_ids:
-                    continue
-
-                name = _kocardz_card_name(card, product_url)
+                name = _kocardz_anchor_name(anchor)
                 if not name:
                     continue
+
+                node = _kocardz_nearest_product_node(anchor, product_url)
+                node_text = woocommerce_clean_text(node.get_text(" ", strip=True))
+                low = node_text.lower()
 
                 synthetic = {
                     "name": name,
@@ -6312,39 +6412,42 @@ def get_kocardz_products():
                     "description": "",
                 }
                 if not woocommerce_is_relevant_sealed(synthetic):
+                    page_urls.add(product_url)
                     continue
 
-                card_text = woocommerce_clean_text(card.get_text(" ", strip=True))
-                low = card_text.lower()
+                preorder = any(
+                    marker in low
+                    for marker in (
+                        "forudbestil", "forudbestilling", "preorder", "pre-order", "kommer snart"
+                    )
+                )
                 explicit_out = (
                     "udsolgt" in low
                     or "ikke på lager" in low
                     or "ikke pa lager" in low
                 )
                 explicit_in = (
-                    ("på lager" in low or "pa lager" in low)
-                    and not explicit_out
-                )
-                preorder = any(
-                    marker in low
-                    for marker in (
-                        "forudbestil",
-                        "forudbestilling",
-                        "preorder",
-                        "pre-order",
-                        "kommer snart",
+                    (
+                        "på lager" in low
+                        or "pa lager" in low
+                        or "føj til kurv" in low
+                        or "foej til kurv" in low
                     )
+                    and not explicit_out
+                    and not preorder
                 )
 
+                product_id = hashlib.sha256(product_url.encode("utf-8")).hexdigest()[:20]
                 products[product_id] = {
                     "name": name,
                     "game": game,
-                    "price": _kocardz_price(card),
+                    "price": _kocardz_price_from_text(node_text),
                     "in_stock": explicit_in,
                     "preorder": preorder,
                     "url": product_url,
                 }
-                seen_ids.add(product_id)
+                seen_urls.add(product_url)
+                page_urls.add(product_url)
                 new_on_page += 1
 
             if new_on_page == 0:
