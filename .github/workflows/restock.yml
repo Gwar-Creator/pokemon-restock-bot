@@ -83,6 +83,9 @@ jobs:
           if [ -f patch_v34_kocardz_anchor_parser.py ]; then
             python patch_v34_kocardz_anchor_parser.py
           fi
+          if [ -f patch_v35_wave4_retailers.py ]; then
+            python patch_v35_wave4_retailers.py
+          fi
 
       - name: Validate Python
         run: |
