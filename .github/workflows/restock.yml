@@ -89,6 +89,9 @@ jobs:
           if [ -f patch_v36_wave4_html_fallbacks.py ]; then
             python patch_v36_wave4_html_fallbacks.py
           fi
+          if [ -f patch_v37_tcgbruus_browser_parser.py ]; then
+            python patch_v37_tcgbruus_browser_parser.py
+          fi
 
       - name: Validate Python
         run: |
