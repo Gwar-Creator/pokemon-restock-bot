@@ -95,6 +95,9 @@ jobs:
           if [ -f patch_v38_wave5_retailers.py ]; then
             python patch_v38_wave5_retailers.py
           fi
+          if [ -f patch_v38_wave5_docs.py ]; then
+            python patch_v38_wave5_docs.py
+          fi
 
       - name: Validate Python
         run: |
