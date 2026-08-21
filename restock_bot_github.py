@@ -42,6 +42,7 @@ PRICE_ALERT_MEMORY = {}
 PRICE_SIGNAL_CLEANUP_V23 = True
 RETAILER_CLEANUP_V25 = True
 ENGLISH_ONLY_V26 = True
+PRICE_HISTORY_COMPACT_V27 = True
 RESTOCK_DUPLICATE_COOLDOWN_SECONDS = 6 * 60 * 60
 RESTOCK_NEW_PRODUCT_COOLDOWN_SECONDS = 24 * 60 * 60
 PRICE_ALERT_COOLDOWN_SECONDS = 24 * 60 * 60
@@ -3230,42 +3231,9 @@ def process_price_history(old_history_state, current_state, fresh_sources):
                     f"Cardmarket fejl for {_history_product_label(product_key)}: {error}"
                 )
 
-    if not first_run and PRICE_HISTORY_WEBHOOK_URL:
-        for product_key, old_low, entry, best in new_lows:
-            improvement_dkk = old_low - float(entry["historical_low"])
-            improvement_pct = (
-                improvement_dkk / old_low * 100.0
-                if old_low > 0
-                else 0.0
-            )
-            if (
-                improvement_dkk < PRICE_HISTORY_NEW_LOW_MIN_DKK
-                or improvement_pct < PRICE_HISTORY_NEW_LOW_MIN_PCT
-            ):
-                continue
-
-            info = parse_price_watch_key(product_key)
-            shops = " + ".join(entry.get("historical_low_shops") or [best["shop"]])
-            description = (
-                f"**{price_watch_game_label(info['game'])} · "
-                f"{_history_product_label(product_key)}**\n\n"
-                f"Tidligere rekord: {format_price(old_low)}\n"
-                f"Ny rekord: **{format_price(entry['historical_low'])}**\n"
-                f"Fald: **{format_price(improvement_dkk)} "
-                f"({improvement_pct:.0f}%)**\n"
-                f"Butik: **{shops}**"
-            )
-            if best.get("url"):
-                description += f"\n🔗 {best['url']}"
-
-            if send_price_history_embed(
-                "🏆 NY HISTORISK LAVESTE PRIS",
-                description,
-                color=0xF1C40F,
-                footer="MasterBot · Price History · dansk retail",
-            ):
-                # Det samme prisfald skal ikke gentages i næste dags digest.
-                entry["last_daily_signal_date"] = today
+    # Individual historical-low alerts are intentionally suppressed.
+    # New lows stay in state and remain eligible for the next compact daily
+    # Price History digest (max 3 total signals).
 
     if daily_due:
         last_daily_attempt_date = today
