@@ -101,6 +101,9 @@ jobs:
           if [ -f patch_v39_wave5_source_fixes.py ]; then
             python patch_v39_wave5_source_fixes.py
           fi
+          if [ -f patch_v40_matching_opportunity.py ]; then
+            python patch_v40_matching_opportunity.py
+          fi
 
       - name: Validate Python
         run: |
