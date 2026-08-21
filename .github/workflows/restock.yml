@@ -80,6 +80,9 @@ jobs:
           if [ -f patch_v33_wave3_source_fixes.py ]; then
             python patch_v33_wave3_source_fixes.py
           fi
+          if [ -f patch_v34_kocardz_anchor_parser.py ]; then
+            python patch_v34_kocardz_anchor_parser.py
+          fi
 
       - name: Validate Python
         run: |
