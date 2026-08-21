@@ -57,6 +57,7 @@ WAVE5_RETAILERS_V38 = True
 WAVE5_SOURCE_FIXES_V39 = True
 MATCHING_OPPORTUNITY_V40 = True
 V40_RUNTIME_FIX_V41 = True
+KELZ0R_STABILITY_V42 = True
 RESTOCK_DUPLICATE_COOLDOWN_SECONDS = 6 * 60 * 60
 RESTOCK_NEW_PRODUCT_COOLDOWN_SECONDS = 24 * 60 * 60
 PRICE_ALERT_COOLDOWN_SECONDS = 24 * 60 * 60
@@ -7582,61 +7583,96 @@ def _wave5_product(name, game, price, in_stock, preorder, url):
 
 def get_kelz0r_products():
     products = {}
+    seen_urls = set()
     session = requests.Session()
-    session.headers.update({**BROWSER_HEADERS, "Accept-Language": "da-DK,da;q=0.9,en;q=0.8"})
+    session.headers.update(
+        {
+            **BROWSER_HEADERS,
+            "Accept-Language": "da-DK,da;q=0.9,en;q=0.8",
+        }
+    )
 
     def is_product_url(value):
         return bool(re.search(r"-p-\d+\.html(?:$|[?#])", value or "", flags=re.I))
 
+    def canonical_url(value):
+        return str(value or "").split("#", 1)[0].split("?", 1)[0].rstrip("/")
+
+    def stable_product_id(product_url):
+        match = re.search(r"-p-(\d+)\.html$", product_url, flags=re.I)
+        if match:
+            return f"kelz0r:{match.group(1)}"
+        return "kelz0r:" + hashlib.sha256(product_url.encode("utf-8")).hexdigest()[:20]
+
     for base_url in KELZ0R_FEEDS:
-        seen_page_urls = set()
         for page in range(1, 31):
             separator = "&" if "?" in base_url else "?"
             page_url = base_url if page == 1 else f"{base_url}{separator}page={page}"
             response = session.get(page_url, timeout=30)
             response.raise_for_status()
             soup = BeautifulSoup(response.text, "html.parser")
-            page_products = 0
+
+            page_product_urls = set()
+            for anchor in soup.find_all("a", href=True):
+                href = urljoin(page_url, anchor.get("href"))
+                if is_product_url(href):
+                    page_product_urls.add(canonical_url(href))
+
+            if not page_product_urls:
+                break
 
             for anchor in soup.find_all("a", href=True):
                 href = urljoin(page_url, anchor.get("href"))
                 if not is_product_url(href):
                     continue
-                product_url = href.split("#", 1)[0].split("?", 1)[0]
-                if product_url in seen_page_urls:
+
+                product_url = canonical_url(href)
+                if product_url in seen_urls:
                     continue
 
                 card = _wave5_nearest_card(anchor, is_product_url)
                 name = _wave5_anchor_name(anchor, card)
-                if not name or not woocommerce_is_relevant_sealed(_wave5_synthetic(name, "POKÉMON")):
-                    seen_page_urls.add(product_url)
+                if not name or not woocommerce_is_relevant_sealed(
+                    _wave5_synthetic(name, "POKÉMON")
+                ):
+                    seen_urls.add(product_url)
                     continue
 
                 card_text = woocommerce_clean_text(card.get_text(" ", strip=True))
                 low = card_text.lower()
-                preorder = any(marker in low for marker in (
-                    "[preorder]", "preorder", "pre-order", "forudbestil", "forudbestilling",
-                    "forhåndsbestilling", "forhandsbestilling"
-                ))
-                explicit_out = any(marker in low for marker in (
-                    "meddela", "notify", "giv mig besked", "udsolgt", "ikke på lager", "ikke pa lager"
-                ))
-                explicit_in = any(marker in low for marker in (
-                    "køb nu", "koeb nu", "köp nu", "kop nu", "buy now",
-                    "læg i indkøbskurv", "laeg i indkoebskurv",
-                    "læg i kurv", "laeg i kurv", "add to cart"
-                ))
-
-                product_id = _wave5_stable_id("kelz0r", name, product_url)
-                products[product_id] = _wave5_product(
-                    name, "POKÉMON", _wave5_price(card_text),
-                    explicit_in and not explicit_out, preorder, product_url
+                preorder = any(
+                    marker in low
+                    for marker in (
+                        "[preorder]", "preorder", "pre-order", "forudbestil",
+                        "forudbestilling", "forhåndsbestilling", "forhandsbestilling",
+                    )
                 )
-                seen_page_urls.add(product_url)
-                page_products += 1
+                explicit_out = any(
+                    marker in low
+                    for marker in (
+                        "meddela", "notify", "giv mig besked", "udsolgt",
+                        "ikke på lager", "ikke pa lager",
+                    )
+                )
+                explicit_in = any(
+                    marker in low
+                    for marker in (
+                        "køb nu", "koeb nu", "köp nu", "kop nu", "buy now",
+                        "læg i indkøbskurv", "laeg i indkoebskurv",
+                        "læg i kurv", "laeg i kurv", "add to cart",
+                    )
+                )
 
-            if page_products == 0:
-                break
+                product_id = stable_product_id(product_url)
+                products[product_id] = _wave5_product(
+                    name,
+                    "POKÉMON",
+                    _wave5_price(card_text),
+                    explicit_in and not explicit_out,
+                    preorder,
+                    product_url,
+                )
+                seen_urls.add(product_url)
 
     return products
 
@@ -11004,6 +11040,10 @@ while True:
                     and 0 < len(old_products) <= WOOCOMMERCE_PAGE_SIZE
                     and len(products) >= len(old_products) * 3
                 )
+                kelz0r_rebaseline = (
+                    site_key == "kelz0r"
+                    and not bool(state.get("_kelz0r_stability_v42_baselined"))
+                )
 
                 print(
                     f"{site['label']}: "
@@ -11013,12 +11053,18 @@ while True:
                     f"{counts['POKÉMON_STOCK'] + counts['LORCANA_STOCK']}"
                 )
 
-                if was_initialized and not scope_expansion:
+                if was_initialized and not scope_expansion and not kelz0r_rebaseline:
                     process_woocommerce_changes(
                         site_key,
                         old_products,
                         products
                     )
+                elif kelz0r_rebaseline:
+                    print(
+                        f"KELZ0R V42 stabil baseline: {len(products)} produkter; "
+                        "historiske false->true/new alerts undertrykkes."
+                    )
+                    new_state["_kelz0r_stability_v42_baselined"] = True
                 elif scope_expansion:
                     print(
                         f"{site['label']} fuld katalogbaseline: "
