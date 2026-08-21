@@ -15,6 +15,11 @@ SOURCE_MINIMUMS = {
     "luckbox": 5,
     "spilforsyningen": 5,
     "musenogslottet": 5,
+    "symbizon": 10,
+    "cardx": 10,
+    "matraws": 20,
+    "halmeshule": 5,
+    "cardsdirect": 5,
     "nostalgic": 5,
     "andcards": 5,
     "pokecards": 10,
@@ -30,6 +35,11 @@ SHOPIFY = {
     "luckbox",
     "spilforsyningen",
     "musenogslottet",
+    "symbizon",
+    "cardx",
+    "matraws",
+    "halmeshule",
+    "cardsdirect",
 }
 WOOCOMMERCE = {"nostalgic", "andcards", "pokecards"}
 
@@ -90,8 +100,8 @@ def main():
             print(f"! {issue}")
     else:
         print(
-            "AUDIT OK: alle 17 aktive kilder er over minimum og uden "
-            "registrerede failures."
+            f"AUDIT OK: alle {len(SOURCE_MINIMUMS)} aktive kilder er over minimum "
+            "og uden registrerede failures."
         )
 
     # Diagnostic only. Source-health already owns Discord failure alerts, so
