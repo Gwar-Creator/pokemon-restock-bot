@@ -44,6 +44,7 @@ RETAILER_CLEANUP_V25 = True
 ENGLISH_ONLY_V26 = True
 PRICE_HISTORY_COMPACT_V27 = True
 WAVE1_RETAILERS_V28 = True
+WAVE2_RETAILERS_V29 = True
 RESTOCK_DUPLICATE_COOLDOWN_SECONDS = 6 * 60 * 60
 RESTOCK_NEW_PRODUCT_COOLDOWN_SECONDS = 24 * 60 * 60
 PRICE_ALERT_COOLDOWN_SECONDS = 24 * 60 * 60
@@ -71,6 +72,11 @@ SOURCE_MIN_PRODUCTS = {
     "matraws": 20,
     "halmeshule": 5,
     "cardsdirect": 5,
+    "baltzer": 5,
+    "tcgshoppen": 5,
+    "pokemonsdk": 5,
+    "pocketmonster": 5,
+    "cardstorecph": 3,
     "nostalgic": 5,
     "andcards": 5,
     "pokecards": 10,
@@ -368,6 +374,25 @@ SHOPIFY_SITES = {
         "feeds": [
             {"game": "POKÉMON", "path": "/collections/all/products.json"}
         ]
+    },
+    "baltzer": {
+        "label": "BALTZER GAMES",
+        "base": "https://baltzergames.dk",
+        "feeds": [
+            {"game": "POKÉMON", "path": "/collections/pokemon-booster-packs/products.json"},
+            {"game": "POKÉMON", "path": "/collections/pokemon-booster-display/products.json"},
+            {"game": "POKÉMON", "path": "/collections/pokemon-tins/products.json"},
+            {"game": "POKÉMON", "path": "/collections/pokemon-blister-pakker/products.json"},
+            {"game": "POKÉMON", "path": "/collections/pokemon-v-ex-gx/products.json"},
+            {"game": "LORCANA", "path": "/collections/lorcana/products.json"}
+        ]
+    },
+    "tcgshoppen": {
+        "label": "TCG SHOPPEN",
+        "base": "https://www.tcgshoppen.dk",
+        "feeds": [
+            {"game": "POKÉMON", "path": "/collections/hele-vores-udvalg-af-pokemon/products.json"}
+        ]
     }
 }
 
@@ -402,6 +427,22 @@ WOOCOMMERCE_SITES = {
         "trust_total_pages": False,
         "categories": {
             "POKÉMON": 16
+        }
+    },
+    "pokemonsdk": {
+        "label": "POKEMONS.DK",
+        "base": "https://www.pokemons.dk",
+        "categories": {},
+        "searches": {
+            "POKÉMON": ["booster", "elite trainer", "tin", "collection", "box"]
+        }
+    },
+    "pocketmonster": {
+        "label": "POCKET MONSTER",
+        "base": "https://pocketmonster.dk",
+        "categories": {},
+        "searches": {
+            "POKÉMON": ["booster", "elite trainer", "tin", "collection", "box"]
         }
     },
 }
@@ -449,6 +490,153 @@ EPICPANDA_FEEDS = [
     }
 ]
 EPICPANDA_MAX_PAGES = 20
+
+
+
+# =========================================================
+# CARDSTORECPH
+# =========================================================
+
+CARDSTORECPH_BASE = "https://cardstorecph.dk"
+CARDSTORECPH_FEEDS = (
+    ("POKÉMON", "https://cardstorecph.dk/shop/3-pokemon/"),
+    ("LORCANA", "https://cardstorecph.dk/shop/125-disney-lorcana/"),
+)
+
+
+def _cardstorecph_price(text):
+    match = re.search(
+        r"(\d{1,3}(?:\.\d{3})*(?:,\d{2})?|\d+(?:,\d{2})?)\s*DKK",
+        text or "",
+        flags=re.IGNORECASE,
+    )
+    if not match:
+        return None
+    try:
+        return float(match.group(1).replace(".", "").replace(",", "."))
+    except ValueError:
+        return None
+
+
+def get_cardstorecph_products():
+    products = {}
+
+    for game, category_url in CARDSTORECPH_FEEDS:
+        response = requests.get(
+            category_url,
+            headers=BROWSER_HEADERS,
+            timeout=30,
+        )
+        response.raise_for_status()
+        soup = BeautifulSoup(response.text, "html.parser")
+        category_prefix = category_url.rstrip("/") + "/"
+
+        for link in soup.find_all("a", href=True):
+            href = urljoin(CARDSTORECPH_BASE, link.get("href"))
+            if not href.startswith(category_prefix):
+                continue
+
+            name = re.sub(r"\s+", " ", link.get_text(" ", strip=True)).strip()
+            if not name or name.lower() in {"vis produkt", "køb", "koeb"}:
+                continue
+
+            product_match = re.search(r"/(\d{6,})-[^/]+/?$", href)
+            if not product_match:
+                continue
+
+            card = None
+            for parent in link.parents:
+                if parent is soup:
+                    break
+                parent_text = re.sub(r"\s+", " ", parent.get_text(" ", strip=True)).strip()
+                low_parent = parent_text.lower()
+                if (
+                    "dkk" in low_parent
+                    and (
+                        "på lager" in low_parent
+                        or "pa lager" in low_parent
+                        or "ikke på lager" in low_parent
+                        or "ikke pa lager" in low_parent
+                        or "udsolgt" in low_parent
+                    )
+                    and len(parent_text) <= 2500
+                ):
+                    card = parent
+                    break
+
+            if card is None:
+                continue
+
+            card_text = re.sub(r"\s+", " ", card.get_text(" ", strip=True)).strip()
+            low = card_text.lower()
+            explicit_out = (
+                "ikke på lager" in low
+                or "ikke pa lager" in low
+                or "udsolgt" in low
+            )
+            explicit_in = (
+                ("på lager" in low or "pa lager" in low)
+                and not explicit_out
+            )
+
+            product = {
+                "name": name,
+                "game": game,
+                "price": _cardstorecph_price(card_text),
+                "in_stock": explicit_in,
+                "preorder": any(
+                    marker in low
+                    for marker in ("forudbestil", "forudbestilling", "preorder", "pre-order")
+                ),
+                "url": href,
+            }
+
+            if not restock_alert_allowed(product, game):
+                continue
+
+            products[product_match.group(1)] = product
+
+    return products
+
+
+def count_cardstorecph_products(products):
+    return {
+        "POKÉMON": sum(1 for p in products.values() if p.get("game") == "POKÉMON"),
+        "LORCANA": sum(1 for p in products.values() if p.get("game") == "LORCANA"),
+        "POKÉMON_STOCK": sum(1 for p in products.values() if p.get("game") == "POKÉMON" and p.get("in_stock")),
+        "LORCANA_STOCK": sum(1 for p in products.values() if p.get("game") == "LORCANA" and p.get("in_stock")),
+    }
+
+
+def process_cardstorecph_changes(old_products, new_products):
+    new_products = filter_restock_alert_products(new_products)
+
+    for product_id, product in new_products.items():
+        if product_id not in old_products:
+            headline = (
+                "🚨 NY FORUDBESTILLING"
+                if product.get("preorder")
+                else "🆕 NYT PRODUKT"
+            )
+            send_discord(
+                f"{headline} **[{product.get('game', 'TCG')}] CARDSTORECPH**\n"
+                f"**{product['name']}**\n"
+                f"📦 {'På lager' if product.get('in_stock') else 'Ikke på lager'}\n"
+                f"💰 {format_price(product.get('price'))}\n"
+                f"🔗 {product['url']}"
+            )
+            continue
+
+        old = old_products.get(product_id) or {}
+        if not old.get("in_stock") and product.get("in_stock"):
+            send_discord(
+                f"🔥 **[{product.get('game', 'TCG')}] CARDSTORECPH RESTOCK**\n"
+                f"**{product['name']}**\n"
+                "📦 **PÅ LAGER**\n"
+                f"💰 {format_price(product.get('price'))}\n"
+                f"🔗 {product['url']}"
+            )
+
 
 # =========================================================
 # STEFFEN-O
@@ -1543,6 +1731,12 @@ def collect_price_watch_candidates(
         current_state.get("nextlevel", {})
     )
 
+    add_products(
+        "CARDSTORECPH",
+        "cardstorecph",
+        current_state.get("cardstorecph", {})
+    )
+
     return candidates
 
 
@@ -1553,7 +1747,7 @@ def collect_price_watch_candidates(
 def _price_watch_raw_products_for_source(current_state, source_key):
     if source_key in {
         "coolshop", "proshop", "br", "bilka", "foetex",
-        "epicpanda", "steffeno", "nextlevel"
+        "epicpanda", "steffeno", "nextlevel", "cardstorecph"
     }:
         products = current_state.get(source_key, {})
         return products if isinstance(products, dict) else {}
@@ -5635,17 +5829,56 @@ def fetch_woocommerce_category(base, category_id, trust_total_pages=True):
     return list(collected.values())
 
 
+def fetch_woocommerce_search(base, search_term, max_pages=5):
+    """Targeted Woo Store API search for shops with huge mixed catalogs."""
+    collected = {}
+
+    for page in range(1, max_pages + 1):
+        response = requests.get(
+            base + WOOCOMMERCE_API_PATH,
+            headers={
+                **BROWSER_HEADERS,
+                "Accept": "application/json,text/plain,*/*"
+            },
+            params={
+                "search": search_term,
+                "per_page": WOOCOMMERCE_PAGE_SIZE,
+                "page": page,
+                "orderby": "id",
+                "order": "desc"
+            },
+            timeout=30
+        )
+        response.raise_for_status()
+        page_products = response.json()
+
+        if not isinstance(page_products, list) or not page_products:
+            break
+
+        for product in page_products:
+            product_id = str(product.get("id", "")).strip()
+            if product_id:
+                collected[product_id] = product
+
+        total_pages = response.headers.get("X-WP-TotalPages")
+        if total_pages:
+            try:
+                if page >= min(int(total_pages), max_pages):
+                    break
+            except ValueError:
+                pass
+
+        if len(page_products) < WOOCOMMERCE_PAGE_SIZE:
+            break
+
+    return list(collected.values())
+
+
 def get_woocommerce_products(site_key):
     site = WOOCOMMERCE_SITES[site_key]
     products = {}
 
-    for game, category_id in site["categories"].items():
-        raw_products = fetch_woocommerce_category(
-            site["base"],
-            category_id,
-            trust_total_pages=site.get("trust_total_pages", True),
-        )
-
+    def add_raw_products(game, raw_products):
         for raw in raw_products:
             if not woocommerce_is_relevant_sealed(raw):
                 continue
@@ -5657,7 +5890,6 @@ def get_woocommerce_products(site_key):
                 continue
 
             url = str(raw.get("permalink") or "").strip()
-
             if not url:
                 url = f"{site['base']}/?p={product_id}"
 
@@ -5669,6 +5901,30 @@ def get_woocommerce_products(site_key):
                 "preorder": woocommerce_is_preorder(raw),
                 "url": url
             }
+
+    for game, category_id in (site.get("categories") or {}).items():
+        add_raw_products(
+            game,
+            fetch_woocommerce_category(
+                site["base"],
+                category_id,
+                trust_total_pages=site.get("trust_total_pages", True),
+            ),
+        )
+
+    # Targeted searches are used only where the shop's category IDs are not
+    # stable/public enough to hard-code. Results are unioned and then pass the
+    # same sealed-product filter as category feeds.
+    for game, search_terms in (site.get("searches") or {}).items():
+        for search_term in search_terms:
+            add_raw_products(
+                game,
+                fetch_woocommerce_search(
+                    site["base"],
+                    search_term,
+                    max_pages=site.get("search_max_pages", 5),
+                ),
+            )
 
     return products
 
@@ -7849,8 +8105,9 @@ else:
         f"Tjekker Coolshop + Proshop + BR + Bilka + Føtex + Elgiganten "
         f"+ PokeHulen + Rogerz + MTGwebshop + Luckbox + Spilforsyningen "
         f"+ Musen & Slottet + Symbizon + CardX + Matraws + Halmes Hule "
-        f"+ CardsDirect + Nostalgic + &Cards + Pokecards.dk + Epic Panda "
-        f"+ Steffen-O + Next Level Games hvert {CHECK_EVERY}. sekund."
+        f"+ CardsDirect + Baltzer Games + TCG Shoppen + Pokemons.dk "
+        f"+ Pocket Monster + CardstoreCPH + Nostalgic + &Cards + Pokecards.dk "
+        f"+ Epic Panda + Steffen-O + Next Level Games hvert {CHECK_EVERY}. sekund."
     )
 print()
 
@@ -8908,6 +9165,48 @@ while True:
                 "NEXT LEVEL GAMES fejl:",
                 error
             )
+
+
+        # -------------------------
+        # CARDSTORECPH
+        # -------------------------
+
+        try:
+            cardstore_was_initialized = "cardstorecph" in state
+            old_cardstore = state.get("cardstorecph", {})
+            cardstore = fetch_source_products(
+                "cardstorecph",
+                old_cardstore,
+                get_cardstorecph_products,
+                new_state,
+            )
+            cardstore_counts = count_cardstorecph_products(cardstore)
+
+            print(
+                f"CARDSTORECPH: {cardstore_counts['POKÉMON']} Pokémon | "
+                f"{cardstore_counts['LORCANA']} Lorcana | "
+                f"på lager "
+                f"{cardstore_counts['POKÉMON_STOCK'] + cardstore_counts['LORCANA_STOCK']}"
+            )
+
+            if cardstore_was_initialized:
+                process_cardstorecph_changes(old_cardstore, cardstore)
+            else:
+                print("CARDSTORECPH baseline tilføjet uden historiske alerts.")
+                send_discord(
+                    "🟢 **CARDSTORECPH overvågning aktiveret**\n"
+                    f"⚡ Pokémon: {cardstore_counts['POKÉMON']} produkter "
+                    f"({cardstore_counts['POKÉMON_STOCK']} på lager)\n"
+                    f"✨ Lorcana: {cardstore_counts['LORCANA']} produkter "
+                    f"({cardstore_counts['LORCANA_STOCK']} på lager)\n"
+                    "🆕 Nye produkter og restocks overvåges."
+                )
+
+            new_state["cardstorecph"] = cardstore
+            price_watch_fresh_sources.add("cardstorecph")
+
+        except Exception as error:
+            print("CARDSTORECPH fejl:", error)
 
         # -------------------------
         # PRICE WATCH V3
