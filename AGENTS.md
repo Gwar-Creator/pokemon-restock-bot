@@ -35,7 +35,7 @@ Læs altid de live filer i GitHub. Stol ikke alene på en ældre chat, lokal kop
 
 ## Overvågede kilder
 
-Scannerens nuværende aktive kilder omfatter Coolshop, Proshop, BR, Bilka, Føtex, PokeHulen, Rogerz, MTGwebshop, Luckbox, Spilforsyningen, Musen & Slottet, Symbizon, CardX, Matraws, Halmes Hule, CardsDirect, Baltzer Games, TCG Shoppen, Pokemons.dk, Pocket Monster, Fun-shop, PokéPulls, Staalz, PBCards, KoCardz, Nostalgic, &Cards, Pokecards.dk, Epic Panda, Steffen-O og Next Level Games.
+Scannerens nuværende aktive kilder omfatter Coolshop, Proshop, BR, Bilka, Føtex, PokeHulen, Rogerz, MTGwebshop, Luckbox, Spilforsyningen, Musen & Slottet, Symbizon, CardX, Matraws, Halmes Hule, CardsDirect, Baltzer Games, TCG Shoppen, Pokemons.dk, Pocket Monster, Fun-shop, PokéPulls, Staalz, PBCards, KoCardz, Vaulted, Pokedexet, Pokemonportalen, TCGBruuS, Pokemon Plaza, Kelz0r, Faraos, Goblin Games, ZZGames, Hyggeonkel, Nostalgic, &Cards, Pokecards.dk, Epic Panda, Steffen-O og Next Level Games.
 
 Elgiganten og CardstoreCPH er historiske/retired kilder. Deres state må gerne bevares, men de skal ikke fetches eller bruges som friske Price Watch-/Price History-kilder.
 
@@ -44,6 +44,10 @@ Wave 1-udvidelsen fra 2026-08-21 tilføjede Symbizon, CardX, Matraws, Halmes Hul
 Wave 2-udvidelsen fra 2026-08-21 tilføjede Baltzer Games og TCG Shoppen som Shopify-kilder samt Pokemons.dk og Pocket Monster via målrettede WooCommerce Store API-søgninger. CardstoreCPH blev kort tilføjet via en separat parser, men retired samme dag, da butikken i praksis primært består af enkeltkort og gav 0 relevante sealed produkter.
 
 Wave 3-udvidelsen fra 2026-08-21 tilføjer Fun-shop, PokéPulls, Staalz og PBCards via Shopify samt KoCardz via målrettede WooCommerce Store API-søgninger. Fun-shop bruger kun sealed-tunge Pokémon-collections for at undgå butikkens store single-card-katalog. PBCards bruger Pokémon-kategorien plus et begrænset new-releases-feed til aktuelle Pokémon/Lorcana-produkter; sprogreglen er særlig vigtig her, fordi shoppen også fører flere ikke-engelske produkter. PokéPulls og Staalz bruger bredere Shopify-feeds med automatisk game-detection og de eksisterende sealed-/sprogfiltre.
+
+Wave 4-udvidelsen fra 2026-08-21 tilføjede Vaulted, Pokedexet, Pokemonportalen, TCGBruuS og Pokemon Plaza med platformstilpassede feeds/parsers.
+
+Wave 5-udvidelsen fra 2026-08-21 tilføjer Kelz0r, Faraos, Goblin Games, ZZGames og Hyggeonkel. ZZGames bruger Shopify-feed; de øvrige bruger målrettede offentlige kategori-parsers og de eksisterende sealed-/English-only-filtre. Bog & idé blev bevidst udskudt, fordi webshoppen var midlertidigt password-lukket under platformsmigrering 21/8, og Bræt & Brikker blev ikke tilføjet, fordi butikken er lukket.
 
 Nye kilder baseline-indlæses uden historiske produkt-alerts og går derefter ind i normal restock-/Price Watch-/Price History-logik, når de er friske og sunde.
 
@@ -185,6 +189,7 @@ Gode næste trin, som skal indføres enkeltvis og sikkert:
 - 2026-08-21: V29 tilføjede Baltzer Games, TCG Shoppen, Pokemons.dk, Pocket Monster og CardstoreCPH som Wave 2-kilder med platformstilpassede fetch-metoder.
 - 2026-08-21: V30 retired CardstoreCPH fra aktiv scanning efter 0 relevante sealed produkter; historisk state bevares, og sealed-filteret blev ikke svækket.
 - 2026-08-21: V31 tilføjede Fun-shop, PokéPulls, Staalz, PBCards og KoCardz som Wave 3-kilder med platformstilpassede feeds og uden at ændre de eksisterende sealed-/sprogfiltre.
+- 2026-08-21: V38 tilføjede Kelz0r, Faraos, Goblin Games, ZZGames og Hyggeonkel som den sidste butiksekspansions-wave for nu; Bog & idé blev udskudt under platformsmigrering, og Bræt & Brikker blev fravalgt som lukket.
 - Lav-signal-produkter skal normalt forblive i state, men ikke sendes til Discord.
 
 ## Kommunikation
