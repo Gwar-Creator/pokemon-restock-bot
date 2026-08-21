@@ -29,6 +29,11 @@ SOURCE_MINIMUMS = {
     "staalz": 5,
     "pbcards": 10,
     "kocardz": 5,
+    "vaulted": 15,
+    "pokedexet": 10,
+    "pokemonportalen": 10,
+    "tcgbruus": 5,
+    "pokemonplaza": 5,
     "nostalgic": 5,
     "andcards": 5,
     "pokecards": 10,
@@ -55,6 +60,8 @@ SHOPIFY = {
     "pokepulls",
     "staalz",
     "pbcards",
+    "vaulted",
+    "pokedexet",
 }
 WOOCOMMERCE = {
     "nostalgic",
@@ -63,6 +70,9 @@ WOOCOMMERCE = {
     "pokemonsdk",
     "pocketmonster",
     "kocardz",
+    "pokemonportalen",
+    "tcgbruus",
+    "pokemonplaza",
 }
 
 
