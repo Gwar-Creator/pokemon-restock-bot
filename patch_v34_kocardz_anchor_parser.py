@@ -83,8 +83,6 @@ def _kocardz_nearest_product_node(anchor, product_url):
         if product_url not in links:
             continue
 
-        # Once an ancestor contains several different products, we have climbed
-        # into the category grid/page and must not use its shared stock/filter text.
         if len(links) > 1:
             break
 
@@ -241,7 +239,9 @@ pattern = re.compile(
     r'''def get_kocardz_products\(\):\n.*?\n\ndef get_woocommerce_products\(site_key\):\n''',
     re.DOTALL,
 )
-text, count = pattern.subn(new_block, text, count=1)
+# Use a callable replacement so backslashes inside the generated parser
+# are treated literally instead of as re.sub replacement escapes.
+text, count = pattern.subn(lambda match: new_block, text, count=1)
 if count != 1:
     raise RuntimeError("V34 patch failed: KoCardz parser block not found")
 
