@@ -86,6 +86,9 @@ jobs:
           if [ -f patch_v35_wave4_retailers.py ]; then
             python patch_v35_wave4_retailers.py
           fi
+          if [ -f patch_v36_wave4_html_fallbacks.py ]; then
+            python patch_v36_wave4_html_fallbacks.py
+          fi
 
       - name: Validate Python
         run: |
