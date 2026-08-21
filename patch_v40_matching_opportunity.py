@@ -367,8 +367,7 @@ replace_once(
 
 replace_once(
     '''    link_line = (
-        f"\\
-🔗 {best['url']}"
+        f"\\n🔗 {best['url']}"
         if best.get("url")
         else ""
     )
@@ -381,14 +380,12 @@ replace_once(
         history_state=history_state,
     )
     score_line = (
-        f"\\
-🎯 {opportunity_score_icon(opportunity['score'])} "
+        f"\\n🎯 {opportunity_score_icon(opportunity['score'])} "
         f"**{opportunity['score']}/100 · {opportunity['label']}**"
     )
 
     link_line = (
-        f"\\
-🔗 {best['url']}"
+        f"\\n🔗 {best['url']}"
         if best.get("url")
         else ""
     )
@@ -399,13 +396,11 @@ replace_once(
 )
 
 replace_once(
-    '''        + "\\
-".join(ranking_lines)
+    '''        + "\\n".join(ranking_lines)
         + link_line
     )
 ''',
-    '''        + "\\
-".join(ranking_lines)
+    '''        + "\\n".join(ranking_lines)
         + score_line
         + link_line
     )
