@@ -15,6 +15,6 @@ text = text.replace('+ "\\\\\n".join(ranking_lines)', '+ "\\\\n".join(ranking_li
 
 if text != original:
     PATH.write_text(text, encoding="utf-8")
-    print("Repaired V40 replacement markers (literal \\n handling)")
+    print("Repaired V40 literal-newline replacement markers")
 else:
     print("V40 replacement markers already repaired")
