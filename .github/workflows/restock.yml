@@ -68,6 +68,9 @@ jobs:
           if [ -f patch_v28_wave1_retailers.py ]; then
             python patch_v28_wave1_retailers.py
           fi
+          if [ -f patch_v29_wave2_retailers.py ]; then
+            python patch_v29_wave2_retailers.py
+          fi
 
       - name: Validate Python
         run: |
