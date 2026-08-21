@@ -77,6 +77,9 @@ jobs:
           if [ -f patch_v31_wave3_retailers.py ]; then
             python patch_v31_wave3_retailers.py
           fi
+          if [ -f patch_v32_wave3_source_fixes.py ]; then
+            python patch_v32_wave3_source_fixes.py
+          fi
 
       - name: Validate Python
         run: |
