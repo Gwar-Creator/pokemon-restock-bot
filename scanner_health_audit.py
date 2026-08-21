@@ -24,7 +24,6 @@ SOURCE_MINIMUMS = {
     "tcgshoppen": 5,
     "pokemonsdk": 5,
     "pocketmonster": 5,
-    "cardstorecph": 3,
     "nostalgic": 5,
     "andcards": 5,
     "pokecards": 10,
