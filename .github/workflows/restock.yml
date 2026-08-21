@@ -104,6 +104,9 @@ jobs:
           if [ -f patch_v40_matching_opportunity.py ]; then
             python patch_v40_matching_opportunity.py
           fi
+          if [ -f patch_v41_v40_runtime_fix.py ]; then
+            python patch_v41_v40_runtime_fix.py
+          fi
 
       - name: Validate Python
         run: |
