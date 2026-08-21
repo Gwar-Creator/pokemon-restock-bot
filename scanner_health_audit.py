@@ -24,6 +24,11 @@ SOURCE_MINIMUMS = {
     "tcgshoppen": 5,
     "pokemonsdk": 5,
     "pocketmonster": 5,
+    "funshop": 10,
+    "pokepulls": 10,
+    "staalz": 5,
+    "pbcards": 10,
+    "kocardz": 5,
     "nostalgic": 5,
     "andcards": 5,
     "pokecards": 10,
@@ -46,6 +51,10 @@ SHOPIFY = {
     "cardsdirect",
     "baltzer",
     "tcgshoppen",
+    "funshop",
+    "pokepulls",
+    "staalz",
+    "pbcards",
 }
 WOOCOMMERCE = {
     "nostalgic",
@@ -53,6 +62,7 @@ WOOCOMMERCE = {
     "pokecards",
     "pokemonsdk",
     "pocketmonster",
+    "kocardz",
 }
 
 
