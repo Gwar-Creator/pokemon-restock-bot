@@ -113,6 +113,9 @@ jobs:
           if [ -f patch_v42_kelz0r_stability.py ]; then
             python patch_v42_kelz0r_stability.py
           fi
+          if [ -f patch_v43_restock_sanitation.py ]; then
+            python patch_v43_restock_sanitation.py
+          fi
 
       - name: Validate Python
         run: |
@@ -122,6 +125,7 @@ jobs:
           python -m py_compile cardmarket_chase_watch.py
           python -m py_compile retailer_probe_v24.py
           python -m py_compile preview_price_channels_v25.py
+          python -m py_compile patch_v43_restock_sanitation.py
           if [ -f cardmarket_v16_replay.py ]; then
             python -m py_compile cardmarket_v16_replay.py
           fi
