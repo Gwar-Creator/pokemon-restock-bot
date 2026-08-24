@@ -2,8 +2,11 @@ name: Pokemon HOT Restock
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "2-57/5 * * * *"
+  workflow_run:
+    workflows:
+      - "Pokemon Restock Bot"
+    types:
+      - requested
   push:
     paths:
       - "hot_restock.py"
