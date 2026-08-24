@@ -8,6 +8,7 @@ import requests
 
 ROOT = Path(__file__).resolve().parent
 SHARED_FILE = ROOT / "restock_bot_github.py"
+TARGET_PRODUCT_ID = "200329839"
 
 SEARCH_TERMS = (
     "victini",
@@ -19,6 +20,26 @@ SEARCH_TERMS = (
 WATCH_MARKERS = SEARCH_TERMS + (
     "unova",
     "collection",
+)
+
+METADATA_MARKERS = (
+    "date",
+    "time",
+    "start",
+    "end",
+    "from",
+    "until",
+    "campaign",
+    "publish",
+    "release",
+    "avail",
+    "stock",
+    "expos",
+    "active",
+    "create",
+    "update",
+    "valid",
+    "launch",
 )
 
 SITES = ("bilka", "foetex")
@@ -111,7 +132,7 @@ def run_query(shared, site_key, term):
     return relevant, len(hits)
 
 
-def run_hidden_catalog(shared, site_key):
+def fetch_hidden_pokemon_hits(shared, site_key):
     hits = algolia_query(
         shared,
         site_key,
@@ -138,6 +159,11 @@ def run_hidden_catalog(shared, site_key):
             continue
         pokemon_hits.append(hit)
 
+    return hits, pokemon_hits
+
+
+def run_hidden_catalog(shared, site_key):
+    hits, pokemon_hits = fetch_hidden_pokemon_hits(shared, site_key)
     hidden = [hit for hit in pokemon_hits if hit.get("is_exposed") is False]
     suspicious = []
     for hit in hidden:
@@ -154,6 +180,60 @@ def run_hidden_catalog(shared, site_key):
             suspicious.append(compact_hit(site_key, "hidden-catalog", hit))
 
     return len(hits), len(pokemon_hits), len(hidden), suspicious
+
+
+def metadata_fields(hit):
+    found = {}
+    for key, value in hit.items():
+        lowered = str(key).lower()
+        if any(marker in lowered for marker in METADATA_MARKERS):
+            found[key] = value
+    return found
+
+
+def run_metadata_diagnostics(shared, site_key):
+    _, pokemon_hits = fetch_hidden_pokemon_hits(shared, site_key)
+    hidden = [hit for hit in pokemon_hits if hit.get("is_exposed") is False]
+
+    target = None
+    for hit in pokemon_hits:
+        product_id = str(hit.get("id") or hit.get("objectID") or "")
+        if product_id == TARGET_PRODUCT_ID:
+            target = hit
+            break
+
+    print(f"METADATA {site_key.upper()}: {len(hidden)} skjulte Pokemon-poster")
+
+    if target is None:
+        print(f"TARGET {site_key.upper()}: {TARGET_PRODUCT_ID} ikke fundet")
+    else:
+        print(
+            f"TARGET {site_key.upper()} KEYS "
+            + json.dumps(sorted(target.keys()), ensure_ascii=False)
+        )
+        print(
+            f"TARGET {site_key.upper()} METADATA "
+            + json.dumps(metadata_fields(target), ensure_ascii=False, sort_keys=True, default=str)
+        )
+        print(
+            f"TARGET {site_key.upper()} FULL "
+            + json.dumps(target, ensure_ascii=False, sort_keys=True, default=str)
+        )
+
+    # Schema-level view: show which release/time/campaign-like fields actually
+    # exist anywhere in the hidden Pokemon catalogue and example values.
+    examples = {}
+    for hit in hidden:
+        for key, value in metadata_fields(hit).items():
+            bucket = examples.setdefault(key, [])
+            rendered = json.dumps(value, ensure_ascii=False, sort_keys=True, default=str)
+            if rendered not in bucket and len(bucket) < 5:
+                bucket.append(rendered)
+
+    print(
+        f"SCHEMA {site_key.upper()} METADATA_FIELDS "
+        + json.dumps(examples, ensure_ascii=False, sort_keys=True)
+    )
 
 
 def main():
@@ -197,6 +277,11 @@ def main():
             all_hits.extend(suspicious)
         except Exception as error:
             print(f"HIDDEN {site_key.upper()}: FEJL {error}")
+
+        try:
+            run_metadata_diagnostics(shared, site_key)
+        except Exception as error:
+            print(f"METADATA {site_key.upper()}: FEJL {error}")
 
     unique = {}
     for hit in all_hits:
