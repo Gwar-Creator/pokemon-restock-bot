@@ -1383,6 +1383,59 @@ def restock_alert_allowed(product, game_override=None):
     name = str((product or {}).get("name", "")).lower()
     game = game_override or (product or {}).get("game")
 
+    # V43_RESTOCK_SANITATION
+    # Keep the 5-minute Discord channel focused on useful sealed restocks.
+    # Products remain in state; this only suppresses low-signal Discord alerts.
+    if game == "POKÉMON":
+        padded_name = " " + re.sub(r"\s+", " ", name).strip() + " "
+
+        core_booster = any(
+            marker in padded_name
+            for marker in (" booster bundle ", " booster box ", " booster display ")
+        )
+        is_etb = (
+            " elite trainer box " in padded_name
+            or bool(re.search(r"\betb\b", padded_name))
+        )
+        is_single_booster = any(
+            marker in padded_name
+            for marker in (" booster pack ", " sleeved booster ", " sleeve booster ")
+        ) or (
+            " booster " in padded_name
+            and not core_booster
+            and not is_etb
+            and " collection " not in padded_name
+        )
+
+        # Chaos Rising / Pitch Black are abundant enough that loose packs and
+        # ETBs add noise. Bundles, displays/boxes and collections still pass.
+        if any(set_name in padded_name for set_name in (" chaos rising ", " pitch black ")):
+            if is_etb or is_single_booster:
+                return False
+
+        # Pure accessories do not belong in the restock channel. Do not block
+        # official collection products that happen to include a binder/playmat.
+        accessory_markers = (
+            " portfolio ",
+            " penalhus ",
+            " pencil case ",
+            " card sleeves ",
+            " card sleeve ",
+            " deck sleeves ",
+            " deck protector ",
+            " deck box ",
+            " toploader ",
+            " top loader ",
+            " storage box ",
+            " card album ",
+        )
+        if any(marker in padded_name for marker in accessory_markers):
+            return False
+        if " playmat " in padded_name and " collection " not in padded_name:
+            return False
+        if " binder " in padded_name and " collection " not in padded_name:
+            return False
+
     if not is_english_card_product(name):
         return False
 
