@@ -10,6 +10,7 @@ on:
   push:
     paths:
       - "hot_restock.py"
+      - "salling_victini_watch.py"
       - ".github/workflows/hot_restock.yml"
 
 permissions:
@@ -39,9 +40,9 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Validate HOT scanner
+      - name: Validate HOT scanner and Victini watcher
         run: |
-          python -m py_compile hot_restock.py
+          python -m py_compile hot_restock.py salling_victini_watch.py
           python - <<'PY'
           import ast
           from pathlib import Path
@@ -49,38 +50,60 @@ jobs:
           source = Path('hot_restock.py').read_text(encoding='utf-8')
           module = ast.parse(source)
           assert any(isinstance(node, ast.FunctionDef) and node.name == 'hot_product_allowed' for node in module.body)
-          print('HOT scanner syntax/filter entrypoint OK')
+
+          watcher_source = Path('salling_victini_watch.py').read_text(encoding='utf-8')
+          watcher_module = ast.parse(watcher_source)
+          assert any(isinstance(node, ast.FunctionDef) and node.name == 'fetch_target' for node in watcher_module.body)
+          print('HOT scanner + Victini watcher syntax OK')
           PY
 
-      - name: Run HOT lane
+      - name: Run HOT lane + direct Victini target watch
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           HOT_ITERATIONS: "5"
           HOT_INTERVAL_SECONDS: "60"
-        run: python hot_restock.py
+        run: |
+          (
+            for iteration in 1 2 3 4 5; do
+              echo "VICTINI direct scan $iteration/5"
+              python salling_victini_watch.py
+              if [ "$iteration" -lt 5 ]; then
+                sleep 60
+              fi
+            done
+          ) &
+          VICTINI_PID=$!
 
-      - name: Save HOT state
+          python hot_restock.py
+          wait "$VICTINI_PID"
+
+      - name: Save HOT + Victini state
         run: |
           if [ ! -f hot_restock_state.json ]; then
             echo "No HOT state produced."
             exit 1
           fi
 
-          if git diff --quiet -- hot_restock_state.json && git ls-files --error-unmatch hot_restock_state.json >/dev/null 2>&1; then
-            echo "HOT state unchanged."
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add hot_restock_state.json
+          if [ -f salling_victini_state.json ]; then
+            git add salling_victini_state.json
+          fi
+
+          if git diff --cached --quiet; then
+            echo "HOT/Victini state unchanged."
             exit 0
           fi
 
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add hot_restock_state.json
-          git commit -m "Update hot restock state"
+          git commit -m "Update hot restock and Victini state"
 
           for attempt in 1 2 3; do
-            echo "HOT state push attempt $attempt/3"
+            echo "HOT/Victini state push attempt $attempt/3"
             git fetch origin main
             if git rebase origin/main && git push origin HEAD:main; then
-              echo "HOT state pushed successfully."
+              echo "HOT/Victini state pushed successfully."
               exit 0
             fi
             git rebase --abort || true
@@ -89,5 +112,5 @@ jobs:
             fi
           done
 
-          echo "Failed to push HOT state after 3 attempts."
+          echo "Failed to push HOT/Victini state after 3 attempts."
           exit 1
