@@ -13,9 +13,11 @@ import requests
 ROOT = Path(__file__).resolve().parent
 SHARED_FILE = ROOT / "restock_bot_github.py"
 STATE_FILE = ROOT / "salling_early_radar_state.json"
-STATE_VERSION = 2
+STATE_VERSION = 3
 SITES = ("bilka", "foetex")
 LOCAL_TZ = ZoneInfo("Europe/Copenhagen")
+MAX_POKEMON_CATALOG_HITS = 250
+MIN_POKEMON_CATALOG_HITS = 50
 
 # High-signal sealed products. Single loose boosters and battle/accessory noise
 # are deliberately excluded; the shared restock relevance filter is applied too.
@@ -246,12 +248,19 @@ def fetch_hidden_catalog(shared, site_key):
         "-dsn.algolia.net/1/indexes/*/queries"
     )
 
-    # Empty query intentionally omits is_exposed:true. 250 comfortably covers
-    # the current Salling Pokemon catalogue and avoids one request per keyword.
+    # IMPORTANT: filter inside Algolia before limiting hits. The old version
+    # requested the first 250 products from the entire Salling index and only
+    # filtered Pokemon afterwards. That made old products disappear/reappear
+    # as ranking changed and caused false "NY SKJULT VARE" alerts.
     params = {
         "query": "",
         "attributesToRetrieve": '["*"]',
-        "hitsPerPage": 250,
+        "filters": (
+            'cfh_nodes:"CFH.CollectionCards" AND '
+            '(f_brand:"Pokemon" OR f_brand:"Pokémon" OR '
+            'facets.productSeriesToys:"Pokémon")'
+        ),
+        "hitsPerPage": MAX_POKEMON_CATALOG_HITS,
         "page": 0,
         "getRankingInfo": "true",
     }
@@ -278,7 +287,19 @@ def fetch_hidden_catalog(shared, site_key):
     )
     response.raise_for_status()
 
-    all_hits = response.json().get("results", [{}])[0].get("hits", [])
+    result = response.json().get("results", [{}])[0]
+    all_hits = result.get("hits", [])
+    total_hits = shared["safe_int"](result.get("nbHits"), len(all_hits))
+
+    if total_hits > MAX_POKEMON_CATALOG_HITS:
+        raise RuntimeError(
+            f"Pokemon-kataloget har {total_hits} hits; paging skal implementeres før state gemmes"
+        )
+    if total_hits < MIN_POKEMON_CATALOG_HITS:
+        raise RuntimeError(
+            f"Pokemon-kataloget gav kun {total_hits} hits; afviser mulig ufuldstændig snapshot"
+        )
+
     products = {}
 
     for hit in all_hits:
@@ -326,7 +347,7 @@ def fetch_hidden_catalog(shared, site_key):
             "description_excerpt": description_excerpt,
         }
 
-    return products, len(all_hits)
+    return products, total_hits
 
 
 def merge_catalogs(site_catalogs):
@@ -571,22 +592,30 @@ def main():
         site_catalogs[site_key] = products
         hidden_count = sum(not product.get("is_exposed") for product in products.values())
         print(
-            f"EARLY RADAR {site_key.upper()}: {raw_count} rå hits · "
+            f"EARLY RADAR {site_key.upper()}: {raw_count} Pokémon-katalog hits · "
             f"{len(products)} relevante · {hidden_count} skjulte"
         )
 
-    if not site_catalogs:
-        raise RuntimeError("Ingen Salling-kataloger kunne hentes")
+    # Never write a partial baseline. If one Salling site is temporarily down,
+    # keeping the previous complete state prevents every recovered product from
+    # being misclassified as new on the next run.
+    if len(site_catalogs) != len(SITES):
+        missing = sorted(set(SITES) - set(site_catalogs))
+        raise RuntimeError(
+            "Ufuldstændig Early Radar snapshot; state bevares. Mangler: "
+            + ", ".join(missing)
+        )
 
     current = merge_catalogs(site_catalogs)
     previous_state = load_state()
 
-    # Version 2 intentionally starts with a quiet baseline. That prevents the
-    # new metadata fields from generating a flood of fake "changes" once.
+    # Version 3 starts with a quiet baseline because v2 was built from an
+    # unstable top-250 whole-catalogue query. No old v2 product may be treated
+    # as a trustworthy "seen" baseline.
     if previous_state is None:
         save_state(current)
         print(
-            f"EARLY RADAR v{STATE_VERSION} baseline: "
+            f"EARLY RADAR v{STATE_VERSION} stabil baseline: "
             f"{len(current)} relevante produkt-ID'er, ingen alerts"
         )
         return
@@ -618,8 +647,8 @@ def main():
     for product_id, product in current.items():
         old = previous.get(product_id)
 
-        # The main edge: a brand-new relevant product appears in the hidden
-        # public catalogue before Salling exposes it on the storefront.
+        # The main edge: a brand-new relevant product appears in the filtered
+        # Pokemon catalogue before Salling exposes it on the storefront.
         if old is None:
             if hidden_somewhere(product):
                 send_alert("NY SKJULT VARE", product, "nyt produkt-ID fundet før offentlig visning")
