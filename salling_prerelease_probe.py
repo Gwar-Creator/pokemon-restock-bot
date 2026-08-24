@@ -16,6 +16,11 @@ SEARCH_TERMS = (
     "illustration collection",
 )
 
+WATCH_MARKERS = SEARCH_TERMS + (
+    "unova",
+    "collection",
+)
+
 SITES = ("bilka", "foetex")
 
 
@@ -52,21 +57,13 @@ def compact_hit(site_key, term, hit):
     }
 
 
-def run_query(shared, site_key, term):
+def algolia_query(shared, site_key, params):
     config = shared["get_salling_frontend_config"](site_key)
     algolia_url = (
         "https://"
         f"{config['algolia_app_id'].lower()}"
         "-dsn.algolia.net/1/indexes/*/queries"
     )
-
-    params = {
-        "query": term,
-        "attributesToRetrieve": '["*"]',
-        "hitsPerPage": 50,
-        "page": 0,
-        "getRankingInfo": "true",
-    }
     payload = {
         "requests": [
             {
@@ -76,7 +73,6 @@ def run_query(shared, site_key, term):
         ],
         "strategy": "none",
     }
-
     response = requests.post(
         algolia_url,
         headers={
@@ -89,7 +85,21 @@ def run_query(shared, site_key, term):
         timeout=20,
     )
     response.raise_for_status()
-    hits = response.json().get("results", [{}])[0].get("hits", [])
+    return response.json().get("results", [{}])[0].get("hits", [])
+
+
+def run_query(shared, site_key, term):
+    hits = algolia_query(
+        shared,
+        site_key,
+        {
+            "query": term,
+            "attributesToRetrieve": '["*"]',
+            "hitsPerPage": 100,
+            "page": 0,
+            "getRankingInfo": "true",
+        },
+    )
 
     relevant = []
     for hit in hits:
@@ -99,6 +109,51 @@ def run_query(shared, site_key, term):
             relevant.append(compact_hit(site_key, term, hit))
 
     return relevant, len(hits)
+
+
+def run_hidden_catalog(shared, site_key):
+    hits = algolia_query(
+        shared,
+        site_key,
+        {
+            "query": "",
+            "attributesToRetrieve": '["*"]',
+            "filters": (
+                'cfh_nodes:"CFH.CollectionCards" AND '
+                '(f_brand:"Pokemon" OR f_brand:"Pokémon" OR '
+                'facets.productSeriesToys:"Pokémon")'
+            ),
+            "hitsPerPage": 250,
+            "page": 0,
+            "getRankingInfo": "true",
+        },
+    )
+
+    pokemon_hits = []
+    for hit in hits:
+        try:
+            if not shared["is_real_pokemon_tcg"](hit):
+                continue
+        except Exception:
+            continue
+        pokemon_hits.append(hit)
+
+    hidden = [hit for hit in pokemon_hits if hit.get("is_exposed") is False]
+    suspicious = []
+    for hit in hidden:
+        name = re.sub(r"\s+", " ", str(hit.get("name") or "").lower()).strip()
+        try:
+            price = float(hit.get("sales_price"))
+        except (TypeError, ValueError):
+            price = None
+
+        if (
+            any(marker in name for marker in WATCH_MARKERS)
+            or (price is not None and 278.0 <= price <= 280.0)
+        ):
+            suspicious.append(compact_hit(site_key, "hidden-catalog", hit))
+
+    return len(hits), len(pokemon_hits), len(hidden), suspicious
 
 
 def main():
@@ -126,6 +181,22 @@ def main():
                 f"{raw_count} rå hits · {len(relevant)} relevante"
             )
             all_hits.extend(relevant)
+
+        try:
+            raw_count, pokemon_count, hidden_count, suspicious = run_hidden_catalog(
+                shared,
+                site_key,
+            )
+            print(
+                f"HIDDEN {site_key.upper()}: {raw_count} rå · "
+                f"{pokemon_count} Pokémon TCG · {hidden_count} skjulte · "
+                f"{len(suspicious)} interessante"
+            )
+            for hit in suspicious:
+                print("HIDDEN HIT " + json.dumps(hit, ensure_ascii=False, sort_keys=True))
+            all_hits.extend(suspicious)
+        except Exception as error:
+            print(f"HIDDEN {site_key.upper()}: FEJL {error}")
 
     unique = {}
     for hit in all_hits:
