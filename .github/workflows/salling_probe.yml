@@ -1,0 +1,41 @@
+name: Salling Pre-release Probe
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "salling_prerelease_probe.py"
+      - ".github/workflows/salling_probe.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: salling-prerelease-probe
+  cancel-in-progress: true
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Validate probe
+        run: python -m py_compile salling_prerelease_probe.py
+
+      - name: Run Salling pre-release probe
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: python salling_prerelease_probe.py
