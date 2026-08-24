@@ -24,7 +24,7 @@ concurrency:
 jobs:
   hot-scan:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 15
 
     steps:
       - name: Checkout repository
@@ -71,8 +71,15 @@ jobs:
           (
             for iteration in 1 2 3 4 5; do
               echo "SALLING early scan $iteration/5"
-              python salling_victini_watch.py
-              python salling_early_radar.py
+
+              if ! python salling_victini_watch.py; then
+                echo "::warning::Victini watcher failed transiently on iteration $iteration; HOT run continues"
+              fi
+
+              if ! python salling_early_radar.py; then
+                echo "::warning::Salling Early Radar failed transiently on iteration $iteration; HOT run continues"
+              fi
+
               if [ "$iteration" -lt 5 ]; then
                 sleep 60
               fi
@@ -81,7 +88,10 @@ jobs:
           SALLING_PID=$!
 
           python hot_restock.py
-          wait "$SALLING_PID"
+
+          if ! wait "$SALLING_PID"; then
+            echo "::warning::Salling background watcher exited non-zero; HOT scanner itself completed"
+          fi
 
       - name: Save HOT + Salling states
         run: |
@@ -108,18 +118,18 @@ jobs:
 
           git commit -m "Update hot restock and Salling radar state"
 
-          for attempt in 1 2 3; do
-            echo "HOT/Salling state push attempt $attempt/3"
+          for attempt in 1 2 3 4 5; do
+            echo "HOT/Salling state push attempt $attempt/5"
             git fetch origin main
             if git rebase origin/main && git push origin HEAD:main; then
               echo "HOT/Salling state pushed successfully."
               exit 0
             fi
             git rebase --abort || true
-            if [ "$attempt" -lt 3 ]; then
+            if [ "$attempt" -lt 5 ]; then
               sleep $((attempt * 5))
             fi
           done
 
-          echo "Failed to push HOT/Salling state after 3 attempts."
+          echo "Failed to push HOT/Salling state after 5 attempts."
           exit 1
