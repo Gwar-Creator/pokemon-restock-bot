@@ -13,9 +13,29 @@ STATE_FILE = ROOT / "hot_restock_state.json"
 FILTER_VERSION = 1
 
 HOT_ITERATIONS = max(1, int(os.getenv("HOT_ITERATIONS", "1")))
-HOT_INTERVAL_SECONDS = max(30, int(os.getenv("HOT_INTERVAL_SECONDS", "55")))
+HOT_INTERVAL_SECONDS = max(30, int(os.getenv("HOT_INTERVAL_SECONDS", "60")))
 HOT_DRY_RUN = os.getenv("HOT_DRY_RUN", "0").strip() == "1"
 WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL", "").strip()
+
+# Each source normally gets checked every HOT loop. If a source starts
+# returning rate-limit/bot-block signals, only that source slows down:
+# 1 min -> 2 min -> 5 min -> 15 min. Successful checks recover one step
+# at a time so the remaining sources can continue at full speed.
+RATE_LIMIT_BACKOFF_SECONDS = (0, 120, 300, 900)
+RATE_LIMIT_MARKERS = (
+    "429",
+    "too many requests",
+    "rate limit",
+    "ratelimit",
+    "retry-after",
+    "throttl",
+    "403",
+    "forbidden",
+    "access denied",
+    "temporarily blocked",
+    "503",
+    "service unavailable",
+)
 
 EXCLUDED_ETB_SETS = (
     "chaos rising",
@@ -134,6 +154,96 @@ def save_state(state):
     )
 
 
+def _utc_now_iso():
+    return datetime.now(timezone.utc).isoformat()
+
+
+def _source_control(state, source_key):
+    controls = state.setdefault("source_controls", {})
+    control = controls.setdefault(
+        source_key,
+        {
+            "backoff_level": 0,
+            "next_allowed_at": 0.0,
+            "generic_failures": 0,
+            "last_error": None,
+            "last_failure_at": None,
+            "last_success_at": None,
+        },
+    )
+    control["backoff_level"] = max(
+        0,
+        min(
+            len(RATE_LIMIT_BACKOFF_SECONDS) - 1,
+            int(control.get("backoff_level") or 0),
+        ),
+    )
+    control["next_allowed_at"] = float(control.get("next_allowed_at") or 0.0)
+    control["generic_failures"] = max(0, int(control.get("generic_failures") or 0))
+    return control
+
+
+def _retry_after_seconds(error):
+    response = getattr(error, "response", None)
+    headers = getattr(response, "headers", None) or {}
+    raw = headers.get("Retry-After") or headers.get("retry-after")
+    if not raw:
+        return None
+    try:
+        return max(0, int(float(raw)))
+    except (TypeError, ValueError):
+        return None
+
+
+def _is_rate_limit_like(error):
+    text = str(error).lower()
+    return any(marker in text for marker in RATE_LIMIT_MARKERS)
+
+
+def _register_source_failure(state, source_key, error):
+    control = _source_control(state, source_key)
+    control["last_error"] = str(error)[:500]
+    control["last_failure_at"] = _utc_now_iso()
+    control["generic_failures"] += 1
+
+    should_backoff = _is_rate_limit_like(error) or control["generic_failures"] >= 2
+    if not should_backoff:
+        return 0
+
+    control["backoff_level"] = min(
+        len(RATE_LIMIT_BACKOFF_SECONDS) - 1,
+        control["backoff_level"] + 1,
+    )
+    delay = RATE_LIMIT_BACKOFF_SECONDS[control["backoff_level"]]
+    retry_after = _retry_after_seconds(error)
+    if retry_after is not None:
+        delay = max(delay, retry_after)
+    control["next_allowed_at"] = time.time() + delay
+    return delay
+
+
+def _register_source_success(state, source_key):
+    control = _source_control(state, source_key)
+    previous_level = control["backoff_level"]
+    control["generic_failures"] = 0
+    control["last_error"] = None
+    control["last_success_at"] = _utc_now_iso()
+
+    if previous_level > 0:
+        control["backoff_level"] = previous_level - 1
+        delay = RATE_LIMIT_BACKOFF_SECONDS[control["backoff_level"]]
+        control["next_allowed_at"] = time.time() + delay if delay else 0.0
+        return previous_level, control["backoff_level"]
+
+    control["next_allowed_at"] = 0.0
+    return 0, 0
+
+
+def _source_wait_seconds(state, source_key):
+    control = _source_control(state, source_key)
+    return max(0, int(round(control["next_allowed_at"] - time.time())))
+
+
 def product_available(source_key, product):
     if source_key == "proshop":
         return product.get("stock") == "PÅ LAGER"
@@ -250,6 +360,16 @@ def run_scan(shared, state):
     successful = 0
 
     for source_key in SOURCE_LABELS:
+        label = SOURCE_LABELS[source_key]
+        wait_seconds = _source_wait_seconds(state, source_key)
+        if wait_seconds > 0:
+            level = _source_control(state, source_key)["backoff_level"]
+            print(
+                f"HOT {label} BACKOFF: springer over i {wait_seconds}s "
+                f"(niveau {level})"
+            )
+            continue
+
         old_products = source_state.get(source_key)
         source_baseline = not isinstance(old_products, dict)
         old_products = old_products if isinstance(old_products, dict) else {}
@@ -258,14 +378,38 @@ def run_scan(shared, state):
             fetched = fetch_source(shared, source_key, old_products)
             current = filter_hot_products(shared, fetched)
         except Exception as error:
-            print(f"HOT {SOURCE_LABELS[source_key]} FEJL: {error}")
+            delay = _register_source_failure(state, source_key, error)
+            if delay:
+                level = _source_control(state, source_key)["backoff_level"]
+                print(
+                    f"HOT {label} FEJL: {error} | "
+                    f"backoff {delay}s (niveau {level})"
+                )
+            else:
+                print(f"HOT {label} FEJL: {error}")
             continue
+
+        previous_level, current_level = _register_source_success(
+            state,
+            source_key,
+        )
+        if previous_level > current_level:
+            next_delay = RATE_LIMIT_BACKOFF_SECONDS[current_level]
+            if next_delay:
+                print(
+                    f"HOT {label} RECOVERY: niveau {previous_level} -> "
+                    f"{current_level}; næste tjek om {next_delay}s"
+                )
+            else:
+                print(
+                    f"HOT {label} RECOVERY: tilbage på normal 1-minuts frekvens"
+                )
 
         successful += 1
 
         if source_baseline:
             print(
-                f"HOT {SOURCE_LABELS[source_key]} baseline: "
+                f"HOT {label} baseline: "
                 f"{len(current)} relevante produkter, ingen alerts"
             )
         else:
@@ -283,13 +427,13 @@ def run_scan(shared, state):
 
         source_state[source_key] = current
         print(
-            f"HOT {SOURCE_LABELS[source_key]}: "
+            f"HOT {label}: "
             f"{len(current)} relevante · "
             f"{sum(product_available(source_key, p) for p in current.values())} på lager"
         )
 
     state["filter_version"] = FILTER_VERSION
-    state["updated_at"] = datetime.now(timezone.utc).isoformat()
+    state["updated_at"] = _utc_now_iso()
     save_state(state)
     return successful
 
@@ -302,9 +446,12 @@ def main():
         state = {
             "filter_version": FILTER_VERSION,
             "sources": {},
+            "source_controls": {},
             "updated_at": None,
         }
         print("HOT scanner: opretter stille baseline")
+    else:
+        state.setdefault("source_controls", {})
 
     for iteration in range(HOT_ITERATIONS):
         started = time.monotonic()
