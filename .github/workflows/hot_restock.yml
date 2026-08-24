@@ -1,0 +1,90 @@
+name: Pokemon HOT Restock
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "2-57/5 * * * *"
+  push:
+    paths:
+      - "hot_restock.py"
+      - ".github/workflows/hot_restock.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pokemon-hot-restock
+  cancel-in-progress: false
+
+jobs:
+  hot-scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Validate HOT scanner
+        run: |
+          python -m py_compile hot_restock.py
+          python - <<'PY'
+          import ast
+          from pathlib import Path
+
+          source = Path('hot_restock.py').read_text(encoding='utf-8')
+          module = ast.parse(source)
+          assert any(isinstance(node, ast.FunctionDef) and node.name == 'hot_product_allowed' for node in module.body)
+          print('HOT scanner syntax/filter entrypoint OK')
+          PY
+
+      - name: Run HOT lane
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          HOT_ITERATIONS: "5"
+          HOT_INTERVAL_SECONDS: "55"
+        run: python hot_restock.py
+
+      - name: Save HOT state
+        run: |
+          if [ ! -f hot_restock_state.json ]; then
+            echo "No HOT state produced."
+            exit 1
+          fi
+
+          if git diff --quiet -- hot_restock_state.json && git ls-files --error-unmatch hot_restock_state.json >/dev/null 2>&1; then
+            echo "HOT state unchanged."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add hot_restock_state.json
+          git commit -m "Update hot restock state"
+
+          for attempt in 1 2 3; do
+            echo "HOT state push attempt $attempt/3"
+            git fetch origin main
+            if git rebase origin/main && git push origin HEAD:main; then
+              echo "HOT state pushed successfully."
+              exit 0
+            fi
+            git rebase --abort || true
+            if [ "$attempt" -lt 3 ]; then
+              sleep $((attempt * 5))
+            fi
+          done
+
+          echo "Failed to push HOT state after 3 attempts."
+          exit 1
