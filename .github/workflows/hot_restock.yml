@@ -56,7 +56,7 @@ jobs:
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           HOT_ITERATIONS: "5"
-          HOT_INTERVAL_SECONDS: "55"
+          HOT_INTERVAL_SECONDS: "60"
         run: python hot_restock.py
 
       - name: Save HOT state
