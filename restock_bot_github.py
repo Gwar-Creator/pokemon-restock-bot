@@ -39,6 +39,12 @@ PRICE_HISTORY_WEBHOOK_URL = os.getenv("PRICE_HISTORY_WEBHOOK_URL", "").strip()
 # It prevents a flapping source from repeating the same Discord alert.
 RESTOCK_ALERT_MEMORY = {}
 PRICE_ALERT_MEMORY = {}
+# Permanent product memory prevents old products from becoming "new" again
+# after a parser/source temporarily drops them from the current snapshot.
+RESTOCK_SEEN_PRODUCTS = set()
+# If the main scanner has been unable to save state for a prolonged period,
+# the first successful scan is a silent recovery baseline for product events.
+RESTOCK_RECOVERY_MODE = False
 
 PRICE_SIGNAL_CLEANUP_V23 = True
 RETAILER_CLEANUP_V25 = True
@@ -58,6 +64,8 @@ WAVE5_SOURCE_FIXES_V39 = True
 MATCHING_OPPORTUNITY_V40 = True
 V40_RUNTIME_FIX_V41 = True
 KELZ0R_STABILITY_V42 = True
+RESTOCK_REPLAY_GUARD_V44 = True
+RESTOCK_RECOVERY_GAP_SECONDS = 30 * 60
 RESTOCK_DUPLICATE_COOLDOWN_SECONDS = 6 * 60 * 60
 RESTOCK_NEW_PRODUCT_COOLDOWN_SECONDS = 24 * 60 * 60
 PRICE_ALERT_COOLDOWN_SECONDS = 24 * 60 * 60
@@ -925,6 +933,9 @@ def send_discord(message):
     alert_key, alert_entry = alert_decision
     if alert_key:
         RESTOCK_ALERT_MEMORY[alert_key] = alert_entry
+    product_fingerprint = (alert_entry or {}).get("product_fp")
+    if product_fingerprint:
+        RESTOCK_SEEN_PRODUCTS.add(product_fingerprint)
     return True
 
 
@@ -1071,6 +1082,56 @@ def _alert_identity(message, channel):
     return hashlib.sha256(raw.encode("utf-8")).hexdigest()[:32], event_type
 
 
+
+
+def _restock_product_fingerprint(name, url=""):
+    name_text = re.sub(r"\s+", " ", str(name or "").lower()).strip()
+    url_text = re.sub(r"[?#].*$", "", str(url or "").lower().strip()).rstrip("/")
+    if not name_text:
+        return ""
+    raw = f"{name_text}|{url_text}"
+    return hashlib.sha256(raw.encode("utf-8")).hexdigest()[:32]
+
+
+def _restock_message_fingerprint(message):
+    lines = [
+        line.replace("**", "").strip()
+        for line in str(message or "").splitlines()
+        if line.strip()
+    ]
+    name = lines[1] if len(lines) > 1 else ""
+    url_match = re.search(r"https?://\S+", str(message or ""))
+    url = url_match.group(0).rstrip(").,>") if url_match else ""
+    return _restock_product_fingerprint(name, url)
+
+
+def _collect_restock_seen_products(state_value):
+    """Collect stable product fingerprints from current + persisted state."""
+    seen = set()
+    if isinstance(state_value, dict):
+        saved = state_value.get("_restock_seen_products")
+        if isinstance(saved, list):
+            seen.update(str(value) for value in saved if value)
+
+    def walk(value):
+        if isinstance(value, dict):
+            name = value.get("name")
+            url = value.get("url") or value.get("product_url")
+            if name:
+                fingerprint = _restock_product_fingerprint(name, url or "")
+                if fingerprint:
+                    seen.add(fingerprint)
+            for key, child in value.items():
+                if str(key).startswith("_"):
+                    continue
+                walk(child)
+        elif isinstance(value, list):
+            for child in value:
+                walk(child)
+
+    walk(state_value)
+    return seen
+
 def _price_values_from_change(message):
     for line in str(message or "").splitlines():
         if "→" not in line or "kr" not in line.lower():
@@ -1119,6 +1180,23 @@ def restock_alert_decision(message):
     key, event_type = _alert_identity(message, "restock")
     previous = RESTOCK_ALERT_MEMORY.get(key)
     now_epoch = _now_epoch()
+    product_fingerprint = _restock_message_fingerprint(message)
+
+    # After a prolonged outage, do not replay accumulated product events.
+    # The current scan is still saved as the new baseline.
+    if RESTOCK_RECOVERY_MODE and event_type in ("NEW", "PREORDER", "RESTOCK"):
+        print(f"RESTOCK V44: recovery baseline undertrykker {event_type}")
+        return None
+
+    # A product that has ever existed in persisted state must never be announced
+    # as NEW/PREORDER again just because a source temporarily omitted it.
+    if (
+        event_type in ("NEW", "PREORDER")
+        and product_fingerprint
+        and product_fingerprint in RESTOCK_SEEN_PRODUCTS
+    ):
+        print("RESTOCK V44: tidligere set produkt undertrykt som nyt")
+        return None
 
     if event_type == "PRICE":
         if not RESTOCK_PRICE_ALERTS_ENABLED:
@@ -1149,7 +1227,10 @@ def restock_alert_decision(message):
     ):
         return None
 
-    return key, {"sent_at": now_epoch}
+    entry = {"sent_at": now_epoch}
+    if event_type in ("NEW", "PREORDER") and product_fingerprint:
+        entry["product_fp"] = product_fingerprint
+    return key, entry
 
 
 def price_alert_decision(message):
@@ -10304,6 +10385,17 @@ if isinstance(state, dict):
     PRICE_ALERT_MEMORY = _alert_memory_cleanup(
         state.get("_price_alert_memory") or {}
     )
+    RESTOCK_SEEN_PRODUCTS = _collect_restock_seen_products(state)
+    last_full_scan_epoch = safe_int(state.get("_last_full_scan_epoch"), 0)
+    if (
+        last_full_scan_epoch > 0
+        and _now_epoch() - last_full_scan_epoch > RESTOCK_RECOVERY_GAP_SECONDS
+    ):
+        RESTOCK_RECOVERY_MODE = True
+        print(
+            "RESTOCK V44: scanner-gap over 30 min; "
+            "første succesfulde run bruges som stille recovery-baseline."
+        )
 
 # Persist the public Elgiganten signed Algolia key between GitHub Action
 # runs. Without this, process-memory cache resets every five minutes.
@@ -10448,6 +10540,9 @@ while state is None:
             "_price_alert_memory": PRICE_ALERT_MEMORY,
             "_elgiganten_key_cache": dict(ELGIGANTEN_KEY_CACHE)
         }
+        RESTOCK_SEEN_PRODUCTS.update(_collect_restock_seen_products(state))
+        state["_restock_seen_products"] = sorted(RESTOCK_SEEN_PRODUCTS)
+        state["_last_full_scan_epoch"] = _now_epoch()
 
         save_state(
             state
@@ -11452,6 +11547,9 @@ while True:
         new_state["_price_alert_memory"] = _alert_memory_cleanup(
             PRICE_ALERT_MEMORY
         )
+        RESTOCK_SEEN_PRODUCTS.update(_collect_restock_seen_products(new_state))
+        new_state["_restock_seen_products"] = sorted(RESTOCK_SEEN_PRODUCTS)
+        new_state["_last_full_scan_epoch"] = _now_epoch()
 
         save_state(
             new_state
