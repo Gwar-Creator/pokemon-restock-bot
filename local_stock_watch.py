@@ -9,6 +9,7 @@ from bs4 import BeautifulSoup
 
 WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL", "").strip()
 STATE_FILE = "local_stock_state_v1.json"
+SALLING_DISCOVERY_V45 = True
 BROWSER_HEADERS = {
     "User-Agent": (
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
@@ -483,6 +484,70 @@ def short_series_name(value):
     return value
 
 
+
+
+def canonical_salling_product_key(product):
+    """Stable identity shared across BR/Bilka/Foetex for discovery de-duplication."""
+    sku = str((product or {}).get("sku") or "").strip().upper()
+    if sku:
+        return f"sku:{sku}"
+    product_id = str((product or {}).get("id") or "").strip()
+    return f"id:{product_id}" if product_id else ""
+
+
+def send_discovery_alert(products):
+    """Send one clearly separated PRE-PUBLISH discovery alert per Salling SKU."""
+    if not WEBHOOK_URL:
+        raise RuntimeError("DISCORD_WEBHOOK_URL mangler")
+    if not products:
+        return
+
+    site_order = {"BR": 0, "BILKA": 1, "FØTEX": 2}
+    products = sorted(
+        products,
+        key=lambda product: site_order.get(product.get("site"), 99),
+    )
+    representative = products[0]
+    series = short_series_name(representative.get("series"))
+    product_line = (
+        f"**{series} · {representative['type']}**"
+        if series
+        else f"**{representative['name']} · {representative['type']}**"
+    )
+
+    lines = [
+        "👀 **NY SKJULT VARE — ikke en lageralarm**",
+        product_line,
+    ]
+    for product in products:
+        store_count = max(0, safe_int(product.get("store_count"), 0))
+        lines.append(
+            f"• **{product['site']}** · {format_price(product.get('price'))} · "
+            f"{store_count} butikker med registreret lager"
+        )
+    lines.append(f"🔎 SKU: `{representative['sku']}`")
+    lines.append(
+        "⏭️ Discovery sendes kun én gang. Næste signal kommer først ved "
+        "lokal 0 → positiv lagerstatus."
+    )
+
+    payload = {
+        "username": "MasterBot",
+        "allowed_mentions": {"parse": []},
+        "embeds": [
+            {
+                "title": "👀 [POKÉMON] SALLING PRE-PUBLISH DISCOVERY",
+                "description": "\n".join(lines)[:4096],
+                "color": 0x5865F2,
+                "footer": {
+                    "text": "MasterBot · Salling Discovery · NY SKJULT VARE"
+                },
+            }
+        ],
+    }
+    response = requests.post(WEBHOOK_URL, json=payload, timeout=20)
+    response.raise_for_status()
+
 def send_local_alert(product, transitions):
     if not WEBHOOK_URL:
         raise RuntimeError("DISCORD_WEBHOOK_URL mangler")
@@ -609,12 +674,23 @@ def main():
     next_products = dict(old_products)
     total_errors = 0
     fresh_keys = set()
-
-    for site_key in ("br", "bilka", "foetex"):
-        site_had_baseline = any(
+    all_observations = {}
+    stock_alerted_products = set()
+    known_product_keys = {
+        canonical_salling_product_key(product)
+        for product in old_products.values()
+        if canonical_salling_product_key(product)
+    }
+    site_baselines = {
+        site_key: any(
             key.startswith(f"{site_key}:")
             for key in old_products
         )
+        for site_key in ("br", "bilka", "foetex")
+    }
+
+    for site_key in ("br", "bilka", "foetex"):
+        site_had_baseline = site_baselines[site_key]
 
         try:
             observations, errors = scan_site(site_key, old_products)
@@ -626,6 +702,7 @@ def main():
         total_errors += errors
         next_products.update(observations)
         fresh_keys.update(observations.keys())
+        all_observations.update(observations)
 
         # A newly added retailer gets one silent baseline even when the shared
         # state already has baseline_complete=True for older retailers. This
@@ -663,6 +740,35 @@ def main():
 
             if transitions:
                 send_local_alert(product, transitions)
+                canonical_key = canonical_salling_product_key(product)
+                if canonical_key:
+                    stock_alerted_products.add(canonical_key)
+
+    # Discovery is deliberately separate from stock alerts:
+    # - only genuinely new Salling identities are eligible;
+    # - BR/Bilka/Foetex sightings of the same SKU collapse to one Discord post;
+    # - if local stock already triggered, the weaker discovery alert is suppressed.
+    discovery_groups = {}
+    if baseline_complete:
+        for observation_key, product in all_observations.items():
+            if product.get("visibility") != "PRE-PUBLISH":
+                continue
+            canonical_key = canonical_salling_product_key(product)
+            if (
+                not canonical_key
+                or canonical_key in known_product_keys
+                or canonical_key in stock_alerted_products
+            ):
+                continue
+            site_key = observation_key.split(":", 1)[0]
+            if not site_baselines.get(site_key, False):
+                continue
+            discovery_groups.setdefault(canonical_key, []).append(product)
+
+        for products in discovery_groups.values():
+            send_discovery_alert(products)
+
+    discovery_count = len(discovery_groups)
 
     next_state = {
         "version": 1,
@@ -681,7 +787,8 @@ def main():
     else:
         print(
             f"LOCAL STOCK: scan færdig | {len(fresh_keys)} "
-            f"friske produktobservationer | {total_errors} fejl"
+            f"friske produktobservationer | {discovery_count} nye "
+            f"PRE-PUBLISH discoveries | {total_errors} fejl"
         )
 
 
