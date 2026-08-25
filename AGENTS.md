@@ -29,8 +29,12 @@ Læs altid de live filer i GitHub. Stol ikke alene på en ældre chat, lokal kop
 - Ekstern scheduler udløser normalt `.github/workflows/restock.yml` cirka hvert 5. minut.
 - Workflowet scanner butikker, sender relevante Discord-events og committer ændret state tilbage til `main`.
 - Restock-kanalen er til lagerændringer og nye relevante varer.
+- Nye katalogprodukter sendes kun til Restock, når de aktuelt er køb-bare eller markeret som preorder. Udsolgte katalogfund bevares i state og kan senere give en reel restock.
+- Scanner-health og recovery sendes kun til en separat `SCANNER_HEALTH_WEBHOOK_URL`; uden den logges hændelserne kun i workflowet.
 - Price Watch er handlingsorienteret og skal være kompakt.
 - Price History bevarer statistik, men Discord-output skal være let; fuld detalje hører til data/CSV.
+- Price Watch og Price History sender ikke tomme daglige "ingen signaler"-beskeder.
+- Card Market må aldrig falde tilbage til Price History-webhooken. Discord-output kræver en dedikeret `CARDMARKET_WEBHOOK_URL`, og fuld Excel sendes kun ugentligt.
 - Webhooks, tokens og andre secrets må aldrig skrives i kode, logs, dokumentation eller commits.
 - Discord-oprydning køres af `discord_cleanup.py` før hovedscannet. Den sletter
   kun ikke-fastgjorte webhook-/botopslag, der er ældre end 24 timer; pris- og
@@ -39,9 +43,9 @@ Læs altid de live filer i GitHub. Stol ikke alene på en ældre chat, lokal kop
 
 ## Overvågede kilder
 
-Scannerens nuværende aktive kilder omfatter Coolshop, Proshop, BR, Bilka, Føtex, PokeHulen, Rogerz, MTGwebshop, Luckbox, Spilforsyningen, Musen & Slottet, Symbizon, CardX, Matraws, Halmes Hule, CardsDirect, Baltzer Games, TCG Shoppen, Pokemons.dk, Pocket Monster, Fun-shop, PokéPulls, Staalz, PBCards, KoCardz, Vaulted, Pokedexet, Pokemonportalen, TCGBruuS, Pokemon Plaza, Kelz0r, Faraos, Goblin Games, ZZGames, Hyggeonkel, Nostalgic, &Cards, Pokecards.dk, Epic Panda, Steffen-O og Next Level Games.
+Scannerens nuværende aktive kilder omfatter Coolshop, Proshop, BR, Bilka, Føtex, PokeHulen, Rogerz, MTGwebshop, Luckbox, Spilforsyningen, Musen & Slottet, Symbizon, CardX, Matraws, Halmes Hule, CardsDirect, Baltzer Games, TCG Shoppen, Pokemons.dk, Pocket Monster, Fun-shop, PokéPulls, Staalz, PBCards, KoCardz, Vaulted, Pokedexet, Pokemonportalen, TCGBruuS, Pokemon Plaza, Kelz0r, Faraos, Goblin Games, Hyggeonkel, Nostalgic, &Cards, Pokecards.dk, Epic Panda, Steffen-O og Next Level Games.
 
-Elgiganten og CardstoreCPH er historiske/retired kilder. Deres state må gerne bevares, men de skal ikke fetches eller bruges som friske Price Watch-/Price History-kilder.
+Elgiganten, CardstoreCPH og ZZGames er historiske/retired kilder. Deres state må gerne bevares, men de skal ikke fetches eller bruges som friske Price Watch-/Price History-kilder.
 
 Wave 1-udvidelsen fra 2026-08-21 tilføjede Symbizon, CardX, Matraws, Halmes Hule og CardsDirect som Shopify-kilder.
 
@@ -52,6 +56,8 @@ Wave 3-udvidelsen fra 2026-08-21 tilføjer Fun-shop, PokéPulls, Staalz og PBCar
 Wave 4-udvidelsen fra 2026-08-21 tilføjede Vaulted, Pokedexet, Pokemonportalen, TCGBruuS og Pokemon Plaza med platformstilpassede feeds/parsers.
 
 Wave 5-udvidelsen fra 2026-08-21 tilføjer Kelz0r, Faraos, Goblin Games, ZZGames og Hyggeonkel. ZZGames bruger Shopify-feed; de øvrige bruger målrettede offentlige kategori-parsers og de eksisterende sealed-/English-only-filtre. Bog & idé blev bevidst udskudt, fordi webshoppen var midlertidigt password-lukket under platformsmigrering 21/8, og Bræt & Brikker blev ikke tilføjet, fordi butikken er lukket.
+
+ZZGames blev retired 2026-08-25 efter 975 fortløbende fejl og 0 brugbare produkter. Historisk state bevares. Kilden må først aktiveres igen, når et stabilt offentligt feed med relevante sealed produkter er dokumenteret.
 
 Nye kilder baseline-indlæses uden historiske produkt-alerts og går derefter ind i normal restock-/Price Watch-/Price History-logik, når de er friske og sunde.
 
@@ -196,6 +202,10 @@ Gode næste trin, som skal indføres enkeltvis og sikkert:
 - 2026-08-21: V38 tilføjede Kelz0r, Faraos, Goblin Games, ZZGames og Hyggeonkel som den sidste butiksekspansions-wave for nu; Bog & idé blev udskudt under platformsmigrering, og Bræt & Brikker blev fravalgt som lukket.
 - 2026-08-25: Automatisk Discord-retention blev tilføjet: webhook-/botopslag
   ældre end 24 timer ryddes, mens pinned og manuelle opslag bevares.
+- 2026-08-25: V45 tilføjede retry/backoff til Pocket Monster, retired ZZGames,
+  krævede købbar/preorder-status for nye katalogalerts, flyttede scanner-health ud
+  af Restock, ensrettede checklane/battle-deck-filteret i Price, fjernede tomme
+  prisdigests og adskilte Card Market fra Price History.
 - Lav-signal-produkter skal normalt forblive i state, men ikke sendes til Discord.
 
 ## Kommunikation

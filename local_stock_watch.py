@@ -120,16 +120,40 @@ def get_frontend_config(site_key):
 
 def pokemon_product_type(name):
     text = " " + re.sub(r"\s+", " ", str(name or "").lower()) + " "
-    blocked = ("checklane", "check lane", "battle deck", "battledeck", "blister", "portfolio", "binder", "mappe", "sleeve", "playmat", "deck box", "penalhus", "pencil case")
+    blocked = ("checklane", "check lane", "battle deck", "battledeck", "blister", "portfolio", "mappe", "sleeve", "deck box", "penalhus", "pencil case")
     if any(marker in text for marker in blocked):
         return None
+    if "booster bundle" in text:
+        if "bundle display" in text or "booster bundle display" in text:
+            return None
+        return "BOOSTER BUNDLE"
+    if "booster box" in text or "booster display" in text:
+        return "BOOSTER BOX"
     if "elite trainer box" in text or re.search(r"\betb\b", text):
         return "ETB"
     if "mini tin" in text or "poké ball tin" in text or "poke ball tin" in text or re.search(r"\btins?\b", text):
         return "TIN"
+    if any(
+        marker in text
+        for marker in (
+            " premium collection ",
+            " ultra-premium collection ",
+            " special collection ",
+            " illustration collection ",
+            " binder collection ",
+            " poster collection ",
+            " playmat collection ",
+            " accessory pouch special collection ",
+            " first partner ",
+            " collection box ",
+            " ex box ",
+            " upc ",
+        )
+    ):
+        return "COLLECTION"
+    if " binder " in text or " playmat " in text:
+        return None
     if "booster" in text:
-        if any(marker in text for marker in ("booster box", "booster display", "booster bundle", "bundle display")):
-            return None
         return "BOOSTER PACK"
     return None
 

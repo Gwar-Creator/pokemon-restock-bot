@@ -15,10 +15,7 @@ from openpyxl.utils import get_column_letter
 
 API = "https://tcg-api-production-5148.up.railway.app"
 KEY = os.getenv("TCG_CARDMARKET_API_KEY", "").strip()
-WEBHOOK = (
-    os.getenv("CARDMARKET_WEBHOOK_URL", "").strip()
-    or os.getenv("PRICE_HISTORY_WEBHOOK_URL", "").strip()
-)
+WEBHOOK = os.getenv("CARDMARKET_WEBHOOK_URL", "").strip()
 TZ = os.getenv("CARDMARKET_TIMEZONE", "Europe/Copenhagen")
 HOUR = int(os.getenv("CARDMARKET_DAILY_HOUR", "8") or 8)
 FORCE = os.getenv("CARDMARKET_FORCE_RUN", "0") == "1"
@@ -666,28 +663,7 @@ def opportunity_block(row, index=None):
 
 
 def quiet_summary(game, rows, summaries, used):
-    color = GAME_COLOR[game]
-    icon = GAME_ICON[game]
-    hottest = sorted(summaries, key=lambda row: row["score"], reverse=True)[:3]
-    text = (
-        f"**{len({row['set'] for row in rows})} sæt** · **{len(rows)} chase cards** · "
-        f"**{used} API requests i dag**\n"
-        f"{RUN_COVERAGE_TEXT}\n\n"
-        "✅ Ingen større prisbevægelser, nye lows eller stærke opportunity-signaler i dag.\n\n"
-        "**Hottest lige nu**\n\n"
-        + "\n\n".join(set_block(row, index) for index, row in enumerate(hottest, 1))
-        + "\n\n*Fuld Top 20 pr. sæt er opdateret i Excel.*"
-    )
-    post(
-        embeds=[
-            emb(
-                f"{icon} {game.title()} · MARKET PULSE · ROLIG DAG",
-                text,
-                color,
-                footer="MasterBot · Card Market Watch",
-            )
-        ]
-    )
+    print(f"CARD MARKET {game}: rolig dag; Discord springes over.")
 
 
 def discord_market_pulse(cards, game, summaries, opportunities, first_scores, lows, used, weekly=False):
@@ -1156,9 +1132,11 @@ def main():
     opportunities = sealed_opportunities(summaries, price_history_products())
     weekly = now.weekday() == 6
 
-    file, ranked_cards = workbook(
-        list(next_cards.values()), summaries, opportunities, stamp, used, remaining
-    )
+    file = None
+    if weekly:
+        file, ranked_cards = workbook(
+            list(next_cards.values()), summaries, opportunities, stamp, used, remaining
+        )
 
     for game in ("POKÉMON", "LORCANA"):
         discord_market_pulse(
@@ -1176,14 +1154,15 @@ def main():
         for game in ("POKÉMON", "LORCANA"):
             discord_weekly_report(ranked_cards, game, summaries, opportunities)
 
-    post(
-        content=(
-            "📎 **Card Market Watch · fuld Excel**\n"
-            "Top 20 pr. sæt + Heat Score, movers, Low/Trend/1d/7d/30d, foil-data, "
-            "observeret historik og DK sealed-opportunities."
-        ),
-        file=file,
-    )
+    if weekly:
+        post(
+            content=(
+                "📎 **Card Market Watch · ugentlig Excel**\n"
+                "Top 20 pr. sæt + Heat Score, movers, Low/Trend/1d/7d/30d, "
+                "foil-data, observeret historik og DK sealed-opportunities."
+            ),
+            file=file,
+        )
 
     set_history = update_set_history(old, summaries, today)
     save(
