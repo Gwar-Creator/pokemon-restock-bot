@@ -12,6 +12,7 @@ on:
       - "hot_restock.py"
       - "salling_victini_watch.py"
       - "salling_early_radar.py"
+      - "salling_early_radar_runner.py"
       - ".github/workflows/hot_restock.yml"
 
 permissions:
@@ -43,7 +44,7 @@ jobs:
 
       - name: Validate HOT scanner and Salling watchers
         run: |
-          python -m py_compile hot_restock.py salling_victini_watch.py salling_early_radar.py
+          python -m py_compile hot_restock.py salling_victini_watch.py salling_early_radar.py salling_early_radar_runner.py
           python - <<'PY'
           import ast
           from pathlib import Path
@@ -59,7 +60,11 @@ jobs:
           radar_source = Path('salling_early_radar.py').read_text(encoding='utf-8')
           radar_module = ast.parse(radar_source)
           assert any(isinstance(node, ast.FunctionDef) and node.name == 'fetch_hidden_catalog' for node in radar_module.body)
-          print('HOT scanner + Victini watcher + Early Radar syntax OK')
+
+          runner_source = Path('salling_early_radar_runner.py').read_text(encoding='utf-8')
+          runner_module = ast.parse(runner_source)
+          assert any(isinstance(node, ast.FunctionDef) and node.name == 'ignore_epoch_only_change' for node in runner_module.body)
+          print('HOT scanner + Victini watcher + Early Radar runner syntax OK')
           PY
 
       - name: Run HOT lane + Salling early watches
@@ -76,7 +81,7 @@ jobs:
                 echo "::warning::Victini watcher failed transiently on iteration $iteration; HOT run continues"
               fi
 
-              if ! python salling_early_radar.py; then
+              if ! python salling_early_radar_runner.py; then
                 echo "::warning::Salling Early Radar failed transiently on iteration $iteration; HOT run continues"
               fi
 
