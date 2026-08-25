@@ -108,33 +108,61 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add hot_restock_state.json
+          # Keep the state produced by this run outside the working tree.
+          # Another workflow writes to main frequently, so rebasing a state
+          # commit causes recurring conflicts. On every retry we instead take
+          # the newest main and overlay only this run's HOT/Salling state files.
+          STATE_BACKUP="$(mktemp -d)"
+          cp hot_restock_state.json "$STATE_BACKUP/hot_restock_state.json"
           if [ -f salling_victini_state.json ]; then
-            git add salling_victini_state.json
+            cp salling_victini_state.json "$STATE_BACKUP/salling_victini_state.json"
           fi
           if [ -f salling_early_radar_state.json ]; then
-            git add salling_early_radar_state.json
+            cp salling_early_radar_state.json "$STATE_BACKUP/salling_early_radar_state.json"
           fi
-
-          if git diff --cached --quiet; then
-            echo "HOT/Salling state unchanged."
-            exit 0
-          fi
-
-          git commit -m "Update hot restock and Salling radar state"
 
           for attempt in 1 2 3 4 5; do
             echo "HOT/Salling state push attempt $attempt/5"
+
             git fetch origin main
-            if git rebase origin/main && git push origin HEAD:main; then
-              echo "HOT/Salling state pushed successfully."
+            git reset --hard origin/main
+
+            cp "$STATE_BACKUP/hot_restock_state.json" hot_restock_state.json
+            if [ -f "$STATE_BACKUP/salling_victini_state.json" ]; then
+              cp "$STATE_BACKUP/salling_victini_state.json" salling_victini_state.json
+            fi
+            if [ -f "$STATE_BACKUP/salling_early_radar_state.json" ]; then
+              cp "$STATE_BACKUP/salling_early_radar_state.json" salling_early_radar_state.json
+            fi
+
+            git add hot_restock_state.json
+            if [ -f salling_victini_state.json ]; then
+              git add salling_victini_state.json
+            fi
+            if [ -f salling_early_radar_state.json ]; then
+              git add salling_early_radar_state.json
+            fi
+
+            if git diff --cached --quiet; then
+              echo "HOT/Salling state already current on main."
+              rm -rf "$STATE_BACKUP"
               exit 0
             fi
-            git rebase --abort || true
+
+            git commit -m "Update hot restock and Salling radar state"
+
+            if git push origin HEAD:main; then
+              echo "HOT/Salling state pushed successfully."
+              rm -rf "$STATE_BACKUP"
+              exit 0
+            fi
+
+            echo "Push raced with another workflow; retrying from latest main."
             if [ "$attempt" -lt 5 ]; then
               sleep $((attempt * 5))
             fi
           done
 
-          echo "Failed to push HOT/Salling state after 5 attempts."
+          rm -rf "$STATE_BACKUP"
+          echo "Failed to push HOT/Salling state after 5 fresh-main attempts."
           exit 1
