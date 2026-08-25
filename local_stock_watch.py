@@ -9,26 +9,80 @@ from bs4 import BeautifulSoup
 
 WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL", "").strip()
 STATE_FILE = "local_stock_state_v1.json"
-BROWSER_HEADERS = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"}
-SITES = {
-    "bilka": {"label": "BILKA", "home": "https://www.bilka.dk/", "base": "https://www.bilka.dk"},
-    "foetex": {"label": "FØTEX", "home": "https://www.foetex.dk/", "base": "https://www.foetex.dk"},
+BROWSER_HEADERS = {
+    "User-Agent": (
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/140.0.0.0 Safari/537.36"
+    )
 }
-TARGET_STORE_MARKERS = ("kolding", "fredericia", "vejen", "brørup", "brorup", "esbjerg")
+
+SITES = {
+    "br": {
+        "label": "BR",
+        "home": "https://www.br.dk/",
+        "base": "https://www.br.dk",
+        "api_url": "https://api.sallinggroup.com/v1/ecommerce/br",
+        "algolia_index": "prod_BR_PRODUCTS",
+    },
+    "bilka": {
+        "label": "BILKA",
+        "home": "https://www.bilka.dk/",
+        "base": "https://www.bilka.dk",
+    },
+    "foetex": {
+        "label": "FØTEX",
+        "home": "https://www.foetex.dk/",
+        "base": "https://www.foetex.dk",
+    },
+}
+
+TARGET_STORE_MARKERS = (
+    "kolding",
+    "fredericia",
+    "vejen",
+    "brørup",
+    "brorup",
+    "esbjerg",
+)
 
 NON_ENGLISH_CARD_MARKERS = (
-    "japansk", "japanese", "japan import",
-    "kinesisk", "chinese", "simplified chinese", "traditional chinese",
-    "koreansk", "korean", "tysk", "german", "deutsch",
-    "fransk", "french", "italiensk", "italian", "spansk", "spanish",
-    "portugisisk", "portuguese", "hollandsk", "dutch",
-    "thai", "thailand", "indonesisk", "indonesian",
+    "japansk",
+    "japanese",
+    "japan import",
+    "kinesisk",
+    "chinese",
+    "simplified chinese",
+    "traditional chinese",
+    "koreansk",
+    "korean",
+    "tysk",
+    "german",
+    "deutsch",
+    "fransk",
+    "french",
+    "italiensk",
+    "italian",
+    "spansk",
+    "spanish",
+    "portugisisk",
+    "portuguese",
+    "hollandsk",
+    "dutch",
+    "thai",
+    "thailand",
+    "indonesisk",
+    "indonesian",
 )
+
 
 def is_english_card_product(name):
     text = " " + re.sub(r"\s+", " ", str(name or "").lower()) + " "
     return not any(marker in text for marker in NON_ENGLISH_CARD_MARKERS)
+
+
 KNOWN_SET_ALIASES = (
+    ("Mega Evolution: Phantasmal Flames", ("phantasmal flames",)),
     ("Mega Evolution: Chaos Rising", ("chaos rising", "mega evolution chaos rising")),
     ("Mega Evolution: Perfect Order", ("perfect order", "mega evolution perfect order")),
     ("Scarlet & Violet: Destined Rivals", ("destined rivals", "rivals booster", "pokemon rivals booster")),
@@ -49,6 +103,7 @@ KNOWN_SET_ALIASES = (
     ("Scarlet & Violet: Obsidian Flames", ("obsidian flames",)),
     ("Scarlet & Violet: Paldea Evolved", ("paldea evolved",)),
 )
+
 KNOWN_PRODUCT_SERIES = {
     "200356078": "Mega Evolution: Perfect Order",
     "11221188-EA": "Mega Evolution: Perfect Order",
@@ -56,19 +111,30 @@ KNOWN_PRODUCT_SERIES = {
     "11263280-EA": "Mega Evolution: Chaos Rising",
 }
 
+
 def safe_int(value, default=0):
     try:
         return int(value)
     except (TypeError, ValueError):
         return default
 
+
 def normalize_search_text(value):
-    text = str(value or "").lower().replace("pokémon", "pokemon").replace("–", " ").replace("—", " ")
+    text = (
+        str(value or "")
+        .lower()
+        .replace("pokémon", "pokemon")
+        .replace("–", " ")
+        .replace("—", " ")
+    )
     text = re.sub(r"[^a-z0-9æøå:]+", " ", text)
     return re.sub(r"\s+", " ", text).strip()
 
+
 def infer_series(product):
-    normalized = normalize_search_text(json.dumps(product, ensure_ascii=False, sort_keys=True))
+    normalized = normalize_search_text(
+        json.dumps(product, ensure_ascii=False, sort_keys=True)
+    )
     for marker, series_name in KNOWN_PRODUCT_SERIES.items():
         if normalize_search_text(marker) in normalized:
             return series_name, "product-id"
@@ -77,28 +143,52 @@ def infer_series(product):
             return series_name, "metadata"
     return None, None
 
+
 def extract_config_value(text, key):
-    match = re.search(re.escape(key) + r'["\']?\s*:\s*["\']([^"\']+)["\']', text)
+    match = re.search(
+        re.escape(key) + r'["\']?\s*:\s*["\']([^"\']+)["\']',
+        text,
+    )
     return match.group(1) if match else None
+
 
 def get_frontend_config(site_key):
     site = SITES[site_key]
     response = requests.get(site["home"], headers=BROWSER_HEADERS, timeout=20)
     response.raise_for_status()
     soup = BeautifulSoup(response.text, "html.parser")
-    script_urls = [urljoin(site["base"], script["src"]) for script in soup.find_all("script", src=True)]
+
+    script_urls = [
+        urljoin(site["base"], script["src"])
+        for script in soup.find_all("script", src=True)
+    ]
     script_urls = list(dict.fromkeys(script_urls))
-    script_urls.sort(key=lambda url: (0 if "app.js" in url.lower() else 1, 0 if "commons.app.js" in url.lower() else 1, len(url)))
+    script_urls.sort(
+        key=lambda url: (
+            0 if "app.js" in url.lower() else 1,
+            0 if "commons.app.js" in url.lower() else 1,
+            len(url),
+        )
+    )
+
     texts = [response.text]
     for script_url in script_urls[:30]:
         try:
-            script_response = requests.get(script_url, headers=BROWSER_HEADERS, timeout=20)
+            script_response = requests.get(
+                script_url,
+                headers=BROWSER_HEADERS,
+                timeout=20,
+            )
             script_response.raise_for_status()
             texts.append(script_response.text)
-            if "NUXT_ENV_API_TOKEN" in script_response.text and "NUXT_ENV_ALGOLIA_DEFAULT_INDEX" in script_response.text:
+            if (
+                "NUXT_ENV_API_TOKEN" in script_response.text
+                and "NUXT_ENV_ALGOLIA_API_KEY" in script_response.text
+            ):
                 break
         except requests.RequestException:
             continue
+
     keys = {
         "api_token": "NUXT_ENV_API_TOKEN",
         "api_url": "NUXT_ENV_API_URL",
@@ -106,23 +196,66 @@ def get_frontend_config(site_key):
         "algolia_app_id": "NUXT_ENV_ALGOLIA_APLICATION_ID",
         "algolia_index": "NUXT_ENV_ALGOLIA_DEFAULT_INDEX",
     }
-    config = {key: None for key in keys}
+    config = {
+        "api_token": None,
+        "api_url": site.get("api_url"),
+        "algolia_api_key": None,
+        "algolia_app_id": None,
+        "algolia_index": site.get("algolia_index"),
+    }
+
     for text in texts:
         for out_key, source_key in keys.items():
             if not config[out_key]:
                 config[out_key] = extract_config_value(text, source_key)
         if not config["algolia_app_id"]:
-            config["algolia_app_id"] = extract_config_value(text, "NUXT_ENV_ALGOLIA_APPLICATION_ID")
+            config["algolia_app_id"] = extract_config_value(
+                text,
+                "NUXT_ENV_ALGOLIA_APPLICATION_ID",
+            )
+
     missing = [key for key, value in config.items() if not value]
     if missing:
-        raise RuntimeError(f"{site['label']} mangler frontend-config: {', '.join(missing)}")
+        raise RuntimeError(
+            f"{site['label']} mangler frontend-config: {', '.join(missing)}"
+        )
     return config
 
-def pokemon_product_type(name):
+
+def pokemon_product_type(name, product=None):
     text = " " + re.sub(r"\s+", " ", str(name or "").lower()) + " "
-    blocked = ("checklane", "check lane", "battle deck", "battledeck", "blister", "portfolio", "mappe", "sleeve", "deck box", "penalhus", "pencil case")
-    if any(marker in text for marker in blocked):
+    metadata = " " + normalize_search_text(
+        json.dumps(product or {}, ensure_ascii=False, sort_keys=True)
+    ) + " "
+
+    if any(marker in text for marker in ("checklane", "check lane", "battle deck", "battledeck")):
         return None
+
+    # Official Pokemon Mini Portfolio products include a booster pack, even if
+    # the Salling title only says "Mini Portfolio". Pure portfolios/maps stay out.
+    if " mini portfolio " in text:
+        return "MINI PORTFOLIO"
+
+    if " blister " in text:
+        return "BLISTER"
+
+    if " portfolio " in text or " mappe " in text:
+        if " booster " in text or " booster " in metadata:
+            return "PORTFOLIO + BOOSTER"
+        return None
+
+    if any(
+        marker in text
+        for marker in (
+            " sleeve ",
+            " sleeves ",
+            " deck box ",
+            " penalhus ",
+            " pencil case ",
+        )
+    ):
+        return None
+
     if "booster bundle" in text:
         if "bundle display" in text or "booster bundle display" in text:
             return None
@@ -131,7 +264,12 @@ def pokemon_product_type(name):
         return "BOOSTER BOX"
     if "elite trainer box" in text or re.search(r"\betb\b", text):
         return "ETB"
-    if "mini tin" in text or "poké ball tin" in text or "poke ball tin" in text or re.search(r"\btins?\b", text):
+    if (
+        "mini tin" in text
+        or "poké ball tin" in text
+        or "poke ball tin" in text
+        or re.search(r"\btins?\b", text)
+    ):
         return "TIN"
     if any(
         marker in text
@@ -157,9 +295,16 @@ def pokemon_product_type(name):
         return "BOOSTER PACK"
     return None
 
+
 def is_pokemon_hit(product):
-    text = f"{product.get('name') or ''} {product.get('brand') or product.get('f_brand') or ''} {product.get('facets.productSeriesToys') or ''}".lower()
+    text = (
+        f"{product.get('name') or ''} "
+        f"{product.get('brand') or product.get('f_brand') or ''} "
+        f"{product.get('facets.productSeriesToys') or ''} "
+        f"{(product.get('supplier_information') or {}).get('manufacturer_name') or ''}"
+    ).lower()
     return "pokemon" in text or "pokémon" in text
+
 
 def visibility_status(product):
     raw = product.get("is_exposed")
@@ -170,65 +315,129 @@ def visibility_status(product):
         return "PRE-PUBLISH"
     return "UNKNOWN"
 
+
 def get_algolia_candidates(site_key, config):
-    algolia_url = f"https://{config['algolia_app_id'].lower()}-dsn.algolia.net/1/indexes/*/queries"
-    params = {"query": "", "attributesToRetrieve": '["*"]', "filters": 'cfh_nodes:"CFH.CollectionCards"', "distinct": "true", "page": 0, "hitsPerPage": 500}
-    payload = {"requests": [{"indexName": config["algolia_index"], "params": urlencode(params)}]}
-    response = requests.post(algolia_url, headers={**BROWSER_HEADERS, "Content-Type": "application/json", "x-algolia-application-id": config["algolia_app_id"], "x-algolia-api-key": config["algolia_api_key"]}, json=payload, timeout=25)
+    algolia_url = (
+        f"https://{config['algolia_app_id'].lower()}"
+        "-dsn.algolia.net/1/indexes/*/queries"
+    )
+    params = {
+        "query": "",
+        "attributesToRetrieve": '["*"]',
+        "filters": 'cfh_nodes:"CFH.CollectionCards"',
+        "distinct": "true",
+        "page": 0,
+        "hitsPerPage": 500,
+    }
+    payload = {
+        "requests": [
+            {
+                "indexName": config["algolia_index"],
+                "params": urlencode(params),
+            }
+        ]
+    }
+    response = requests.post(
+        algolia_url,
+        headers={
+            **BROWSER_HEADERS,
+            "Content-Type": "application/json",
+            "x-algolia-application-id": config["algolia_app_id"],
+            "x-algolia-api-key": config["algolia_api_key"],
+        },
+        json=payload,
+        timeout=25,
+    )
     response.raise_for_status()
     hits = response.json()["results"][0].get("hits", [])
+
     candidates = []
     for product in hits:
         if not is_pokemon_hit(product):
             continue
         if not is_english_card_product(product.get("name")):
             continue
-        product_type = pokemon_product_type(product.get("name"))
+        product_type = pokemon_product_type(product.get("name"), product)
         if not product_type:
             continue
         sku = product.get("sku") or product.get("erp_product_id")
         if not sku:
             continue
+
         product_url = product.get("product_url") or ""
         series_name, series_source = infer_series(product)
-        candidates.append({
-            "id": str(product.get("id") or product.get("objectID") or sku),
-            "name": str(product.get("name") or "Ukendt produkt"),
-            "type": product_type,
-            "series": series_name,
-            "series_source": series_source,
-            "sku": str(sku),
-            "price": product.get("sales_price"),
-            "visibility": visibility_status(product),
-            "store_count": max(0, safe_int(product.get("in_stock_stores_count"), 0)),
-            "url": urljoin(SITES[site_key]["base"], product_url) if product_url else "",
-        })
+        candidates.append(
+            {
+                "id": str(product.get("id") or product.get("objectID") or sku),
+                "name": str(product.get("name") or "Ukendt produkt"),
+                "type": product_type,
+                "series": series_name,
+                "series_source": series_source,
+                "sku": str(sku),
+                "price": product.get("sales_price"),
+                "visibility": visibility_status(product),
+                "store_count": max(
+                    0,
+                    safe_int(product.get("in_stock_stores_count"), 0),
+                ),
+                "url": (
+                    urljoin(SITES[site_key]["base"], product_url)
+                    if product_url
+                    else ""
+                ),
+            }
+        )
     return candidates, len(hits)
+
 
 def get_target_store_stocks(site_key, config, sku, session, old_stocks=None):
     site = SITES[site_key]
     url = f"{config['api_url']}/clickcollect/availability/{sku}"
-    headers = {**BROWSER_HEADERS, "Accept": "application/json, text/plain, */*", "Authorization": f"Bearer {config['api_token']}", "Origin": site["base"], "Referer": site["home"]}
+    headers = {
+        **BROWSER_HEADERS,
+        "Accept": "application/json, text/plain, */*",
+        "Authorization": f"Bearer {config['api_token']}",
+        "Origin": site["base"],
+        "Referer": site["home"],
+    }
     response = session.get(url, headers=headers, timeout=20)
     response.raise_for_status()
     payload = response.json()
     if not isinstance(payload, list):
         raise RuntimeError("availability svarede ikke med en liste")
+
     stocks = {}
     for item in payload:
         store = item.get("store") or {}
         store_name = str(store.get("name") or "").strip()
         if not any(marker in store_name.lower() for marker in TARGET_STORE_MARKERS):
             continue
-        site_id = str(store.get("sapSiteId") or "") or "name:" + normalize_search_text(store_name)
-        stocks[site_id] = {"name": store_name or site_id, "stock": max(0, safe_int(item.get("currentStock"), 0))}
+        site_id = str(store.get("sapSiteId") or "") or (
+            "name:" + normalize_search_text(store_name)
+        )
+        stocks[site_id] = {
+            "name": store_name or site_id,
+            "stock": max(0, safe_int(item.get("currentStock"), 0)),
+        }
+
     for site_id, old_store in (old_stocks or {}).items():
         if site_id not in stocks:
-            stocks[site_id] = {"name": old_store.get("name") or site_id, "stock": 0}
+            stocks[site_id] = {
+                "name": old_store.get("name") or site_id,
+                "stock": 0,
+            }
     return stocks
 
+
 def zero_known_stocks(old_stocks):
-    return {site_id: {"name": (store or {}).get("name") or site_id, "stock": 0} for site_id, store in (old_stocks or {}).items()}
+    return {
+        site_id: {
+            "name": (store or {}).get("name") or site_id,
+            "stock": 0,
+        }
+        for site_id, store in (old_stocks or {}).items()
+    }
+
 
 def load_state():
     if not os.path.exists(STATE_FILE):
@@ -247,16 +456,24 @@ def load_state():
         state["products"] = {}
     return state
 
+
 def save_state(state):
     with open(STATE_FILE, "w", encoding="utf-8") as file:
         json.dump(state, file, ensure_ascii=False, indent=2)
+
 
 def format_price(value):
     try:
         value = float(value)
     except (TypeError, ValueError):
         return "Pris ukendt"
-    return f"{value:,.2f} kr.".replace(",", "X").replace(".", ",").replace("X", ".")
+    return (
+        f"{value:,.2f} kr."
+        .replace(",", "X")
+        .replace(".", ",")
+        .replace("X", ".")
+    )
+
 
 def short_series_name(value):
     value = str(value or "")
@@ -265,29 +482,66 @@ def short_series_name(value):
             return value[len(prefix):]
     return value
 
+
 def send_local_alert(product, transitions):
     if not WEBHOOK_URL:
         raise RuntimeError("DISCORD_WEBHOOK_URL mangler")
+
     visibility = product.get("visibility") or "UNKNOWN"
     pre_publish = visibility == "PRE-PUBLISH"
-    title = f"🔥 [POKÉMON] {product['site']} LOCAL STOCK [PRE-PUBLISH]" if pre_publish else f"🏪 [POKÉMON] {product['site']} LOCAL STOCK"
+    title = (
+        f"🔥 [POKÉMON] {product['site']} LOCAL STOCK [PRE-PUBLISH]"
+        if pre_publish
+        else f"🏪 [POKÉMON] {product['site']} LOCAL STOCK"
+    )
     color = 0xF1C40F if pre_publish else 0x57F287
     series = short_series_name(product.get("series"))
-    product_line = f"**{series} · {product['type']}**" if series else f"**{product['name']} · {product['type']}**"
+    product_line = (
+        f"**{series} · {product['type']}**"
+        if series
+        else f"**{product['name']} · {product['type']}**"
+    )
+
     lines = [product_line]
     for transition in transitions:
-        lines.append(f"🏪 {transition['name']}: {transition['old']} → **{transition['new']} stk.**")
+        lines.append(
+            f"🏪 {transition['name']}: {transition['old']} → "
+            f"**{transition['new']} stk.**"
+        )
     lines.append(f"💰 {format_price(product.get('price'))}")
+
     if pre_publish:
-        lines.append("🟡 Ikke eksponeret på webshoppen endnu — fysisk lager bør bekræftes i butikken.")
+        lines.append(
+            "🟡 Ikke eksponeret på webshoppen endnu — "
+            "fysisk lager bør bekræftes i butikken."
+        )
         lines.append(f"🔎 SKU: `{product['sku']}`")
     elif visibility == "UNKNOWN":
         lines.append("⚪ Webshop-eksponering kunne ikke klassificeres sikkert.")
+
     if product.get("url") and not pre_publish:
         lines.append(f"🔗 {product['url']}")
-    payload = {"username": "MasterBot", "allowed_mentions": {"parse": []}, "embeds": [{"title": title[:256], "description": "\n".join(lines)[:4096], "color": color, "footer": {"text": "MasterBot · Local Stock Watch · Kolding/Fredericia/Vejen/Brørup/Esbjerg"}}]}
+
+    payload = {
+        "username": "MasterBot",
+        "allowed_mentions": {"parse": []},
+        "embeds": [
+            {
+                "title": title[:256],
+                "description": "\n".join(lines)[:4096],
+                "color": color,
+                "footer": {
+                    "text": (
+                        "MasterBot · Local Stock Watch · "
+                        "Kolding/Fredericia/Vejen/Brørup/Esbjerg"
+                    )
+                },
+            }
+        ],
+    }
     response = requests.post(WEBHOOK_URL, json=payload, timeout=20)
     response.raise_for_status()
+
 
 def scan_site(site_key, old_products):
     site = SITES[site_key]
@@ -296,24 +550,57 @@ def scan_site(site_key, old_products):
     session = requests.Session()
     observations = {}
     errors = 0
+
     for product in candidates:
         key = f"{site_key}:{product['id']}"
         old_product = old_products.get(key) or {}
         old_stocks = old_product.get("stocks") or {}
         try:
             if product["visibility"] == "PRE-PUBLISH" or product["store_count"] > 0:
-                stocks = get_target_store_stocks(site_key, config, product["sku"], session, old_stocks=old_stocks)
+                stocks = get_target_store_stocks(
+                    site_key,
+                    config,
+                    product["sku"],
+                    session,
+                    old_stocks=old_stocks,
+                )
             else:
                 stocks = zero_known_stocks(old_stocks)
         except Exception as error:
             errors += 1
-            print(f"LOCAL STOCK {site['label']} availability-fejl for {product['name']}: {error}")
+            print(
+                f"LOCAL STOCK {site['label']} availability-fejl for "
+                f"{product['name']}: {error}"
+            )
             continue
-        observations[key] = {**product, "site": site["label"], "stocks": stocks, "observed_at": datetime.now(timezone.utc).isoformat()}
-    pre_publish_count = sum(1 for product in candidates if product["visibility"] == "PRE-PUBLISH")
-    positive_products = sum(1 for product in observations.values() if any(safe_int(store.get("stock"), 0) > 0 for store in (product.get("stocks") or {}).values()))
-    print(f"LOCAL STOCK {site['label']}: {raw_hits} Algolia hits | {len(candidates)} relevante candidates | {pre_publish_count} PRE-PUBLISH | {positive_products} med lokal stock | {errors} availability-fejl")
+
+        observations[key] = {
+            **product,
+            "site": site["label"],
+            "stocks": stocks,
+            "observed_at": datetime.now(timezone.utc).isoformat(),
+        }
+
+    pre_publish_count = sum(
+        1 for product in candidates if product["visibility"] == "PRE-PUBLISH"
+    )
+    positive_products = sum(
+        1
+        for product in observations.values()
+        if any(
+            safe_int(store.get("stock"), 0) > 0
+            for store in (product.get("stocks") or {}).values()
+        )
+    )
+    print(
+        f"LOCAL STOCK {site['label']}: {raw_hits} Algolia hits | "
+        f"{len(candidates)} relevante candidates | "
+        f"{pre_publish_count} PRE-PUBLISH | "
+        f"{positive_products} med lokal stock | "
+        f"{errors} availability-fejl"
+    )
     return observations, errors
+
 
 def main():
     old_state = load_state()
@@ -322,37 +609,81 @@ def main():
     next_products = dict(old_products)
     total_errors = 0
     fresh_keys = set()
-    for site_key in ("bilka", "foetex"):
+
+    for site_key in ("br", "bilka", "foetex"):
+        site_had_baseline = any(
+            key.startswith(f"{site_key}:")
+            for key in old_products
+        )
+
         try:
             observations, errors = scan_site(site_key, old_products)
         except Exception as error:
             total_errors += 1
             print(f"LOCAL STOCK {site_key.upper()} KILDEFEJL: {error}")
             continue
+
         total_errors += errors
         next_products.update(observations)
         fresh_keys.update(observations.keys())
-        if not baseline_complete:
+
+        # A newly added retailer gets one silent baseline even when the shared
+        # state already has baseline_complete=True for older retailers. This
+        # prevents a one-time storm of all existing BR stock when BR is enabled.
+        if not baseline_complete or not site_had_baseline:
+            if baseline_complete and observations:
+                print(
+                    f"LOCAL STOCK {SITES[site_key]['label']}: "
+                    "ny kilde baseline oprettet uden alerts."
+                )
             continue
+
         for key, product in observations.items():
             old_product = old_products.get(key) or {}
             old_stocks = old_product.get("stocks") or {}
             transitions = []
+
             for store_id, store in (product.get("stocks") or {}).items():
                 new_stock = max(0, safe_int(store.get("stock"), 0))
                 if new_stock <= 0:
                     continue
-                old_stock = max(0, safe_int((old_stocks.get(store_id) or {}).get("stock"), 0))
+                old_stock = max(
+                    0,
+                    safe_int((old_stocks.get(store_id) or {}).get("stock"), 0),
+                )
                 if old_stock <= 0:
-                    transitions.append({"id": store_id, "name": store.get("name") or store_id, "old": old_stock, "new": new_stock})
+                    transitions.append(
+                        {
+                            "id": store_id,
+                            "name": store.get("name") or store_id,
+                            "old": old_stock,
+                            "new": new_stock,
+                        }
+                    )
+
             if transitions:
                 send_local_alert(product, transitions)
-    next_state = {"version": 1, "baseline_complete": True, "products": next_products, "last_run": datetime.now(timezone.utc).isoformat(), "last_run_errors": total_errors}
+
+    next_state = {
+        "version": 1,
+        "baseline_complete": True,
+        "products": next_products,
+        "last_run": datetime.now(timezone.utc).isoformat(),
+        "last_run_errors": total_errors,
+    }
     save_state(next_state)
+
     if not baseline_complete:
-        print("LOCAL STOCK: baseline oprettet uden alerts. Fremtidige 0 -> positiv / nye positive fund alarmeres.")
+        print(
+            "LOCAL STOCK: baseline oprettet uden alerts. "
+            "Fremtidige 0 -> positiv / nye positive fund alarmeres."
+        )
     else:
-        print(f"LOCAL STOCK: scan færdig | {len(fresh_keys)} friske produktobservationer | {total_errors} fejl")
+        print(
+            f"LOCAL STOCK: scan færdig | {len(fresh_keys)} "
+            f"friske produktobservationer | {total_errors} fejl"
+        )
+
 
 if __name__ == "__main__":
     main()
