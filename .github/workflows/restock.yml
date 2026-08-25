@@ -19,6 +19,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
         with:
+          # workflow_dispatch may wait behind the previous scan. Resolve main
+          # when the job actually starts instead of checking out its stale event SHA.
+          ref: main
           fetch-depth: 0
 
       - name: Set up Python
