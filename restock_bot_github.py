@@ -34,6 +34,10 @@ from zoneinfo import ZoneInfo
 WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL", "").strip()
 PRICE_WATCH_WEBHOOK_URL = os.getenv("PRICE_WATCH_WEBHOOK_URL", "").strip()
 PRICE_HISTORY_WEBHOOK_URL = os.getenv("PRICE_HISTORY_WEBHOOK_URL", "").strip()
+SCANNER_HEALTH_WEBHOOK_URL = os.getenv(
+    "SCANNER_HEALTH_WEBHOOK_URL",
+    "",
+).strip()
 
 # Persistent alert memory is hydrated from state before scanning starts.
 # It prevents a flapping source from repeating the same Discord alert.
@@ -110,7 +114,6 @@ SOURCE_MIN_PRODUCTS = {
     "kelz0r": 20,
     "faraos": 5,
     "goblingames": 10,
-    "zzgames": 3,
     "hyggeonkel": 5,
     "nostalgic": 5,
     "andcards": 5,
@@ -473,12 +476,15 @@ SHOPIFY_SITES = {
             {"game": None, "path": "/collections/all/products.json"}
         ]
     },
+}
+
+# ZZGames has returned zero usable products for hundreds of consecutive runs.
+# Preserve its historical state, but do not spend requests or report stale data
+# as a live source until a verified public feed exists again.
+RETIRED_SHOPIFY_SITES = {
     "zzgames": {
         "label": "ZZGAMES",
-        "base": "https://www.zzgames.dk",
-        "feeds": [
-            {"game": "POKÉMON", "path": "/collections/tcg-pokemon/products.json"}
-        ]
+        "reason": "Retired V45: public feed has no reliable sealed catalog",
     }
 }
 
@@ -526,6 +532,8 @@ WOOCOMMERCE_SITES = {
     "pocketmonster": {
         "label": "POCKET MONSTER",
         "base": "https://pocketmonster.dk",
+        "request_retries": 2,
+        "retry_backoff_seconds": 2,
         "categories": {},
         "searches": {
             "POKÉMON": ["booster", "elite trainer", "tin", "collection", "box"]
@@ -1276,6 +1284,29 @@ def _source_health_update(state_target, source_key, **updates):
     return entry
 
 
+def send_scanner_health(message):
+    """Keep operational noise out of Restock unless an admin webhook exists."""
+    print("SCANNER HEALTH:", re.sub(r"\s+", " ", str(message)).strip())
+    if not SCANNER_HEALTH_WEBHOOK_URL:
+        return False
+
+    try:
+        response = requests.post(
+            SCANNER_HEALTH_WEBHOOK_URL,
+            json={
+                "content": str(message)[:2000],
+                "username": "MasterBot Health",
+                "allowed_mentions": {"parse": []},
+            },
+            timeout=20,
+        )
+        response.raise_for_status()
+        return True
+    except requests.RequestException as error:
+        print("SCANNER HEALTH webhook-fejl:", error)
+        return False
+
+
 def _source_failure(state_target, source_key, error, observed_count=None):
     old_entry = (state_target.get("_source_health") or {}).get(source_key) or {}
     failures = safe_int(old_entry.get("consecutive_failures"), 0) + 1
@@ -1290,7 +1321,7 @@ def _source_failure(state_target, source_key, error, observed_count=None):
     )
 
     if failures == 3:
-        send_discord(
+        send_scanner_health(
             "⚠️ **SCANNERKILDE HAR FEJLET 3 GANGE**\n"
             f"**{source_key.upper()}**\n"
             f"Fejl: {entry['last_error']}"
@@ -1345,7 +1376,7 @@ def fetch_source_products(source_key, old_products, fetcher, state_target):
     )
 
     if was_failed:
-        send_discord(
+        send_scanner_health(
             "✅ **SCANNERKILDE KØRER IGEN**\n"
             f"**{source_key.upper()}**\n"
             f"Produkter fundet: {new_count}"
@@ -1553,6 +1584,43 @@ def filter_restock_alert_products(products, game_override=None):
     }
 
 
+def new_product_alert_allowed(product):
+    """Only announce a new catalog item when it is actionable now."""
+    product = product or {}
+
+    if product.get("preorder"):
+        return True
+
+    if product.get("in_stock") is True or product.get("online_stock") is True:
+        return True
+
+    stock = product.get("stock")
+    if isinstance(stock, (int, float)) and stock > 0:
+        return True
+    if str(stock or "").strip().upper() in {
+        "PÅ LAGER",
+        "PA LAGER",
+        "IN STOCK",
+        "AVAILABLE",
+    }:
+        return True
+
+    for key in (
+        "online_count",
+        "store_count",
+        "kolding_stock",
+        "esbjerg_stock",
+    ):
+        if safe_int(product.get(key), 0) > 0:
+            return True
+
+    for store in (product.get("local_stocks") or {}).values():
+        if safe_int((store or {}).get("stock"), 0) > 0:
+            return True
+
+    return False
+
+
 # ============================================================
 # PRICE WATCH - PRODUKTTYPER
 # ============================================================
@@ -1589,6 +1657,17 @@ def get_price_watch_type(name, game):
         "yu-gi-oh",
         "yugioh"
     )
+
+    if game == "POKÉMON" and any(
+        marker in text
+        for marker in (
+            "checklane",
+            "check lane",
+            "battle deck",
+            "battledeck",
+        )
+    ):
+        return None
 
     if any(word in text for word in blocked):
         return None
@@ -2680,7 +2759,10 @@ def send_price_watch_change(
 
     headline = "🔥 **BEDRE PRIS FUNDET**"
 
-    top = products[:3]
+    top = sorted(
+        products,
+        key=lambda product: (product["price"], product["shop"]),
+    )[:2]
     ranking_lines = []
 
     for index, product in enumerate(
@@ -2690,7 +2772,6 @@ def send_price_watch_change(
         medal = {
             1: "🥇",
             2: "🥈",
-            3: "🥉"
         }.get(index, "•")
 
         ranking_lines.append(
@@ -2710,16 +2791,6 @@ def send_price_watch_change(
         else ""
     )
 
-    opportunity = calculate_opportunity_score(
-        product_key,
-        products,
-        history_state=history_state,
-    )
-    score_line = (
-        f"\n🎯 {opportunity_score_icon(opportunity['score'])} "
-        f"**{opportunity['score']}/100 · {opportunity['label']}**"
-    )
-
     link_line = (
         f"\n🔗 {best['url']}"
         if best.get("url")
@@ -2734,7 +2805,6 @@ def send_price_watch_change(
         f"{language_line}\n"
         f"{change_line}\n\n"
         + "\n".join(ranking_lines)
-        + score_line
         + link_line
     )
 
@@ -2818,11 +2888,6 @@ def send_price_watch_daily_summary(
         ):
             continue
 
-        opportunity = calculate_opportunity_score(
-            product_key,
-            products,
-            history_state=history_state,
-        )
         signals_by_game[game].append({
             "product_key": product_key,
             "best": best,
@@ -2830,8 +2895,11 @@ def send_price_watch_daily_summary(
             "next_price": next_price,
             "saving_dkk": saving_dkk,
             "saving_pct": saving_pct,
-            "opportunity": opportunity,
         })
+
+    if not any(signals_by_game.values()):
+        print("PRICE WATCH: ingen tydelige prisfordele i dag; Discord springes over.")
+        return False
 
     lines = [
         "🎯 **DAGENS KØBSOVERSIGT**",
@@ -2846,7 +2914,6 @@ def send_price_watch_daily_summary(
         signals = sorted(
             signals_by_game[game],
             key=lambda row: (
-                row["opportunity"]["score"],
                 row["saving_pct"],
                 row["saving_dkk"],
             ),
@@ -2863,15 +2930,13 @@ def send_price_watch_daily_summary(
         for index, signal in enumerate(signals, start=1):
             info = parse_price_watch_key(signal["product_key"])
             shops = " + ".join(signal["shops"])
-            opportunity = signal["opportunity"]
             lines.append(
-                f"{index}. {opportunity_score_icon(opportunity['score'])} "
-                f"**{opportunity['score']}/100 · "
-                f"{price_watch_display_name(signal['product_key'])} · "
+                f"{index}. **{price_watch_display_name(signal['product_key'])} · "
                 f"{price_watch_type_label(info['type'])}** — "
                 f"{format_price(signal['best']['price'])} hos {shops} · "
                 f"næste {format_price(signal['next_price'])} · "
-                f"spar **{signal['saving_pct']:.0f}%**"
+                f"spar **{format_price(signal['saving_dkk'])} "
+                f"({signal['saving_pct']:.0f}%)**"
             )
             signal_count += 1
 
@@ -2979,9 +3044,9 @@ def process_price_watch(
             now_local,
             history_state=history_state,
         )
-
-        if daily_sent:
-            last_daily_date = today
+        # Mark the daily evaluation complete even on a quiet day. This avoids
+        # an empty digest every five minutes while keeping intraday alerts on.
+        last_daily_date = today
 
     # V4: Negative ændringer kræver både eksplicit kildebevis og to
     # ens scans. En vare, der blot mangler fra et frisk kategori-feed,
@@ -3915,6 +3980,12 @@ def _price_history_daily_summary(products, active_keys, now_local, started_at):
             continue
         selected_by_game[game][row["signal_kind"]].append(row)
 
+    if not selected_rows:
+        print("PRICE HISTORY: ingen nye signaler; Discord-embed springes over.")
+        if now_local.weekday() == 6:
+            return _send_price_history_csv(products, active_keys, now_local)
+        return False
+
     lines = [
         (
             f"*{now_local.strftime('%d.%m.%Y')} · kun nye, dokumenterede "
@@ -3924,12 +3995,11 @@ def _price_history_daily_summary(products, active_keys, now_local, started_at):
 
     for game in ("POKÉMON", "LORCANA"):
         game_signals = selected_by_game[game]
+        if not game_signals["buy"] and not game_signals["wait"]:
+            continue
+
         lines.append("")
         lines.append(f"**{price_watch_game_label(game)}**")
-
-        if not game_signals["buy"] and not game_signals["wait"]:
-            lines.append("• Ingen nye signaler i dag")
-            continue
 
         if game_signals["buy"]:
             lines.append("🟢 **SLÅ TIL**")
@@ -3959,16 +4029,10 @@ def _price_history_daily_summary(products, active_keys, now_local, started_at):
                     f"{row['diff']:.0f}% over historisk low"
                 )
 
-    if not selected_rows:
-        lines.append("")
-        lines.append(
-            "✅ Ingen nye købssignaler eller tydelige afvent-priser i dag."
-        )
-
     embed = {
         "title": "🎯 PRISUDVIKLING & KØBSSIGNALER",
         "description": "\n".join(lines)[:4096],
-        "color": 0x2ECC71 if selected_rows else 0x95A5A6,
+        "color": 0x2ECC71,
         "footer": {
             "text": (
                 "Slå til = højst 3% over historisk low · "
@@ -6468,15 +6532,7 @@ def get_shopify_products(site_key):
             if not game:
                 continue
 
-            relevance_raw = raw
-            if site_key == "zzgames":
-                relevance_raw = dict(raw)
-                tags = relevance_raw.get("tags") or []
-                if not isinstance(tags, list):
-                    tags = [tags]
-                relevance_raw["tags"] = [*tags, "Pokemon"]
-
-            if not is_relevant_shopify_tcg(relevance_raw, game):
+            if not is_relevant_shopify_tcg(raw, game):
                 continue
 
             product_id = str(raw.get("id", "")).strip()
@@ -6738,27 +6794,56 @@ def fetch_woocommerce_category(base, category_id, trust_total_pages=True):
     return list(collected.values())
 
 
-def fetch_woocommerce_search(base, search_term, max_pages=5):
+def fetch_woocommerce_search(
+    base,
+    search_term,
+    max_pages=5,
+    request_retries=0,
+    retry_backoff_seconds=2,
+):
     """Targeted Woo Store API search for shops with huge mixed catalogs."""
     collected = {}
 
     for page in range(1, max_pages + 1):
-        response = requests.get(
-            base + WOOCOMMERCE_API_PATH,
-            headers={
-                **BROWSER_HEADERS,
-                "Accept": "application/json,text/plain,*/*"
-            },
-            params={
-                "search": search_term,
-                "per_page": WOOCOMMERCE_PAGE_SIZE,
-                "page": page,
-                "orderby": "id",
-                "order": "desc"
-            },
-            timeout=30
-        )
-        response.raise_for_status()
+        response = None
+        for attempt in range(request_retries + 1):
+            try:
+                response = requests.get(
+                    base + WOOCOMMERCE_API_PATH,
+                    headers={
+                        **BROWSER_HEADERS,
+                        "Accept": "application/json,text/plain,*/*"
+                    },
+                    params={
+                        "search": search_term,
+                        "per_page": WOOCOMMERCE_PAGE_SIZE,
+                        "page": page,
+                        "orderby": "id",
+                        "order": "desc"
+                    },
+                    timeout=30
+                )
+                response.raise_for_status()
+                break
+            except requests.RequestException as error:
+                status = getattr(getattr(error, "response", None), "status_code", None)
+                retryable = (
+                    isinstance(error, (requests.Timeout, requests.ConnectionError))
+                    or status == 429
+                    or (status is not None and status >= 500)
+                )
+                if not retryable or attempt >= request_retries:
+                    raise
+
+                delay = retry_backoff_seconds * (2 ** attempt)
+                print(
+                    "WOOCOMMERCE retry: "
+                    f"{base} search={search_term!r} page={page} "
+                    f"attempt={attempt + 2}/{request_retries + 1} "
+                    f"after={delay}s error={error}"
+                )
+                time.sleep(delay)
+
         page_products = response.json()
 
         if not isinstance(page_products, list) or not page_products:
@@ -8186,6 +8271,11 @@ def get_woocommerce_products(site_key):
                     site["base"],
                     search_term,
                     max_pages=site.get("search_max_pages", 5),
+                    request_retries=site.get("request_retries", 0),
+                    retry_backoff_seconds=site.get(
+                        "retry_backoff_seconds",
+                        2,
+                    ),
                 ),
             )
 
@@ -9193,7 +9283,7 @@ def process_coolshop_changes(
 
     # NYE PRODUKTER
     for url, product in new_products.items():
-        if url not in old_products:
+        if url not in old_products and new_product_alert_allowed(product):
             send_discord(
                 f"🆕 **[{product['game']}] NYT FUNDET PÅ COOLSHOP**\n"
                 f"**{product['name']}**\n"
@@ -9264,7 +9354,10 @@ def process_proshop_changes(
 
     # NYE PRODUKTER
     for product_id, product in new_products.items():
-        if product_id not in old_products:
+        if (
+            product_id not in old_products
+            and new_product_alert_allowed(product)
+        ):
             send_discord(
                 "🆕 **[POKÉMON] NYT PÅ PROSHOP**\n"
                 f"**{product['name']}**\n"
@@ -9378,7 +9471,10 @@ def process_br_changes(
 
     # NYE PRODUKTER
     for product_id, product in new_products.items():
-        if product_id not in old_products:
+        if (
+            product_id not in old_products
+            and new_product_alert_allowed(product)
+        ):
             send_discord(
                 "🆕 **[POKÉMON] NYT PÅ BR**\n"
                 f"**{product['name']}**\n"
@@ -9586,7 +9682,10 @@ def process_salling_changes(
 
     # NYE PRODUKTER
     for product_id, product in new_products.items():
-        if product_id not in old_products:
+        if (
+            product_id not in old_products
+            and new_product_alert_allowed(product)
+        ):
             send_discord(
                 f"🆕 **[POKÉMON] NYT PÅ {label}**\n"
                 f"**{product['name']}**\n"
@@ -9776,7 +9875,10 @@ def process_elgiganten_changes(old_products, new_products):
     new_products = filter_restock_alert_products(new_products, "POKÉMON")
 
     for product_id, product in new_products.items():
-        if product_id not in old_products:
+        if (
+            product_id not in old_products
+            and new_product_alert_allowed(product)
+        ):
             send_discord(
                 "🆕 **[POKÉMON] NYT PÅ ELGIGANTEN**\n"
                 f"**{product['name']}**\n"
@@ -9925,6 +10027,8 @@ def process_shopify_changes(site_key, old_products, new_products):
     for product_id, product in new_products.items():
         if product_id in old_products:
             continue
+        if not new_product_alert_allowed(product):
+            continue
 
         game = product.get("game", "TCG")
 
@@ -10005,6 +10109,8 @@ def process_woocommerce_changes(site_key, old_products, new_products):
     for product_id, product in new_products.items():
         if product_id in old_products:
             continue
+        if not new_product_alert_allowed(product):
+            continue
 
         game = product.get("game", "TCG")
 
@@ -10071,6 +10177,8 @@ def process_nextlevel_changes(old_products, current_products):
         old = old_products.get(product_id)
 
         if old is None:
+            if not new_product_alert_allowed(product):
+                continue
             if product.get("preorder"):
                 headline = (
                     f"🚨 **[{product['game']}] NY FORUDBESTILLING HOS {label}**"
@@ -10139,6 +10247,8 @@ def process_epicpanda_changes(
     # Nye produkter / nye preorders
     for product_id, product in new_products.items():
         if product_id in old_products:
+            continue
+        if not new_product_alert_allowed(product):
             continue
 
         game = product.get(
@@ -10241,6 +10351,8 @@ def process_steffeno_changes(
     # Nye produkter / nye preorders
     for product_id, product in new_products.items():
         if product_id in old_products:
+            continue
+        if not new_product_alert_allowed(product):
             continue
 
         if product.get(
@@ -11158,6 +11270,26 @@ while True:
                     f"{site['label']} fejl:",
                     error
                 )
+
+        for site_key, site in RETIRED_SHOPIFY_SITES.items():
+            old_products = old_shopify_all.get(site_key, {})
+            new_shopify_all[site_key] = old_products
+            _source_health_update(
+                new_state,
+                site_key,
+                status="retired",
+                consecutive_failures=0,
+                last_error=site["reason"],
+                observed_count=(
+                    len(old_products)
+                    if isinstance(old_products, dict)
+                    else 0
+                ),
+            )
+            print(
+                f"{site['label']}: retired fra aktiv scanning; "
+                "historisk state bevares og bruges ikke i Price-kanalerne."
+            )
 
         new_state["shopify"] = new_shopify_all
 

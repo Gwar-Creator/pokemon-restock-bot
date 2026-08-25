@@ -37,7 +37,6 @@ SOURCE_MINIMUMS = {
     "kelz0r": 20,
     "faraos": 5,
     "goblingames": 10,
-    "zzgames": 3,
     "hyggeonkel": 5,
     "nostalgic": 5,
     "andcards": 5,
@@ -67,7 +66,6 @@ SHOPIFY = {
     "pbcards",
     "vaulted",
     "pokedexet",
-    "zzgames",
 }
 WOOCOMMERCE = {
     "nostalgic",

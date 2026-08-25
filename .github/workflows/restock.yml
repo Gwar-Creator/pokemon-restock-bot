@@ -166,6 +166,7 @@ jobs:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           PRICE_WATCH_WEBHOOK_URL: ${{ secrets.PRICE_WATCH_WEBHOOK_URL }}
           PRICE_HISTORY_WEBHOOK_URL: ${{ secrets.PRICE_HISTORY_WEBHOOK_URL }}
+          SCANNER_HEALTH_WEBHOOK_URL: ${{ secrets.SCANNER_HEALTH_WEBHOOK_URL }}
           RUN_ONCE: "1"
         run: python restock_bot_github.py
 
@@ -195,7 +196,6 @@ jobs:
         env:
           TCG_CARDMARKET_API_KEY: ${{ secrets.TCG_CARDMARKET_API_KEY }}
           CARDMARKET_WEBHOOK_URL: ${{ secrets.CARDMARKET_WEBHOOK_URL }}
-          PRICE_HISTORY_WEBHOOK_URL: ${{ secrets.PRICE_HISTORY_WEBHOOK_URL }}
           CARDMARKET_TIMEZONE: "Europe/Copenhagen"
           CARDMARKET_DAILY_HOUR: "8"
           CARDMARKET_MAX_DAILY_REQUESTS: "98"
