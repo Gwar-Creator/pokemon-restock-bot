@@ -32,6 +32,10 @@ Læs altid de live filer i GitHub. Stol ikke alene på en ældre chat, lokal kop
 - Price Watch er handlingsorienteret og skal være kompakt.
 - Price History bevarer statistik, men Discord-output skal være let; fuld detalje hører til data/CSV.
 - Webhooks, tokens og andre secrets må aldrig skrives i kode, logs, dokumentation eller commits.
+- Discord-oprydning køres af `discord_cleanup.py` før hovedscannet. Den sletter
+  kun ikke-fastgjorte webhook-/botopslag, der er ældre end 24 timer; pris- og
+  lagerhistorik i state påvirkes ikke. Oprydning er fail-open, så scannerne
+  fortsætter ved Discord-fejl.
 
 ## Overvågede kilder
 
@@ -190,6 +194,8 @@ Gode næste trin, som skal indføres enkeltvis og sikkert:
 - 2026-08-21: V30 retired CardstoreCPH fra aktiv scanning efter 0 relevante sealed produkter; historisk state bevares, og sealed-filteret blev ikke svækket.
 - 2026-08-21: V31 tilføjede Fun-shop, PokéPulls, Staalz, PBCards og KoCardz som Wave 3-kilder med platformstilpassede feeds og uden at ændre de eksisterende sealed-/sprogfiltre.
 - 2026-08-21: V38 tilføjede Kelz0r, Faraos, Goblin Games, ZZGames og Hyggeonkel som den sidste butiksekspansions-wave for nu; Bog & idé blev udskudt under platformsmigrering, og Bræt & Brikker blev fravalgt som lukket.
+- 2026-08-25: Automatisk Discord-retention blev tilføjet: webhook-/botopslag
+  ældre end 24 timer ryddes, mens pinned og manuelle opslag bevares.
 - Lav-signal-produkter skal normalt forblive i state, men ikke sendes til Discord.
 
 ## Kommunikation
