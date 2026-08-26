@@ -1,0 +1,145 @@
+name: Card Market Watch
+
+on:
+  workflow_dispatch:
+    inputs:
+      test_webhook:
+        description: "Send kun en sikker Discord-test uden Cardmarket API-kald"
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pokemon-cardmarket-watch
+  cancel-in-progress: false
+
+jobs:
+  cardmarket:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Validate Cardmarket watcher
+        run: |
+          python -m py_compile cardmarket_chase_watch.py
+          if [ -f cardmarket_v16_replay.py ]; then
+            python -m py_compile cardmarket_v16_replay.py
+          fi
+
+      - name: Test Cardmarket Discord webhook
+        if: ${{ inputs.test_webhook == true }}
+        env:
+          CARDMARKET_WEBHOOK_URL: ${{ secrets.CARDMARKET_WEBHOOK_URL }}
+        run: |
+          python - <<'PY'
+          import os
+          import requests
+
+          webhook = os.environ.get("CARDMARKET_WEBHOOK_URL", "").strip()
+          if not webhook:
+              raise RuntimeError("CARDMARKET_WEBHOOK_URL mangler")
+
+          payload = {
+              "username": "MasterBot",
+              "allowed_mentions": {"parse": []},
+              "embeds": [
+                  {
+                      "title": "✅ Cardmarket webhook virker",
+                      "description": (
+                          "Kanalen er forbundet korrekt. Denne test bruger "
+                          "ingen Cardmarket API-kald."
+                      ),
+                      "color": 0x57F287,
+                      "footer": {"text": "MasterBot · Card Market Watch"},
+                  }
+              ],
+          }
+          response = requests.post(webhook, json=payload, timeout=30)
+          response.raise_for_status()
+          print("CARD MARKET: Discord webhook test OK")
+          PY
+
+      - name: Run daily Card Market Watch
+        if: ${{ inputs.test_webhook != true }}
+        env:
+          TCG_CARDMARKET_API_KEY: ${{ secrets.TCG_CARDMARKET_API_KEY }}
+          CARDMARKET_WEBHOOK_URL: ${{ secrets.CARDMARKET_WEBHOOK_URL }}
+          CARDMARKET_TIMEZONE: "Europe/Copenhagen"
+          CARDMARKET_DAILY_HOUR: "8"
+          CARDMARKET_MAX_DAILY_REQUESTS: "98"
+          CARDMARKET_ROTATION_DAYS: "3"
+          CARDMARKET_FORCE_RUN: "0"
+        run: |
+          if [ -f cardmarket_v16_replay.py ]; then
+            python cardmarket_v16_replay.py
+          fi
+          python cardmarket_chase_watch.py
+
+      - name: Save Cardmarket state
+        if: ${{ inputs.test_webhook != true }}
+        run: |
+          if [ ! -f cardmarket_chase_state.json ]; then
+            echo "No Cardmarket state produced."
+            exit 1
+          fi
+
+          if git diff --quiet -- cardmarket_chase_state.json; then
+            echo "No Cardmarket state changes to save."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          STATE_BACKUP="$(mktemp -d)"
+          cp cardmarket_chase_state.json "$STATE_BACKUP/cardmarket_chase_state.json"
+
+          for attempt in 1 2 3 4 5; do
+            echo "Cardmarket state push attempt $attempt/5"
+
+            git fetch origin main
+            git reset --hard origin/main
+            cp "$STATE_BACKUP/cardmarket_chase_state.json" cardmarket_chase_state.json
+            git add cardmarket_chase_state.json
+
+            if git diff --cached --quiet; then
+              echo "Cardmarket state already current on main."
+              rm -rf "$STATE_BACKUP"
+              exit 0
+            fi
+
+            git commit -m "Update Cardmarket state"
+
+            if git push origin HEAD:main; then
+              echo "Cardmarket state pushed successfully."
+              rm -rf "$STATE_BACKUP"
+              exit 0
+            fi
+
+            echo "Push raced with another workflow; retrying from latest main."
+            if [ "$attempt" -lt 5 ]; then
+              sleep $((attempt * 5))
+            fi
+          done
+
+          rm -rf "$STATE_BACKUP"
+          echo "Failed to push Cardmarket state after 5 fresh-main attempts."
+          exit 1

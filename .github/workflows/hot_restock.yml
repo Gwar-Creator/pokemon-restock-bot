@@ -71,7 +71,7 @@ jobs:
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           HOT_ITERATIONS: "5"
-          HOT_INTERVAL_SECONDS: "60"
+          HOT_INTERVAL_SECONDS: "55"
         run: |
           (
             for iteration in 1 2 3 4 5; do
@@ -86,7 +86,7 @@ jobs:
               fi
 
               if [ "$iteration" -lt 5 ]; then
-                sleep 60
+                sleep 55
               fi
             done
           ) &
