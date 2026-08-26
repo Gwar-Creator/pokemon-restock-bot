@@ -125,6 +125,9 @@ jobs:
           if [ -f patch_v45_salling_discovery.py ]; then
             python patch_v45_salling_discovery.py
           fi
+          if [ -f patch_v46_unified_abundant_set_policy.py ]; then
+            python patch_v46_unified_abundant_set_policy.py
+          fi
 
       - name: Validate Python
         run: |
@@ -134,11 +137,13 @@ jobs:
           python -m py_compile cardmarket_chase_watch.py
           python -m py_compile discord_cleanup.py
           python -m unittest test_discord_cleanup.py
+          python -m unittest test_alert_policy.py
           python -m py_compile retailer_probe_v24.py
           python -m py_compile preview_price_channels_v25.py
           python -m py_compile patch_v43_restock_sanitation.py
           python -m py_compile patch_v44_replay_guard.py
           python -m py_compile patch_v45_salling_discovery.py
+          python -m py_compile patch_v46_unified_abundant_set_policy.py
           if [ -f cardmarket_v16_replay.py ]; then
             python -m py_compile cardmarket_v16_replay.py
           fi
