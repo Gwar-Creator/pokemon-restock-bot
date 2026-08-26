@@ -6,6 +6,7 @@ from urllib.parse import urlencode, urljoin
 
 import requests
 from bs4 import BeautifulSoup
+from alert_policy import abundant_set_signal_allowed
 
 WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL", "").strip()
 STATE_FILE = "local_stock_state_v1.json"
@@ -497,6 +498,14 @@ def canonical_salling_product_key(product):
 
 def send_discovery_alert(products):
     """Send one clearly separated PRE-PUBLISH discovery alert per Salling SKU."""
+    # V46_UNIFIED_ABUNDANT_SET_POLICY
+    products = [
+        product for product in products
+        if abundant_set_signal_allowed(
+            product.get("name"),
+            product.get("series"),
+        )
+    ]
     if not WEBHOOK_URL:
         raise RuntimeError("DISCORD_WEBHOOK_URL mangler")
     if not products:
@@ -549,6 +558,12 @@ def send_discovery_alert(products):
     response.raise_for_status()
 
 def send_local_alert(product, transitions):
+    # V46_UNIFIED_ABUNDANT_SET_POLICY
+    if not abundant_set_signal_allowed(
+        product.get("name"),
+        product.get("series"),
+    ):
+        return
     if not WEBHOOK_URL:
         raise RuntimeError("DISCORD_WEBHOOK_URL mangler")
 

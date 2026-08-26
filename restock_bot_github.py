@@ -19,6 +19,7 @@ import base64
 import html
 import hashlib
 import unicodedata
+from alert_policy import abundant_set_signal_allowed
 from pathlib import Path
 
 from bs4 import BeautifulSoup
@@ -1494,6 +1495,15 @@ def restock_alert_allowed(product, game_override=None):
     """Keep low-signal products in state, but silence them on Discord."""
     name = str((product or {}).get("name", "")).lower()
     game = game_override or (product or {}).get("game")
+
+    # V46_UNIFIED_ABUNDANT_SET_POLICY
+    # Chaos Rising / Pitch Black low-signal formats stay in state,
+    # but may not create Restock/HOT/Early-Radar Discord alerts.
+    if game == "POKÉMON" and not abundant_set_signal_allowed(
+        name,
+        (product or {}).get("series"),
+    ):
+        return False
 
     # V43_RESTOCK_SANITATION
     # Keep the 5-minute Discord channel focused on useful sealed restocks.
