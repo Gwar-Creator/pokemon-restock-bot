@@ -1,11 +1,11 @@
 {
-  "candidate_lines": 373,
-  "coverage_pct": 72.9,
+  "candidate_lines": 374,
+  "coverage_pct": 72.7,
   "exact_comparable_groups": 73,
   "likely_alias_pairs": 20,
   "matched_lines": 272,
-  "normalized_keys": 174,
-  "single_shop_keys": 101,
+  "normalized_keys": 175,
+  "single_shop_keys": 102,
   "suspects": [
     {
       "game": "LORCANA",
@@ -440,6 +440,30 @@
       "game": "POKÉMON",
       "language": "EN",
       "left_names": [
+        "Booster Pack – ME02.5 Ascended Heroes",
+        "Pokemon TCG: Ascended Heroes Booster Pack"
+      ],
+      "left_set": "ascended heroes",
+      "left_shops": [
+        "FUN-SHOP",
+        "POKECARDS.DK",
+        "POKEHULEN",
+        "POKEMONS.DK"
+      ],
+      "right_names": [
+        "Ascended Heroes: Booster Pakke"
+      ],
+      "right_set": "ascended heroes pakke",
+      "right_shops": [
+        "POKEMONPORTALEN"
+      ],
+      "similarity": 0.94,
+      "type": "BOOSTER PACK"
+    },
+    {
+      "game": "POKÉMON",
+      "language": "EN",
+      "left_names": [
         "Destined Rivals Booster Bundle",
         "Pokemon Booster Bundle - Scarlet & Violet Destined Rivals"
       ],
@@ -529,29 +553,6 @@
       ],
       "similarity": 0.94,
       "type": "BOOSTER PACK"
-    },
-    {
-      "game": "POKÉMON",
-      "language": "EN",
-      "left_names": [
-        "Journey Together Elite Trainer Box",
-        "Pokémon TCG: Journey Together Elite Trainer Box"
-      ],
-      "left_set": "journey together",
-      "left_shops": [
-        "MTGWEBSHOP",
-        "POCKET MONSTER",
-        "ROGERZ"
-      ],
-      "right_names": [
-        "Pokémon Journey Together Elite Trainer Box (ETB) – Sealed (SV09)"
-      ],
-      "right_set": "journey together etb",
-      "right_shops": [
-        "STAALZ"
-      ],
-      "similarity": 0.94,
-      "type": "ETB"
     }
   ],
   "version": 1
