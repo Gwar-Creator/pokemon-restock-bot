@@ -1,6 +1,12 @@
 name: Card Market Watch
 
 on:
+  schedule:
+    # GitHub cron uses UTC. Running at both 06:15 and 07:15 UTC keeps the
+    # existing Europe/Copenhagen 08:00 gate correct across summer/winter time.
+    # The watcher itself exits before 08:00 local time and after today's run,
+    # so only one API-backed Cardmarket scan is performed per day.
+    - cron: "15 6,7 * * *"
   workflow_dispatch:
     inputs:
       test_webhook:
