@@ -1,54 +1,49 @@
 import re
-from html import unescape
-from urllib.parse import quote, urljoin
+from pathlib import Path
+from urllib.parse import quote
 
 import requests
-from bs4 import BeautifulSoup
 
 try:
     from curl_cffi import requests as curl_requests
 except ImportError:
     curl_requests = None
 
+ROOT = Path(__file__).resolve().parent
+SHARED_FILE = ROOT / "restock_bot_github.py"
 BASE = "https://www.proshop.dk"
 AUTOCOMPLETE = BASE + "/ClientPlugins/AutoComplete/SearchResult"
-SEARCH_TERMS = (
-    "Pokemon TCG",
-    "Pokemon booster",
-    "Pokemon collection",
-    "Pokemon Elite Trainer Box",
-    "Ascended Heroes",
-    "Pokemon Ascended Heroes",
-    "First Partner",
-    "Mega Evolution",
-    "30th Pokemon",
-)
-
-PRODUCT_LINK_RE = re.compile(
-    r"(?:https?://(?:www\.)?proshop\.dk)?/Pokemon/([^\"'<>?\s]+)/([0-9]{6,9})",
-    re.IGNORECASE,
-)
+FULL_TERMS = ("Pokemon TCG", "Pokemon booster", "Pokemon collection")
+PAGES = tuple(range(1, 7))
 
 
-def browser_get(url, accept="text/html,*/*"):
+def load_shared_namespace():
+    source = SHARED_FILE.read_text(encoding="utf-8")
+    marker = (
+        "# =========================================================\n"
+        "# START\n"
+        "# ========================================================="
+    )
+    namespace = {"__name__": "proshop_frontend_probe_shared", "__file__": str(SHARED_FILE)}
+    exec(compile(source.split(marker, 1)[0], str(SHARED_FILE), "exec"), namespace)
+    return namespace
+
+
+def browser_get(url):
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/139 Safari/537.36",
-        "Accept": accept,
+        "Accept": "text/html,application/xhtml+xml,*/*;q=0.8",
         "Accept-Language": "da-DK,da;q=0.9,en;q=0.8",
         "Referer": BASE + "/",
-        "X-Requested-With": "XMLHttpRequest",
     }
-
     try:
         response = requests.get(url, headers=headers, timeout=30, allow_redirects=True)
         if response.status_code == 200:
             return response, "requests"
     except Exception:
         pass
-
     if curl_requests is None:
-        return response if "response" in locals() else None, "requests"
-
+        raise RuntimeError("curl_cffi unavailable and plain requests did not return 200")
     response = curl_requests.get(
         url,
         headers=headers,
@@ -56,125 +51,102 @@ def browser_get(url, accept="text/html,*/*"):
         allow_redirects=True,
         impersonate="chrome",
     )
+    response.raise_for_status()
     return response, "curl_cffi"
 
 
-def extract_products(html):
-    products = {}
-    soup = BeautifulSoup(html or "", "html.parser")
-
-    for anchor in soup.find_all("a", href=True):
-        href = unescape(anchor.get("href") or "")
-        match = PRODUCT_LINK_RE.search(href)
-        if not match:
-            continue
-        slug, product_id = match.groups()
-        text = " ".join(anchor.stripped_strings)
-        container = anchor
-        for _ in range(4):
-            parent = getattr(container, "parent", None)
-            if parent is None:
-                break
-            parent_text = " ".join(parent.stripped_strings)
-            if len(parent_text) <= 600:
-                container = parent
-            else:
-                break
-        container_text = " ".join(container.stripped_strings)
-        products[product_id] = {
-            "id": product_id,
-            "slug": slug,
-            "url": urljoin(BASE, href),
-            "anchor_text": text[:220],
-            "context": container_text[:500],
-        }
-
-    # Fallback in case links are present in attributes/script snippets rather
-    # than normal anchors.
-    for slug, product_id in PRODUCT_LINK_RE.findall(html or ""):
-        products.setdefault(
-            product_id,
-            {
-                "id": product_id,
-                "slug": slug,
-                "url": f"{BASE}/Pokemon/{slug}/{product_id}",
-                "anchor_text": "",
-                "context": "",
-            },
-        )
-    return products
+def raw_product_ids(text):
+    return set(re.findall(
+        r"(?:https?://(?:www\.)?proshop\.dk)?/Pokemon/[^\"'<>?\s]+/([0-9]{6,9})",
+        text or "",
+        flags=re.IGNORECASE,
+    ))
 
 
-def probe_autocomplete(term):
-    url = AUTOCOMPLETE + "?searchInput=" + quote(term)
-    response, method = browser_get(url)
-    if response is None:
-        print(f"AUTO {term!r}: no response")
-        return {}
-
-    text = response.text or ""
-    products = extract_products(text)
-    print(
-        f"AUTO {term!r}: method={method} status={response.status_code} "
-        f"bytes={len(response.content)} products={len(products)}"
-    )
-    for product in products.values():
-        print(
-            f"AUTO PRODUCT {term!r} {product['id']}: {product['slug']} | "
-            f"{product['anchor_text']} | {product['context']} | {product['url']}"
-        )
-    return products
-
-
-def probe_full_search(term):
-    url = BASE + "/?s=" + quote(term)
-    response, method = browser_get(url)
-    if response is None:
-        print(f"FULL {term!r}: no response")
-        return {}
-    products = extract_products(response.text or "")
-    print(
-        f"FULL {term!r}: method={method} status={response.status_code} "
-        f"bytes={len(response.content)} products={len(products)}"
-    )
-    for product in list(products.values())[:40]:
-        print(
-            f"FULL PRODUCT {term!r} {product['id']}: {product['slug']} | "
-            f"{product['context']} | {product['url']}"
-        )
-    return products
+def hot_like(name):
+    text = " " + re.sub(r"\s+", " ", str(name or "").lower()).strip() + " "
+    if any(marker in text for marker in (" booster pack ", " sleeved booster ", " sleeve booster ")):
+        return False
+    core = any(marker in text for marker in (" booster bundle ", " booster box ", " booster display "))
+    etb = " elite trainer box " in text or bool(re.search(r"\betb\b", text))
+    collection = any(marker in text for marker in (
+        " premium collection ", " ultra-premium collection ", " ultra premium collection ",
+        " special collection ", " illustration collection ",
+    ))
+    if etb and any(marker in text for marker in (" chaos rising ", " pitch black ")):
+        return False
+    if core or etb or collection:
+        return True
+    if " ultra premium " in text or bool(re.search(r"\bupc\b", text)):
+        return True
+    return any(marker in text for marker in (
+        " first partner ", " 30th anniversary ", " 30th ", " ascended heroes ",
+        " white flare ", " black bolt ",
+    ))
 
 
 def main():
-    all_auto = {}
-    all_full = {}
+    shared = load_shared_namespace()
+    existing = shared["get_proshop_products"]()
+    existing_ids = set(map(str, existing))
+    print(f"DIRECT PROBE existing production route: {len(existing_ids)} parsed TCG")
 
-    for term in SEARCH_TERMS:
-        auto = probe_autocomplete(term)
-        for product_id, product in auto.items():
-            all_auto.setdefault(product_id, product)
+    merged = {}
+    raw_all = set()
 
-    # Full search is heavier; compare the two most useful broad queries plus
-    # the exact set name we care about.
-    for term in ("Pokemon TCG", "Pokemon booster", "Ascended Heroes"):
-        full = probe_full_search(term)
-        for product_id, product in full.items():
-            all_full.setdefault(product_id, product)
+    for term in FULL_TERMS:
+        term_ids = set()
+        term_parsed = {}
+        previous_raw = None
+        for page in PAGES:
+            query = "s=" + quote(term)
+            if page > 1:
+                query += f"&pn={page}"
+            url = BASE + "/?" + query
+            response, method = browser_get(url)
+            raw_ids = raw_product_ids(response.text)
+            parsed = shared["_parse_proshop_products"](response)
+            parsed = {str(k): v for k, v in parsed.items()}
+            print(
+                f"DIRECT PROBE {term!r} page={page}: method={method} status={response.status_code} "
+                f"raw={len(raw_ids)} parsed_tcg={len(parsed)}"
+            )
+            if previous_raw is not None and raw_ids == previous_raw:
+                print(f"DIRECT PROBE {term!r}: page {page} repeats previous page; stopping")
+                break
+            previous_raw = raw_ids
+            term_ids.update(raw_ids)
+            raw_all.update(raw_ids)
+            term_parsed.update(parsed)
+            merged.update(parsed)
 
-    auto_ids = set(all_auto)
-    full_ids = set(all_full)
-    print(
-        f"DISCOVERY SUMMARY autocomplete_unique={len(auto_ids)} "
-        f"full_search_unique={len(full_ids)} "
-        f"autocomplete_only={len(auto_ids - full_ids)} "
-        f"full_only={len(full_ids - auto_ids)}"
-    )
-    for product_id in sorted(auto_ids - full_ids):
-        product = all_auto[product_id]
         print(
-            f"DISCOVERY AUTOCOMPLETE-ONLY {product_id}: "
-            f"{product['slug']} | {product['context']} | {product['url']}"
+            f"DIRECT PROBE {term!r} total: raw_unique={len(term_ids)} "
+            f"parsed_tcg_unique={len(term_parsed)}"
         )
+
+    merged_ids = set(merged)
+    direct_only = sorted(merged_ids - existing_ids)
+    direct_only_hot = [pid for pid in direct_only if hot_like(merged[pid].get("name"))]
+    print(
+        f"DIRECT PROBE SUMMARY: raw_unique={len(raw_all)} direct_parsed={len(merged_ids)} "
+        f"existing={len(existing_ids)} direct_only={len(direct_only)} "
+        f"direct_only_hot={len(direct_only_hot)}"
+    )
+    for pid in direct_only:
+        p = merged[pid]
+        marker = "HOT" if pid in direct_only_hot else "TCG"
+        print(
+            f"DIRECT PROBE {marker} ONLY {pid}: {p.get('name')} | {p.get('stock')} | "
+            f"{p.get('price')} | {p.get('url')}"
+        )
+
+    # Confirm the exact frontend autocomplete path is reachable directly too.
+    response, method = browser_get(AUTOCOMPLETE + "?searchInput=" + quote("Pokemon TCG"))
+    print(
+        f"DIRECT PROBE AUTOCOMPLETE: method={method} status={response.status_code} "
+        f"raw_products={len(raw_product_ids(response.text))} bytes={len(response.content)}"
+    )
 
 
 if __name__ == "__main__":
