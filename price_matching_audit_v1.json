@@ -1,11 +1,11 @@
 {
-  "candidate_lines": 386,
-  "coverage_pct": 70.7,
+  "candidate_lines": 387,
+  "coverage_pct": 70.5,
   "exact_comparable_groups": 73,
   "likely_alias_pairs": 20,
   "matched_lines": 273,
-  "normalized_keys": 185,
-  "single_shop_keys": 112,
+  "normalized_keys": 186,
+  "single_shop_keys": 113,
   "suspects": [
     {
       "game": "LORCANA",
@@ -158,6 +158,36 @@
       ],
       "similarity": 0.94,
       "type": "ETB"
+    },
+    {
+      "game": "POKÉMON",
+      "language": "EN",
+      "left_names": [
+        "Booster Pack – ME05 Pitch Black",
+        "Pitch Black - Booster pack - Pokemon kort"
+      ],
+      "left_set": "pitch black",
+      "left_shops": [
+        "EPIC PANDA",
+        "HALMES HULE",
+        "MUSEN & SLOTTET",
+        "NOSTALGIC",
+        "PBCARDS",
+        "POKECARDS.DK",
+        "POKEHULEN",
+        "POKEMONS.DK",
+        "POKÉPULLS",
+        "ROGERZ"
+      ],
+      "right_names": [
+        "Pitch Black Booster pakke"
+      ],
+      "right_set": "pitch black pakke",
+      "right_shops": [
+        "ANDCARDS"
+      ],
+      "similarity": 0.94,
+      "type": "BOOSTER PACK"
     },
     {
       "game": "POKÉMON",
@@ -533,29 +563,6 @@
       ],
       "similarity": 0.94,
       "type": "BOOSTER BOX"
-    },
-    {
-      "game": "POKÉMON",
-      "language": "EN",
-      "left_names": [
-        "Pokémon TCG: Destined Rivals - Elite Trainer Box (ETB)"
-      ],
-      "left_set": "destined rivals etb",
-      "left_shops": [
-        "POKEHULEN"
-      ],
-      "right_names": [
-        "Pokemon - Scarlet & Violet - Destined Rivals - Elite Trainer Box",
-        "Pokémon TCG: Destined Rivals Elite Trainer Box"
-      ],
-      "right_set": "destined rivals",
-      "right_shops": [
-        "MUSEN & SLOTTET",
-        "NOSTALGIC",
-        "ROGERZ"
-      ],
-      "similarity": 0.94,
-      "type": "ETB"
     }
   ],
   "version": 1
