@@ -36,4 +36,6 @@ jobs:
         run: python -m py_compile proshop_frontend_probe.py
 
       - name: Run Proshop frontend probe
+        env:
+          DISCORD_WEBHOOK_URL: "https://example.invalid/not-used"
         run: python proshop_frontend_probe.py
