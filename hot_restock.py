@@ -5,7 +5,6 @@ import time
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 from pathlib import Path
-from urllib.parse import quote
 
 import requests
 
@@ -19,19 +18,14 @@ HOT_INTERVAL_SECONDS = max(30, int(os.getenv("HOT_INTERVAL_SECONDS", "60")))
 HOT_DRY_RUN = os.getenv("HOT_DRY_RUN", "0").strip() == "1"
 WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL", "").strip()
 
-# Proshop's dedicated card category is small and can lag behind the broader
-# Pokemon catalogue. HOT therefore reads several public discovery views and
-# merges them by stable product id. Search views are especially useful for
-# products that exist in Proshop's catalogue but are not exposed in a category
-# yet. The first successful expanded scan is a silent Proshop-only baseline so
-# rollout cannot create a burst of old "new product" alerts.
-PROSHOP_BROAD_URL = "https://www.proshop.dk/Pokemon"
-PROSHOP_BROAD_READER_URL = "https://r.jina.ai/" + PROSHOP_BROAD_URL
-PROSHOP_SEARCH_TERMS = (
-    "Pokemon TCG",
-    "Pokemon booster",
-)
-PROSHOP_DISCOVERY_VERSION = 3
+# Proshop HOT uses two independent public views:
+# 1) the existing Jina-backed curated route for stable coverage, and
+# 2) Proshop's own live search frontend through a browser TLS fingerprint for
+#    freshness. The direct frontend is best-effort: Cloudflare may return 403
+#    from GitHub runners, but that must never take the stable Proshop source
+#    offline. When both succeed, the live frontend wins explicit price/stock.
+PROSHOP_FRONTEND_URL = "https://www.proshop.dk/?s=Pokemon+TCG"
+PROSHOP_DISCOVERY_VERSION = 4
 
 # Each source normally gets checked every HOT loop. If a source starts
 # returning rate-limit/bot-block signals, only that source slows down:
@@ -361,15 +355,6 @@ def filter_hot_products(shared, products):
     return allowed
 
 
-def _reader_headers(user_agent):
-    return {
-        "Accept": "text/plain, text/markdown;q=0.9, */*;q=0.5",
-        "User-Agent": user_agent,
-        "x-no-cache": "true",
-        "x-engine": "browser",
-    }
-
-
 def _proshop_raw_link_count(text):
     raw_link_pattern = re.compile(
         r"(?:https?://(?:www\.)?proshop\.dk)?/Pokemon/[^)\s?#]+/\d+",
@@ -378,107 +363,60 @@ def _proshop_raw_link_count(text):
     return len(set(raw_link_pattern.findall(text or "")))
 
 
-def _fetch_proshop_reader_view(shared, public_url, fetch_via, user_agent):
-    reader_url = "https://r.jina.ai/" + public_url
-    response = requests.get(
-        reader_url,
-        headers=_reader_headers(user_agent),
-        timeout=50,
-    )
+def _fetch_proshop_frontend_products(shared):
+    """Read Proshop's live public search page without the Jina cache layer.
+
+    This mirrors a normal browser request with curl_cffi's Chrome TLS
+    fingerprint. It is intentionally best-effort because Proshop/Cloudflare
+    can block GitHub-hosted traffic. The stable curated Jina route remains an
+    independent fallback and keeps Proshop healthy when this lane is blocked.
+    """
+    curl_requests = shared.get("curl_requests")
+    if curl_requests is None:
+        raise RuntimeError("curl_cffi er ikke tilgængelig til Proshop frontend")
+
+    headers = {
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Accept-Language": "da-DK,da;q=0.9,en;q=0.8",
+        "Referer": "https://www.proshop.dk/",
+        "Upgrade-Insecure-Requests": "1",
+    }
+
+    session = curl_requests.Session(impersonate="chrome")
+    response = session.get(PROSHOP_FRONTEND_URL, headers=headers, timeout=25)
     response.raise_for_status()
 
     raw_product_links = _proshop_raw_link_count(response.text)
-    products = shared["_parse_proshop_reader_markdown"](response.text)
+    if raw_product_links < 10:
+        raise RuntimeError(
+            "Proshop frontend returnerede for få rå produktlinks "
+            f"({raw_product_links})"
+        )
+
+    products = shared["_parse_proshop_products"](response)
+    if not products:
+        raise RuntimeError(
+            "Proshop frontend parser gav 0 TCG-produkter fra "
+            f"{raw_product_links} rå links"
+        )
 
     for product in products.values():
         if isinstance(product, dict):
-            product["fetch_via"] = fetch_via
-
-    return products, raw_product_links
-
-
-def _fetch_proshop_broad_products(shared):
-    """Read Proshop's broad Pokemon catalogue through the public Reader."""
-    products, raw_product_links = _fetch_proshop_reader_view(
-        shared,
-        PROSHOP_BROAD_URL,
-        "jina_reader_broad",
-        "Pokemon-Lorcana-MasterBot/2.7 ProshopBroadDiscovery",
-    )
-
-    if raw_product_links < 10:
-        raise RuntimeError(
-            "Proshop broad Reader returned too little raw data "
-            f"({raw_product_links} product links)"
-        )
-    if not products:
-        raise RuntimeError(
-            "Proshop broad Reader parser extracted 0 TCG products from "
-            f"{raw_product_links} product links"
-        )
+            product["fetch_via"] = "direct_frontend_search"
 
     print(
-        f"HOT PROSHOP broad discovery: {len(products)} TCG-produkter "
+        f"HOT PROSHOP frontend: {len(products)} TCG-produkter "
         f"fra {raw_product_links} rå produktlinks"
     )
     return products
 
 
-def _fetch_proshop_search_products(shared):
-    """Probe Proshop's own public search for catalogue-only TCG listings.
-
-    Proshop explicitly allows the ?s= search route in robots.txt. Search can
-    expose a SKU even when it has not reached the dedicated Pokemon-card page,
-    which is the gap we care about for short-lived listings.
-    """
-    merged = {}
-    successful_terms = 0
-    total_raw_links = 0
-    errors = []
-
-    def fetch_term(term):
-        public_url = "https://www.proshop.dk/?s=" + quote(term)
-        return term, _fetch_proshop_reader_view(
-            shared,
-            public_url,
-            "jina_reader_search",
-            "Pokemon-Lorcana-MasterBot/2.7 ProshopSearchDiscovery",
-        )
-
-    with ThreadPoolExecutor(max_workers=len(PROSHOP_SEARCH_TERMS)) as pool:
-        futures = [pool.submit(fetch_term, term) for term in PROSHOP_SEARCH_TERMS]
-        for future in futures:
-            try:
-                term, (products, raw_links) = future.result()
-                successful_terms += 1
-                total_raw_links += raw_links
-                print(
-                    f"HOT PROSHOP search '{term}': {len(products)} TCG-produkter "
-                    f"fra {raw_links} rå produktlinks"
-                )
-                for product_id, product in products.items():
-                    merged[str(product_id)] = product
-            except Exception as error:
-                errors.append(str(error))
-
-    if successful_terms == 0:
-        detail = "; ".join(errors[-4:]) if errors else "ukendt fejl"
-        raise RuntimeError(f"Proshop search discovery fejlede ({detail})")
-
-    print(
-        f"HOT PROSHOP search discovery samlet: {len(merged)} TCG-produkter "
-        f"fra {successful_terms}/{len(PROSHOP_SEARCH_TERMS)} søgninger · "
-        f"{total_raw_links} rå links"
-    )
-    return merged
-
-
 def _merge_proshop_products(*product_sets):
     """Merge Proshop views by stable product id without degrading good data.
 
-    Earlier views seed discovery. Later views win for explicit price/stock,
-    so the dedicated card category can override broad/search data when it has
-    fresher availability while search-only SKUs remain preserved.
+    Later views win for explicit price/stock. The direct frontend is therefore
+    merged last so a fresh live stock state can beat a stale Reader snapshot,
+    while Reader values remain when the frontend omits a field.
     """
     merged = {}
 
@@ -520,16 +458,14 @@ def _merge_proshop_products(*product_sets):
 
 
 def _fetch_expanded_proshop_products(shared):
-    """Fetch curated, broad and search Proshop views concurrently and merge."""
+    """Fetch stable curated data and the live frontend concurrently."""
     curated = {}
-    broad = {}
-    search = {}
+    frontend = {}
     errors = []
 
-    with ThreadPoolExecutor(max_workers=3) as pool:
+    with ThreadPoolExecutor(max_workers=2) as pool:
         curated_future = pool.submit(shared["get_proshop_products"])
-        broad_future = pool.submit(_fetch_proshop_broad_products, shared)
-        search_future = pool.submit(_fetch_proshop_search_products, shared)
+        frontend_future = pool.submit(_fetch_proshop_frontend_products, shared)
 
         try:
             curated = curated_future.result()
@@ -537,33 +473,27 @@ def _fetch_expanded_proshop_products(shared):
             errors.append(f"curated: {error}")
 
         try:
-            broad = broad_future.result()
+            frontend = frontend_future.result()
         except Exception as error:
-            errors.append(f"broad: {error}")
+            errors.append(f"frontend: {error}")
 
-        try:
-            search = search_future.result()
-        except Exception as error:
-            errors.append(f"search: {error}")
-
-    if not curated and not broad and not search:
-        detail = "; ".join(errors[-6:]) if errors else "ukendt fejl"
+    if not curated and not frontend:
+        detail = "; ".join(errors[-4:]) if errors else "ukendt fejl"
         raise RuntimeError(f"Alle Proshop discovery-ruter fejlede ({detail})")
 
     if errors:
         print("HOT PROSHOP discovery warning: " + "; ".join(errors))
 
-    merged = _merge_proshop_products(broad, search, curated)
+    # Stable Reader first, fresh direct frontend last so live price/stock wins.
+    merged = _merge_proshop_products(curated, frontend)
     curated_ids = set(map(str, curated))
-    broad_ids = set(map(str, broad))
-    search_ids = set(map(str, search))
-    search_only = len(search_ids - curated_ids - broad_ids)
-    broad_only = len(broad_ids - curated_ids - search_ids)
+    frontend_ids = set(map(str, frontend))
+    frontend_only = len(frontend_ids - curated_ids)
 
     print(
-        f"HOT PROSHOP discovery: curated={len(curated)} · broad={len(broad)} · "
-        f"search={len(search)} · merged={len(merged)} · "
-        f"search-only={search_only} · broad-only={broad_only}"
+        f"HOT PROSHOP discovery: curated={len(curated)} · "
+        f"frontend={len(frontend)} · merged={len(merged)} · "
+        f"frontend-only={frontend_only}"
     )
     return merged
 
