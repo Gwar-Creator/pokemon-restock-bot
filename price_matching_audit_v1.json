@@ -1,11 +1,11 @@
 {
-  "candidate_lines": 386,
-  "coverage_pct": 70.2,
+  "candidate_lines": 387,
+  "coverage_pct": 70.0,
   "exact_comparable_groups": 72,
   "likely_alias_pairs": 20,
   "matched_lines": 271,
-  "normalized_keys": 186,
-  "single_shop_keys": 114,
+  "normalized_keys": 187,
+  "single_shop_keys": 115,
   "suspects": [
     {
       "game": "POKÉMON",
@@ -519,6 +519,30 @@
       "game": "POKÉMON",
       "language": "EN",
       "left_names": [
+        "Booster Pack – ME02.5 Ascended Heroes",
+        "Pokemon TCG: Ascended Heroes Booster Pack"
+      ],
+      "left_set": "ascended heroes",
+      "left_shops": [
+        "FUN-SHOP",
+        "POKECARDS.DK",
+        "POKEHULEN",
+        "POKEMONS.DK"
+      ],
+      "right_names": [
+        "Ascended Heroes: Booster Pakke"
+      ],
+      "right_set": "ascended heroes pakke",
+      "right_shops": [
+        "POKEMONPORTALEN"
+      ],
+      "similarity": 0.94,
+      "type": "BOOSTER PACK"
+    },
+    {
+      "game": "POKÉMON",
+      "language": "EN",
+      "left_names": [
         "Destined Rivals Booster Bundle",
         "Pokemon Booster Bundle - Scarlet & Violet Destined Rivals"
       ],
@@ -538,30 +562,6 @@
       ],
       "similarity": 0.94,
       "type": "BOOSTER BUNDLE"
-    },
-    {
-      "game": "POKÉMON",
-      "language": "EN",
-      "left_names": [
-        "Pokémon TCG: Surging Sparks Booster Pack (Scarlet & Violet 8)"
-      ],
-      "left_set": "surging sparks scarlet and violet 8",
-      "left_shops": [
-        "ROGERZ"
-      ],
-      "right_names": [
-        "Booster Pack – SV08 Surging Sparks",
-        "Pokémon TCG: Scarlet & Violet – Surging Sparks Booster Pack"
-      ],
-      "right_set": "surging sparks",
-      "right_shops": [
-        "CARDX",
-        "EPIC PANDA",
-        "POKECARDS.DK",
-        "POKEMONS.DK"
-      ],
-      "similarity": 0.94,
-      "type": "BOOSTER PACK"
     }
   ],
   "version": 1
