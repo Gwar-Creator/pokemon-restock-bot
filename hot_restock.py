@@ -2,6 +2,7 @@ import json
 import os
 import re
 import time
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -16,6 +17,14 @@ HOT_ITERATIONS = max(1, int(os.getenv("HOT_ITERATIONS", "1")))
 HOT_INTERVAL_SECONDS = max(30, int(os.getenv("HOT_INTERVAL_SECONDS", "60")))
 HOT_DRY_RUN = os.getenv("HOT_DRY_RUN", "0").strip() == "1"
 WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL", "").strip()
+
+# Proshop's dedicated card category is small and can lag behind the broader
+# Pokemon catalogue. HOT therefore reads both public views and merges them by
+# stable product id. The first successful expanded scan is a silent Proshop-
+# only baseline so rollout cannot create a burst of old "new product" alerts.
+PROSHOP_BROAD_URL = "https://www.proshop.dk/Pokemon"
+PROSHOP_BROAD_READER_URL = "https://r.jina.ai/" + PROSHOP_BROAD_URL
+PROSHOP_DISCOVERY_VERSION = 2
 
 # Each source normally gets checked every HOT loop. If a source starts
 # returning rate-limit/bot-block signals, only that source slows down:
@@ -345,9 +354,139 @@ def filter_hot_products(shared, products):
     return allowed
 
 
+def _fetch_proshop_broad_products(shared):
+    """Read Proshop's broad Pokemon catalogue through the same public Reader.
+
+    This is deliberately best-effort. The existing /pokemon-kort route remains
+    an independent signal, so a broad-catalogue failure must not take Proshop
+    offline when the curated route still works.
+    """
+    response = requests.get(
+        PROSHOP_BROAD_READER_URL,
+        headers={
+            "Accept": "text/plain, text/markdown;q=0.9, */*;q=0.5",
+            "User-Agent": "Pokemon-Lorcana-MasterBot/2.6 ProshopBroadDiscovery",
+            "x-no-cache": "true",
+            "x-engine": "browser",
+        },
+        timeout=50,
+    )
+    response.raise_for_status()
+
+    raw_link_pattern = re.compile(
+        r"(?:https?://(?:www\.)?proshop\.dk)?/Pokemon/[^)\s?#]+/\d+",
+        re.IGNORECASE,
+    )
+    raw_product_links = len(set(raw_link_pattern.findall(response.text or "")))
+    if raw_product_links < 10:
+        raise RuntimeError(
+            "Proshop broad Reader returned too little raw data "
+            f"({raw_product_links} product links)"
+        )
+
+    products = shared["_parse_proshop_reader_markdown"](response.text)
+    if not products:
+        raise RuntimeError(
+            "Proshop broad Reader parser extracted 0 TCG products from "
+            f"{raw_product_links} product links"
+        )
+
+    for product in products.values():
+        if isinstance(product, dict):
+            product["fetch_via"] = "jina_reader_broad"
+
+    print(
+        f"HOT PROSHOP broad discovery: {len(products)} TCG-produkter "
+        f"fra {raw_product_links} rå produktlinks"
+    )
+    return products
+
+
+def _merge_proshop_products(broad_products, curated_products):
+    """Merge Proshop views by stable product id without degrading good data.
+
+    Broad discovery is loaded first. The dedicated card category then wins for
+    explicit price/stock when both views contain the same product, while broad
+    values remain available when the curated view has not published them yet.
+    """
+    merged = {}
+
+    for products in (broad_products or {}, curated_products or {}):
+        for product_id, product in products.items():
+            if not isinstance(product, dict):
+                continue
+
+            product_id = str(product_id)
+            current = merged.get(product_id)
+            if current is None:
+                merged[product_id] = dict(product)
+                continue
+
+            combined = dict(current)
+
+            for key in ("name", "url"):
+                if product.get(key):
+                    combined[key] = product[key]
+
+            if product.get("price") is not None:
+                combined["price"] = product["price"]
+
+            stock = product.get("stock")
+            if stock and stock != "UKENDT":
+                combined["stock"] = stock
+            elif not combined.get("stock"):
+                combined["stock"] = stock or "UKENDT"
+
+            current_via = str(current.get("fetch_via") or "")
+            candidate_via = str(product.get("fetch_via") or "")
+            vias = [value for value in (current_via, candidate_via) if value]
+            if vias:
+                combined["fetch_via"] = "+".join(dict.fromkeys(vias))
+
+            merged[product_id] = combined
+
+    return merged
+
+
+def _fetch_expanded_proshop_products(shared):
+    """Fetch curated and broad Proshop views concurrently and merge them."""
+    curated = {}
+    broad = {}
+    errors = []
+
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        curated_future = pool.submit(shared["get_proshop_products"])
+        broad_future = pool.submit(_fetch_proshop_broad_products, shared)
+
+        try:
+            curated = curated_future.result()
+        except Exception as error:
+            errors.append(f"curated: {error}")
+
+        try:
+            broad = broad_future.result()
+        except Exception as error:
+            errors.append(f"broad: {error}")
+
+    if not curated and not broad:
+        detail = "; ".join(errors[-4:]) if errors else "ukendt fejl"
+        raise RuntimeError(f"Begge Proshop discovery-ruter fejlede ({detail})")
+
+    if errors:
+        print("HOT PROSHOP discovery warning: " + "; ".join(errors))
+
+    merged = _merge_proshop_products(broad, curated)
+    broad_only = len(set(map(str, broad)) - set(map(str, curated)))
+    print(
+        f"HOT PROSHOP discovery: curated={len(curated)} · broad={len(broad)} · "
+        f"merged={len(merged)} · broad-only={broad_only}"
+    )
+    return merged
+
+
 def fetch_source(shared, source_key, old_products):
     if source_key == "proshop":
-        return shared["get_proshop_products"]()
+        return _fetch_expanded_proshop_products(shared)
     if source_key == "br":
         return shared["get_br_products"](old_products)
     if source_key in ("bilka", "foetex"):
@@ -372,6 +511,11 @@ def run_scan(shared, state):
 
         old_products = source_state.get(source_key)
         source_baseline = not isinstance(old_products, dict)
+        if (
+            source_key == "proshop"
+            and state.get("proshop_discovery_version") != PROSHOP_DISCOVERY_VERSION
+        ):
+            source_baseline = True
         old_products = old_products if isinstance(old_products, dict) else {}
 
         try:
@@ -426,6 +570,8 @@ def run_scan(shared, state):
                     send_hot_alert(source_key, product, "RESTOCK")
 
         source_state[source_key] = current
+        if source_key == "proshop":
+            state["proshop_discovery_version"] = PROSHOP_DISCOVERY_VERSION
         print(
             f"HOT {label}: "
             f"{len(current)} relevante · "
