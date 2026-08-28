@@ -1,11 +1,11 @@
 {
-  "candidate_lines": 385,
-  "coverage_pct": 70.9,
+  "candidate_lines": 387,
+  "coverage_pct": 70.5,
   "exact_comparable_groups": 73,
   "likely_alias_pairs": 20,
   "matched_lines": 273,
-  "normalized_keys": 184,
-  "single_shop_keys": 111,
+  "normalized_keys": 186,
+  "single_shop_keys": 113,
   "suspects": [
     {
       "game": "POKÉMON",
@@ -178,6 +178,37 @@
       ],
       "similarity": 0.94,
       "type": "ETB"
+    },
+    {
+      "game": "POKÉMON",
+      "language": "EN",
+      "left_names": [
+        "Booster Pack – ME03 Perfect Order",
+        "Perfect Order - Booster pack - Pokemon kort"
+      ],
+      "left_set": "perfect order",
+      "left_shops": [
+        "BALTZER GAMES",
+        "EPIC PANDA",
+        "FUN-SHOP",
+        "MUSEN & SLOTTET",
+        "NOSTALGIC",
+        "POKECARDS.DK",
+        "POKEDEXET",
+        "POKEHULEN",
+        "POKEMONS.DK",
+        "POKÉPULLS",
+        "ROGERZ"
+      ],
+      "right_names": [
+        "Perfect Order: Booster Pakke"
+      ],
+      "right_set": "perfect order pakke",
+      "right_shops": [
+        "POKEMONPORTALEN"
+      ],
+      "similarity": 0.94,
+      "type": "BOOSTER PACK"
     },
     {
       "game": "POKÉMON",
@@ -488,6 +519,30 @@
       "game": "POKÉMON",
       "language": "EN",
       "left_names": [
+        "Booster Pack – ME02.5 Ascended Heroes",
+        "Pokemon TCG: Ascended Heroes Booster Pack"
+      ],
+      "left_set": "ascended heroes",
+      "left_shops": [
+        "FUN-SHOP",
+        "POKECARDS.DK",
+        "POKEHULEN",
+        "POKEMONS.DK"
+      ],
+      "right_names": [
+        "Ascended Heroes: Booster Pakke"
+      ],
+      "right_set": "ascended heroes pakke",
+      "right_shops": [
+        "POKEMONPORTALEN"
+      ],
+      "similarity": 0.94,
+      "type": "BOOSTER PACK"
+    },
+    {
+      "game": "POKÉMON",
+      "language": "EN",
+      "left_names": [
         "Destined Rivals Booster Bundle",
         "Pokemon Booster Bundle - Scarlet & Violet Destined Rivals"
       ],
@@ -507,53 +562,6 @@
       ],
       "similarity": 0.94,
       "type": "BOOSTER BUNDLE"
-    },
-    {
-      "game": "POKÉMON",
-      "language": "EN",
-      "left_names": [
-        "Pokémon TCG: Surging Sparks Booster Pack (Scarlet & Violet 8)"
-      ],
-      "left_set": "surging sparks scarlet and violet 8",
-      "left_shops": [
-        "ROGERZ"
-      ],
-      "right_names": [
-        "Booster Pack – SV08 Surging Sparks",
-        "Pokémon TCG: Scarlet & Violet – Surging Sparks Booster Pack"
-      ],
-      "right_set": "surging sparks",
-      "right_shops": [
-        "CARDX",
-        "EPIC PANDA",
-        "POKECARDS.DK",
-        "POKEMONS.DK"
-      ],
-      "similarity": 0.94,
-      "type": "BOOSTER PACK"
-    },
-    {
-      "game": "POKÉMON",
-      "language": "EN",
-      "left_names": [
-        "Chaos Rising - Booster Box (36 Booster packs) - Pokemon kort",
-        "Pokémon ME04 Chaos Rising Booster Box – Sealed"
-      ],
-      "left_set": "chaos rising",
-      "left_shops": [
-        "EPIC PANDA",
-        "POKEHULEN",
-        "STAALZ"
-      ],
-      "right_names": [
-        "Pokémon Chaos Rising Booster Box (1stk)"
-      ],
-      "right_set": "chaos rising 1stk",
-      "right_shops": [
-        "STEFFEN-O"
-      ],
-      "similarity": 0.94,
-      "type": "BOOSTER BOX"
     }
   ],
   "version": 1
