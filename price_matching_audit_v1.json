@@ -1,12 +1,32 @@
 {
-  "candidate_lines": 383,
-  "coverage_pct": 71.3,
+  "candidate_lines": 385,
+  "coverage_pct": 70.9,
   "exact_comparable_groups": 73,
   "likely_alias_pairs": 20,
   "matched_lines": 273,
-  "normalized_keys": 182,
-  "single_shop_keys": 109,
+  "normalized_keys": 184,
+  "single_shop_keys": 111,
   "suspects": [
+    {
+      "game": "POKÉMON",
+      "language": "EN",
+      "left_names": [
+        "Pokémon TCG: Astral Radiance Elite Trainer Box (Sword & Shield)"
+      ],
+      "left_set": "astral radiance sword and shield",
+      "left_shops": [
+        "ROGERZ"
+      ],
+      "right_names": [
+        "Pokémon TCG: Sword & Shield: Astral Radiance - Elite Trainer Box"
+      ],
+      "right_set": "sword and shield astral radiance",
+      "right_shops": [
+        "MATRAWS"
+      ],
+      "similarity": 1.0,
+      "type": "ETB"
+    },
     {
       "game": "LORCANA",
       "language": "EN",
@@ -534,29 +554,6 @@
       ],
       "similarity": 0.94,
       "type": "BOOSTER BOX"
-    },
-    {
-      "game": "POKÉMON",
-      "language": "EN",
-      "left_names": [
-        "Pokémon TCG: Destined Rivals - Elite Trainer Box (ETB)"
-      ],
-      "left_set": "destined rivals etb",
-      "left_shops": [
-        "POKEHULEN"
-      ],
-      "right_names": [
-        "Pokemon - Scarlet & Violet - Destined Rivals - Elite Trainer Box",
-        "Pokémon TCG: Destined Rivals Elite Trainer Box"
-      ],
-      "right_set": "destined rivals",
-      "right_shops": [
-        "MUSEN & SLOTTET",
-        "NOSTALGIC",
-        "ROGERZ"
-      ],
-      "similarity": 0.94,
-      "type": "ETB"
     }
   ],
   "version": 1
