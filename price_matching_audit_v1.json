@@ -1,11 +1,11 @@
 {
-  "candidate_lines": 379,
-  "coverage_pct": 69.9,
+  "candidate_lines": 381,
+  "coverage_pct": 69.6,
   "exact_comparable_groups": 70,
   "likely_alias_pairs": 20,
   "matched_lines": 265,
-  "normalized_keys": 183,
-  "single_shop_keys": 113,
+  "normalized_keys": 185,
+  "single_shop_keys": 115,
   "suspects": [
     {
       "game": "POKÉMON",
@@ -26,6 +26,28 @@
       ],
       "similarity": 1.0,
       "type": "ETB"
+    },
+    {
+      "game": "LORCANA",
+      "language": "EN",
+      "left_names": [
+        "Disney Lorcana: Into the Inklands Booster Pack",
+        "Into the Inklands - Booster - Disney Lorcana"
+      ],
+      "left_set": "into the inklands",
+      "left_shops": [
+        "BALTZER GAMES",
+        "ROGERZ"
+      ],
+      "right_names": [
+        "- 8% Booster Into the Inklands"
+      ],
+      "right_set": "8 into the inklands",
+      "right_shops": [
+        "FARAOS"
+      ],
+      "similarity": 0.968,
+      "type": "BOOSTER PACK"
     },
     {
       "game": "POKÉMON",
@@ -530,29 +552,6 @@
       ],
       "similarity": 0.94,
       "type": "ETB"
-    },
-    {
-      "game": "POKÉMON",
-      "language": "EN",
-      "left_names": [
-        "Booster Pack – SV10.5 White Flare",
-        "Pokémon TCG: White Flare Booster Pack"
-      ],
-      "left_set": "white flare",
-      "left_shops": [
-        "POKECARDS.DK",
-        "POKEMONS.DK",
-        "ROGERZ"
-      ],
-      "right_names": [
-        "Pokémon White Flare Booster Pack (Scarlet & Violet)"
-      ],
-      "right_set": "white flare scarlet and violet",
-      "right_shops": [
-        "POKÉPULLS"
-      ],
-      "similarity": 0.94,
-      "type": "BOOSTER PACK"
     }
   ],
   "version": 1
