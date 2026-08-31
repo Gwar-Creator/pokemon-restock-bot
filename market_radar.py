@@ -21,7 +21,7 @@ SHADOW = os.getenv("MARKET_RADAR_SHADOW", "1") == "1"
 EUR_DKK = float(os.getenv("MARKET_RADAR_EUR_DKK", "7.46") or 7.46)
 MIN_MATCH_SCORE = float(os.getenv("MARKET_RADAR_MIN_MATCH_SCORE", "0.90") or 0.90)
 
-# V2 deliberately starts narrow: Pokemon core sealed only.
+# V3 deliberately stays narrow: Pokemon core sealed only.
 CARDMARKET = {
     "POKÉMON": {
         "products_url": "https://downloads.s3.cardmarket.com/productCatalog/productList/products_nonsingles_6.json",
@@ -115,12 +115,7 @@ def is_accessory(name):
 
 
 def infer_type(name, game):
-    """Return a narrow core-sealed product type or None.
-
-    V2 intentionally excludes loose boosters, sleeved boosters, blisters,
-    tins/mini tins, displays/cases and accessories. Collection products stay
-    broad enough to catch named boxes such as Mega Greninja ex products.
-    """
+    """Return a narrow core-sealed product type or None."""
     if game != "POKÉMON":
         return None
 
@@ -128,8 +123,6 @@ def infer_type(name, game):
     if not text or not is_english(name) or is_accessory(name):
         return None
 
-    # Hard quantity/container exclusions first. Booster Display is the one
-    # display wording that is equivalent to a Booster Box.
     if any(marker in text for marker in ("booster box case", "booster case", "case of booster", "case 6", "case 10")):
         return None
     if re.search(r"\b(?:4|6|8|10|12)\s*x\s*36\b", text):
@@ -139,7 +132,6 @@ def infer_type(name, game):
     if "booster bundle display" in text or "bundle display" in text:
         return None
 
-    # Explicitly excluded low-signal sealed formats.
     if any(marker in text for marker in (
         "mini tin", " tin ", "tin box", "booster pack", "booster pakke",
         "sleeved booster", "sleeve booster", "checklane", "blister",
@@ -155,7 +147,6 @@ def infer_type(name, game):
     if "booster box" in text or "booster display" in text:
         return "BOOSTER BOX"
 
-    # Collection hierarchy: most specific first.
     if "ultra premium collection" in text or re.search(r"\bupc\b", text):
         return "UPC"
     if "super premium collection" in text or re.search(r"\bspc\b", text):
@@ -226,14 +217,10 @@ def canonical_name(name, product_type):
     for phrase in phrases:
         text = text.replace(phrase, " ")
 
-    # Shipping/retailer fluff and explicit content counts are not product identity.
     text = re.sub(r"\b(?:with|med)\s+\d+\s+(?:packs?|boosters?|boostere|pakker)\b", " ", text)
     text = re.sub(r"\b(?:6|8|9|10|11|12|18|20|24|30|36)\s*(?:packs?|boosters?|boostere|pakker)\b", " ", text)
     text = " ".join(text.split())
 
-    # Series prefixes are often present only in Danish shop titles. Remove them
-    # when a distinctive set/product name remains, but preserve Base Set so
-    # modern Scarlet & Violet Base Set cannot become vintage Base Set.
     for prefix in ("scarlet and violet", "sword and shield"):
         if text.startswith(prefix + " "):
             remainder = text[len(prefix):].strip()
@@ -308,8 +295,6 @@ def collect_danish_offers(state):
 def group_danish_offers(offers):
     groups = {}
     for offer in offers:
-        # Collection subtypes share one comparison family because shops and
-        # Cardmarket do not always use the same collection suffix.
         group_type = offer["family"]
         key = (offer["game"], group_type, offer["canonical"])
         groups.setdefault(key, []).append(offer)
@@ -332,7 +317,7 @@ def fetch_json(url, local_name):
         path = Path(local_dir) / local_name
         if path.exists():
             return load_json(path, {})
-    response = requests.get(url, headers={"User-Agent": "Pokemon-Market-Radar/2.0"}, timeout=60)
+    response = requests.get(url, headers={"User-Agent": "Pokemon-Market-Radar/3.0"}, timeout=60)
     response.raise_for_status()
     return response.json()
 
@@ -401,14 +386,10 @@ def _match_guard(left, right):
     if not left_tokens or not right_tokens:
         return False
 
-    # Explicit Base Set safeguard: do not collapse a modern era title into the
-    # vintage Base Set product just because both contain "base set".
     if "base" in shared and "set" in shared:
         if left_tokens != right_tokens:
             return False
 
-    # A fuzzy match must share at least two identity tokens. Exact one-token
-    # products are still allowed by the exact branch in match_cardmarket().
     return len(shared) >= 2
 
 
@@ -457,45 +438,138 @@ def fmt_eur(value):
     return f"€{value:.2f}".replace(".", ",")
 
 
+def _dedupe_shop_offers(offers):
+    by_shop = {}
+    for offer in offers:
+        current = by_shop.get(offer["shop"])
+        if current is None or offer["price"] < current["price"]:
+            by_shop[offer["shop"]] = offer
+    return sorted(by_shop.values(), key=lambda row: (row["price"], row["shop"]))
+
+
+def _cardmarket_reference(cardmarket):
+    trend = safe_float(cardmarket.get("trend_eur"))
+    low = safe_float(cardmarket.get("low_eur"))
+    if trend is not None and trend > 0:
+        return trend, "trend"
+    if low is not None and low > 0:
+        return low, "low_fallback"
+    return None, "none"
+
+
+def consolidate_cardmarket_matches(raw_matches):
+    """Collapse Danish aliases after they resolve to the same Cardmarket product."""
+    buckets = {}
+    for item in raw_matches:
+        key = (item["game"], item["cardmarket"]["idProduct"])
+        bucket = buckets.setdefault(key, {
+            "cardmarket": item["cardmarket"],
+            "offers": [],
+            "aliases": set(),
+            "scores": [],
+            "methods": set(),
+        })
+        bucket["offers"].extend(item["offers"])
+        bucket["aliases"].add(item["best"]["name"])
+        bucket["scores"].append(item["cardmarket"]["match_score"])
+        bucket["methods"].add(item["cardmarket"]["match_method"])
+
+    matched = []
+    for (game, _product_id), bucket in buckets.items():
+        cardmarket = bucket["cardmarket"]
+        offers = _dedupe_shop_offers(bucket["offers"])
+        if not offers:
+            continue
+        best = offers[0]
+        low_eur = safe_float(cardmarket.get("low_eur"))
+        trend_eur = safe_float(cardmarket.get("trend_eur"))
+        low_dkk = low_eur * EUR_DKK if low_eur is not None else None
+        trend_dkk = trend_eur * EUR_DKK if trend_eur is not None else None
+        reference_eur, reference_kind = _cardmarket_reference(cardmarket)
+        reference_dkk = reference_eur * EUR_DKK if reference_eur is not None else None
+        diff_reference = (
+            ((best["price"] / reference_dkk) - 1.0) * 100.0
+            if reference_dkk and reference_dkk > 0 else None
+        )
+        diff_low = (
+            ((best["price"] / low_dkk) - 1.0) * 100.0
+            if low_dkk and low_dkk > 0 else None
+        )
+        matched.append({
+            "game": game,
+            "type": cardmarket.get("type") or best["type"],
+            "family": cardmarket.get("family") or best["family"],
+            "name": cardmarket["name"],
+            "dk_name": best["name"],
+            "dk_price": best["price"],
+            "shop": best["shop"],
+            "url": best["url"],
+            "shops": len(offers),
+            "shop_prices": [
+                {"shop": row["shop"], "price": row["price"], "url": row["url"], "name": row["name"]}
+                for row in offers
+            ],
+            "aliases": sorted(bucket["aliases"]),
+            "cm_product_id": cardmarket["idProduct"],
+            "cm_name": cardmarket["name"],
+            "cm_type": cardmarket.get("type"),
+            "cm_low_eur": low_eur,
+            "cm_trend_eur": trend_eur,
+            "cm_low_dkk": low_dkk,
+            "cm_trend_dkk": trend_dkk,
+            "cm_reference_eur": reference_eur,
+            "cm_reference_dkk": reference_dkk,
+            "cm_reference_kind": reference_kind,
+            "diff_pct_vs_reference": diff_reference,
+            "diff_pct_vs_low": diff_low,
+            "match_score": min(bucket["scores"]) if bucket["scores"] else None,
+            "match_methods": sorted(bucket["methods"]),
+            "alias_groups_merged": len(bucket["aliases"]),
+        })
+
+    matched.sort(key=lambda row: (
+        9999 if row["diff_pct_vs_reference"] is None else row["diff_pct_vs_reference"],
+        row["dk_price"],
+    ))
+    return matched
+
+
 def build_radar(state):
     offers = collect_danish_offers(state)
     groups = group_danish_offers(offers)
     cardmarket_rows, cardmarket_meta = load_cardmarket()
-    matched = []
+    raw_matches = []
     unmatched = []
+
     for group in groups:
         cardmarket = match_cardmarket(group, cardmarket_rows)
         if not cardmarket:
             unmatched.append(group)
             continue
-        best = group["best"]
-        low_dkk = cardmarket["low_eur"] * EUR_DKK if cardmarket.get("low_eur") is not None else None
-        trend_dkk = cardmarket["trend_eur"] * EUR_DKK if cardmarket.get("trend_eur") is not None else None
-        benchmark = low_dkk if low_dkk and low_dkk > 0 else trend_dkk
-        diff_pct = ((best["price"] / benchmark) - 1.0) * 100.0 if benchmark and benchmark > 0 else None
-        matched.append({
-            "game": best["game"], "type": best["type"], "family": best["family"], "name": best["name"],
-            "dk_price": best["price"], "shop": best["shop"], "url": best["url"],
-            "shops": len(group["offers"]), "cm_product_id": cardmarket["idProduct"],
-            "cm_name": cardmarket["name"], "cm_type": cardmarket.get("type"),
-            "cm_low_eur": cardmarket.get("low_eur"), "cm_trend_eur": cardmarket.get("trend_eur"),
-            "cm_low_dkk": low_dkk, "cm_trend_dkk": trend_dkk, "diff_pct_vs_low": diff_pct,
-            "match_score": cardmarket["match_score"], "match_method": cardmarket["match_method"],
+        raw_matches.append({
+            "game": group["best"]["game"],
+            "best": group["best"],
+            "offers": group["offers"],
+            "cardmarket": cardmarket,
         })
-    matched.sort(key=lambda row: (9999 if row["diff_pct_vs_low"] is None else row["diff_pct_vs_low"], row["dk_price"]))
+
+    matched = consolidate_cardmarket_matches(raw_matches)
 
     type_counts = {}
     for row in matched:
         type_counts[row["type"]] = type_counts.get(row["type"], 0) + 1
 
     return {
-        "version": 2,
+        "version": 3,
         "scope": "pokemon_core_sealed",
+        "benchmark": "cardmarket_trend_with_low_fallback",
         "generated_at": datetime.now(ZoneInfo(TZ_NAME)).isoformat(),
         "eur_dkk_used": EUR_DKK,
         "danish_offer_lines": len(offers),
         "danish_groups": len(groups),
+        "matched_alias_groups": len(raw_matches),
         "matched_groups": len(matched),
+        "merged_alias_groups": len(raw_matches) - len(matched),
         "unmatched_groups": len(unmatched),
         "matched_type_counts": dict(sorted(type_counts.items())),
         "cardmarket_meta": cardmarket_meta,
@@ -509,33 +583,34 @@ def build_radar(state):
 
 
 def make_embed(radar):
-    rows = [row for row in radar["matched"] if row.get("diff_pct_vs_low") is not None]
+    rows = [row for row in radar["matched"] if row.get("diff_pct_vs_reference") is not None]
     best = rows[:10]
-    overpriced = sorted(rows, key=lambda row: row["diff_pct_vs_low"], reverse=True)[:5]
+    overpriced = sorted(rows, key=lambda row: row["diff_pct_vs_reference"], reverse=True)[:5]
     lines = [
-        f"**{radar['matched_groups']}** core sealed-produkter matchet sikkert mod Cardmarket · "
-        f"**{radar['unmatched_groups']}** holdt ude pga. usikkert match.",
-        "", "🟢 **BEDSTE DK-PRISER VS. CARDMARKET LOW**",
+        f"**{radar['matched_groups']}** unikke core sealed-produkter matchet mod Cardmarket · "
+        f"**{radar['merged_alias_groups']}** dublet/alias-grupper samlet · "
+        f"**{radar['unmatched_groups']}** usikre holdt ude.",
+        "", "🟢 **BEDSTE DK-PRISER VS. CARDMARKET TREND**",
     ]
     for row in best:
-        sign = "+" if row["diff_pct_vs_low"] >= 0 else ""
+        sign = "+" if row["diff_pct_vs_reference"] >= 0 else ""
         lines.append(
-            f"• **{row['name']}** — {fmt_dkk(row['dk_price'])} hos {row['shop']} · "
-            f"CM {fmt_eur(row['cm_low_eur'])} · **{sign}{row['diff_pct_vs_low']:.0f}%**"
+            f"• **{row['cm_name']}** — {fmt_dkk(row['dk_price'])} hos {row['shop']} · "
+            f"CM ref {fmt_eur(row['cm_reference_eur'])} · **{sign}{row['diff_pct_vs_reference']:.0f}%**"
         )
     if overpriced:
-        lines += ["", "🔴 **STØRSTE DK-MARKUPS VS. CARDMARKET LOW**"]
+        lines += ["", "🔴 **STØRSTE DK-MARKUPS VS. CARDMARKET TREND**"]
         for row in overpriced:
-            sign = "+" if row["diff_pct_vs_low"] >= 0 else ""
+            sign = "+" if row["diff_pct_vs_reference"] >= 0 else ""
             lines.append(
-                f"• **{row['name']}** — {fmt_dkk(row['dk_price'])} · CM {fmt_eur(row['cm_low_eur'])} · "
-                f"**{sign}{row['diff_pct_vs_low']:.0f}%**"
+                f"• **{row['cm_name']}** — {fmt_dkk(row['dk_price'])} · "
+                f"CM ref {fmt_eur(row['cm_reference_eur'])} · **{sign}{row['diff_pct_vs_reference']:.0f}%**"
             )
     return {
-        "title": "🛰️ MARKET RADAR V2 · CORE SEALED",
+        "title": "🛰️ MARKET RADAR V3 · CORE SEALED",
         "description": "\n".join(lines)[:4096],
         "color": 0x5865F2,
-        "footer": {"text": "Kun ETB, bundles, booster boxes og collections · Cardmarket low/trend ekskl. fragt"},
+        "footer": {"text": "DK aliases samles via Cardmarket product ID · reference = trend, low som fallback · ekskl. fragt"},
     }
 
 
@@ -562,8 +637,9 @@ def main():
     radar = build_radar(state)
     save_json(PREVIEW_FILE, radar)
     print(
-        f"MARKET RADAR V2 CORE SEALED: {radar['danish_offer_lines']} DK prislinjer | {radar['danish_groups']} grupper | "
-        f"{radar['matched_groups']} sikre CM matches | {radar['unmatched_groups']} usikre holdt ude"
+        f"MARKET RADAR V3 CORE SEALED: {radar['danish_offer_lines']} DK prislinjer | "
+        f"{radar['danish_groups']} alias-grupper | {radar['matched_groups']} unikke CM produkter | "
+        f"{radar['merged_alias_groups']} aliases samlet | {radar['unmatched_groups']} usikre holdt ude"
     )
     if SHADOW:
         print("MARKET RADAR: shadow mode - Discord ikke sendt.")
@@ -572,7 +648,7 @@ def main():
         raise RuntimeError("MARKET_RADAR_WEBHOOK_URL mangler")
     post_discord(make_embed(radar))
     radar_state.update({
-        "version": 2,
+        "version": 3,
         "last_daily_date": today,
         "last_sent_at": now.isoformat(),
         "last_match_count": radar["matched_groups"],
