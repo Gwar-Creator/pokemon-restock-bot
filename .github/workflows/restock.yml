@@ -138,6 +138,8 @@ jobs:
           python -m py_compile local_stock_watch.py
           python -m py_compile scanner_health_audit.py
           python -m py_compile discord_cleanup.py
+          python -m py_compile market_radar.py
+          python -m unittest test_market_radar.py
           python -m unittest test_discord_cleanup.py
           python -m unittest test_alert_policy.py
           python -m py_compile retailer_probe_v24.py
@@ -199,6 +201,21 @@ jobs:
             echo "::error::Main restock scan exited with status $RESTOCK_STATUS"
             exit "$RESTOCK_STATUS"
           fi
+
+      - name: Generate one-time Market Radar shadow preview
+        if: ${{ hashFiles('market_radar_shadow_v1_done.json') == '' }}
+        env:
+          MARKET_RADAR_WEBHOOK_URL: ${{ secrets.MARKET_RADAR_WEBHOOK_URL }}
+          MARKET_RADAR_FORCE_RUN: "1"
+          MARKET_RADAR_SHADOW: "1"
+        run: |
+          python market_radar.py
+          python - <<'PY'
+          import json
+          from datetime import datetime, timezone
+          with open('market_radar_shadow_v1_done.json', 'w', encoding='utf-8') as f:
+              json.dump({'completed_at': datetime.now(timezone.utc).isoformat()}, f, indent=2)
+          PY
 
       - name: Generate one-time V25 price channel preview
         if: ${{ hashFiles('price_channels_preview_v25_done.json') == '' }}
