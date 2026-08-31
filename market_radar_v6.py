@@ -1,6 +1,5 @@
 import json
 import os
-import re
 import time
 from datetime import datetime
 from pathlib import Path
@@ -19,20 +18,25 @@ import market_radar as v5
 PREVIEW_FILE = Path(os.getenv("MARKET_RADAR_V6_PREVIEW_FILE", "market_radar_v6_preview.json"))
 ALLOWLIST_FILE = Path(os.getenv("MARKET_RADAR_DK_SHIPPING_ALLOWLIST", "market_radar_dk_shipping_allowlist.json"))
 TZ_NAME = os.getenv("MARKET_RADAR_TIMEZONE", "Europe/Copenhagen").strip() or "Europe/Copenhagen"
-CARDMARKET_API_BASE = "https://apiv2.cardmarket.com/ws/v2.0/output.json"
+CARDMARKET_API_BASE = "https://apiv2.cardmarket.com/ws/v2.0"
 CARDMARKET_APP_TOKEN = os.getenv("CARDMARKET_APP_TOKEN", "").strip()
 CARDMARKET_APP_SECRET = os.getenv("CARDMARKET_APP_SECRET", "").strip()
 CARDMARKET_ACCESS_TOKEN = os.getenv("CARDMARKET_ACCESS_TOKEN", "").strip()
 CARDMARKET_ACCESS_SECRET = os.getenv("CARDMARKET_ACCESS_SECRET", "").strip()
 MAX_PRODUCTS = max(1, int(os.getenv("MARKET_RADAR_V6_MAX_PRODUCTS", "150") or 150))
 REQUEST_DELAY = max(0.0, float(os.getenv("MARKET_RADAR_V6_REQUEST_DELAY", "0.15") or 0.15))
+MIN_SELLS = max(0, int(os.getenv("MARKET_RADAR_V6_MIN_SELLS", "25") or 25))
 
 # V6 is intentionally fail-closed. A product is not called actionable unless:
 # 1) the DK product identity is exact and sufficiently specific,
 # 2) a concrete English Cardmarket article exists,
-# 3) the listing comment has no obvious damage/opened warning,
-# 4) delivery to Denmark is verified. For now, Danish Cardmarket sellers are
-#    automatically verified; foreign sellers require an explicit allowlist entry.
+# 3) the seller has a basic history and is not on vacation,
+# 4) the listing comment has no obvious damage/opened warning,
+# 5) delivery to Denmark is verified.
+#
+# Cardmarket's Articles resource provides concrete current listings and supports
+# idLanguage filtering. It does not expose a simple "ships to Denmark" filter.
+# Therefore foreign seller delivery is never inferred from seller country alone.
 
 DAMAGE_MARKERS = (
     "damaged", "damage", "dented", "dent", "crushed", "crease", "creased",
@@ -59,25 +63,23 @@ def _load_allowlist():
 
 
 def _credentials_available():
-    return bool(
-        OAuth1
-        and CARDMARKET_APP_TOKEN
-        and CARDMARKET_APP_SECRET
-        and CARDMARKET_ACCESS_TOKEN
-        and CARDMARKET_ACCESS_SECRET
-    )
+    # Marketplace GET endpoints need an app signature. Access credentials are
+    # optional and are included when present, mirroring the existing scanner.
+    return bool(OAuth1 and CARDMARKET_APP_TOKEN and CARDMARKET_APP_SECRET)
 
 
 def _oauth(url):
-    return OAuth1(
-        client_key=CARDMARKET_APP_TOKEN,
-        client_secret=CARDMARKET_APP_SECRET,
-        resource_owner_key=CARDMARKET_ACCESS_TOKEN,
-        resource_owner_secret=CARDMARKET_ACCESS_SECRET,
-        signature_method="HMAC-SHA1",
-        signature_type="AUTH_HEADER",
-        realm=url,
-    )
+    kwargs = {
+        "client_key": CARDMARKET_APP_TOKEN,
+        "client_secret": CARDMARKET_APP_SECRET,
+        "signature_method": "HMAC-SHA1",
+        "signature_type": "AUTH_HEADER",
+        "realm": url,
+    }
+    if CARDMARKET_ACCESS_TOKEN and CARDMARKET_ACCESS_SECRET:
+        kwargs["resource_owner_key"] = CARDMARKET_ACCESS_TOKEN
+        kwargs["resource_owner_secret"] = CARDMARKET_ACCESS_SECRET
+    return OAuth1(**kwargs)
 
 
 def _extract_articles(payload):
@@ -141,7 +143,13 @@ def _identity_gate(row):
     product_type = str(row.get("type") or "")
     family = str(row.get("family") or "")
     canonical = v5.canonical_name(dk_name, product_type)
+    cm_canonical = v5.canonical_name(row.get("cm_name") or "", row.get("cm_type") or product_type)
     normalized = " " + v5.normalize_text(dk_name) + " "
+
+    # Even after V5 says "exact", require the canonical DK and CM identities to
+    # still agree at this final gate.
+    if not canonical or canonical != cm_canonical:
+        return False, "CANONICAL_IDENTITY_MISMATCH"
 
     # Generic set-level collection names are too ambiguous. Example:
     # "Ascended Heroes Collection" can refer to several distinct sealed boxes.
@@ -167,16 +175,7 @@ def _fetch_articles(product_id):
         auth=_oauth(url),
         headers={"Accept": "application/json", "User-Agent": "Pokemon-Market-Radar/6.0"},
         timeout=30,
-        allow_redirects=False,
     )
-    if response.status_code == 307 and response.headers.get("Location"):
-        redirected = response.headers["Location"]
-        response = requests.get(
-            redirected,
-            auth=_oauth(redirected.split("?", 1)[0]),
-            headers={"Accept": "application/json", "User-Agent": "Pokemon-Market-Radar/6.0"},
-            timeout=30,
-        )
     response.raise_for_status()
     return _extract_articles(response.json())
 
@@ -187,6 +186,7 @@ def _validate_articles(articles, allowlist):
         "non_english": 0,
         "damaged_or_opened": 0,
         "seller_on_vacation": 0,
+        "seller_too_new": 0,
         "delivery_unverified": 0,
         "invalid_price": 0,
     }
@@ -212,6 +212,9 @@ def _validate_articles(articles, allowlist):
         if seller.get("onVacation") is True:
             rejected["seller_on_vacation"] += 1
             continue
+        if v5.safe_int(seller.get("sellCount"), 0) < MIN_SELLS:
+            rejected["seller_too_new"] += 1
+            continue
 
         delivery_ok, delivery_reason = _delivery_verified(article, allowlist)
         if not delivery_ok:
@@ -228,7 +231,7 @@ def _validate_articles(articles, allowlist):
             "comments": comment[:300],
             "delivery_verification": delivery_reason,
             "language": "English",
-            "sealed_basis": "Cardmarket non-single product + no opened/damage warning",
+            "sealed_basis": "Cardmarket sealed/non-single product; opened/damage comments rejected",
         })
 
     valid.sort(key=lambda row: (row["price_eur"], row["seller"]))
@@ -241,7 +244,8 @@ def _listing_signal(dk_price, listings):
     prices = [row["price_eur"] for row in listings]
     floor_eur = prices[0]
     floor_dkk = floor_eur * v5.EUR_DKK
-    median_eur = median(prices[: min(5, len(prices))])
+    top = prices[: min(5, len(prices))]
+    median_eur = median(top)
     median_dkk = median_eur * v5.EUR_DKK
     diff_floor_pct = ((dk_price / floor_dkk) - 1.0) * 100.0 if floor_dkk > 0 else None
     diff_median_pct = ((dk_price / median_dkk) - 1.0) * 100.0 if median_dkk > 0 else None
@@ -326,7 +330,7 @@ def build_v6():
         row.get("dk_price") or 0,
     ))
 
-    preview = {
+    return {
         "version": 6,
         "scope": "pokemon_core_sealed",
         "mode": "shadow_listing_validator",
@@ -338,7 +342,8 @@ def build_v6():
             "foreign": "only explicit confirmed_sellers allowlist",
             "note": "Foreign seller country alone is not treated as proof of delivery to Denmark.",
         },
-        "sealed_policy": "Cardmarket non-single product plus rejection of opened/damaged listing comments",
+        "sealed_policy": "Cardmarket sealed/non-single product plus rejection of opened/damaged listing comments",
+        "seller_minimum_sales": MIN_SELLS,
         "cardmarket_api_credentials_available": api_ready,
         "matched_groups_from_v5": len(base.get("matched") or []),
         "exact_identity_groups": exact_identity,
@@ -348,7 +353,6 @@ def build_v6():
         "confirmed_foreign_sellers_for_dk": len(allowlist),
         "rows": rows,
     }
-    return preview
 
 
 def make_embed(preview):
@@ -359,20 +363,25 @@ def make_embed(preview):
         f"**{preview['unresolved_identity_groups']}** variants held out · "
         f"**{preview['actionable_groups']}** products with concrete verified listings.",
         "",
-        "Cardmarket Price Guide is **info only**. V6 only benchmarks against concrete English listings that pass damage/opened checks and have verified DK delivery.",
+        "Cardmarket Price Guide is **info only**. V6 only benchmarks against concrete English listings that pass seller/damage checks and have verified DK delivery.",
     ]
     if actionable:
         lines += ["", "🟢 **KONKRETE CARDMARKET-LISTINGS**"]
         for row in actionable:
             listing = row["concrete_listings"][0]
             diff = row.get("diff_pct_vs_actionable_floor")
-            sign = "+" if diff is not None and diff >= 0 else ""
-            lines.append(
-                f"• **{row['cm_name']}** — DK {v5.fmt_dkk(row['dk_price'])} · "
-                f"CM {v5.fmt_eur(listing['price_eur'])} hos {listing['seller']} ({listing['seller_country']}) · "
-                f"**{sign}{diff:.0f}%**" if diff is not None else
-                f"• **{row['cm_name']}** — DK {v5.fmt_dkk(row['dk_price'])} · CM {v5.fmt_eur(listing['price_eur'])}"
-            )
+            if diff is not None:
+                sign = "+" if diff >= 0 else ""
+                lines.append(
+                    f"• **{row['cm_name']}** — DK {v5.fmt_dkk(row['dk_price'])} · "
+                    f"CM {v5.fmt_eur(listing['price_eur'])} hos {listing['seller']} ({listing['seller_country']}) · "
+                    f"**{sign}{diff:.0f}%**"
+                )
+            else:
+                lines.append(
+                    f"• **{row['cm_name']}** — DK {v5.fmt_dkk(row['dk_price'])} · "
+                    f"CM {v5.fmt_eur(listing['price_eur'])}"
+                )
     else:
         lines += ["", "🟡 Ingen produkter har endnu et komplet, verificeret V6-benchmark."]
 
