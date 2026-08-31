@@ -140,6 +140,8 @@ jobs:
           python -m py_compile discord_cleanup.py
           python -m py_compile market_radar.py
           python -m unittest test_market_radar.py
+          python -m py_compile market_radar_v6.py
+          python -m unittest test_market_radar_v6.py
           python -m unittest test_discord_cleanup.py
           python -m unittest test_alert_policy.py
           python -m py_compile retailer_probe_v24.py
@@ -202,13 +204,27 @@ jobs:
             exit "$RESTOCK_STATUS"
           fi
 
-      - name: Run daily Market Radar
+      # V5 live output is deliberately paused. Price-guide low/trend is not
+      # concrete enough to support a buying decision for sealed products.
+      - name: Generate one-time Market Radar V6 listing-validator shadow
+        if: ${{ hashFiles('market_radar_v6_shadow_done.json') == '' }}
         continue-on-error: true
         env:
-          MARKET_RADAR_WEBHOOK_URL: ${{ secrets.MARKET_RADAR_WEBHOOK_URL }}
-          MARKET_RADAR_FORCE_RUN: "0"
-          MARKET_RADAR_SHADOW: "0"
-        run: python market_radar.py
+          CARDMARKET_APP_TOKEN: ${{ secrets.CARDMARKET_APP_TOKEN }}
+          CARDMARKET_APP_SECRET: ${{ secrets.CARDMARKET_APP_SECRET }}
+          CARDMARKET_ACCESS_TOKEN: ${{ secrets.CARDMARKET_ACCESS_TOKEN }}
+          CARDMARKET_ACCESS_SECRET: ${{ secrets.CARDMARKET_ACCESS_SECRET }}
+          MARKET_RADAR_V6_MAX_PRODUCTS: "150"
+          MARKET_RADAR_V6_REQUEST_DELAY: "0.20"
+          MARKET_RADAR_V6_MIN_SELLS: "25"
+        run: |
+          python market_radar_v6.py
+          python - <<'PY'
+          import json
+          from datetime import datetime, timezone
+          with open('market_radar_v6_shadow_done.json', 'w', encoding='utf-8') as f:
+              json.dump({'completed_at': datetime.now(timezone.utc).isoformat()}, f, indent=2)
+          PY
 
       - name: Generate one-time V25 price channel preview
         if: ${{ hashFiles('price_channels_preview_v25_done.json') == '' }}
