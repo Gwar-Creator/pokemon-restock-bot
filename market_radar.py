@@ -20,8 +20,9 @@ FORCE = os.getenv("MARKET_RADAR_FORCE_RUN", "0") == "1"
 SHADOW = os.getenv("MARKET_RADAR_SHADOW", "1") == "1"
 EUR_DKK = float(os.getenv("MARKET_RADAR_EUR_DKK", "7.46") or 7.46)
 MIN_MATCH_SCORE = float(os.getenv("MARKET_RADAR_MIN_MATCH_SCORE", "0.90") or 0.90)
+MAX_CM_DIVERGENCE_PCT = float(os.getenv("MARKET_RADAR_MAX_CM_DIVERGENCE_PCT", "50") or 50)
 
-# V3 deliberately stays narrow: Pokemon core sealed only.
+# V4 deliberately stays narrow: Pokemon core sealed only.
 CARDMARKET = {
     "POKÉMON": {
         "products_url": "https://downloads.s3.cardmarket.com/productCatalog/productList/products_nonsingles_6.json",
@@ -115,7 +116,6 @@ def is_accessory(name):
 
 
 def infer_type(name, game):
-    """Return a narrow core-sealed product type or None."""
     if game != "POKÉMON":
         return None
 
@@ -317,7 +317,7 @@ def fetch_json(url, local_name):
         path = Path(local_dir) / local_name
         if path.exists():
             return load_json(path, {})
-    response = requests.get(url, headers={"User-Agent": "Pokemon-Market-Radar/3.0"}, timeout=60)
+    response = requests.get(url, headers={"User-Agent": "Pokemon-Market-Radar/4.0"}, timeout=60)
     response.raise_for_status()
     return response.json()
 
@@ -386,9 +386,8 @@ def _match_guard(left, right):
     if not left_tokens or not right_tokens:
         return False
 
-    if "base" in shared and "set" in shared:
-        if left_tokens != right_tokens:
-            return False
+    if "base" in shared and "set" in shared and left_tokens != right_tokens:
+        return False
 
     return len(shared) >= 2
 
@@ -448,13 +447,28 @@ def _dedupe_shop_offers(offers):
 
 
 def _cardmarket_reference(cardmarket):
+    """Return reference price plus a reliability gate.
+
+    Trend remains the primary benchmark, but when Cardmarket low and trend are
+    more than MAX_CM_DIVERGENCE_PCT apart (measured against the smaller value),
+    the product is marked unstable and is excluded from buy/overprice rankings.
+    A benchmark with only one of the two signals is also not rankable.
+    """
     trend = safe_float(cardmarket.get("trend_eur"))
     low = safe_float(cardmarket.get("low_eur"))
-    if trend is not None and trend > 0:
-        return trend, "trend"
-    if low is not None and low > 0:
-        return low, "low_fallback"
-    return None, "none"
+    trend_ok = trend is not None and trend > 0
+    low_ok = low is not None and low > 0
+
+    if trend_ok and low_ok:
+        smaller = min(trend, low)
+        divergence_pct = ((max(trend, low) / smaller) - 1.0) * 100.0
+        stable = divergence_pct <= MAX_CM_DIVERGENCE_PCT
+        return trend, "trend", stable, divergence_pct
+    if trend_ok:
+        return trend, "trend_only", False, None
+    if low_ok:
+        return low, "low_only", False, None
+    return None, "none", False, None
 
 
 def consolidate_cardmarket_matches(raw_matches):
@@ -485,7 +499,7 @@ def consolidate_cardmarket_matches(raw_matches):
         trend_eur = safe_float(cardmarket.get("trend_eur"))
         low_dkk = low_eur * EUR_DKK if low_eur is not None else None
         trend_dkk = trend_eur * EUR_DKK if trend_eur is not None else None
-        reference_eur, reference_kind = _cardmarket_reference(cardmarket)
+        reference_eur, reference_kind, price_stable, divergence_pct = _cardmarket_reference(cardmarket)
         reference_dkk = reference_eur * EUR_DKK if reference_eur is not None else None
         diff_reference = (
             ((best["price"] / reference_dkk) - 1.0) * 100.0
@@ -495,6 +509,17 @@ def consolidate_cardmarket_matches(raw_matches):
             ((best["price"] / low_dkk) - 1.0) * 100.0
             if low_dkk and low_dkk > 0 else None
         )
+        value_status = "UNSTABLE_CM_PRICE"
+        if price_stable and diff_reference is not None:
+            if diff_reference <= -10:
+                value_status = "EU_KUP"
+            elif diff_reference <= 0:
+                value_status = "KUP"
+            elif diff_reference <= 15:
+                value_status = "FAIR"
+            else:
+                value_status = "OVERPRIS"
+
         matched.append({
             "game": game,
             "type": cardmarket.get("type") or best["type"],
@@ -520,6 +545,10 @@ def consolidate_cardmarket_matches(raw_matches):
             "cm_reference_eur": reference_eur,
             "cm_reference_dkk": reference_dkk,
             "cm_reference_kind": reference_kind,
+            "cm_price_stable": price_stable,
+            "cm_divergence_pct": divergence_pct,
+            "rankable": price_stable,
+            "value_status": value_status,
             "diff_pct_vs_reference": diff_reference,
             "diff_pct_vs_low": diff_low,
             "match_score": min(bucket["scores"]) if bucket["scores"] else None,
@@ -528,6 +557,7 @@ def consolidate_cardmarket_matches(raw_matches):
         })
 
     matched.sort(key=lambda row: (
+        0 if row["rankable"] else 1,
         9999 if row["diff_pct_vs_reference"] is None else row["diff_pct_vs_reference"],
         row["dk_price"],
     ))
@@ -558,17 +588,22 @@ def build_radar(state):
     type_counts = {}
     for row in matched:
         type_counts[row["type"]] = type_counts.get(row["type"], 0) + 1
+    stable_count = sum(1 for row in matched if row["rankable"])
+    unstable_count = len(matched) - stable_count
 
     return {
-        "version": 3,
+        "version": 4,
         "scope": "pokemon_core_sealed",
-        "benchmark": "cardmarket_trend_with_low_fallback",
+        "benchmark": "cardmarket_trend_with_stability_gate",
+        "cm_max_divergence_pct": MAX_CM_DIVERGENCE_PCT,
         "generated_at": datetime.now(ZoneInfo(TZ_NAME)).isoformat(),
         "eur_dkk_used": EUR_DKK,
         "danish_offer_lines": len(offers),
         "danish_groups": len(groups),
         "matched_alias_groups": len(raw_matches),
         "matched_groups": len(matched),
+        "stable_price_groups": stable_count,
+        "unstable_price_groups": unstable_count,
         "merged_alias_groups": len(raw_matches) - len(matched),
         "unmatched_groups": len(unmatched),
         "matched_type_counts": dict(sorted(type_counts.items())),
@@ -583,14 +618,23 @@ def build_radar(state):
 
 
 def make_embed(radar):
-    rows = [row for row in radar["matched"] if row.get("diff_pct_vs_reference") is not None]
-    best = rows[:10]
-    overpriced = sorted(rows, key=lambda row: row["diff_pct_vs_reference"], reverse=True)[:5]
+    stable = [
+        row for row in radar["matched"]
+        if row.get("rankable") and row.get("diff_pct_vs_reference") is not None
+    ]
+    unstable = [row for row in radar["matched"] if not row.get("rankable")]
+    best = stable[:10]
+    overpriced = sorted(stable, key=lambda row: row["diff_pct_vs_reference"], reverse=True)[:5]
+    unstable = sorted(
+        unstable,
+        key=lambda row: -1 if row.get("cm_divergence_pct") is None else -row["cm_divergence_pct"],
+    )[:5]
+
     lines = [
-        f"**{radar['matched_groups']}** unikke core sealed-produkter matchet mod Cardmarket · "
-        f"**{radar['merged_alias_groups']}** dublet/alias-grupper samlet · "
-        f"**{radar['unmatched_groups']}** usikre holdt ude.",
-        "", "🟢 **BEDSTE DK-PRISER VS. CARDMARKET TREND**",
+        f"**{radar['matched_groups']}** unikke core sealed-produkter · "
+        f"**{radar['stable_price_groups']}** med stabil CM-reference · "
+        f"**{radar['unstable_price_groups']}** markeret ustabile.",
+        "", "🟢 **BEDSTE OBSERVEREDE DK-PRISER VS. CARDMARKET TREND**",
     ]
     for row in best:
         sign = "+" if row["diff_pct_vs_reference"] >= 0 else ""
@@ -599,18 +643,28 @@ def make_embed(radar):
             f"CM ref {fmt_eur(row['cm_reference_eur'])} · **{sign}{row['diff_pct_vs_reference']:.0f}%**"
         )
     if overpriced:
-        lines += ["", "🔴 **STØRSTE DK-MARKUPS VS. CARDMARKET TREND**"]
+        lines += ["", "🔴 **STØRSTE DK-MARKUPS · KUN STABILE CM-PRISER**"]
         for row in overpriced:
             sign = "+" if row["diff_pct_vs_reference"] >= 0 else ""
             lines.append(
                 f"• **{row['cm_name']}** — {fmt_dkk(row['dk_price'])} · "
                 f"CM ref {fmt_eur(row['cm_reference_eur'])} · **{sign}{row['diff_pct_vs_reference']:.0f}%**"
             )
+    if unstable:
+        lines += ["", "⚠️ **USTABIL CARDMARKET-PRIS · IKKE RANKET**"]
+        for row in unstable:
+            divergence = "mangler dobbelt signal" if row.get("cm_divergence_pct") is None else f"{row['cm_divergence_pct']:.0f}% spænd"
+            lines.append(
+                f"• **{row['cm_name']}** — DK {fmt_dkk(row['dk_price'])} · "
+                f"CM low {fmt_eur(row['cm_low_eur'])} / trend {fmt_eur(row['cm_trend_eur'])} · {divergence}"
+            )
     return {
-        "title": "🛰️ MARKET RADAR V3 · CORE SEALED",
+        "title": "🛰️ MARKET RADAR V4 · CORE SEALED",
         "description": "\n".join(lines)[:4096],
         "color": 0x5865F2,
-        "footer": {"text": "DK aliases samles via Cardmarket product ID · reference = trend, low som fallback · ekskl. fragt"},
+        "footer": {
+            "text": "Bedste offentligt observerede DK-webpris · CM trend er reference · low/trend >50% fra hinanden rankes ikke · ekskl. fragt"
+        },
     }
 
 
@@ -637,8 +691,9 @@ def main():
     radar = build_radar(state)
     save_json(PREVIEW_FILE, radar)
     print(
-        f"MARKET RADAR V3 CORE SEALED: {radar['danish_offer_lines']} DK prislinjer | "
+        f"MARKET RADAR V4 CORE SEALED: {radar['danish_offer_lines']} DK prislinjer | "
         f"{radar['danish_groups']} alias-grupper | {radar['matched_groups']} unikke CM produkter | "
+        f"{radar['stable_price_groups']} stabile | {radar['unstable_price_groups']} ustabile | "
         f"{radar['merged_alias_groups']} aliases samlet | {radar['unmatched_groups']} usikre holdt ude"
     )
     if SHADOW:
@@ -648,10 +703,12 @@ def main():
         raise RuntimeError("MARKET_RADAR_WEBHOOK_URL mangler")
     post_discord(make_embed(radar))
     radar_state.update({
-        "version": 3,
+        "version": 4,
         "last_daily_date": today,
         "last_sent_at": now.isoformat(),
         "last_match_count": radar["matched_groups"],
+        "last_stable_count": radar["stable_price_groups"],
+        "last_unstable_count": radar["unstable_price_groups"],
     })
     save_json(RADAR_STATE_FILE, radar_state)
     print("MARKET RADAR: daglig rapport sendt.")
