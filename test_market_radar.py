@@ -69,29 +69,17 @@ class MarketRadarTests(unittest.TestCase):
         self.assertEqual(result["match_score"], 1.0)
 
     def test_loose_boosters_and_tins_are_out(self):
-        self.assertIsNone(
-            market_radar.infer_type("Destined Rivals Booster Pack", "POKÉMON")
-        )
-        self.assertIsNone(
-            market_radar.infer_type("Kanto Friends Mini Tin Display", "POKÉMON")
-        )
-        self.assertIsNone(
-            market_radar.infer_type("Pokeball Tin", "POKÉMON")
-        )
+        self.assertIsNone(market_radar.infer_type("Destined Rivals Booster Pack", "POKÉMON"))
+        self.assertIsNone(market_radar.infer_type("Kanto Friends Mini Tin Display", "POKÉMON"))
+        self.assertIsNone(market_radar.infer_type("Pokeball Tin", "POKÉMON"))
 
     def test_named_collections_stay_in(self):
         self.assertEqual(
-            market_radar.infer_type(
-                "Mega Greninja ex Premium Collection",
-                "POKÉMON",
-            ),
+            market_radar.infer_type("Mega Greninja ex Premium Collection", "POKÉMON"),
             "PREMIUM COLLECTION",
         )
         self.assertEqual(
-            market_radar.canonical_name(
-                "Mega Greninja ex Premium Collection",
-                "PREMIUM COLLECTION",
-            ),
+            market_radar.canonical_name("Mega Greninja ex Premium Collection", "PREMIUM COLLECTION"),
             "mega greninja ex",
         )
 
@@ -100,25 +88,32 @@ class MarketRadarTests(unittest.TestCase):
             "Pokemon Scarlet & Violet Base Set - Booster Box",
             "BOOSTER BOX",
         )
-        vintage = market_radar.canonical_name(
-            "Base Set Booster Box",
-            "BOOSTER BOX",
-        )
+        vintage = market_radar.canonical_name("Base Set Booster Box", "BOOSTER BOX")
         self.assertNotEqual(modern, vintage)
         self.assertFalse(market_radar._match_guard(modern, vintage))
 
-    def test_lorcana_is_out_of_v3_scope(self):
-        self.assertIsNone(
-            market_radar.infer_type("Lorcana Booster Box", "LORCANA")
-        )
+    def test_lorcana_is_out_of_v4_scope(self):
+        self.assertIsNone(market_radar.infer_type("Lorcana Booster Box", "LORCANA"))
 
-    def test_cardmarket_reference_prefers_trend(self):
-        reference, kind = market_radar._cardmarket_reference({
+    def test_cardmarket_reference_uses_stable_trend(self):
+        reference, kind, stable, divergence = market_radar._cardmarket_reference({
             "low_eur": 95.0,
             "trend_eur": 130.52,
         })
         self.assertEqual(reference, 130.52)
         self.assertEqual(kind, "trend")
+        self.assertTrue(stable)
+        self.assertLess(divergence, market_radar.MAX_CM_DIVERGENCE_PCT)
+
+    def test_cardmarket_reference_flags_large_divergence(self):
+        reference, kind, stable, divergence = market_radar._cardmarket_reference({
+            "low_eur": 139.9,
+            "trend_eur": 329.05,
+        })
+        self.assertEqual(reference, 329.05)
+        self.assertEqual(kind, "trend")
+        self.assertFalse(stable)
+        self.assertGreater(divergence, market_radar.MAX_CM_DIVERGENCE_PCT)
 
     def test_alias_groups_merge_by_cardmarket_product_id(self):
         cardmarket = {
@@ -163,7 +158,8 @@ class MarketRadarTests(unittest.TestCase):
         self.assertEqual(rows[0]["dk_price"], 499.0)
         self.assertEqual(rows[0]["shops"], 2)
         self.assertEqual(rows[0]["alias_groups_merged"], 2)
-        self.assertEqual(rows[0]["cm_reference_kind"], "trend")
+        self.assertFalse(rows[0]["rankable"])
+        self.assertEqual(rows[0]["value_status"], "UNSTABLE_CM_PRICE")
 
 
 if __name__ == "__main__":
