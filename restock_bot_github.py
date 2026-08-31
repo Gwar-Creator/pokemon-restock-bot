@@ -1491,10 +1491,39 @@ def is_english_card_product(name):
 # RESTOCK ALERT FILTER
 # ============================================================
 
+# V47_MATRAWS_SINGLE_ALERT_GUARD
+def is_matraws_single_alert_product(product):
+    """Recognize Matraws single-card naming without removing products from state."""
+    product = product or {}
+    url = str(product.get("url", "")).lower()
+
+    if "matraws.dk/" not in url:
+        return False
+
+    name = str(product.get("name", "")).strip()
+    if " - " not in name:
+        return False
+
+    # Matraws singles end in a bracketed card number/code, e.g. [CLC-009]
+    # or [7]. Sealed products do not use this per-card title convention.
+    match = re.search(
+        r"\[([a-z0-9]{1,10}(?:[-/][a-z0-9]{1,10}){0,2})\]\s*$",
+        name,
+        flags=re.IGNORECASE,
+    )
+    if not match:
+        return False
+
+    return bool(re.search(r"\d", match.group(1)))
+
+
 def restock_alert_allowed(product, game_override=None):
     """Keep low-signal products in state, but silence them on Discord."""
     name = str((product or {}).get("name", "")).lower()
     game = game_override or (product or {}).get("game")
+
+    if is_matraws_single_alert_product(product):
+        return False
 
     # V46_UNIFIED_ABUNDANT_SET_POLICY
     # Chaos Rising / Pitch Black low-signal formats stay in state,

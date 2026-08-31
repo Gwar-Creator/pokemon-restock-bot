@@ -208,6 +208,8 @@ Gode næste trin, som skal indføres enkeltvis og sikkert:
   prisdigests og adskilte Card Market fra Price History.
 - Lav-signal-produkter skal normalt forblive i state, men ikke sendes til Discord.
 
+- 2026-08-31: V47 tilføjede et Matraws-specifikt Discord-værn mod enkeltkort med Matraws' per-card titelkonvention (fx `[CLC-009]`). Produkterne bevares i state, men må ikke udløse Restock-alerts.
+
 ## Kommunikation
 
 Skriv kort og konkret på dansk. Start med anbefalingen eller resultatet. Forklar tydeligt, hvad der blev ændret, hvad der ikke blev ændret, og hvordan det er verificeret. Bed om godkendelse før destruktive ændringer, historikmigreringer eller større adfærdsændringer.
