@@ -1,11 +1,11 @@
 {
-  "candidate_lines": 373,
-  "coverage_pct": 68.9,
+  "candidate_lines": 374,
+  "coverage_pct": 68.4,
   "exact_comparable_groups": 68,
   "likely_alias_pairs": 20,
-  "matched_lines": 257,
-  "normalized_keys": 183,
-  "single_shop_keys": 115,
+  "matched_lines": 256,
+  "normalized_keys": 185,
+  "single_shop_keys": 117,
   "suspects": [
     {
       "game": "POKÉMON",
@@ -26,6 +26,28 @@
       ],
       "similarity": 1.0,
       "type": "ETB"
+    },
+    {
+      "game": "LORCANA",
+      "language": "EN",
+      "left_names": [
+        "Disney Lorcana: Into the Inklands Booster Pack",
+        "Into the Inklands - Booster - Disney Lorcana"
+      ],
+      "left_set": "into the inklands",
+      "left_shops": [
+        "BALTZER GAMES",
+        "ROGERZ"
+      ],
+      "right_names": [
+        "- 8% Booster Into the Inklands"
+      ],
+      "right_set": "8 into the inklands",
+      "right_shops": [
+        "FARAOS"
+      ],
+      "similarity": 0.968,
+      "type": "BOOSTER PACK"
     },
     {
       "game": "POKÉMON",
@@ -188,36 +210,6 @@
       "game": "POKÉMON",
       "language": "EN",
       "left_names": [
-        "Booster Pack – SV10 Destined Rivals",
-        "Destined Rivals - Booster Pack - Pokemon kort"
-      ],
-      "left_set": "destined rivals",
-      "left_shops": [
-        "CARDX",
-        "EPIC PANDA",
-        "MATRAWS",
-        "MUSEN & SLOTTET",
-        "NOSTALGIC",
-        "PBCARDS",
-        "POKECARDS.DK",
-        "POKEHULEN",
-        "POKEMONS.DK",
-        "ROGERZ"
-      ],
-      "right_names": [
-        "Pokemon SV10 Destined Rivals - Booster pakke"
-      ],
-      "right_set": "destined rivals pakke",
-      "right_shops": [
-        "FUN-SHOP"
-      ],
-      "similarity": 0.94,
-      "type": "BOOSTER PACK"
-    },
-    {
-      "game": "POKÉMON",
-      "language": "EN",
-      "left_names": [
         "Pitch Black - Booster Bundle - Pokemon kort",
         "Pitch Black Booster Bundle"
       ],
@@ -269,6 +261,35 @@
       "right_set": "pakke chaos rising 1stk",
       "right_shops": [
         "STEFFEN-O"
+      ],
+      "similarity": 0.94,
+      "type": "BOOSTER PACK"
+    },
+    {
+      "game": "POKÉMON",
+      "language": "EN",
+      "left_names": [
+        "Booster Pack – SV10 Destined Rivals",
+        "Destined Rivals - Booster Pack - Pokemon kort"
+      ],
+      "left_set": "destined rivals",
+      "left_shops": [
+        "CARDX",
+        "EPIC PANDA",
+        "MATRAWS",
+        "MUSEN & SLOTTET",
+        "NOSTALGIC",
+        "PBCARDS",
+        "POKECARDS.DK",
+        "POKEHULEN",
+        "ROGERZ"
+      ],
+      "right_names": [
+        "Pokemon SV10 Destined Rivals - Booster pakke"
+      ],
+      "right_set": "destined rivals pakke",
+      "right_shops": [
+        "FUN-SHOP"
       ],
       "similarity": 0.94,
       "type": "BOOSTER PACK"
@@ -534,29 +555,6 @@
       ],
       "similarity": 0.94,
       "type": "BOOSTER BOX"
-    },
-    {
-      "game": "POKÉMON",
-      "language": "EN",
-      "left_names": [
-        "Booster Pack – SV10.5 White Flare",
-        "Pokémon TCG: White Flare Booster Pack"
-      ],
-      "left_set": "white flare",
-      "left_shops": [
-        "POKECARDS.DK",
-        "POKEMONS.DK",
-        "ROGERZ"
-      ],
-      "right_names": [
-        "Pokémon White Flare Booster Pack (Scarlet & Violet)"
-      ],
-      "right_set": "white flare scarlet and violet",
-      "right_shops": [
-        "POKÉPULLS"
-      ],
-      "similarity": 0.94,
-      "type": "BOOSTER PACK"
     }
   ],
   "version": 1
