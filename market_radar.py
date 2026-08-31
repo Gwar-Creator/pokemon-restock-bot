@@ -19,20 +19,15 @@ DAILY_HOUR = max(0, min(23, int(os.getenv("MARKET_RADAR_DAILY_HOUR", "9") or 9))
 FORCE = os.getenv("MARKET_RADAR_FORCE_RUN", "0") == "1"
 SHADOW = os.getenv("MARKET_RADAR_SHADOW", "1") == "1"
 EUR_DKK = float(os.getenv("MARKET_RADAR_EUR_DKK", "7.46") or 7.46)
-MIN_MATCH_SCORE = float(os.getenv("MARKET_RADAR_MIN_MATCH_SCORE", "0.86") or 0.86)
+MIN_MATCH_SCORE = float(os.getenv("MARKET_RADAR_MIN_MATCH_SCORE", "0.90") or 0.90)
 
+# V2 deliberately starts narrow: Pokemon core sealed only.
 CARDMARKET = {
     "POKÉMON": {
         "products_url": "https://downloads.s3.cardmarket.com/productCatalog/productList/products_nonsingles_6.json",
         "prices_url": "https://downloads.s3.cardmarket.com/productCatalog/priceGuide/price_guide_6.json",
         "local_products": "products_nonsingles_6.json",
         "local_prices": "price_guide_6.json",
-    },
-    "LORCANA": {
-        "products_url": "https://downloads.s3.cardmarket.com/productCatalog/productList/products_nonsingles_19.json",
-        "prices_url": "https://downloads.s3.cardmarket.com/productCatalog/priceGuide/price_guide_19.json",
-        "local_products": "products_nonsingles_19.json",
-        "local_prices": "price_guide_19.json",
     },
 }
 
@@ -64,7 +59,13 @@ ACCESSORY_MARKERS = (
     "playmat", "play mat", "toploader", "top loader", "storage box", "acrylic", "acryl", "akryl",
     "display case", "card case", "penalhus", "pencil case", "repack",
 )
-ACCESSORY_EXCEPTIONS = ("binder collection", "playmat collection", "play mat collection", "sleeved booster")
+ACCESSORY_EXCEPTIONS = ("binder collection",)
+
+COLLECTION_TYPES = {
+    "UPC", "SPC", "PREMIUM COLLECTION", "SPECIAL COLLECTION", "ILLUSTRATION COLLECTION",
+    "POSTER COLLECTION", "BINDER COLLECTION", "EX BOX", "V BOX", "VSTAR BOX", "VMAX BOX",
+    "COLLECTION BOX", "COLLECTION",
+}
 
 
 def load_json(path, default=None):
@@ -114,68 +115,131 @@ def is_accessory(name):
 
 
 def infer_type(name, game):
-    text = normalize_text(name)
-    if not is_english(name) or is_accessory(name):
+    """Return a narrow core-sealed product type or None.
+
+    V2 intentionally excludes loose boosters, sleeved boosters, blisters,
+    tins/mini tins, displays/cases and accessories. Collection products stay
+    broad enough to catch named boxes such as Mega Greninja ex products.
+    """
+    if game != "POKÉMON":
         return None
-    if any(marker in text for marker in ("booster box case", "booster case", "case of booster")):
+
+    text = normalize_text(name)
+    if not text or not is_english(name) or is_accessory(name):
+        return None
+
+    # Hard quantity/container exclusions first. Booster Display is the one
+    # display wording that is equivalent to a Booster Box.
+    if any(marker in text for marker in ("booster box case", "booster case", "case of booster", "case 6", "case 10")):
         return None
     if re.search(r"\b(?:4|6|8|10|12)\s*x\s*36\b", text):
         return None
+    if "display" in text and "booster display" not in text:
+        return None
     if "booster bundle display" in text or "bundle display" in text:
         return None
-    if game == "POKÉMON" and ("elite trainer box" in text or re.search(r"\betb\b", text)):
-        if "pokemon center" in text:
-            return "PC ETB"
-        return "ETB"
-    if "booster box" in text or "booster display" in text:
-        return "BOOSTER BOX"
+
+    # Explicitly excluded low-signal sealed formats.
+    if any(marker in text for marker in (
+        "mini tin", " tin ", "tin box", "booster pack", "booster pakke",
+        "sleeved booster", "sleeve booster", "checklane", "blister",
+    )):
+        return None
+    if text.startswith("tin ") or text.endswith(" tin"):
+        return None
+
+    if "elite trainer box" in text or re.search(r"\betb\b", text):
+        return "PC ETB" if "pokemon center" in text else "ETB"
     if "booster bundle" in text:
         return "BOOSTER BUNDLE"
-    if "sleeved booster" in text or "sleeve booster" in text:
-        return "SLEEVED BOOSTER"
-    if "booster pack" in text:
-        return "BOOSTER PACK"
-    if "booster" in text and not any(x in text for x in ("box", "bundle", "display", "collection")):
-        return "BOOSTER PACK"
+    if "booster box" in text or "booster display" in text:
+        return "BOOSTER BOX"
+
+    # Collection hierarchy: most specific first.
     if "ultra premium collection" in text or re.search(r"\bupc\b", text):
+        return "UPC"
+    if "super premium collection" in text or re.search(r"\bspc\b", text):
+        return "SPC"
+    if "premium collection" in text or "premium figure collection" in text:
+        return "PREMIUM COLLECTION"
+    if "special collection" in text:
+        return "SPECIAL COLLECTION"
+    if "illustration collection" in text:
+        return "ILLUSTRATION COLLECTION"
+    if "poster collection" in text:
+        return "POSTER COLLECTION"
+    if "binder collection" in text:
+        return "BINDER COLLECTION"
+    if re.search(r"\bex\b.*\bbox\b", text):
+        return "EX BOX"
+    if re.search(r"\bvstar\b.*\bbox\b", text):
+        return "VSTAR BOX"
+    if re.search(r"\bvmax\b.*\bbox\b", text):
+        return "VMAX BOX"
+    if re.search(r"\bv\b.*\bbox\b", text):
+        return "V BOX"
+    if "collection box" in text:
+        return "COLLECTION BOX"
+    if "collection" in text:
         return "COLLECTION"
-    if "premium collection" in text or "special collection" in text or "collection box" in text:
-        return "COLLECTION"
-    if "collection" in text and game == "POKÉMON":
-        return "COLLECTION"
-    if "tin" in text and game == "POKÉMON":
-        return "TIN"
-    if "blister" in text and game == "POKÉMON":
-        return "BLISTER"
-    if game == "LORCANA" and ("illumineer s trove" in text or "illumineers trove" in text):
-        return "TROVE"
-    if game == "LORCANA" and "gift set" in text:
-        return "GIFT SET"
+
     return None
+
+
+def type_family(product_type):
+    if product_type in ("ETB", "PC ETB"):
+        return product_type
+    if product_type == "BOOSTER BUNDLE":
+        return "BOOSTER BUNDLE"
+    if product_type == "BOOSTER BOX":
+        return "BOOSTER BOX"
+    if product_type in COLLECTION_TYPES:
+        return "COLLECTION"
+    return product_type
 
 
 def canonical_name(name, product_type):
     text = normalize_text(name)
-    text = re.sub(r"\b(?:pokemon|pok mon|tcg|trading card game|disney|lorcana|engelsk|english)\b", " ", text)
+    text = re.sub(r"\b(?:pokemon|pok mon|tcg|trading card game|engelsk|english|sealed)\b", " ", text)
     text = re.sub(r"\b(?:sv|me)\s*\d+(?:\.\d+)?[a-z]?\b", " ", text)
-    text = re.sub(r"\b(?:pok|dis|lor)[a-z0-9-]*\d[a-z0-9-]*\b", " ", text)
+    text = re.sub(r"\bpok[a-z0-9-]*\d[a-z0-9-]*\b", " ", text)
+
     phrases = {
-        "PC ETB": ("pokemon center elite trainer box", "elite trainer box", "etb"),
+        "PC ETB": ("pokemon center elite trainer box", "elite trainer box", "etb", "pokemon center"),
         "ETB": ("elite trainer box", "etb"),
-        "BOOSTER BOX": ("booster box", "booster display", "display"),
+        "BOOSTER BOX": ("booster box", "booster display"),
         "BOOSTER BUNDLE": ("booster bundle",),
-        "SLEEVED BOOSTER": ("sleeved booster", "sleeve booster"),
-        "BOOSTER PACK": ("booster pack", "booster pakke", "booster"),
-        "COLLECTION": ("ultra premium collection", "premium collection", "special collection", "collection box", "collection"),
-        "TIN": ("tin box", "tin"),
-        "BLISTER": ("3 pack blister", "2 pack blister", "1 pack blister", "blister"),
-        "TROVE": ("illumineer s trove", "illumineers trove", "trove"),
-        "GIFT SET": ("gift set",),
+        "UPC": ("ultra premium collection", "upc"),
+        "SPC": ("super premium collection", "spc"),
+        "PREMIUM COLLECTION": ("premium figure collection", "premium collection"),
+        "SPECIAL COLLECTION": ("special collection",),
+        "ILLUSTRATION COLLECTION": ("illustration collection",),
+        "POSTER COLLECTION": ("poster collection",),
+        "BINDER COLLECTION": ("binder collection",),
+        "EX BOX": ("box",),
+        "V BOX": ("box",),
+        "VSTAR BOX": ("box",),
+        "VMAX BOX": ("box",),
+        "COLLECTION BOX": ("collection box",),
+        "COLLECTION": ("collection box", "collection"),
     }.get(product_type, ())
     for phrase in phrases:
         text = text.replace(phrase, " ")
-    text = re.sub(r"\b(?:6|10|18|20|24|30|36)\s*(?:packs?|boosters?|boostere|pakker)\b", " ", text)
-    text = re.sub(r"\b(?:scarlet and violet|sword and shield|mega evolution)\b", " ", text)
+
+    # Shipping/retailer fluff and explicit content counts are not product identity.
+    text = re.sub(r"\b(?:with|med)\s+\d+\s+(?:packs?|boosters?|boostere|pakker)\b", " ", text)
+    text = re.sub(r"\b(?:6|8|9|10|11|12|18|20|24|30|36)\s*(?:packs?|boosters?|boostere|pakker)\b", " ", text)
+    text = " ".join(text.split())
+
+    # Series prefixes are often present only in Danish shop titles. Remove them
+    # when a distinctive set/product name remains, but preserve Base Set so
+    # modern Scarlet & Violet Base Set cannot become vintage Base Set.
+    for prefix in ("scarlet and violet", "sword and shield"):
+        if text.startswith(prefix + " "):
+            remainder = text[len(prefix):].strip()
+            if remainder and remainder != "base set" and len(remainder.split()) >= 2:
+                text = remainder
+
     return " ".join(text.split())
 
 
@@ -206,7 +270,7 @@ def _iter_products(mapping, source_key, default_game=None):
         if not isinstance(product, dict) or not product.get("name"):
             continue
         game = product.get("game") or default_game
-        if game not in ("POKÉMON", "LORCANA"):
+        if game != "POKÉMON":
             continue
         price = safe_float(product.get("price"))
         if price is None or price <= 0 or not product_buyable(product):
@@ -222,6 +286,7 @@ def _iter_products(mapping, source_key, default_game=None):
             "price": price,
             "url": str(product.get("url") or ""),
             "type": product_type,
+            "family": type_family(product_type),
             "canonical": canonical_name(product.get("name"), product_type),
         }
 
@@ -243,7 +308,10 @@ def collect_danish_offers(state):
 def group_danish_offers(offers):
     groups = {}
     for offer in offers:
-        key = (offer["game"], offer["type"], offer["canonical"])
+        # Collection subtypes share one comparison family because shops and
+        # Cardmarket do not always use the same collection suffix.
+        group_type = offer["family"]
+        key = (offer["game"], group_type, offer["canonical"])
         groups.setdefault(key, []).append(offer)
     output = []
     for key, rows in groups.items():
@@ -264,7 +332,7 @@ def fetch_json(url, local_name):
         path = Path(local_dir) / local_name
         if path.exists():
             return load_json(path, {})
-    response = requests.get(url, headers={"User-Agent": "Pokemon-Market-Radar/1.0"}, timeout=60)
+    response = requests.get(url, headers={"User-Agent": "Pokemon-Market-Radar/2.0"}, timeout=60)
     response.raise_for_status()
     return response.json()
 
@@ -298,6 +366,7 @@ def load_cardmarket():
                 "idProduct": product_id,
                 "name": name,
                 "type": product_type,
+                "family": type_family(product_type),
                 "canonical": canonical_name(name, product_type),
                 "low_eur": low,
                 "trend_eur": trend,
@@ -322,29 +391,56 @@ def token_score(left, right):
     jaccard = intersection / union if union else 0.0
     sequence = SequenceMatcher(None, left, right).ratio()
     containment = intersection / min(len(left_tokens), len(right_tokens))
-    return 0.45 * containment + 0.35 * jaccard + 0.20 * sequence
+    return 0.50 * containment + 0.30 * jaccard + 0.20 * sequence
+
+
+def _match_guard(left, right):
+    left_tokens = set(left.split())
+    right_tokens = set(right.split())
+    shared = left_tokens & right_tokens
+    if not left_tokens or not right_tokens:
+        return False
+
+    # Explicit Base Set safeguard: do not collapse a modern era title into the
+    # vintage Base Set product just because both contain "base set".
+    if "base" in shared and "set" in shared:
+        if left_tokens != right_tokens:
+            return False
+
+    # A fuzzy match must share at least two identity tokens. Exact one-token
+    # products are still allowed by the exact branch in match_cardmarket().
+    return len(shared) >= 2
 
 
 def match_cardmarket(group, cardmarket_rows):
-    game, product_type, canonical = group["key"]
-    candidates = [row for row in cardmarket_rows.get(game, []) if row["type"] == product_type]
-    if not candidates:
+    game, family, canonical = group["key"]
+    candidates = [
+        row for row in cardmarket_rows.get(game, [])
+        if row.get("family", type_family(row.get("type"))) == family
+    ]
+    if not candidates or not canonical:
         return None
-    exact = [row for row in candidates if row["canonical"] == canonical and canonical]
+
+    exact = [row for row in candidates if row.get("canonical") == canonical]
     if len(exact) == 1:
         result = dict(exact[0])
         result["match_score"] = 1.0
         result["match_method"] = "exact"
         return result
-    scored = sorted(
-        ((token_score(canonical, row["canonical"]), row) for row in candidates),
-        key=lambda item: item[0],
-        reverse=True,
-    )
+
+    scored = []
+    for row in candidates:
+        other = row.get("canonical") or ""
+        if not _match_guard(canonical, other):
+            continue
+        scored.append((token_score(canonical, other), row))
+    scored.sort(key=lambda item: item[0], reverse=True)
+
     if not scored or scored[0][0] < MIN_MATCH_SCORE:
         return None
-    if len(scored) > 1 and scored[0][0] - scored[1][0] < 0.04:
+    if len(scored) > 1 and scored[0][0] - scored[1][0] < 0.08:
         return None
+
     result = dict(scored[0][1])
     result["match_score"] = round(scored[0][0], 3)
     result["match_method"] = "fuzzy"
@@ -378,22 +474,30 @@ def build_radar(state):
         benchmark = low_dkk if low_dkk and low_dkk > 0 else trend_dkk
         diff_pct = ((best["price"] / benchmark) - 1.0) * 100.0 if benchmark and benchmark > 0 else None
         matched.append({
-            "game": best["game"], "type": best["type"], "name": best["name"],
+            "game": best["game"], "type": best["type"], "family": best["family"], "name": best["name"],
             "dk_price": best["price"], "shop": best["shop"], "url": best["url"],
             "shops": len(group["offers"]), "cm_product_id": cardmarket["idProduct"],
-            "cm_name": cardmarket["name"], "cm_low_eur": cardmarket.get("low_eur"),
-            "cm_trend_eur": cardmarket.get("trend_eur"), "cm_low_dkk": low_dkk,
-            "cm_trend_dkk": trend_dkk, "diff_pct_vs_low": diff_pct,
+            "cm_name": cardmarket["name"], "cm_type": cardmarket.get("type"),
+            "cm_low_eur": cardmarket.get("low_eur"), "cm_trend_eur": cardmarket.get("trend_eur"),
+            "cm_low_dkk": low_dkk, "cm_trend_dkk": trend_dkk, "diff_pct_vs_low": diff_pct,
             "match_score": cardmarket["match_score"], "match_method": cardmarket["match_method"],
         })
     matched.sort(key=lambda row: (9999 if row["diff_pct_vs_low"] is None else row["diff_pct_vs_low"], row["dk_price"]))
+
+    type_counts = {}
+    for row in matched:
+        type_counts[row["type"]] = type_counts.get(row["type"], 0) + 1
+
     return {
+        "version": 2,
+        "scope": "pokemon_core_sealed",
         "generated_at": datetime.now(ZoneInfo(TZ_NAME)).isoformat(),
         "eur_dkk_used": EUR_DKK,
         "danish_offer_lines": len(offers),
         "danish_groups": len(groups),
         "matched_groups": len(matched),
         "unmatched_groups": len(unmatched),
+        "matched_type_counts": dict(sorted(type_counts.items())),
         "cardmarket_meta": cardmarket_meta,
         "matched": matched,
         "unmatched": [
@@ -409,7 +513,8 @@ def make_embed(radar):
     best = rows[:10]
     overpriced = sorted(rows, key=lambda row: row["diff_pct_vs_low"], reverse=True)[:5]
     lines = [
-        f"**{radar['matched_groups']}** produkter matchet sikkert mod Cardmarket · **{radar['unmatched_groups']}** holdt ude pga. usikkert match.",
+        f"**{radar['matched_groups']}** core sealed-produkter matchet sikkert mod Cardmarket · "
+        f"**{radar['unmatched_groups']}** holdt ude pga. usikkert match.",
         "", "🟢 **BEDSTE DK-PRISER VS. CARDMARKET LOW**",
     ]
     for row in best:
@@ -427,10 +532,10 @@ def make_embed(radar):
                 f"**{sign}{row['diff_pct_vs_low']:.0f}%**"
             )
     return {
-        "title": "🛰️ MARKET RADAR · DANMARK VS. CARDMARKET",
+        "title": "🛰️ MARKET RADAR V2 · CORE SEALED",
         "description": "\n".join(lines)[:4096],
         "color": 0x5865F2,
-        "footer": {"text": "Cardmarket low/trend er dagens prisguide og ekskl. fragt · kun sikre produktmatches vises"},
+        "footer": {"text": "Kun ETB, bundles, booster boxes og collections · Cardmarket low/trend ekskl. fragt"},
     }
 
 
@@ -457,7 +562,7 @@ def main():
     radar = build_radar(state)
     save_json(PREVIEW_FILE, radar)
     print(
-        f"MARKET RADAR V1: {radar['danish_offer_lines']} DK prislinjer | {radar['danish_groups']} grupper | "
+        f"MARKET RADAR V2 CORE SEALED: {radar['danish_offer_lines']} DK prislinjer | {radar['danish_groups']} grupper | "
         f"{radar['matched_groups']} sikre CM matches | {radar['unmatched_groups']} usikre holdt ude"
     )
     if SHADOW:
@@ -467,7 +572,7 @@ def main():
         raise RuntimeError("MARKET_RADAR_WEBHOOK_URL mangler")
     post_discord(make_embed(radar))
     radar_state.update({
-        "version": 1,
+        "version": 2,
         "last_daily_date": today,
         "last_sent_at": now.isoformat(),
         "last_match_count": radar["matched_groups"],
