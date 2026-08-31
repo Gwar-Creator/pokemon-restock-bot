@@ -107,10 +107,63 @@ class MarketRadarTests(unittest.TestCase):
         self.assertNotEqual(modern, vintage)
         self.assertFalse(market_radar._match_guard(modern, vintage))
 
-    def test_lorcana_is_out_of_v2_scope(self):
+    def test_lorcana_is_out_of_v3_scope(self):
         self.assertIsNone(
             market_radar.infer_type("Lorcana Booster Box", "LORCANA")
         )
+
+    def test_cardmarket_reference_prefers_trend(self):
+        reference, kind = market_radar._cardmarket_reference({
+            "low_eur": 95.0,
+            "trend_eur": 130.52,
+        })
+        self.assertEqual(reference, 130.52)
+        self.assertEqual(kind, "trend")
+
+    def test_alias_groups_merge_by_cardmarket_product_id(self):
+        cardmarket = {
+            "idProduct": 884751,
+            "name": "Mega Greninja ex Premium Collection",
+            "type": "PREMIUM COLLECTION",
+            "family": "COLLECTION",
+            "low_eur": 27.5,
+            "trend_eur": 42.54,
+            "match_score": 1.0,
+            "match_method": "exact",
+        }
+        raw = [
+            {
+                "game": "POKÉMON",
+                "best": {"name": "Mega Greninja ex Premium Collection Box"},
+                "offers": [
+                    {
+                        "shop": "POKEMONPORTALEN", "price": 499.0,
+                        "url": "https://example.invalid/a", "name": "Mega Greninja ex Premium Collection Box",
+                        "type": "PREMIUM COLLECTION", "family": "COLLECTION",
+                    }
+                ],
+                "cardmarket": dict(cardmarket),
+            },
+            {
+                "game": "POKÉMON",
+                "best": {"name": "Pokémon TCG: Mega Greninja ex Premium Collection"},
+                "offers": [
+                    {
+                        "shop": "NOSTALGIC", "price": 529.0,
+                        "url": "https://example.invalid/b", "name": "Pokémon TCG: Mega Greninja ex Premium Collection",
+                        "type": "PREMIUM COLLECTION", "family": "COLLECTION",
+                    }
+                ],
+                "cardmarket": dict(cardmarket),
+            },
+        ]
+        rows = market_radar.consolidate_cardmarket_matches(raw)
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]["cm_product_id"], 884751)
+        self.assertEqual(rows[0]["dk_price"], 499.0)
+        self.assertEqual(rows[0]["shops"], 2)
+        self.assertEqual(rows[0]["alias_groups_merged"], 2)
+        self.assertEqual(rows[0]["cm_reference_kind"], "trend")
 
 
 if __name__ == "__main__":
