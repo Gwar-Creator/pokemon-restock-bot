@@ -1,5 +1,4 @@
 import importlib.util
-import os
 import unittest
 
 
@@ -57,6 +56,7 @@ class MarketRadarTests(unittest.TestCase):
                     "idProduct": 818585,
                     "name": "Destined Rivals Elite Trainer Box",
                     "type": "ETB",
+                    "family": "ETB",
                     "canonical": "destined rivals",
                     "low_eur": 97.98,
                     "trend_eur": 156.73,
@@ -67,6 +67,50 @@ class MarketRadarTests(unittest.TestCase):
         self.assertEqual(result["idProduct"], 818585)
         self.assertEqual(result["match_method"], "exact")
         self.assertEqual(result["match_score"], 1.0)
+
+    def test_loose_boosters_and_tins_are_out(self):
+        self.assertIsNone(
+            market_radar.infer_type("Destined Rivals Booster Pack", "POKÉMON")
+        )
+        self.assertIsNone(
+            market_radar.infer_type("Kanto Friends Mini Tin Display", "POKÉMON")
+        )
+        self.assertIsNone(
+            market_radar.infer_type("Pokeball Tin", "POKÉMON")
+        )
+
+    def test_named_collections_stay_in(self):
+        self.assertEqual(
+            market_radar.infer_type(
+                "Mega Greninja ex Premium Collection",
+                "POKÉMON",
+            ),
+            "PREMIUM COLLECTION",
+        )
+        self.assertEqual(
+            market_radar.canonical_name(
+                "Mega Greninja ex Premium Collection",
+                "PREMIUM COLLECTION",
+            ),
+            "mega greninja ex",
+        )
+
+    def test_modern_base_set_cannot_match_vintage_base_set(self):
+        modern = market_radar.canonical_name(
+            "Pokemon Scarlet & Violet Base Set - Booster Box",
+            "BOOSTER BOX",
+        )
+        vintage = market_radar.canonical_name(
+            "Base Set Booster Box",
+            "BOOSTER BOX",
+        )
+        self.assertNotEqual(modern, vintage)
+        self.assertFalse(market_radar._match_guard(modern, vintage))
+
+    def test_lorcana_is_out_of_v2_scope(self):
+        self.assertIsNone(
+            market_radar.infer_type("Lorcana Booster Box", "LORCANA")
+        )
 
 
 if __name__ == "__main__":
