@@ -1,17 +1,26 @@
 import json
+import math
 import os
+import re
 import time
+import unicodedata
 from datetime import datetime
 from pathlib import Path
 from statistics import median
 from zoneinfo import ZoneInfo
 
 import requests
+from bs4 import BeautifulSoup
 
 try:
     from requests_oauthlib import OAuth1
 except ImportError:
     OAuth1 = None
+
+try:
+    from curl_cffi import requests as curl_requests
+except ImportError:
+    curl_requests = None
 
 import market_radar as v5
 
@@ -24,26 +33,32 @@ CARDMARKET_APP_SECRET = os.getenv("CARDMARKET_APP_SECRET", "").strip()
 CARDMARKET_ACCESS_TOKEN = os.getenv("CARDMARKET_ACCESS_TOKEN", "").strip()
 CARDMARKET_ACCESS_SECRET = os.getenv("CARDMARKET_ACCESS_SECRET", "").strip()
 MAX_PRODUCTS = max(1, int(os.getenv("MARKET_RADAR_V6_MAX_PRODUCTS", "150") or 150))
-REQUEST_DELAY = max(0.0, float(os.getenv("MARKET_RADAR_V6_REQUEST_DELAY", "0.15") or 0.15))
+PUBLIC_MAX_PRODUCTS = max(1, int(os.getenv("MARKET_RADAR_V6_PUBLIC_MAX_PRODUCTS", "12") or 12))
+REQUEST_DELAY = max(0.0, float(os.getenv("MARKET_RADAR_V6_REQUEST_DELAY", "0.20") or 0.20))
 MIN_SELLS = max(0, int(os.getenv("MARKET_RADAR_V6_MIN_SELLS", "25") or 25))
 
-# V6 is intentionally fail-closed. A product is not called actionable unless:
-# 1) the DK product identity is exact and sufficiently specific,
-# 2) a concrete English Cardmarket article exists,
-# 3) the seller has a basic history and is not on vacation,
-# 4) the listing comment has no obvious damage/opened warning,
-# 5) delivery to Denmark is verified.
-#
-# Cardmarket's Articles resource provides concrete current listings and supports
-# idLanguage filtering. It does not expose a simple "ships to Denmark" filter.
-# Therefore foreign seller delivery is never inferred from seller country alone.
+# High-value probe products. These are always attempted even if the normal public
+# probe budget has already been consumed.
+PUBLIC_PRIORITY_IDS = {
+    819414,  # Team Rocket's Mewtwo ex Box
+    818585,  # Destined Rivals ETB
+    884751,  # Mega Greninja ex Premium Collection
+    860578,  # Ascended Heroes Booster Bundle
+}
 
 DAMAGE_MARKERS = (
     "damaged", "damage", "dented", "dent", "crushed", "crease", "creased",
     "tear", "torn", "ripped", "corner damage", "box damage", "packaging damage",
     "opened", "open box", "unsealed", "resealed", "broken seal", "seal broken",
     "beschadigt", "beschädigt", "schaden", "delle", "geoffnet", "geöffnet",
-    "offen", "eingerissen", "knick", "defekt",
+    "offen", "eingerissen", "knick", "defekt", "plastic damaged", "folie nicht perfekt",
+)
+
+FOREIGN_LANGUAGE_MARKERS = (
+    "german", "deutsch", "tysk", "french", "francais", "français", "fransk",
+    "italian", "italiano", "italiensk", "spanish", "espanol", "español", "spansk",
+    "portuguese", "portugues", "português", "portugisisk", "dutch", "nederlands",
+    "hollandsk", "japanese", "japansk", "korean", "koreansk", "chinese", "kinesisk",
 )
 
 SPECIFIC_COLLECTION_MARKERS = (
@@ -51,6 +66,19 @@ SPECIFIC_COLLECTION_MARKERS = (
     " illustration ", " poster ", " binder ", " figure ", " deluxe ", " pin ",
     " ultra ", " super ", " trainer ", " collection box ",
 )
+
+COUNTRY_CODES = {
+    "denmark": "DK", "danmark": "DK", "germany": "DE", "deutschland": "DE",
+    "italy": "IT", "italia": "IT", "france": "FR", "spain": "ES", "espana": "ES",
+    "españa": "ES", "netherlands": "NL", "nederland": "NL", "belgium": "BE",
+    "belgie": "BE", "belgië": "BE", "austria": "AT", "osterreich": "AT",
+    "österreich": "AT", "poland": "PL", "polska": "PL", "sweden": "SE",
+    "sverige": "SE", "finland": "FI", "suomi": "FI", "norway": "NO",
+    "norge": "NO", "czech republic": "CZ", "czechia": "CZ", "portugal": "PT",
+    "greece": "GR", "slovakia": "SK", "slovenia": "SI", "croatia": "HR",
+    "hungary": "HU", "romania": "RO", "ireland": "IE", "united kingdom": "GB",
+    "switzerland": "CH",
+}
 
 
 def _load_allowlist():
@@ -63,8 +91,6 @@ def _load_allowlist():
 
 
 def _credentials_available():
-    # Marketplace GET endpoints need an app signature. Access credentials are
-    # optional and are included when present, mirroring the existing scanner.
     return bool(OAuth1 and CARDMARKET_APP_TOKEN and CARDMARKET_APP_SECRET)
 
 
@@ -124,6 +150,11 @@ def _comment_has_damage(comment):
     return any(v5.normalize_text(marker) in text for marker in DAMAGE_MARKERS)
 
 
+def _comment_has_foreign_language(comment):
+    text = " " + v5.normalize_text(comment) + " "
+    return any(v5.normalize_text(marker) in text for marker in FOREIGN_LANGUAGE_MARKERS)
+
+
 def _delivery_verified(article, allowlist):
     username = _seller_username(article).lower()
     country = _seller_country(article)
@@ -146,17 +177,12 @@ def _identity_gate(row):
     cm_canonical = v5.canonical_name(row.get("cm_name") or "", row.get("cm_type") or product_type)
     normalized = " " + v5.normalize_text(dk_name) + " "
 
-    # Even after V5 says "exact", require the canonical DK and CM identities to
-    # still agree at this final gate.
     if not canonical or canonical != cm_canonical:
         return False, "CANONICAL_IDENTITY_MISMATCH"
 
-    # Generic set-level collection names are too ambiguous. Example:
-    # "Ascended Heroes Collection" can refer to several distinct sealed boxes.
     if family == "COLLECTION" and product_type == "COLLECTION":
         has_specific_marker = any(marker in normalized for marker in SPECIFIC_COLLECTION_MARKERS)
-        token_count = len(canonical.split())
-        if token_count <= 3 and not has_specific_marker:
+        if len(canonical.split()) <= 3 and not has_specific_marker:
             return False, "UNRESOLVED_VARIANT"
 
     return True, "EXACT_PRODUCT"
@@ -164,16 +190,11 @@ def _identity_gate(row):
 
 def _fetch_articles(product_id):
     url = f"{CARDMARKET_API_BASE}/articles/{int(product_id)}"
-    params = {
-        "idLanguage": 1,
-        "start": 0,
-        "maxResults": 100,
-    }
     response = requests.get(
         url,
-        params=params,
+        params={"idLanguage": 1, "start": 0, "maxResults": 100},
         auth=_oauth(url),
-        headers={"Accept": "application/json", "User-Agent": "Pokemon-Market-Radar/6.0"},
+        headers={"Accept": "application/json", "User-Agent": "Pokemon-Market-Radar/6.1"},
         timeout=30,
     )
     response.raise_for_status()
@@ -190,24 +211,20 @@ def _validate_articles(articles, allowlist):
         "delivery_unverified": 0,
         "invalid_price": 0,
     }
-
     for article in articles:
         if not isinstance(article, dict):
             continue
         if _article_language_id(article) != 1:
             rejected["non_english"] += 1
             continue
-
         price = v5.safe_float(article.get("price"))
         if price is None or price <= 0:
             rejected["invalid_price"] += 1
             continue
-
         comment = str(article.get("comments") or "")
         if _comment_has_damage(comment):
             rejected["damaged_or_opened"] += 1
             continue
-
         seller = _seller(article)
         if seller.get("onVacation") is True:
             rejected["seller_on_vacation"] += 1
@@ -215,27 +232,203 @@ def _validate_articles(articles, allowlist):
         if v5.safe_int(seller.get("sellCount"), 0) < MIN_SELLS:
             rejected["seller_too_new"] += 1
             continue
-
         delivery_ok, delivery_reason = _delivery_verified(article, allowlist)
         if not delivery_ok:
             rejected["delivery_unverified"] += 1
             continue
-
         valid.append({
             "idArticle": v5.safe_int(article.get("idArticle"), 0),
             "price_eur": price,
             "seller": _seller_username(article),
             "seller_country": _seller_country(article),
-            "seller_reputation": seller.get("reputation"),
             "seller_sell_count": seller.get("sellCount"),
             "comments": comment[:300],
             "delivery_verification": delivery_reason,
             "language": "English",
+            "language_verified": True,
             "sealed_basis": "Cardmarket sealed/non-single product; opened/damage comments rejected",
         })
-
     valid.sort(key=lambda row: (row["price_eur"], row["seller"]))
     return valid, rejected
+
+
+def _cm_slug(name):
+    value = unicodedata.normalize("NFKD", str(name or ""))
+    value = "".join(char for char in value if not unicodedata.combining(char))
+    value = value.replace("’", "").replace("'", "").replace("&", " and ")
+    value = re.sub(r"[^A-Za-z0-9]+", "-", value).strip("-")
+    return value
+
+
+def _public_product_url(row):
+    product_type = str(row.get("cm_type") or row.get("type") or "")
+    if product_type in {"ETB", "PC ETB"}:
+        category = "Elite-Trainer-Boxes"
+    elif product_type in {"BOOSTER BOX", "BOOSTER BUNDLE"}:
+        category = "Booster-Boxes"
+    else:
+        category = "Box-Sets"
+    return f"https://www.cardmarket.com/en/Pokemon/Products/{category}/{_cm_slug(row.get('cm_name'))}"
+
+
+def _looks_like_cloudflare(status_code, text):
+    lower = str(text or "").lower()
+    return status_code in {403, 429, 503} or any(marker in lower for marker in (
+        "just a moment", "cf-chl-", "cloudflare ray id", "challenge-platform",
+    ))
+
+
+def _public_get(url):
+    headers = {
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Accept-Language": "en-US,en;q=0.9",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                      "(KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36",
+    }
+    attempts = []
+
+    if curl_requests is not None:
+        try:
+            response = curl_requests.get(
+                url,
+                headers=headers,
+                impersonate="chrome",
+                timeout=30,
+                allow_redirects=True,
+            )
+            attempts.append({"client": "curl_cffi", "status": response.status_code, "bytes": len(response.text or "")})
+            if response.status_code == 200 and not _looks_like_cloudflare(response.status_code, response.text):
+                return response.text, "PUBLIC_OK_CURL_CFFI", attempts
+            if _looks_like_cloudflare(response.status_code, response.text):
+                attempts[-1]["cloudflare"] = True
+        except Exception as exc:
+            attempts.append({"client": "curl_cffi", "error": f"{type(exc).__name__}: {exc}"[:200]})
+
+    try:
+        response = requests.get(url, headers=headers, timeout=30, allow_redirects=True)
+        attempts.append({"client": "requests", "status": response.status_code, "bytes": len(response.text or "")})
+        if response.status_code == 200 and not _looks_like_cloudflare(response.status_code, response.text):
+            return response.text, "PUBLIC_OK_REQUESTS", attempts
+        if _looks_like_cloudflare(response.status_code, response.text):
+            attempts[-1]["cloudflare"] = True
+            return "", "PUBLIC_CLOUDFLARE_BLOCKED", attempts
+        return "", f"PUBLIC_HTTP_{response.status_code}", attempts
+    except Exception as exc:
+        attempts.append({"client": "requests", "error": f"{type(exc).__name__}: {exc}"[:200]})
+        return "", "PUBLIC_FETCH_ERROR", attempts
+
+
+def _parse_eur(text):
+    match = re.search(r"(\d{1,3}(?:\.\d{3})*|\d+)(?:[,.](\d{1,2}))?\s*€", str(text or ""))
+    if not match:
+        return None
+    whole = match.group(1).replace(".", "")
+    cents = (match.group(2) or "0").ljust(2, "0")[:2]
+    try:
+        return float(f"{whole}.{cents}")
+    except ValueError:
+        return None
+
+
+def _country_from_row(row):
+    candidates = []
+    for tag in row.select("[title], [data-original-title], [data-bs-original-title], img[alt]"):
+        for attr in ("title", "data-original-title", "data-bs-original-title", "alt"):
+            value = str(tag.get(attr) or "").strip()
+            if value:
+                candidates.append(value)
+    for value in candidates:
+        normalized = v5.normalize_text(value)
+        if normalized in COUNTRY_CODES:
+            return COUNTRY_CODES[normalized]
+    return ""
+
+
+def _parse_public_listings(html):
+    soup = BeautifulSoup(html, "html.parser")
+    listings = []
+    rows = soup.select("#table .article-row, .table-body .article-row, .article-row")
+    seen = set()
+    for row in rows:
+        seller_link = row.select_one('a[href*="/Users/"]')
+        seller = seller_link.get_text(" ", strip=True) if seller_link else ""
+        if not seller:
+            continue
+
+        price = None
+        for node in row.select(".price-container, .color-primary, [class*='price']"):
+            price = _parse_eur(node.get_text(" ", strip=True))
+            if price is not None:
+                break
+        if price is None:
+            price = _parse_eur(row.get_text(" ", strip=True))
+        if price is None or price <= 0:
+            continue
+
+        comment_node = row.select_one(".col-comments, .comments, [class*='comment']")
+        comment = comment_node.get_text(" ", strip=True) if comment_node else ""
+        country = _country_from_row(row)
+        key = (seller, price, comment)
+        if key in seen:
+            continue
+        seen.add(key)
+        listings.append({
+            "seller": seller,
+            "seller_country": country,
+            "price_eur": price,
+            "comments": comment[:300],
+            "damaged_or_opened": _comment_has_damage(comment),
+            "foreign_language_warning": _comment_has_foreign_language(comment),
+            "language": "UNVERIFIED_ON_PUBLIC_SEALED_PAGE",
+            "language_verified": False,
+        })
+    listings.sort(key=lambda item: (item["price_eur"], item["seller"]))
+    return listings
+
+
+def _public_probe(row, allowlist):
+    url = _public_product_url(row)
+    html, status, attempts = _public_get(url)
+    result = {
+        "public_page_url": url,
+        "public_fetch_status": status,
+        "public_fetch_attempts": attempts,
+        "public_listings": [],
+        "public_clean_listings": [],
+        "public_verified_dk_listings": [],
+        "public_actionable": False,
+    }
+    if not html:
+        return result
+
+    listings = _parse_public_listings(html)
+    clean = [item for item in listings if not item["damaged_or_opened"] and not item["foreign_language_warning"]]
+    verified_dk = []
+    for item in clean:
+        seller = item["seller"].lower()
+        if item["seller_country"] == "DK" or seller in allowlist:
+            verified_dk.append(item)
+
+    result["public_listings"] = listings[:20]
+    result["public_listing_count"] = len(listings)
+    result["public_clean_listings"] = clean[:10]
+    result["public_clean_listing_count"] = len(clean)
+    result["public_verified_dk_listings"] = verified_dk[:10]
+    result["public_verified_dk_listing_count"] = len(verified_dk)
+    if clean:
+        result["public_clean_floor_eur"] = clean[0]["price_eur"]
+        result["public_clean_floor_dkk"] = clean[0]["price_eur"] * v5.EUR_DKK
+    if verified_dk:
+        result["public_verified_dk_floor_eur"] = verified_dk[0]["price_eur"]
+        result["public_verified_dk_floor_dkk"] = verified_dk[0]["price_eur"] * v5.EUR_DKK
+
+    # Public sealed pages do not expose a reliable per-listing English-language
+    # field. Therefore public scraping remains a probe/reference and is NEVER
+    # promoted to an actionable benchmark solely from HTML.
+    result["public_actionable"] = False
+    if not listings:
+        result["public_fetch_status"] = "PUBLIC_PARSE_EMPTY"
+    return result
 
 
 def _listing_signal(dk_price, listings):
@@ -247,15 +440,13 @@ def _listing_signal(dk_price, listings):
     top = prices[: min(5, len(prices))]
     median_eur = median(top)
     median_dkk = median_eur * v5.EUR_DKK
-    diff_floor_pct = ((dk_price / floor_dkk) - 1.0) * 100.0 if floor_dkk > 0 else None
-    diff_median_pct = ((dk_price / median_dkk) - 1.0) * 100.0 if median_dkk > 0 else None
     return {
         "actionable_floor_eur": floor_eur,
         "actionable_floor_dkk": floor_dkk,
         "top5_median_eur": median_eur,
         "top5_median_dkk": median_dkk,
-        "diff_pct_vs_actionable_floor": diff_floor_pct,
-        "diff_pct_vs_top5_median": diff_median_pct,
+        "diff_pct_vs_actionable_floor": ((dk_price / floor_dkk) - 1.0) * 100.0 if floor_dkk > 0 else None,
+        "diff_pct_vs_top5_median": ((dk_price / median_dkk) - 1.0) * 100.0 if median_dkk > 0 else None,
     }
 
 
@@ -272,6 +463,10 @@ def build_v6():
     unresolved_identity = 0
     api_errors = 0
     actionable = 0
+    public_attempted = 0
+    public_ok = 0
+    public_blocked = 0
+    public_parse_empty = 0
 
     for index, row in enumerate(base.get("matched") or []):
         item = dict(row)
@@ -292,33 +487,43 @@ def build_v6():
 
         exact_identity += 1
 
-        if not api_ready:
-            item["listing_validation_status"] = "CARDMARKET_API_CREDENTIALS_MISSING"
-            rows.append(item)
-            continue
-
-        if index >= MAX_PRODUCTS:
-            item["listing_validation_status"] = "API_VALIDATION_LIMIT_REACHED"
-            rows.append(item)
-            continue
-
-        try:
-            articles = _fetch_articles(item["cm_product_id"])
-            valid, rejected = _validate_articles(articles, allowlist)
-            item["article_filter_rejections"] = rejected
-            item["concrete_listings"] = valid[:5]
-            item["concrete_listing_count"] = len(valid)
-            if valid:
-                item["listing_validation_status"] = "ACTIONABLE_LISTINGS_FOUND"
-                item["actionable"] = True
-                item.update(_listing_signal(item["dk_price"], valid) or {})
-                actionable += 1
+        if api_ready and index < MAX_PRODUCTS:
+            try:
+                articles = _fetch_articles(item["cm_product_id"])
+                valid, rejected = _validate_articles(articles, allowlist)
+                item["article_filter_rejections"] = rejected
+                item["concrete_listings"] = valid[:5]
+                item["concrete_listing_count"] = len(valid)
+                if valid:
+                    item["listing_validation_status"] = "ACTIONABLE_LISTINGS_FOUND"
+                    item["actionable"] = True
+                    item.update(_listing_signal(item["dk_price"], valid) or {})
+                    actionable += 1
+                else:
+                    item["listing_validation_status"] = "NO_VERIFIED_DK_DELIVERABLE_CLEAN_ENGLISH_LISTINGS"
+            except Exception as exc:
+                api_errors += 1
+                item["listing_validation_status"] = "CARDMARKET_API_ERROR"
+                item["listing_validation_error"] = f"{type(exc).__name__}: {exc}"[:300]
+        elif not api_ready:
+            product_id = v5.safe_int(item.get("cm_product_id"), 0)
+            should_probe = product_id in PUBLIC_PRIORITY_IDS or public_attempted < PUBLIC_MAX_PRODUCTS
+            if should_probe:
+                public_attempted += 1
+                probe = _public_probe(item, allowlist)
+                item.update(probe)
+                status = probe.get("public_fetch_status")
+                if status in {"PUBLIC_OK_CURL_CFFI", "PUBLIC_OK_REQUESTS"}:
+                    public_ok += 1
+                elif status == "PUBLIC_CLOUDFLARE_BLOCKED":
+                    public_blocked += 1
+                elif status == "PUBLIC_PARSE_EMPTY":
+                    public_parse_empty += 1
+                item["listing_validation_status"] = "PUBLIC_LISTING_PROBE_ONLY"
             else:
-                item["listing_validation_status"] = "NO_VERIFIED_DK_DELIVERABLE_CLEAN_ENGLISH_LISTINGS"
-        except Exception as exc:
-            api_errors += 1
-            item["listing_validation_status"] = "CARDMARKET_API_ERROR"
-            item["listing_validation_error"] = f"{type(exc).__name__}: {exc}"[:300]
+                item["listing_validation_status"] = "PUBLIC_PROBE_LIMIT_REACHED"
+        else:
+            item["listing_validation_status"] = "API_VALIDATION_LIMIT_REACHED"
 
         rows.append(item)
         if REQUEST_DELAY:
@@ -326,23 +531,28 @@ def build_v6():
 
     rows.sort(key=lambda row: (
         0 if row.get("actionable") else 1,
+        0 if row.get("cm_product_id") in PUBLIC_PRIORITY_IDS else 1,
         999999 if row.get("diff_pct_vs_actionable_floor") is None else row["diff_pct_vs_actionable_floor"],
         row.get("dk_price") or 0,
     ))
 
     return {
-        "version": 6,
+        "version": 6.1,
         "scope": "pokemon_core_sealed",
-        "mode": "shadow_listing_validator",
+        "mode": "shadow_listing_validator_public_probe",
         "generated_at": datetime.now(ZoneInfo(TZ_NAME)).isoformat(),
-        "benchmark": "concrete_english_clean_verified_dk_deliverable_cardmarket_articles",
+        "benchmark": "official_articles_when_available_else_public_listing_probe_only",
         "price_guide_role": "info_only",
         "delivery_policy": {
             "automatic": "Cardmarket seller country DK",
             "foreign": "only explicit confirmed_sellers allowlist",
-            "note": "Foreign seller country alone is not treated as proof of delivery to Denmark.",
+            "note": "Foreign seller location is not proof of delivery to Denmark.",
         },
-        "sealed_policy": "Cardmarket sealed/non-single product plus rejection of opened/damaged listing comments",
+        "language_policy": {
+            "official_articles": "idLanguage=1 required",
+            "public_pages": "language not reliably exposed per sealed listing; never actionable",
+        },
+        "sealed_policy": "Cardmarket sealed product page plus rejection of opened/damaged listing comments",
         "seller_minimum_sales": MIN_SELLS,
         "cardmarket_api_credentials_available": api_ready,
         "matched_groups_from_v5": len(base.get("matched") or []),
@@ -350,53 +560,33 @@ def build_v6():
         "unresolved_identity_groups": unresolved_identity,
         "actionable_groups": actionable,
         "api_errors": api_errors,
+        "public_probe_attempted": public_attempted,
+        "public_probe_ok": public_ok,
+        "public_probe_cloudflare_blocked": public_blocked,
+        "public_probe_parse_empty": public_parse_empty,
         "confirmed_foreign_sellers_for_dk": len(allowlist),
         "rows": rows,
     }
 
 
 def make_embed(preview):
-    actionable = [row for row in preview["rows"] if row.get("actionable")][:10]
-    unresolved = [row for row in preview["rows"] if row.get("identity_status") == "UNRESOLVED_VARIANT"][:5]
     lines = [
-        f"**{preview['exact_identity_groups']}** exact product identities · "
+        f"**{preview['exact_identity_groups']}** exact identities · "
         f"**{preview['unresolved_identity_groups']}** variants held out · "
-        f"**{preview['actionable_groups']}** products with concrete verified listings.",
+        f"**{preview['actionable_groups']}** fully actionable benchmarks.",
         "",
-        "Cardmarket Price Guide is **info only**. V6 only benchmarks against concrete English listings that pass seller/damage checks and have verified DK delivery.",
+        f"Public probe: {preview['public_probe_attempted']} attempted · "
+        f"{preview['public_probe_ok']} fetched · "
+        f"{preview['public_probe_cloudflare_blocked']} Cloudflare-blocked · "
+        f"{preview['public_probe_parse_empty']} parse-empty.",
+        "",
+        "Public Cardmarket listings are reference-only until English language and DK delivery can both be verified.",
     ]
-    if actionable:
-        lines += ["", "🟢 **KONKRETE CARDMARKET-LISTINGS**"]
-        for row in actionable:
-            listing = row["concrete_listings"][0]
-            diff = row.get("diff_pct_vs_actionable_floor")
-            if diff is not None:
-                sign = "+" if diff >= 0 else ""
-                lines.append(
-                    f"• **{row['cm_name']}** — DK {v5.fmt_dkk(row['dk_price'])} · "
-                    f"CM {v5.fmt_eur(listing['price_eur'])} hos {listing['seller']} ({listing['seller_country']}) · "
-                    f"**{sign}{diff:.0f}%**"
-                )
-            else:
-                lines.append(
-                    f"• **{row['cm_name']}** — DK {v5.fmt_dkk(row['dk_price'])} · "
-                    f"CM {v5.fmt_eur(listing['price_eur'])}"
-                )
-    else:
-        lines += ["", "🟡 Ingen produkter har endnu et komplet, verificeret V6-benchmark."]
-
-    if unresolved:
-        lines += ["", "⚠️ **VARIANT IKKE FASTSLÅET**"]
-        for row in unresolved:
-            lines.append(f"• {row['dk_name']} — ingen prisdom")
-
     return {
-        "title": "🛰️ MARKET RADAR V6 · LISTING VALIDATOR",
+        "title": "🛰️ MARKET RADAR V6.1 · PUBLIC LISTING PROBE",
         "description": "\n".join(lines)[:4096],
         "color": 0xF1C40F,
-        "footer": {
-            "text": "Shadow only · exact product + English + clean/sealed + verified DK delivery required"
-        },
+        "footer": {"text": "Shadow only · no Discord post"},
     }
 
 
@@ -404,13 +594,14 @@ def main():
     preview = build_v6()
     PREVIEW_FILE.write_text(json.dumps(preview, ensure_ascii=False, indent=2), encoding="utf-8")
     print(
-        "MARKET RADAR V6: "
-        f"{preview['exact_identity_groups']} exact identities | "
-        f"{preview['unresolved_identity_groups']} unresolved variants | "
-        f"{preview['actionable_groups']} actionable listing benchmarks | "
-        f"API ready={preview['cardmarket_api_credentials_available']} | errors={preview['api_errors']}"
+        "MARKET RADAR V6.1: "
+        f"{preview['exact_identity_groups']} exact | "
+        f"{preview['unresolved_identity_groups']} unresolved | "
+        f"public {preview['public_probe_ok']}/{preview['public_probe_attempted']} fetched | "
+        f"CF blocked={preview['public_probe_cloudflare_blocked']} | "
+        f"actionable={preview['actionable_groups']}"
     )
-    print("MARKET RADAR V6: shadow mode only - Discord ikke sendt.")
+    print("MARKET RADAR V6.1: shadow mode only - Discord ikke sendt.")
     return 0
 
 
