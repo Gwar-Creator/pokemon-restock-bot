@@ -1,12 +1,32 @@
 {
-  "candidate_lines": 283,
-  "coverage_pct": 58.0,
+  "candidate_lines": 287,
+  "coverage_pct": 57.1,
   "exact_comparable_groups": 41,
   "likely_alias_pairs": 20,
   "matched_lines": 164,
-  "normalized_keys": 159,
-  "single_shop_keys": 118,
+  "normalized_keys": 163,
+  "single_shop_keys": 122,
   "suspects": [
+    {
+      "game": "POKÉMON",
+      "language": "EN",
+      "left_names": [
+        "Pokémon TCG: Battle Styles Elite Trainer Box - Single Strike Urshifu (Sword & Shield)"
+      ],
+      "left_set": "battle styles single strike urshifu sword and shield",
+      "left_shops": [
+        "ROGERZ"
+      ],
+      "right_names": [
+        "Pokémon TCG: Sword & Shield: Battle Styles - Elite Trainer Box (Single Strike Urshifu)"
+      ],
+      "right_set": "sword and shield battle styles single strike urshifu",
+      "right_shops": [
+        "MATRAWS"
+      ],
+      "similarity": 1.0,
+      "type": "ETB"
+    },
     {
       "game": "POKÉMON",
       "language": "EN",
@@ -484,27 +504,6 @@
         "CARDX",
         "MATRAWS",
         "STAALZ"
-      ],
-      "similarity": 0.94,
-      "type": "ETB"
-    },
-    {
-      "game": "POKÉMON",
-      "language": "EN",
-      "left_names": [
-        "Pokémon TCG: Mega Evolution: Pitch Black - Elite Trainer Box (ETB)"
-      ],
-      "left_set": "pitch black etb",
-      "left_shops": [
-        "MATRAWS",
-        "POKEHULEN"
-      ],
-      "right_names": [
-        "Featured image for “Pitch Black ME05 - Elite Trainer Box (ETB)”"
-      ],
-      "right_set": "featured image for pitch black etb",
-      "right_shops": [
-        "KOCARDZ"
       ],
       "similarity": 0.94,
       "type": "ETB"
