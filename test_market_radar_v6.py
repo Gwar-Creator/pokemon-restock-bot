@@ -1,5 +1,6 @@
 import importlib.util
 import unittest
+from unittest.mock import patch
 
 
 spec = importlib.util.spec_from_file_location("market_radar_v6", "market_radar_v6.py")
@@ -132,6 +133,33 @@ class MarketRadarV6Tests(unittest.TestCase):
         self.assertEqual(len(valid), 1)
         self.assertEqual(valid[0]["price_eur"], 40.0)
         self.assertEqual(rejected["damaged_or_opened"], 1)
+
+    def test_app_credentials_are_enough_without_access_token(self):
+        with patch.object(market_radar_v6, "OAuth1", object()), \
+             patch.object(market_radar_v6, "CARDMARKET_APP_TOKEN", "app-token"), \
+             patch.object(market_radar_v6, "CARDMARKET_APP_SECRET", "app-secret"), \
+             patch.object(market_radar_v6, "CARDMARKET_ACCESS_TOKEN", ""), \
+             patch.object(market_radar_v6, "CARDMARKET_ACCESS_SECRET", ""):
+            self.assertTrue(market_radar_v6._credentials_available())
+
+    def test_oauth_only_adds_resource_owner_when_both_access_values_exist(self):
+        captured = {}
+
+        def fake_oauth1(**kwargs):
+            captured.update(kwargs)
+            return kwargs
+
+        with patch.object(market_radar_v6, "OAuth1", fake_oauth1), \
+             patch.object(market_radar_v6, "CARDMARKET_APP_TOKEN", "app-token"), \
+             patch.object(market_radar_v6, "CARDMARKET_APP_SECRET", "app-secret"), \
+             patch.object(market_radar_v6, "CARDMARKET_ACCESS_TOKEN", ""), \
+             patch.object(market_radar_v6, "CARDMARKET_ACCESS_SECRET", ""):
+            market_radar_v6._oauth("https://example.invalid")
+
+        self.assertEqual(captured["client_key"], "app-token")
+        self.assertEqual(captured["client_secret"], "app-secret")
+        self.assertNotIn("resource_owner_key", captured)
+        self.assertNotIn("resource_owner_secret", captured)
 
 
 if __name__ == "__main__":
