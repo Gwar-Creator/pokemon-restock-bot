@@ -1,0 +1,98 @@
+name: Personal Listings V56
+
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_limit:
+        description: "Max V55 REVIEW cards to check through the official Cardmarket API"
+        required: false
+        default: "12"
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: personal-listings-v56
+  cancel-in-progress: false
+
+jobs:
+  refresh-listings:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Validate V56 read-only probe
+        run: |
+          python -m py_compile personal/cardmarket_official_listing_probe.py personal/singles_v56.py personal/singles_collection_runner_v56.py
+          python -m unittest test_cardmarket_official_listing_probe.py test_singles_v56.py
+
+      - name: Refresh official Cardmarket articles
+        env:
+          CARDMARKET_APP_TOKEN: ${{ secrets.CARDMARKET_APP_TOKEN }}
+          CARDMARKET_APP_SECRET: ${{ secrets.CARDMARKET_APP_SECRET }}
+          CARDMARKET_ACCESS_TOKEN: ${{ secrets.CARDMARKET_ACCESS_TOKEN }}
+          CARDMARKET_ACCESS_TOKEN_SECRET: ${{ secrets.CARDMARKET_ACCESS_TOKEN_SECRET }}
+          CANDIDATE_LIMIT: ${{ inputs.candidate_limit }}
+        run: |
+          if [ -z "$CARDMARKET_APP_TOKEN" ] || [ -z "$CARDMARKET_APP_SECRET" ] || [ -z "$CARDMARKET_ACCESS_TOKEN" ] || [ -z "$CARDMARKET_ACCESS_TOKEN_SECRET" ]; then
+            echo "Official Cardmarket OAuth credentials are not configured."
+            echo "V56 will not scrape Cardmarket or treat aggregate prices as concrete listings."
+            exit 1
+          fi
+          python -m personal.cardmarket_official_listing_probe \
+            --limit "$CANDIDATE_LIMIT" \
+            --offers-per-product 25
+
+      - name: Save listing snapshot
+        run: |
+          if git diff --quiet -- personal/cardmarket_listing_snapshot.json; then
+            echo "Listing snapshot already current."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          BACKUP_DIR="$(mktemp -d)"
+          cp personal/cardmarket_listing_snapshot.json "$BACKUP_DIR/cardmarket_listing_snapshot.json"
+
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git reset --hard origin/main
+            cp "$BACKUP_DIR/cardmarket_listing_snapshot.json" personal/cardmarket_listing_snapshot.json
+            git add personal/cardmarket_listing_snapshot.json
+
+            if git diff --cached --quiet; then
+              rm -rf "$BACKUP_DIR"
+              exit 0
+            fi
+
+            git commit -m "Refresh V56 Cardmarket listing snapshot"
+            if git push origin HEAD:main; then
+              rm -rf "$BACKUP_DIR"
+              exit 0
+            fi
+
+            if [ "$attempt" -lt 5 ]; then
+              sleep $((attempt * 5))
+            fi
+          done
+
+          rm -rf "$BACKUP_DIR"
+          echo "Failed to save V56 listing snapshot after 5 fresh-main attempts."
+          exit 1
