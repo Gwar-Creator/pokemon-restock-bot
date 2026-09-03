@@ -55,6 +55,7 @@ jobs:
             python -m py_compile cardmarket_v16_replay.py
           fi
           python -m unittest test_cardmarket_feasibility.py test_singles_opportunity.py test_collection_integration.py
+          python -m personal.singles_collection_runner --help >/dev/null
 
       - name: Test Cardmarket Discord webhook
         if: ${{ inputs.test_webhook == true }}
@@ -108,7 +109,7 @@ jobs:
       - name: Run V51 collection-aware personal singles radar
         if: ${{ inputs.test_webhook != true }}
         run: |
-          python personal/singles_collection_runner.py \
+          python -m personal.singles_collection_runner \
             --output "$RUNNER_TEMP/personal_singles_opportunity_report.md" \
             --limit 10
 
