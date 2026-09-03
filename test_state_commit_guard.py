@@ -29,7 +29,7 @@ class StateCommitGuardTests(unittest.TestCase):
         result = compact_local_stock(old, new)
         self.assertEqual(result["products"]["x"]["observed_at"], "new")
 
-    def test_restock_keeps_heartbeat_but_reuses_health_timestamps(self):
+    def test_restock_throttles_heartbeat_but_reuses_health_timestamps(self):
         old = {
             "_last_full_scan_epoch": 100,
             "_source_health": {
@@ -53,9 +53,15 @@ class StateCommitGuardTests(unittest.TestCase):
             },
         }
         result = compact_restock_state(old, new)
-        self.assertEqual(result["_last_full_scan_epoch"], 200)
+        self.assertEqual(result["_last_full_scan_epoch"], 100)
         self.assertEqual(result["_source_health"]["shop"]["last_attempt"], "old-a")
         self.assertEqual(result["_source_health"]["shop"]["last_success"], "old-s")
+
+    def test_restock_refreshes_heartbeat_after_15_minutes(self):
+        old = {"_last_full_scan_epoch": 100, "_source_health": {}}
+        new = {"_last_full_scan_epoch": 1001, "_source_health": {}}
+        result = compact_restock_state(old, new)
+        self.assertEqual(result["_last_full_scan_epoch"], 1001)
 
     def test_restock_keeps_fresh_health_timestamp_on_real_health_change(self):
         old = {
