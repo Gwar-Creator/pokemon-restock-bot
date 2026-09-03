@@ -24,13 +24,13 @@ def card():
     return {
         "game": "POKÉMON",
         "id": "1",
-        "name": "Pikachu δ Delta Species [Tail Whap | Steel Headbutt]",
-        "set": "EX Holon Phantoms",
+        "name": "Pikachu [Zap]",
+        "set": "Test Set",
         "variant": "Normal",
-        "trend": 6,
-        "avg1": 6,
-        "avg7": 7,
-        "avg30": 8,
+        "trend": 4,
+        "avg1": 4,
+        "avg7": 5,
+        "avg30": 6,
         "low": 1,
     }
 
@@ -38,9 +38,10 @@ def card():
 def metadata():
     return {
         "1": {
-            "source_card_id": "ex13-79",
-            "cardmarket_set": "EX Holon Phantoms",
-            "canonical_rarity": "Common",
+            "source_card_id": "test-1",
+            "cardmarket_set": "Test Set",
+            "canonical_rarity": "Special Illustration Rare",
+            "finish": "normal",
         }
     }
 
