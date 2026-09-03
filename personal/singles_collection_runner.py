@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""V51 collection-aware runner for the V50.1 personal singles radar.
+"""V52.1 collection-aware runner for the V50.1 personal singles radar.
 
 The collection is the source of truth for what is owned. The runner only blocks
 Cardmarket cards when an exact, explicitly verified ``cardmarket_product_id`` is
@@ -166,6 +166,23 @@ def linked_product_ids(payload: dict[str, Any], *, allowed_statuses: set[str]) -
     return result
 
 
+def unresolved_collection_rows(collection: dict[str, Any]) -> list[dict[str, str]]:
+    unresolved: list[dict[str, str]] = []
+    for card in iter_collection_rows(collection):
+        if card.get("cardmarket_product_id") not in (None, ""):
+            continue
+        unresolved.append(
+            {
+                "name": str(card.get("name") or "Ukendt kort"),
+                "set": str(card.get("set") or "Ukendt sæt"),
+                "number": str(card.get("number") or "–"),
+                "variant": str(card.get("variant") or "–"),
+                "tcg": str(card.get("tcg") or "POKEMON").upper(),
+            }
+        )
+    return unresolved
+
+
 def apply_collection_filters(
     profile: dict[str, Any],
     collection: dict[str, Any],
@@ -188,21 +205,70 @@ def apply_collection_filters(
     return merged, stats
 
 
-def collection_header(stats: dict[str, int]) -> str:
+def suppression_diagnostics(
+    state: dict[str, Any],
+    profile: dict[str, Any],
+    collection: dict[str, Any],
+    incoming: dict[str, Any],
+) -> dict[str, int]:
+    """Count exact-linked personal candidates suppressed by owned/incoming IDs."""
+    from personal import singles_opportunity as radar
+
+    baseline_profile = copy.deepcopy(profile)
+    baseline_profile["owned_ids"] = []
+    baseline_rows = radar.evaluate_state(state, baseline_profile)
+    candidate_ids = {str(row.get("id") or "") for row in baseline_rows}
+
+    owned_ids = linked_product_ids(collection, allowed_statuses={"owned"})
+    incoming_ids = linked_product_ids(incoming, allowed_statuses={"incoming"})
+    legacy_ids = {str(value).strip() for value in profile.get("owned_ids", []) if str(value).strip()}
+
+    owned_filtered = len(candidate_ids & owned_ids)
+    incoming_filtered = len(candidate_ids & incoming_ids)
+    legacy_filtered = len(candidate_ids & legacy_ids)
+    exact_filtered_union = len(candidate_ids & (owned_ids | incoming_ids))
+
+    return {
+        "baseline_personal_candidates": len(baseline_rows),
+        "owned_filtered": owned_filtered,
+        "incoming_filtered": incoming_filtered,
+        "legacy_filtered": legacy_filtered,
+        "exact_filtered_union": exact_filtered_union,
+    }
+
+
+def collection_header(
+    stats: dict[str, int],
+    diagnostics: dict[str, int],
+    unresolved: list[dict[str, str]],
+) -> str:
     unlinked = stats["unique_exact_records"] - stats["linked_cardmarket_product_ids"]
-    return "\n".join(
-        [
-            "# Personal Singles Scout · V51 collection-aware shadow",
-            "",
-            f"- Owned baseline: {stats['physical_cards']} physical cards / {stats['unique_exact_records']} exact records",
-            f"- Pokémon owned: {stats['pokemon_cards']} · Lorcana owned: {stats['lorcana_cards']}",
-            f"- Verified Cardmarket links in collection: {stats['linked_cardmarket_product_ids']}",
-            f"- Verified incoming Cardmarket links: {stats['linked_incoming_ids']}",
-            f"- Unlinked collection records: {unlinked}",
-            "- No fuzzy owned matching: unlinked cards are never hidden by name/set guesses.",
-            "",
-        ]
-    )
+    lines = [
+        "# Personal Singles Scout · V52.1 exact-link diagnostics shadow",
+        "",
+        f"- Owned baseline: {stats['physical_cards']} physical cards / {stats['unique_exact_records']} exact records",
+        f"- Pokémon owned: {stats['pokemon_cards']} · Lorcana owned: {stats['lorcana_cards']}",
+        f"- Verified Cardmarket links in collection: {stats['linked_cardmarket_product_ids']}",
+        f"- Verified incoming Cardmarket links: {stats['linked_incoming_ids']}",
+        f"- Unlinked collection records: {unlinked}",
+        f"- OWNED filtered from personal candidate pool: {diagnostics['owned_filtered']}",
+        f"- INCOMING filtered from personal candidate pool: {diagnostics['incoming_filtered']}",
+        f"- Exact OWNED/INCOMING filtered (union): {diagnostics['exact_filtered_union']}",
+        f"- Personal candidate pool before exact owned/incoming suppression: {diagnostics['baseline_personal_candidates']}",
+        "- No fuzzy owned matching: unlinked cards are never hidden by name/set guesses.",
+        "",
+        "## Unresolved collection records",
+        "",
+    ]
+    if not unresolved:
+        lines.append("- None")
+    else:
+        for card in unresolved:
+            lines.append(
+                f"- {card['name']} · {card['set']} · {card['number']} · {card['variant']} · {card['tcg']}"
+            )
+    lines.append("")
+    return "\n".join(lines)
 
 
 def parse_args() -> argparse.Namespace:
@@ -225,6 +291,8 @@ def main() -> int:
     collection = load_json(args.collection)
     incoming = load_json(args.incoming)
     effective_profile, stats = apply_collection_filters(profile, collection, incoming)
+    diagnostics = suppression_diagnostics(state, profile, collection, incoming)
+    unresolved = unresolved_collection_rows(collection)
 
     rows = radar.evaluate_state(state, effective_profile)
     if not rows:
@@ -233,7 +301,7 @@ def main() -> int:
     base_lines = base_report.splitlines()
     if base_lines and base_lines[0].startswith("# Personal Singles Scout"):
         base_lines = base_lines[1:]
-    report = collection_header(stats) + "\n" + "\n".join(base_lines).lstrip("\n")
+    report = collection_header(stats, diagnostics, unresolved) + "\n" + "\n".join(base_lines).lstrip("\n")
     args.output.write_text(report, encoding="utf-8")
     print(report)
     return 0
