@@ -1,0 +1,86 @@
+name: Personal Singles Discord Now
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "personal/discord_dispatch_trigger.txt"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: personal-singles-discord-now
+  cancel-in-progress: false
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Build exact collection overlay
+        run: |
+          python -m personal.cardmarket_link_overlay --output "$RUNNER_TEMP/personal_collection_linked.json"
+
+      - name: Send today's V56.1 Discord singles deltas
+        env:
+          CARDMARKET_WEBHOOK_URL: ${{ secrets.CARDMARKET_WEBHOOK_URL }}
+        run: |
+          python -m personal.singles_discord_notify \
+            --collection "$RUNNER_TEMP/personal_collection_linked.json" \
+            --limit 5 \
+            --require-webhook
+
+      - name: Save singles Discord alert state
+        run: |
+          if git diff --quiet -- personal/personal_singles_discord_state.json; then
+            echo "No singles Discord state changes to save."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          BACKUP="$(mktemp -d)"
+          cp personal/personal_singles_discord_state.json "$BACKUP/personal_singles_discord_state.json"
+
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git reset --hard origin/main
+            cp "$BACKUP/personal_singles_discord_state.json" personal/personal_singles_discord_state.json
+            git add personal/personal_singles_discord_state.json
+
+            if git diff --cached --quiet; then
+              rm -rf "$BACKUP"
+              exit 0
+            fi
+
+            git commit -m "Update personal singles Discord state"
+            if git push origin HEAD:main; then
+              rm -rf "$BACKUP"
+              exit 0
+            fi
+
+            if [ "$attempt" -lt 5 ]; then
+              sleep $((attempt * 5))
+            fi
+          done
+
+          rm -rf "$BACKUP"
+          exit 1
