@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
-"""V50 personal singles opportunity engine.
+"""V50.1 personal singles radar.
 
 Shadow-only decision layer over the existing aggregate Cardmarket state.
 It performs no network requests, sends no Discord messages, and writes no
-production state. Aggregate `low` is deliberately excluded from scoring because
-V49 showed that it is not purchase-grade for the user's EN/NM/EU->DK constraints.
+production state.
+
+V50.1 deliberately stops treating aggregate Cardmarket trend/averages as a
+purchase price. They are market-radar signals only. A card can therefore be
+flagged for manual review because its market trend looks interesting, but the
+engine never claims that the user's EN/NM/EU->DK purchase constraints are met.
 """
 
 from __future__ import annotations
@@ -21,7 +25,13 @@ from typing import Any
 DEFAULT_STATE = Path("cardmarket_chase_state.json")
 DEFAULT_PROFILE = Path("personal/singles_profile.json")
 DEFAULT_OUTPUT = Path("personal_singles_opportunity_report.md")
-DEFAULT_LIMIT = 20
+DEFAULT_LIMIT = 10
+
+NON_PHYSICAL_PATTERNS = (
+    "code card",
+    "online code",
+    "online-code",
+)
 
 
 def load_json(path: Path, default: Any) -> Any:
@@ -70,8 +80,13 @@ def contains_name(card_name: Any, wanted: Any) -> bool:
     return f" {needle} " in haystack
 
 
+def is_non_physical_card(card: dict[str, Any]) -> bool:
+    name = normalize_text(card.get("name"))
+    return any(pattern in name for pattern in NON_PHYSICAL_PATTERNS)
+
+
 def reference_price_eur(card: dict[str, Any]) -> float | None:
-    """Purchase radar reference: trend first; averages are fallbacks, never low."""
+    """Market-radar reference only: trend first; averages are fallbacks, never low."""
     trend = number(card.get("trend"))
     if trend is not None and trend > 0:
         return trend
@@ -94,59 +109,51 @@ def data_confidence(card: dict[str, Any]) -> tuple[str, float | None]:
     return "LOW", spread
 
 
-def budget_score(price_dkk: float, target_dkk: float) -> float:
-    if target_dkk <= 0:
-        return 0.0
-    ratio = price_dkk / target_dkk
-    if ratio <= 0.5:
-        return 100.0
-    if ratio <= 1.0:
-        return 100.0 - (ratio - 0.5) * 40.0
-    return clamp(80.0 - (ratio - 1.0) * 100.0)
-
-
 def relative_value_score(card: dict[str, Any]) -> float:
+    """Score market weakness vs 30-day average; this is not purchase value."""
     change = pct(card.get("trend"), card.get("avg30"))
     if change is None:
-        return 50.0
+        return 35.0
     return clamp(50.0 - change * 2.0)
 
 
 def timing_score(card: dict[str, Any]) -> float:
     change = pct(card.get("avg1"), card.get("avg7"))
     if change is None:
-        return 50.0
+        return 40.0
     return clamp(50.0 - change * 1.5)
 
 
 def personal_score(card: dict[str, Any], profile: dict[str, Any]) -> tuple[float, list[str]]:
+    """Personal relevance is now a gate, not a small bonus over the full catalogue."""
     card_id = str(card.get("id") or "")
     reasons: list[str] = []
-    score = 35.0
+    score = 0.0
 
     wishlist = {str(value) for value in profile.get("wishlist_ids", [])}
     manual_priority = {str(value) for value in profile.get("manual_priority_ids", [])}
 
     if card_id in wishlist:
-        score += 40.0
+        score = max(score, 100.0)
         reasons.append("wishlist")
     if card_id in manual_priority:
-        score += 45.0
+        score = max(score, 100.0)
         reasons.append("manual priority")
 
     primary = profile.get("priority_pokemon", [])
     secondary = profile.get("secondary_pokemon", [])
     if any(contains_name(card.get("name"), value) for value in primary):
-        score += 30.0
+        score = max(score, 80.0)
         reasons.append("priority Pokémon")
     elif any(contains_name(card.get("name"), value) for value in secondary):
-        score += 15.0
+        score = max(score, 60.0)
         reasons.append("secondary Pokémon")
 
-    return clamp(score), reasons
+    return score, reasons
 
 
 def target_for(card: dict[str, Any], profile: dict[str, Any]) -> float:
+    """Manual purchase budget metadata only; never compared with aggregate reference."""
     overrides = profile.get("target_overrides_dkk", {})
     override = number(overrides.get(str(card.get("id") or ""))) if isinstance(overrides, dict) else None
     default = number(profile.get("default_target_dkk")) or 75.0
@@ -160,7 +167,11 @@ def evaluate_card(card: dict[str, Any], profile: dict[str, Any]) -> dict[str, An
     card_id = str(card.get("id") or "")
     ignored = {str(value) for value in profile.get("ignore_ids", [])}
     owned = {str(value) for value in profile.get("owned_ids", [])}
-    if card_id in ignored or card_id in owned:
+    if card_id in ignored or card_id in owned or is_non_physical_card(card):
+        return None
+
+    personal, personal_reasons = personal_score(card, profile)
+    if not personal_reasons:
         return None
 
     reference_eur = reference_price_eur(card)
@@ -169,37 +180,38 @@ def evaluate_card(card: dict[str, Any], profile: dict[str, Any]) -> dict[str, An
 
     eur_dkk = number(profile.get("eur_to_dkk")) or 7.46
     reference_dkk = reference_eur * eur_dkk
-    target_dkk = target_for(card, profile)
-    budget = budget_score(reference_dkk, target_dkk)
+    purchase_budget_dkk = target_for(card, profile)
     value = relative_value_score(card)
     timing = timing_score(card)
-    personal, personal_reasons = personal_score(card, profile)
     confidence, spread = data_confidence(card)
+    confidence_component = {"HIGH": 100.0, "MEDIUM": 70.0, "LOW": 20.0}[confidence]
 
-    score = budget * 0.40 + value * 0.25 + timing * 0.15 + personal * 0.20
+    # V50.1: no budget component. Aggregate price data cannot prove a usable
+    # English/NM/EU listing, so price-to-budget math must not drive the signal.
+    score = value * 0.45 + timing * 0.20 + personal * 0.25 + confidence_component * 0.10
     if confidence == "LOW":
-        score = min(score, 64.9)
+        score = min(score, 59.9)
 
-    budget_ratio = reference_dkk / target_dkk if target_dkk > 0 else math.inf
-    if confidence != "LOW" and score >= 70 and budget_ratio <= 1.0:
-        signal = "CHECK_NOW"
-    elif score >= 55 and budget_ratio <= 1.35:
+    thirty_day = pct(card.get("trend"), card.get("avg30"))
+    strong_dip = thirty_day is not None and thirty_day <= -20.0
+    moderate_dip = thirty_day is not None and thirty_day <= -10.0
+    explicitly_curated = "wishlist" in personal_reasons or "manual priority" in personal_reasons
+
+    if confidence != "LOW" and score >= 72.0 and (strong_dip or (explicitly_curated and moderate_dip)):
+        signal = "REVIEW"
+    elif confidence != "LOW" and score >= 58.0 and moderate_dip:
         signal = "WATCH"
     else:
         signal = "PASS"
 
     reasons = list(personal_reasons)
-    thirty_day = pct(card.get("trend"), card.get("avg30"))
     one_week = pct(card.get("avg1"), card.get("avg7"))
     if thirty_day is not None:
         if thirty_day <= -5:
             reasons.append(f"trend {abs(thirty_day):.1f}% under avg30")
         elif thirty_day >= 8:
             reasons.append(f"trend {thirty_day:.1f}% over avg30")
-    if reference_dkk <= target_dkk:
-        reasons.append("reference within target")
-    else:
-        reasons.append(f"reference {budget_ratio:.2f}x target")
+    reasons.append("aggregate reference is not purchase price")
     if confidence == "LOW":
         reasons.append("low aggregate confidence")
 
@@ -212,7 +224,7 @@ def evaluate_card(card: dict[str, Any], profile: dict[str, Any]) -> dict[str, An
         "score": round(score, 1),
         "reference_eur": round(reference_eur, 2),
         "reference_dkk": round(reference_dkk, 2),
-        "target_dkk": round(target_dkk, 2),
+        "purchase_budget_dkk": round(purchase_budget_dkk, 2),
         "trend_eur": number(card.get("trend")),
         "avg1_eur": number(card.get("avg1")),
         "avg7_eur": number(card.get("avg7")),
@@ -237,7 +249,7 @@ def evaluate_state(state: dict[str, Any], profile: dict[str, Any]) -> list[dict[
         row = evaluate_card(card, profile)
         if row is not None:
             rows.append(row)
-    signal_order = {"CHECK_NOW": 0, "WATCH": 1, "PASS": 2}
+    signal_order = {"REVIEW": 0, "WATCH": 1, "PASS": 2}
     return sorted(rows, key=lambda row: (signal_order[row["signal"]], -row["score"], row["reference_dkk"], row["name"]))
 
 
@@ -250,41 +262,45 @@ def fmt_money(value: Any, currency: str = "kr.") -> str:
 
 def build_report(rows: list[dict[str, Any]], profile: dict[str, Any], limit: int = DEFAULT_LIMIT) -> str:
     visible = [row for row in rows if row["signal"] != "PASS"][:limit]
-    checks = sum(1 for row in rows if row["signal"] == "CHECK_NOW")
+    reviews = sum(1 for row in rows if row["signal"] == "REVIEW")
     watches = sum(1 for row in rows if row["signal"] == "WATCH")
     lines = [
-        "# Personal Singles Scout · V50 shadow",
+        "# Personal Singles Scout · V50.1 shadow",
         "",
-        "> Aggregate Cardmarket radar only. CHECK_NOW is not a buy signal.",
+        "> Aggregate Cardmarket radar only. REVIEW means: open the actual listings and verify them.",
+        "> Market reference is NOT an EN/NM purchase price and is never compared with the purchase budget.",
         "> Verify exact version, English, MT/NM, EU/EEA seller and shipping to Denmark before purchase.",
         "",
-        f"- Evaluated: {len(rows)} Pokémon cards",
-        f"- CHECK_NOW: {checks}",
+        f"- Personal candidate pool: {len(rows)} cards",
+        f"- REVIEW: {reviews}",
         f"- WATCH: {watches}",
-        f"- Default target: {fmt_money(profile.get('default_target_dkk', 75))}",
-        "- `low` is diagnostic only and has zero weight in the score.",
+        f"- Manual purchase budget: {fmt_money(profile.get('default_target_dkk', 75))}",
+        "- `low` has zero weight; aggregate trend/averages are market context only.",
+        "- Non-personal cards and code cards are filtered before scoring.",
         "",
-        "## Ranked opportunities",
+        "## Ranked radar candidates",
         "",
-        "| Signal | Score | Card | Set | Reference | Target | Confidence | Why |",
+        "| Signal | Score | Card | Set | Market ref | 30d move | Confidence | Why |",
         "|---|---:|---|---|---:|---:|---|---|",
     ]
     if not visible:
         lines.append("| – | – | No current candidates | – | – | – | – | – |")
     for row in visible:
-        why = "; ".join(row["reasons"][:3]) or "aggregate pricing"
+        move = row.get("trend_vs_avg30_pct")
+        move_text = "–" if move is None else f"{move:+.1f}%"
+        why = "; ".join(row["reasons"][:3]) or "aggregate market movement"
         lines.append(
             f"| {row['signal']} | {row['score']:.1f} | {row['name'].replace('|', '/')} | "
             f"{row['set'].replace('|', '/')} | {fmt_money(row['reference_dkk'])} | "
-            f"{fmt_money(row['target_dkk'])} | {row['confidence']} | {why} |"
+            f"{move_text} | {row['confidence']} | {why} |"
         )
     lines.extend(
         [
             "",
             "## Guardrail",
             "",
-            "This engine never emits BUY. Its strongest status is CHECK_NOW because the current aggregate feed cannot verify language, condition, seller region or Denmark shipping.",
-            "Trend is the primary price reference; avg7/avg30 provide context and fallbacks. Aggregate low is never used for ranking or thresholds.",
+            "V50.1 never emits BUY and does not infer a purchase price from aggregate Cardmarket data.",
+            "REVIEW is only a manual-inspection signal. The 75 kr. budget is metadata until a concrete EN/NM/EU->DK offer is verified.",
             "",
         ]
     )
@@ -308,7 +324,7 @@ def main() -> int:
         raise SystemExit(f"Personal profile missing or empty: {args.profile}")
     rows = evaluate_state(state, profile)
     if not rows:
-        raise SystemExit(f"No usable Pokemon aggregate cards found in {args.state}")
+        raise SystemExit(f"No usable personal Pokemon radar candidates found in {args.state}")
     report = build_report(rows, profile, max(1, args.limit))
     args.output.write_text(report, encoding="utf-8")
     print(report)
