@@ -119,6 +119,34 @@ class SinglesDiscordNotifyTests(unittest.TestCase):
     def test_non_review_never_alerts(self):
         self.assertEqual(notify.plan_alerts([row(signal="WATCH")], {"cards": {}}), [])
 
+    def test_cardmarket_search_text_uses_exact_name_number_and_set(self):
+        rarity_metadata = {
+            "1": {
+                "canonical_name": "Umbreon",
+                "canonical_number": "10",
+            }
+        }
+        exact = row()
+        exact["set"] = "Undaunted"
+        self.assertEqual(
+            notify.cardmarket_search_text(exact, rarity_metadata),
+            "Umbreon 10 Undaunted",
+        )
+
+    def test_embed_contains_copyable_cardmarket_search_text(self):
+        rarity_metadata = {
+            "1": {
+                "canonical_name": "Umbreon",
+                "canonical_number": "10",
+            }
+        }
+        exact = row()
+        exact["set"] = "Undaunted"
+        exact["alert_reason"] = "PROMOTED_REVIEW"
+        embed = notify.embed_for(exact, rarity_metadata)
+        search_field = next(field for field in embed["fields"] if field["name"] == "Cardmarket-søgning")
+        self.assertEqual(search_field["value"], "`Umbreon 10 Undaunted`")
+
 
 if __name__ == "__main__":
     unittest.main()
