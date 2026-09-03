@@ -50,12 +50,13 @@ jobs:
 
       - name: Validate Cardmarket watcher
         run: |
-          python -m py_compile cardmarket_chase_watch.py cardmarket_feasibility.py personal/singles_opportunity.py personal/singles_v54.py personal/singles_v55.py personal/singles_v56.py personal/singles_collection_runner.py personal/singles_collection_runner_v54.py personal/singles_collection_runner_v55.py personal/singles_collection_runner_v56.py personal/cardmarket_link_overlay.py personal/cardmarket_official_listing_probe.py
+          python -m py_compile cardmarket_chase_watch.py cardmarket_feasibility.py personal/singles_opportunity.py personal/singles_v54.py personal/singles_v55.py personal/singles_v56.py personal/singles_discord_notify.py personal/singles_collection_runner.py personal/singles_collection_runner_v54.py personal/singles_collection_runner_v55.py personal/singles_collection_runner_v56.py personal/cardmarket_link_overlay.py personal/cardmarket_official_listing_probe.py
           if [ -f cardmarket_v16_replay.py ]; then
             python -m py_compile cardmarket_v16_replay.py
           fi
-          python -m unittest test_cardmarket_feasibility.py test_singles_opportunity.py test_singles_v54.py test_singles_v55.py test_singles_v56.py test_cardmarket_official_listing_probe.py test_collection_integration.py test_cardmarket_link_overlay.py
+          python -m unittest test_cardmarket_feasibility.py test_singles_opportunity.py test_singles_v54.py test_singles_v55.py test_singles_v56.py test_singles_discord_notify.py test_cardmarket_official_listing_probe.py test_collection_integration.py test_cardmarket_link_overlay.py
           python -m personal.singles_collection_runner_v56 --help >/dev/null
+          python -m personal.singles_discord_notify --help >/dev/null
           python -m personal.cardmarket_link_overlay --help >/dev/null
 
       - name: Test Cardmarket Discord webhook
@@ -117,16 +118,30 @@ jobs:
             --output "$RUNNER_TEMP/personal_singles_listing_report.md" \
             --limit 10
 
-      - name: Save Cardmarket state
+      - name: Send V56.1 personal singles Discord deltas
+        if: ${{ inputs.test_webhook != true && inputs.personal_shadow != true }}
+        env:
+          CARDMARKET_WEBHOOK_URL: ${{ secrets.CARDMARKET_WEBHOOK_URL }}
+        run: |
+          python -m personal.singles_discord_notify \
+            --collection "$RUNNER_TEMP/personal_collection_linked.json" \
+            --limit 5 \
+            --require-webhook
+
+      - name: Save Cardmarket and singles alert state
         if: ${{ inputs.test_webhook != true && inputs.personal_shadow != true }}
         run: |
           if [ ! -f cardmarket_chase_state.json ]; then
             echo "No Cardmarket state produced."
             exit 1
           fi
+          if [ ! -f personal/personal_singles_discord_state.json ]; then
+            echo "No personal singles Discord state produced."
+            exit 1
+          fi
 
-          if git diff --quiet -- cardmarket_chase_state.json; then
-            echo "No Cardmarket state changes to save."
+          if git diff --quiet -- cardmarket_chase_state.json personal/personal_singles_discord_state.json; then
+            echo "No Cardmarket or singles alert state changes to save."
             exit 0
           fi
 
@@ -135,25 +150,27 @@ jobs:
 
           STATE_BACKUP="$(mktemp -d)"
           cp cardmarket_chase_state.json "$STATE_BACKUP/cardmarket_chase_state.json"
+          cp personal/personal_singles_discord_state.json "$STATE_BACKUP/personal_singles_discord_state.json"
 
           for attempt in 1 2 3 4 5; do
-            echo "Cardmarket state push attempt $attempt/5"
+            echo "Cardmarket/singles state push attempt $attempt/5"
 
             git fetch origin main
             git reset --hard origin/main
             cp "$STATE_BACKUP/cardmarket_chase_state.json" cardmarket_chase_state.json
-            git add cardmarket_chase_state.json
+            cp "$STATE_BACKUP/personal_singles_discord_state.json" personal/personal_singles_discord_state.json
+            git add cardmarket_chase_state.json personal/personal_singles_discord_state.json
 
             if git diff --cached --quiet; then
-              echo "Cardmarket state already current on main."
+              echo "Cardmarket and singles alert state already current on main."
               rm -rf "$STATE_BACKUP"
               exit 0
             fi
 
-            git commit -m "Update Cardmarket state"
+            git commit -m "Update Cardmarket and singles alert state"
 
             if git push origin HEAD:main; then
-              echo "Cardmarket state pushed successfully."
+              echo "Cardmarket and singles alert state pushed successfully."
               rm -rf "$STATE_BACKUP"
               exit 0
             fi
@@ -165,5 +182,5 @@ jobs:
           done
 
           rm -rf "$STATE_BACKUP"
-          echo "Failed to push Cardmarket state after 5 fresh-main attempts."
+          echo "Failed to push Cardmarket/singles state after 5 fresh-main attempts."
           exit 1
