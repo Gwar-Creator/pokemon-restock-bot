@@ -33,125 +33,17 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Apply one-time patches
-        run: |
-          if [ -f patch_v17_pricewatch.py ]; then
-            python patch_v17_pricewatch.py
-          fi
-          if [ -f patch_v17_finalize.py ]; then
-            python patch_v17_finalize.py
-          fi
-          if [ -f patch_v18_no_price_rises.py ]; then
-            python patch_v18_no_price_rises.py
-          fi
-          if [ -f patch_v19_sources.py ]; then
-            python patch_v19_sources.py
-          fi
-          if [ -f patch_v20_proshop_reader.py ]; then
-            python patch_v20_proshop_reader.py
-          fi
-          if [ -f patch_v21_cleanup_price_history_log.py ]; then
-            python patch_v21_cleanup_price_history_log.py
-          fi
-          if [ -f patch_v22_proshop_filter.py ]; then
-            python patch_v22_proshop_filter.py
-          fi
-          if [ -f patch_v23_signal_cleanup.py ]; then
-            python patch_v23_signal_cleanup.py
-          fi
-          if [ -f patch_v25_retailer_cleanup.py ]; then
-            python patch_v25_retailer_cleanup.py
-          fi
-          if [ -f patch_v26_english_only.py ]; then
-            python patch_v26_english_only.py
-          fi
-          if [ -f patch_v27_compact_price_history.py ]; then
-            python patch_v27_compact_price_history.py
-          fi
-          if [ -f patch_v28_wave1_retailers.py ]; then
-            python patch_v28_wave1_retailers.py
-          fi
-          if [ -f patch_v29_wave2_retailers.py ]; then
-            python patch_v29_wave2_retailers.py
-          fi
-          if [ -f patch_v30_retire_cardstorecph.py ]; then
-            python patch_v30_retire_cardstorecph.py
-          fi
-          if [ -f patch_v31_wave3_retailers.py ]; then
-            python patch_v31_wave3_retailers.py
-          fi
-          if [ -f patch_v33_wave3_source_fixes.py ]; then
-            python patch_v33_wave3_source_fixes.py
-          fi
-          if [ -f patch_v34_kocardz_anchor_parser.py ]; then
-            python patch_v34_kocardz_anchor_parser.py
-          fi
-          if [ -f patch_v35_wave4_retailers.py ]; then
-            python patch_v35_wave4_retailers.py
-          fi
-          if [ -f patch_v36_wave4_html_fallbacks.py ]; then
-            python patch_v36_wave4_html_fallbacks.py
-          fi
-          if [ -f patch_v37_tcgbruus_browser_parser.py ]; then
-            python patch_v37_tcgbruus_browser_parser.py
-          fi
-          if [ -f patch_v38_wave5_retailers.py ]; then
-            python patch_v38_wave5_retailers.py
-          fi
-          if [ -f patch_v38_wave5_docs.py ]; then
-            python patch_v38_wave5_docs.py
-          fi
-          if [ -f patch_v39_wave5_source_fixes.py ]; then
-            python patch_v39_wave5_source_fixes.py
-          fi
-          if [ -f patch_v40_repair.py ]; then
-            python patch_v40_repair.py
-          fi
-          if [ -f patch_v40_matching_opportunity.py ]; then
-            python patch_v40_matching_opportunity.py
-          fi
-          if [ -f patch_v41_v40_runtime_fix.py ]; then
-            python patch_v41_v40_runtime_fix.py
-          fi
-          if [ -f patch_v42_kelz0r_stability.py ]; then
-            python patch_v42_kelz0r_stability.py
-          fi
-          if [ -f patch_v43_restock_sanitation.py ]; then
-            python patch_v43_restock_sanitation.py
-          fi
-          if [ -f patch_v44_replay_guard.py ]; then
-            python patch_v44_replay_guard.py
-          fi
-          if [ -f patch_v45_salling_discovery.py ]; then
-            python patch_v45_salling_discovery.py
-          fi
-          if [ -f patch_v46_unified_abundant_set_policy.py ]; then
-            python patch_v46_unified_abundant_set_policy.py
-          fi
-          if [ -f patch_v47_matraws_single_guard.py ]; then
-            python patch_v47_matraws_single_guard.py
-          fi
-
-      - name: Validate Python
+      - name: Validate production scanner
         run: |
           python -m py_compile restock_bot_github.py
           python -m py_compile local_stock_watch.py
           python -m py_compile scanner_health_audit.py
           python -m py_compile discord_cleanup.py
-          python -m py_compile market_radar.py
-          python -m unittest test_market_radar.py
-          python -m py_compile market_radar_v6.py
-          python -m unittest test_market_radar_v6.py
+          python -m py_compile state_commit_guard.py
           python -m unittest test_discord_cleanup.py
           python -m unittest test_alert_policy.py
-          python -m py_compile retailer_probe_v24.py
-          python -m py_compile preview_price_channels_v25.py
-          python -m py_compile patch_v43_restock_sanitation.py
-          python -m py_compile patch_v44_replay_guard.py
-          python -m py_compile patch_v45_salling_discovery.py
-          python -m py_compile patch_v46_unified_abundant_set_policy.py
-          python -m py_compile patch_v47_matraws_single_guard.py
           python -m unittest test_matraws_single_guard.py
+          python -m unittest test_state_commit_guard.py
 
       - name: Keep Discord channels fresh
         continue-on-error: true
@@ -163,17 +55,6 @@ jobs:
           CARDMARKET_CHANNEL_ID: ${{ secrets.CARDMARKET_CHANNEL_ID }}
           DISCORD_RETENTION_HOURS: "24"
         run: python discord_cleanup.py
-
-      - name: Run one-time retailer path probe V24
-        if: ${{ hashFiles('retailer_probe_v24_done.json') == '' }}
-        run: |
-          python retailer_probe_v24.py
-          python - <<'PY'
-          import json
-          from datetime import datetime, timezone
-          with open('retailer_probe_v24_done.json', 'w', encoding='utf-8') as f:
-              json.dump({'completed_at': datetime.now(timezone.utc).isoformat()}, f, indent=2)
-          PY
 
       - name: Run restock + Local Stock in parallel
         env:
@@ -204,55 +85,31 @@ jobs:
             exit "$RESTOCK_STATUS"
           fi
 
-      # V5 live output is deliberately paused. Price-guide low/trend is not
-      # concrete enough to support a buying decision for sealed products.
-      - name: Generate one-time Market Radar V6 listing-validator shadow
-        if: ${{ hashFiles('market_radar_v6_shadow_done.json') == '' }}
-        continue-on-error: true
-        env:
-          CARDMARKET_APP_TOKEN: ${{ secrets.CARDMARKET_APP_TOKEN }}
-          CARDMARKET_APP_SECRET: ${{ secrets.CARDMARKET_APP_SECRET }}
-          CARDMARKET_ACCESS_TOKEN: ${{ secrets.CARDMARKET_ACCESS_TOKEN }}
-          CARDMARKET_ACCESS_SECRET: ${{ secrets.CARDMARKET_ACCESS_SECRET }}
-          MARKET_RADAR_V6_MAX_PRODUCTS: "150"
-          MARKET_RADAR_V6_REQUEST_DELAY: "0.20"
-          MARKET_RADAR_V6_MIN_SELLS: "25"
-        run: |
-          python market_radar_v6.py
-          python - <<'PY'
-          import json
-          from datetime import datetime, timezone
-          with open('market_radar_v6_shadow_done.json', 'w', encoding='utf-8') as f:
-              json.dump({'completed_at': datetime.now(timezone.utc).isoformat()}, f, indent=2)
-          PY
-
-      - name: Generate one-time V25 price channel preview
-        if: ${{ hashFiles('price_channels_preview_v25_done.json') == '' }}
-        run: |
-          python preview_price_channels_v25.py
-          python - <<'PY'
-          import json
-          from datetime import datetime, timezone
-          with open('price_channels_preview_v25_done.json', 'w', encoding='utf-8') as f:
-              json.dump({'completed_at': datetime.now(timezone.utc).isoformat()}, f, indent=2)
-          PY
-
       - name: Audit scanner health
         continue-on-error: true
         run: python scanner_health_audit.py
 
+      - name: Compact volatile state fields
+        run: python state_commit_guard.py --profile main
+
       - name: Save updated state
         run: |
-          if [ -z "$(git status --porcelain)" ]; then
-            echo "No changes to save."
-            exit 0
-          fi
-
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add -A
-          git commit -m "Update restock and market state"
+          # Only production-owned state/audit files may be committed. This
+          # deliberately replaces the old `git add -A` behavior.
+          git add -- \
+            restock_state_v2.json \
+            local_stock_state_v1.json \
+            price_matching_audit_v1.json
+
+          if git diff --cached --quiet; then
+            echo "No production state changes to save."
+            exit 0
+          fi
+
+          git commit -m "Update restock state"
 
           for attempt in 1 2 3; do
             echo "Push attempt $attempt/3"
