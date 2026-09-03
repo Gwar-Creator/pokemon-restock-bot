@@ -16,6 +16,8 @@ HOT_FILES = (
     "salling_victini_state.json",
 )
 
+RESTOCK_HEARTBEAT_COMMIT_INTERVAL_SECONDS = 15 * 60
+
 
 def _read_json_text(text):
     value = json.loads(text)
@@ -87,9 +89,27 @@ def compact_restock_state(old, new):
                     else:
                         new_entry.pop(key, None)
 
-    # _last_full_scan_epoch is deliberately kept from the current run. It is
-    # the V44 recovery heartbeat and must remain fresh even when nothing else
-    # changed, otherwise a healthy scanner would enter recovery mode after 30m.
+    # V44 uses _last_full_scan_epoch as a recovery heartbeat. Do not drop it,
+    # but avoid a Git commit every five minutes when it is the only real change.
+    # A 15-minute persisted heartbeat stays safely below the 30-minute recovery
+    # threshold while cutting no-op state commits substantially.
+    old_cmp = copy.deepcopy(old)
+    new_cmp = copy.deepcopy(compact)
+    old_cmp.pop("_last_full_scan_epoch", None)
+    new_cmp.pop("_last_full_scan_epoch", None)
+    if old_cmp == new_cmp:
+        try:
+            old_epoch = int(old.get("_last_full_scan_epoch") or 0)
+            new_epoch = int(compact.get("_last_full_scan_epoch") or 0)
+        except (TypeError, ValueError):
+            old_epoch = 0
+            new_epoch = 0
+        if (
+            old_epoch > 0
+            and 0 <= new_epoch - old_epoch < RESTOCK_HEARTBEAT_COMMIT_INTERVAL_SECONDS
+        ):
+            compact["_last_full_scan_epoch"] = old_epoch
+
     return compact
 
 
