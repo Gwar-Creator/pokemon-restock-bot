@@ -30,7 +30,8 @@ TCGDEX_API = "https://api.tcgdex.net/v2/en"
 SOURCE_REPO = "tcgdex/cards-database"
 REQUEST_TIMEOUT = 25
 MAX_WORKERS = 8
-NAME_BATCH_SIZE = 16
+NAME_BATCH_SIZE = 8
+LIST_PAGE_SIZE = 250
 
 # TCGdex follows official set names while Cardmarket sometimes keeps the EX-era
 # prefix. Normalize those known naming differences before comparing sets.
@@ -142,22 +143,28 @@ def set_name_map(session: requests.Session) -> dict[str, str]:
 def brief_cards_for_subjects(
     session: requests.Session, subjects: list[str]
 ) -> list[dict[str, Any]]:
-    """Fetch TCGdex card briefs in exact-name batches."""
+    """Fetch TCGdex card briefs in exact-name batches, including pagination."""
     unique: dict[str, dict[str, Any]] = {}
     for batch in chunks(sorted(set(subjects), key=str.casefold), NAME_BATCH_SIZE):
-        rows = request_json(
-            session,
-            f"{TCGDEX_API}/cards",
-            params={
-                "name": "eq:" + "|".join(batch),
-                "pagination:itemsPerPage": 500,
-            },
-        )
-        if not isinstance(rows, list):
-            raise RuntimeError("Unexpected TCGdex /cards response")
-        for row in rows:
-            if isinstance(row, dict) and row.get("id"):
-                unique[str(row["id"])] = row
+        page = 1
+        while True:
+            rows = request_json(
+                session,
+                f"{TCGDEX_API}/cards",
+                params={
+                    "name": "eq:" + "|".join(batch),
+                    "pagination:page": page,
+                    "pagination:itemsPerPage": LIST_PAGE_SIZE,
+                },
+            )
+            if not isinstance(rows, list):
+                raise RuntimeError("Unexpected TCGdex /cards response")
+            for row in rows:
+                if isinstance(row, dict) and row.get("id"):
+                    unique[str(row["id"])] = row
+            if len(rows) < LIST_PAGE_SIZE:
+                break
+            page += 1
     return list(unique.values())
 
 
@@ -218,7 +225,11 @@ def metadata_from_card(
     """Extract only exact Cardmarket IDs that also agree on set and card name."""
     set_info = card.get("set") if isinstance(card, dict) else None
     set_name = str(set_info.get("name") or "") if isinstance(set_info, dict) else ""
-    source_set_id = str(set_info.get("id") or "") if isinstance(set_info, dict) else card_set_id(str(card.get("id") or ""))
+    source_set_id = (
+        str(set_info.get("id") or "")
+        if isinstance(set_info, dict)
+        else card_set_id(str(card.get("id") or ""))
+    )
     canonical_name = str(card.get("name") or "")
     rarity = str(card.get("rarity") or "").strip()
     if not canonical_name or not set_name or not rarity:
@@ -301,7 +312,7 @@ def refresh_metadata(
             "Exact Cardmarket product ID is required. TCGdex set and English card name must also agree "
             "with the personal Cardmarket radar state. No fuzzy rarity linking is accepted."
         ),
-        "cards": dict(sorted(cards.items(), key=lambda item: int(item[0]) if item[0].isdigit() else item[0])),
+        "cards": dict(sorted(cards.items(), key=lambda item: int(item[0]))),
     }
     stats = {
         "candidates": len(candidates),
