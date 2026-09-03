@@ -58,10 +58,10 @@ class CardmarketLinkOverlayTests(unittest.TestCase):
         real_links = json.loads(Path("personal/cardmarket_links.json").read_text(encoding="utf-8"))
         linked, stats = apply_links(real_collection, real_links)
         self.assertEqual(stats["collection_records"], 125)
-        self.assertEqual(stats["applied_links"], 116)
-        self.assertEqual(stats["linked_records"], 116)
-        self.assertEqual(stats["unlinked_records"], 9)
-        self.assertEqual(linked["totals"]["linked_cardmarket_product_ids"], 116)
+        self.assertEqual(stats["applied_links"], 125)
+        self.assertEqual(stats["linked_records"], 125)
+        self.assertEqual(stats["unlinked_records"], 0)
+        self.assertEqual(linked["totals"]["linked_cardmarket_product_ids"], 125)
 
 
 if __name__ == "__main__":
