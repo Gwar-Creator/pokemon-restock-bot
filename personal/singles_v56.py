@@ -4,11 +4,11 @@
 V56 preserves V55's canonical-rarity and collection guardrails, then overlays a
 read-only snapshot of concrete Cardmarket marketplace articles. Aggregate price
 fields remain radar context only. A card becomes LISTING_REVIEW only when an
-individual offer is exact-product matched, English, MT/NM, from an EU/EEA seller,
-confirmed to ship to Denmark, fresh, and within the card's DKK purchase budget.
+individual offer is exact-product and exact-finish matched, English, MT/NM, from
+an EU/EEA seller, confirmed to ship to Denmark, fresh, and within the DKK budget.
 
 The official Cardmarket Articles API does not expose destination-specific shipping
-eligibility or shipping cost in an Article entity. Those two fields therefore stay
+eligibility or buyer-specific shipping cost. Those fields therefore stay
 unverified until supplied by a separate explicit shipping verification step. V56
 never infers them from seller country and never emits BUY.
 """
@@ -20,7 +20,6 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from personal import singles_opportunity as v53
 from personal import singles_v55 as v55
 
 DEFAULT_LISTINGS = Path("personal/cardmarket_listing_snapshot.json")
@@ -110,17 +109,38 @@ def merged_offer(offer: dict[str, Any], shipping: dict[str, dict[str, Any]]) -> 
     return result
 
 
+def expected_foil(expected_variant: Any) -> bool:
+    return str(expected_variant or "").strip().casefold() == "foil"
+
+
+def finish_matches(offer: dict[str, Any], expected_variant: Any) -> bool:
+    explicit = offer.get("variant_match")
+    if isinstance(explicit, bool):
+        return explicit
+    if "is_foil" in offer:
+        return (offer.get("is_foil") is True) == expected_foil(expected_variant)
+    if "isFoil" in offer:
+        return (offer.get("isFoil") is True) == expected_foil(expected_variant)
+    return False
+
+
 def offer_checks(
     offer: dict[str, Any],
     product_id: str,
+    expected_variant: str,
     *,
     now: datetime | None = None,
 ) -> dict[str, Any]:
     offered_product = str(offer.get("product_id") or offer.get("idProduct") or "")
     language_id = offer.get("language_id")
-    if language_id is None and isinstance(offer.get("language"), dict):
-        language_id = offer["language"].get("idLanguage")
-    language = str(offer.get("language") or "") if not isinstance(offer.get("language"), dict) else str(offer["language"].get("languageName") or "")
+    raw_language = offer.get("language")
+    if language_id is None and isinstance(raw_language, dict):
+        language_id = raw_language.get("idLanguage")
+    language = (
+        str(raw_language.get("languageName") or "")
+        if isinstance(raw_language, dict)
+        else str(raw_language or "")
+    )
     condition = str(offer.get("condition") or "").upper()
     seller_country = str(offer.get("seller_country") or "").upper()
     price_eur = number(offer.get("price_eur") if "price_eur" in offer else offer.get("price"))
@@ -128,6 +148,7 @@ def offer_checks(
     age = listing_age_hours(offer.get("checked_at"), now)
 
     exact_product = offered_product == str(product_id)
+    variant_match = finish_matches(offer, expected_variant)
     english = str(language_id) == "1" or language.strip().casefold() == "english"
     condition_ok = condition in ACCEPTED_CONDITIONS
     eu_eea = seller_country in EU_EEA_COUNTRIES
@@ -139,6 +160,7 @@ def offer_checks(
 
     return {
         "exact_product": exact_product,
+        "variant_match": variant_match,
         "english": english,
         "condition_ok": condition_ok,
         "eu_eea": eu_eea,
@@ -155,7 +177,7 @@ def offer_checks(
 
 def candidate_quality(checks: dict[str, Any]) -> int:
     fields = (
-        "exact_product", "english", "condition_ok", "eu_eea", "fresh",
+        "exact_product", "variant_match", "english", "condition_ok", "eu_eea", "fresh",
         "listing_price_known", "ships_to_denmark", "shipping_known",
     )
     return sum(bool(checks.get(field)) for field in fields)
@@ -163,6 +185,7 @@ def candidate_quality(checks: dict[str, Any]) -> int:
 
 def best_offer_for(
     product_id: str,
+    expected_variant: str,
     snapshot: dict[str, Any],
     shipping: dict[str, dict[str, Any]],
     *,
@@ -171,7 +194,7 @@ def best_offer_for(
     candidates: list[tuple[tuple[Any, ...], dict[str, Any], dict[str, Any]]] = []
     for raw in listing_rows_for(snapshot, product_id):
         offer = merged_offer(raw, shipping)
-        checks = offer_checks(offer, product_id, now=now)
+        checks = offer_checks(offer, product_id, expected_variant, now=now)
         total = checks["total_eur"]
         price = checks["listing_price_eur"]
         sort_key = (
@@ -201,7 +224,14 @@ def evaluate_card(
         return None
 
     product_id = str(card.get("id") or "")
-    offer, checks = best_offer_for(product_id, snapshot, shipping, now=now)
+    expected_variant = str(card.get("variant") or "Normal")
+    offer, checks = best_offer_for(
+        product_id,
+        expected_variant,
+        snapshot,
+        shipping,
+        now=now,
+    )
     result = dict(base)
     result["v55_signal"] = base["signal"]
     result["listing_status"] = "NO_OFFER"
@@ -210,6 +240,7 @@ def evaluate_card(
     result["listing_checks"] = checks
     result["listing_total_eur"] = None
     result["listing_total_dkk"] = None
+    result["listing_within_budget"] = False
 
     if offer is None or checks is None:
         return result
@@ -217,7 +248,7 @@ def evaluate_card(
     required_listing = all(
         checks[field]
         for field in (
-            "exact_product", "english", "condition_ok", "eu_eea", "fresh", "listing_price_known"
+            "exact_product", "variant_match", "english", "condition_ok", "eu_eea", "fresh", "listing_price_known"
         )
     )
     shipping_verified = checks["ships_to_denmark"] and checks["shipping_known"]
@@ -232,10 +263,11 @@ def evaluate_card(
 
     if required_listing and shipping_verified:
         result["listing_status"] = "VERIFIED"
-        if base["signal"] == "REVIEW" and within_budget:
-            result["listing_signal"] = "LISTING_REVIEW"
-        else:
-            result["listing_signal"] = "LISTING_WATCH"
+        result["listing_signal"] = (
+            "LISTING_REVIEW"
+            if base["signal"] == "REVIEW" and within_budget
+            else "LISTING_WATCH"
+        )
     elif required_listing:
         result["listing_status"] = "SHIPPING_UNVERIFIED"
         result["listing_signal"] = "LISTING_WATCH"
@@ -278,17 +310,13 @@ def evaluate_state(
 
 
 def fmt_dkk(value: Any) -> str:
-    number_value = number(value)
-    if number_value is None:
-        return "–"
-    return f"{number_value:.0f} kr."
+    value = number(value)
+    return "–" if value is None else f"{value:.0f} kr."
 
 
 def fmt_eur(value: Any) -> str:
-    number_value = number(value)
-    if number_value is None:
-        return "–"
-    return f"€{number_value:.2f}"
+    value = number(value)
+    return "–" if value is None else f"€{value:.2f}"
 
 
 def build_report(rows: list[dict[str, Any]], profile: dict[str, Any], limit: int = 10) -> str:
@@ -308,7 +336,7 @@ def build_report(rows: list[dict[str, Any]], profile: dict[str, Any], limit: int
         "",
         f"- Personal candidate pool: {len(rows)} cards",
         f"- Concrete offers in snapshot: {with_offer}",
-        f"- Fully verified EN + MT/NM + EU/EEA + DK shipping offers: {verified}",
+        f"- Fully verified EN + MT/NM + exact finish + EU/EEA + DK shipping offers: {verified}",
         f"- Offers waiting only/partly on shipping verification: {shipping_unverified}",
         f"- LISTING_REVIEW: {listing_reviews}",
         f"- LISTING_WATCH: {listing_watch}",
@@ -340,7 +368,7 @@ def build_report(rows: list[dict[str, Any]], profile: dict[str, Any], limit: int
         "",
         "## V56 gate",
         "",
-        "LISTING_REVIEW requires exact Cardmarket product ID, English, MT/NM, EU/EEA seller, a fresh concrete listing, explicit shipping-to-Denmark verification, known shipping cost, total price within the card budget, and an underlying V55 REVIEW.",
+        "LISTING_REVIEW requires exact Cardmarket product ID and finish, English, MT/NM, EU/EEA seller, a fresh concrete listing, explicit shipping-to-Denmark verification, known shipping cost, total price within the card budget, and an underlying V55 REVIEW.",
         "If Cardmarket's Article API confirms the listing but destination shipping is unavailable, the card remains LISTING_WATCH rather than being guessed into a purchase candidate.",
         "",
     ]
