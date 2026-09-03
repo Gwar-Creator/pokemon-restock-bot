@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""V56.2 delta-only Discord alerts for the personal singles radar.
+"""V56.3 delta-only Discord alerts for the personal singles radar.
 
 This module deliberately uses the existing V55/V56 radar as discovery only. It
 never presents aggregate Cardmarket prices as concrete offers and never emits BUY.
@@ -27,6 +27,35 @@ DEFAULT_LIMIT = 5
 PRICE_DROP_PCT = 12.0
 PRICE_DROP_DKK = 3.0
 SCORE_GAIN = 5.0
+TCGDEX_SET_API = "https://api.tcgdex.net/v2/en/sets"
+
+# Cardmarket does not always use the same set abbreviation as upstream TCG data.
+# Known differences and high-frequency personal-radar sets are pinned here so the
+# Discord copy text matches Cardmarket's own display syntax exactly.
+CARDMARKET_SET_CODE_OVERRIDES = {
+    "hgss1": "HS",
+    "hgss2": "UL",
+    "hgss3": "UD",
+    "hgss4": "TM",
+    "swsh7": "EVS",
+    "swsh12": "SIT",
+    "swsh12.5": "CRZ",
+    "sv01": "SVI",
+    "sv02": "PAL",
+    "sv03": "OBF",
+    "sv3pt5": "MEW",
+    "sv04": "PAR",
+    "sv4pt5": "PAF",
+    "sv05": "TEF",
+    "sv06": "TWM",
+    "sv6pt5": "SFA",
+    "sv07": "SCR",
+    "sv08": "SSP",
+    "sv8pt5": "PRE",
+    "sv09": "JTG",
+    "sv10": "DRI",
+}
+_SET_CODE_CACHE: dict[str, str] = {}
 
 
 def load_json(path: Path, default: Any) -> Any:
@@ -101,8 +130,6 @@ def plan_alerts(
         if reason:
             planned.append({**row, "alert_reason": reason})
 
-    # First deployment establishes a baseline instead of dumping every current
-    # REVIEW card into Discord. Only the strongest few are surfaced once.
     if first_run:
         planned = [row for row in planned if row["alert_reason"] == "NEW_REVIEW"]
 
@@ -126,25 +153,61 @@ def state_snapshot(rows: list[dict[str, Any]], stamp: str) -> dict[str, Any]:
     return {"version": 1, "updated_at": stamp, "cards": cards}
 
 
-def metadata_display(row: dict[str, Any], rarity_metadata: dict[str, dict[str, Any]]) -> tuple[str, str]:
+def metadata_for(row: dict[str, Any], rarity_metadata: dict[str, dict[str, Any]]) -> dict[str, Any]:
     meta = rarity_metadata.get(str(row.get("id") or ""), {})
-    if not isinstance(meta, dict):
-        meta = {}
+    return meta if isinstance(meta, dict) else {}
+
+
+def metadata_display(row: dict[str, Any], rarity_metadata: dict[str, dict[str, Any]]) -> tuple[str, str]:
+    meta = metadata_for(row, rarity_metadata)
     name = str(meta.get("canonical_name") or row.get("name") or "Ukendt kort")
     number_text = str(meta.get("canonical_number") or "").strip()
     return name, number_text
 
 
+def cardmarket_set_code(
+    row: dict[str, Any],
+    rarity_metadata: dict[str, dict[str, Any]],
+) -> str:
+    """Resolve Cardmarket's displayed set code without guessing from set name."""
+    meta = metadata_for(row, rarity_metadata)
+    explicit = str(meta.get("cardmarket_set_code") or "").strip().upper()
+    if explicit:
+        return explicit
+
+    source_set_id = str(meta.get("source_set_id") or "").strip()
+    if not source_set_id:
+        return ""
+    if source_set_id in CARDMARKET_SET_CODE_OVERRIDES:
+        return CARDMARKET_SET_CODE_OVERRIDES[source_set_id]
+    if source_set_id in _SET_CODE_CACHE:
+        return _SET_CODE_CACHE[source_set_id]
+
+    # For sets where Cardmarket follows the official Pokemon abbreviation, use
+    # TCGdex's official code. Known Cardmarket exceptions are always overridden
+    # above. Failure is safe: we show no fabricated set code.
+    try:
+        response = requests.get(f"{TCGDEX_SET_API}/{source_set_id}", timeout=10)
+        response.raise_for_status()
+        payload = response.json()
+        abbreviations = payload.get("abbreviations") if isinstance(payload, dict) else None
+        official = str(abbreviations.get("official") or "").strip().upper() if isinstance(abbreviations, dict) else ""
+    except (requests.RequestException, ValueError):
+        official = ""
+
+    _SET_CODE_CACHE[source_set_id] = official
+    return official
+
+
 def cardmarket_search_text(row: dict[str, Any], rarity_metadata: dict[str, dict[str, Any]]) -> str:
-    """Return a copy/paste Cardmarket query for the exact intended print."""
+    """Return Cardmarket's own single-card label syntax: Name (SET NUMBER)."""
     name, card_number = metadata_display(row, rarity_metadata)
-    set_name = str(row.get("set") or "").strip()
-    parts = [name]
+    set_code = cardmarket_set_code(row, rarity_metadata)
+    if set_code and card_number:
+        return f"{name} ({set_code} {card_number})"
     if card_number:
-        parts.append(card_number)
-    if set_name:
-        parts.append(set_name)
-    return " ".join(" ".join(parts).split())
+        return f"{name} ({card_number})"
+    return name
 
 
 def money(value: Any) -> str:
@@ -194,7 +257,7 @@ def embed_for(row: dict[str, Any], rarity_metadata: dict[str, dict[str, Any]]) -
         "color": 0xF1C40F if not exact_listing else 0x57F287,
         "fields": fields[:25],
         "footer": {
-            "text": "V56.2 · Kopiér Cardmarket-søgningen · Tjek English · NM/MT · EU/EEA · DK-fragt · aldrig BUY"
+            "text": "V56.3 · Cardmarket-format: navn (setkode nummer) · Tjek English · NM/MT · EU/EEA · DK-fragt · aldrig BUY"
         },
     }
 
@@ -246,7 +309,7 @@ def main() -> int:
     alerts = plan_alerts(rows, old_state, args.limit)
     webhook = os.getenv("CARDMARKET_WEBHOOK_URL", "").strip()
 
-    print(f"V56.2 DISCORD: {len(alerts)} delta alert(s) planned from {len(rows)} candidates")
+    print(f"V56.3 DISCORD: {len(alerts)} delta alert(s) planned from {len(rows)} candidates")
     for row in alerts:
         name, number_text = metadata_display(row, rarity_metadata)
         print(f"- {row['alert_reason']}: {name} {number_text} | {row.get('set')} | {money(row.get('reference_dkk'))}")
@@ -264,7 +327,7 @@ def main() -> int:
 
     stamp = datetime.now(timezone.utc).isoformat()
     save_json(args.alert_state, state_snapshot(rows, stamp))
-    print(f"V56.2 DISCORD: state saved to {args.alert_state}")
+    print(f"V56.3 DISCORD: state saved to {args.alert_state}")
     return 0
 
 
