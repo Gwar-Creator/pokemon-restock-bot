@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""V56.1 delta-only Discord alerts for the personal singles radar.
+"""V56.2 delta-only Discord alerts for the personal singles radar.
 
 This module deliberately uses the existing V55/V56 radar as discovery only. It
 never presents aggregate Cardmarket prices as concrete offers and never emits BUY.
@@ -135,6 +135,18 @@ def metadata_display(row: dict[str, Any], rarity_metadata: dict[str, dict[str, A
     return name, number_text
 
 
+def cardmarket_search_text(row: dict[str, Any], rarity_metadata: dict[str, dict[str, Any]]) -> str:
+    """Return a copy/paste Cardmarket query for the exact intended print."""
+    name, card_number = metadata_display(row, rarity_metadata)
+    set_name = str(row.get("set") or "").strip()
+    parts = [name]
+    if card_number:
+        parts.append(card_number)
+    if set_name:
+        parts.append(set_name)
+    return " ".join(" ".join(parts).split())
+
+
 def money(value: Any) -> str:
     parsed = number(value)
     return "–" if parsed is None else f"{parsed:.0f} kr."
@@ -165,6 +177,7 @@ def embed_for(row: dict[str, Any], rarity_metadata: dict[str, dict[str, Any]]) -
         f"Cardmarket product ID: `{row.get('id', '')}`"
     )
     fields = [
+        {"name": "Cardmarket-søgning", "value": f"`{cardmarket_search_text(row, rarity_metadata)}`", "inline": False},
         {"name": "Market ref (aggregate)", "value": money(row.get("reference_dkk")), "inline": True},
         {"name": "Vores budget", "value": money(row.get("purchase_budget_dkk")), "inline": True},
         {"name": "30d", "value": pct(row.get("trend_vs_avg30_pct")), "inline": True},
@@ -181,7 +194,7 @@ def embed_for(row: dict[str, Any], rarity_metadata: dict[str, dict[str, Any]]) -
         "color": 0xF1C40F if not exact_listing else 0x57F287,
         "fields": fields[:25],
         "footer": {
-            "text": "V56.1 · Tjek English · NM/MT · EU/EEA · DK-fragt før køb · aldrig BUY"
+            "text": "V56.2 · Kopiér Cardmarket-søgningen · Tjek English · NM/MT · EU/EEA · DK-fragt · aldrig BUY"
         },
     }
 
@@ -233,7 +246,7 @@ def main() -> int:
     alerts = plan_alerts(rows, old_state, args.limit)
     webhook = os.getenv("CARDMARKET_WEBHOOK_URL", "").strip()
 
-    print(f"V56.1 DISCORD: {len(alerts)} delta alert(s) planned from {len(rows)} candidates")
+    print(f"V56.2 DISCORD: {len(alerts)} delta alert(s) planned from {len(rows)} candidates")
     for row in alerts:
         name, number_text = metadata_display(row, rarity_metadata)
         print(f"- {row['alert_reason']}: {name} {number_text} | {row.get('set')} | {money(row.get('reference_dkk'))}")
@@ -251,7 +264,7 @@ def main() -> int:
 
     stamp = datetime.now(timezone.utc).isoformat()
     save_json(args.alert_state, state_snapshot(rows, stamp))
-    print(f"V56.1 DISCORD: state saved to {args.alert_state}")
+    print(f"V56.2 DISCORD: state saved to {args.alert_state}")
     return 0
 
 
