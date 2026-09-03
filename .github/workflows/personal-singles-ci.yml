@@ -8,6 +8,7 @@ on:
       - "test_singles_opportunity.py"
       - "test_singles_v54.py"
       - "test_singles_v55.py"
+      - "test_rarity_metadata_update.py"
       - "test_collection_integration.py"
       - "test_cardmarket_link_overlay.py"
       - ".github/workflows/personal-singles-ci.yml"
@@ -18,6 +19,7 @@ on:
       - "test_singles_opportunity.py"
       - "test_singles_v54.py"
       - "test_singles_v55.py"
+      - "test_rarity_metadata_update.py"
       - "test_collection_integration.py"
       - "test_cardmarket_link_overlay.py"
       - ".github/workflows/personal-singles-ci.yml"
@@ -45,8 +47,8 @@ jobs:
 
       - name: Compile and test Personal Singles
         run: |
-          python -m py_compile personal/singles_opportunity.py personal/singles_v54.py personal/singles_v55.py personal/singles_collection_runner.py personal/singles_collection_runner_v54.py personal/singles_collection_runner_v55.py personal/cardmarket_link_overlay.py
-          python -m unittest test_singles_opportunity.py test_singles_v54.py test_singles_v55.py test_collection_integration.py test_cardmarket_link_overlay.py
+          python -m py_compile personal/singles_opportunity.py personal/singles_v54.py personal/singles_v55.py personal/singles_collection_runner.py personal/singles_collection_runner_v54.py personal/singles_collection_runner_v55.py personal/cardmarket_link_overlay.py personal/update_rarity_metadata.py
+          python -m unittest test_singles_opportunity.py test_singles_v54.py test_singles_v55.py test_rarity_metadata_update.py test_collection_integration.py test_cardmarket_link_overlay.py
 
       - name: Run safe V55 shadow report
         run: |
