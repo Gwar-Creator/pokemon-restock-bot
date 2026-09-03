@@ -14,6 +14,11 @@ on:
         required: false
         default: false
         type: boolean
+      personal_shadow:
+        description: "Kør kun V50 Personal Singles shadow uden Cardmarket API-kald"
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: write
@@ -45,10 +50,11 @@ jobs:
 
       - name: Validate Cardmarket watcher
         run: |
-          python -m py_compile cardmarket_chase_watch.py
+          python -m py_compile cardmarket_chase_watch.py cardmarket_feasibility.py personal/singles_opportunity.py
           if [ -f cardmarket_v16_replay.py ]; then
             python -m py_compile cardmarket_v16_replay.py
           fi
+          python -m unittest test_cardmarket_feasibility.py test_singles_opportunity.py
 
       - name: Test Cardmarket Discord webhook
         if: ${{ inputs.test_webhook == true }}
@@ -84,7 +90,7 @@ jobs:
           PY
 
       - name: Run daily Card Market Watch
-        if: ${{ inputs.test_webhook != true }}
+        if: ${{ inputs.test_webhook != true && inputs.personal_shadow != true }}
         env:
           TCG_CARDMARKET_API_KEY: ${{ secrets.TCG_CARDMARKET_API_KEY }}
           CARDMARKET_WEBHOOK_URL: ${{ secrets.CARDMARKET_WEBHOOK_URL }}
@@ -99,8 +105,15 @@ jobs:
           fi
           python cardmarket_chase_watch.py
 
-      - name: Save Cardmarket state
+      - name: Run V50 personal singles shadow
         if: ${{ inputs.test_webhook != true }}
+        run: |
+          python personal/singles_opportunity.py \
+            --output "$RUNNER_TEMP/personal_singles_opportunity_report.md" \
+            --limit 20
+
+      - name: Save Cardmarket state
+        if: ${{ inputs.test_webhook != true && inputs.personal_shadow != true }}
         run: |
           if [ ! -f cardmarket_chase_state.json ]; then
             echo "No Cardmarket state produced."
