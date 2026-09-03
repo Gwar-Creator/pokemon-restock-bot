@@ -1,0 +1,56 @@
+#!/usr/bin/env python3
+"""V54 collection-aware shadow runner."""
+
+from __future__ import annotations
+
+import argparse
+from pathlib import Path
+
+from personal import singles_collection_runner as cr
+from personal import singles_v54 as radar
+
+DEFAULT_OUTPUT = Path("personal_singles_opportunity_report.md")
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--state", type=Path, default=cr.DEFAULT_STATE)
+    parser.add_argument("--profile", type=Path, default=cr.DEFAULT_PROFILE)
+    parser.add_argument("--collection", type=Path, default=cr.DEFAULT_COLLECTION)
+    parser.add_argument("--incoming", type=Path, default=cr.DEFAULT_INCOMING)
+    parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
+    parser.add_argument("--limit", type=int, default=cr.DEFAULT_LIMIT)
+    return parser.parse_args()
+
+
+def main() -> int:
+    args = parse_args()
+    state = cr.load_json(args.state)
+    profile = cr.load_json(args.profile)
+    collection = cr.load_json(args.collection)
+    incoming = cr.load_json(args.incoming)
+
+    effective_profile, stats = cr.apply_collection_filters(profile, collection, incoming)
+    diagnostics = cr.suppression_diagnostics(state, profile, collection, incoming)
+    unresolved = cr.unresolved_collection_rows(collection)
+
+    rows = radar.evaluate_state(state, effective_profile)
+    if not rows:
+        raise SystemExit(f"No usable personal Pokemon radar candidates found in {args.state}")
+
+    header = cr.collection_header(stats, diagnostics, unresolved).replace(
+        "V52.1 exact-link diagnostics shadow",
+        "V54 exact-link + collectability shadow",
+    )
+    base_report = radar.build_report(rows, effective_profile, max(1, args.limit))
+    base_lines = base_report.splitlines()
+    if base_lines and base_lines[0].startswith("# Personal Singles Scout"):
+        base_lines = base_lines[1:]
+    report = header + "\n" + "\n".join(base_lines).lstrip("\n")
+    args.output.write_text(report, encoding="utf-8")
+    print(report)
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

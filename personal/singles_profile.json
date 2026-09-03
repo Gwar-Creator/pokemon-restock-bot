@@ -1,9 +1,12 @@
 {
-  "version": 3,
+  "version": 4,
   "mode": "shadow",
   "currency": "DKK",
   "eur_to_dkk": 7.46,
   "default_target_dkk": 75,
+  "collectable_target_dkk": 150,
+  "collectable_target_min_score": 75,
+  "automatic_review_ceiling_dkk": 150,
   "priority_pokemon": [
     "Tangela",
     "Abra",
@@ -37,5 +40,5 @@
   "owned_ids": [],
   "ignore_ids": [],
   "target_overrides_dkk": {},
-  "notes": "V53 shadow profile. Aggregate Cardmarket trend/averages are never treated as EN/NM purchase prices. The 75 kr. target now shapes market-scale actionability: CORE <= target, STRETCH <= 2x target, while more expensive cards are normally demoted unless explicitly curated. Exact English/NM/EU-to-DK listings must still be verified before purchase. Only wishlist/manual-priority or named priority/secondary Pokemon enter the candidate pool."
+  "notes": "V54 shadow profile. Normal singles remain a 75 kr. target. Cards with strong/iconic collectability evidence can use a 150 kr. target, but 150 kr. is also the automatic REVIEW ceiling unless the card is explicitly curated via wishlist/manual priority. Aggregate Cardmarket values remain market context only; exact English NM EU/EEA-to-DK listings must still be verified before purchase."
 }
