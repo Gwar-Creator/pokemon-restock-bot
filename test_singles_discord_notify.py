@@ -119,18 +119,33 @@ class SinglesDiscordNotifyTests(unittest.TestCase):
     def test_non_review_never_alerts(self):
         self.assertEqual(notify.plan_alerts([row(signal="WATCH")], {"cards": {}}), [])
 
-    def test_cardmarket_search_text_uses_exact_name_number_and_set(self):
+    def test_cardmarket_search_text_matches_cardmarket_display_format(self):
         rarity_metadata = {
             "1": {
                 "canonical_name": "Umbreon",
                 "canonical_number": "10",
+                "source_set_id": "hgss3",
             }
         }
         exact = row()
         exact["set"] = "Undaunted"
         self.assertEqual(
             notify.cardmarket_search_text(exact, rarity_metadata),
-            "Umbreon 10 Undaunted",
+            "Umbreon (UD 10)",
+        )
+
+    def test_explicit_cardmarket_set_code_wins(self):
+        rarity_metadata = {
+            "1": {
+                "canonical_name": "Umbreon",
+                "canonical_number": "10",
+                "source_set_id": "hgss3",
+                "cardmarket_set_code": "XYZ",
+            }
+        }
+        self.assertEqual(
+            notify.cardmarket_search_text(row(), rarity_metadata),
+            "Umbreon (XYZ 10)",
         )
 
     def test_embed_contains_copyable_cardmarket_search_text(self):
@@ -138,6 +153,7 @@ class SinglesDiscordNotifyTests(unittest.TestCase):
             "1": {
                 "canonical_name": "Umbreon",
                 "canonical_number": "10",
+                "source_set_id": "hgss3",
             }
         }
         exact = row()
@@ -145,7 +161,7 @@ class SinglesDiscordNotifyTests(unittest.TestCase):
         exact["alert_reason"] = "PROMOTED_REVIEW"
         embed = notify.embed_for(exact, rarity_metadata)
         search_field = next(field for field in embed["fields"] if field["name"] == "Cardmarket-søgning")
-        self.assertEqual(search_field["value"], "`Umbreon 10 Undaunted`")
+        self.assertEqual(search_field["value"], "`Umbreon (UD 10)`")
 
 
 if __name__ == "__main__":
