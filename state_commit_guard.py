@@ -1,3 +1,4 @@
+# V48.1: keep Git history focused on real scanner state changes.
 import argparse
 import copy
 import json
