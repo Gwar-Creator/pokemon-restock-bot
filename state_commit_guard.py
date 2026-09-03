@@ -1,7 +1,9 @@
+# V48.1: keep Git history focused on real scanner state changes.
 import argparse
 import copy
 import json
 import subprocess
+from datetime import datetime
 from pathlib import Path
 
 
@@ -16,7 +18,7 @@ HOT_FILES = (
     "salling_victini_state.json",
 )
 
-RESTOCK_HEARTBEAT_COMMIT_INTERVAL_SECONDS = 15 * 60
+HEARTBEAT_COMMIT_INTERVAL_SECONDS = 15 * 60
 
 
 def _read_json_text(text):
@@ -52,23 +54,65 @@ def _same_except_keys(old_entry, new_entry, ignored_keys):
     return old_cmp == new_cmp
 
 
+def _iso_epoch(value):
+    if not value:
+        return None
+    try:
+        return datetime.fromisoformat(str(value).replace("Z", "+00:00")).timestamp()
+    except (TypeError, ValueError):
+        return None
+
+
+def _throttle_iso_heartbeat(old, new, key):
+    old_value = old.get(key)
+    new_value = new.get(key)
+    old_epoch = _iso_epoch(old_value)
+    new_epoch = _iso_epoch(new_value)
+    if old_epoch is None or new_epoch is None:
+        return
+    if 0 <= new_epoch - old_epoch < HEARTBEAT_COMMIT_INTERVAL_SECONDS:
+        new[key] = old_value
+
+
+def _compact_product_timestamp_map(old_state, new_state, timestamp_key):
+    old_products = old_state.get("products") or {}
+    new_products = new_state.get("products") or {}
+    if not isinstance(old_products, dict) or not isinstance(new_products, dict):
+        return
+
+    for product_key, new_entry in new_products.items():
+        old_entry = old_products.get(product_key)
+        if not isinstance(old_entry, dict) or not isinstance(new_entry, dict):
+            continue
+        if _same_except_keys(old_entry, new_entry, {timestamp_key}):
+            if timestamp_key in old_entry:
+                new_entry[timestamp_key] = old_entry[timestamp_key]
+            else:
+                new_entry.pop(timestamp_key, None)
+
+
 def compact_local_stock(old, new):
     compact = copy.deepcopy(new)
-    old_products = old.get("products") or {}
-    new_products = compact.get("products") or {}
+    _compact_product_timestamp_map(old, compact, "observed_at")
 
-    if isinstance(old_products, dict) and isinstance(new_products, dict):
-        for product_key, new_product in new_products.items():
-            old_product = old_products.get(product_key)
-            if not isinstance(old_product, dict) or not isinstance(new_product, dict):
-                continue
-            if _same_except_keys(old_product, new_product, {"observed_at"}):
-                if "observed_at" in old_product:
-                    new_product["observed_at"] = old_product["observed_at"]
-                else:
-                    new_product.pop("observed_at", None)
+    # last_run is diagnostic only in Local Stock Watch. Keep a recent persisted
+    # heartbeat, but do not force a Git commit on every five-minute no-op scan.
+    old_cmp = copy.deepcopy(old)
+    new_cmp = copy.deepcopy(compact)
+    old_cmp.pop("last_run", None)
+    new_cmp.pop("last_run", None)
+    if old_cmp == new_cmp:
+        _throttle_iso_heartbeat(old, compact, "last_run")
 
     return compact
+
+
+def _compact_price_last_seen(old, compact, section_key):
+    old_section = old.get(section_key) or {}
+    new_section = compact.get(section_key) or {}
+    if not isinstance(old_section, dict) or not isinstance(new_section, dict):
+        return
+    _compact_product_timestamp_map(old_section, new_section, "last_seen")
 
 
 def compact_restock_state(old, new):
@@ -89,6 +133,12 @@ def compact_restock_state(old, new):
                     else:
                         new_entry.pop(key, None)
 
+    # Price Watch/History wrote last_seen on every scan, even when every price,
+    # shop and signal field was identical. No production logic reads last_seen;
+    # preserve it when the rest of the product entry did not change.
+    _compact_price_last_seen(old, compact, "price_watch")
+    _compact_price_last_seen(old, compact, "price_history")
+
     # V44 uses _last_full_scan_epoch as a recovery heartbeat. Do not drop it,
     # but avoid a Git commit every five minutes when it is the only real change.
     # A 15-minute persisted heartbeat stays safely below the 30-minute recovery
@@ -106,7 +156,7 @@ def compact_restock_state(old, new):
             new_epoch = 0
         if (
             old_epoch > 0
-            and 0 <= new_epoch - old_epoch < RESTOCK_HEARTBEAT_COMMIT_INTERVAL_SECONDS
+            and 0 <= new_epoch - old_epoch < HEARTBEAT_COMMIT_INTERVAL_SECONDS
         ):
             compact["_last_full_scan_epoch"] = old_epoch
 

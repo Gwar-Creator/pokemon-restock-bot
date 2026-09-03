@@ -12,16 +12,36 @@ class StateCommitGuardTests(unittest.TestCase):
     def test_local_stock_reuses_timestamp_for_unchanged_product(self):
         old = {
             "version": 1,
-            "products": {"x": {"stock": 2, "observed_at": "old"}},
+            "products": {"x": {"stock": 2, "observed_at": "2026-09-03T04:00:00+00:00"}},
+            "last_run": "2026-09-03T04:00:00+00:00",
             "last_run_errors": 0,
         }
         new = {
             "version": 1,
-            "products": {"x": {"stock": 2, "observed_at": "new"}},
+            "products": {"x": {"stock": 2, "observed_at": "2026-09-03T04:05:00+00:00"}},
+            "last_run": "2026-09-03T04:05:00+00:00",
             "last_run_errors": 0,
         }
         result = compact_local_stock(old, new)
-        self.assertEqual(result["products"]["x"]["observed_at"], "old")
+        self.assertEqual(
+            result["products"]["x"]["observed_at"],
+            "2026-09-03T04:00:00+00:00",
+        )
+        self.assertEqual(result["last_run"], "2026-09-03T04:00:00+00:00")
+
+    def test_local_stock_refreshes_last_run_after_15_minutes(self):
+        old = {
+            "products": {},
+            "last_run": "2026-09-03T04:00:00+00:00",
+            "last_run_errors": 0,
+        }
+        new = {
+            "products": {},
+            "last_run": "2026-09-03T04:15:01+00:00",
+            "last_run_errors": 0,
+        }
+        result = compact_local_stock(old, new)
+        self.assertEqual(result["last_run"], "2026-09-03T04:15:01+00:00")
 
     def test_local_stock_keeps_timestamp_when_stock_changed(self):
         old = {"products": {"x": {"stock": 2, "observed_at": "old"}}}
@@ -62,6 +82,77 @@ class StateCommitGuardTests(unittest.TestCase):
         new = {"_last_full_scan_epoch": 1001, "_source_health": {}}
         result = compact_restock_state(old, new)
         self.assertEqual(result["_last_full_scan_epoch"], 1001)
+
+    def test_restock_reuses_price_last_seen_when_entry_unchanged(self):
+        old = {
+            "_last_full_scan_epoch": 100,
+            "price_watch": {
+                "products": {
+                    "x": {
+                        "current_best": 100.0,
+                        "current_shop": "A",
+                        "last_seen": "old-watch",
+                    }
+                }
+            },
+            "price_history": {
+                "products": {
+                    "x": {
+                        "current_best": 100.0,
+                        "historical_low": 90.0,
+                        "last_seen": "old-history",
+                    }
+                }
+            },
+        }
+        new = {
+            "_last_full_scan_epoch": 200,
+            "price_watch": {
+                "products": {
+                    "x": {
+                        "current_best": 100.0,
+                        "current_shop": "A",
+                        "last_seen": "new-watch",
+                    }
+                }
+            },
+            "price_history": {
+                "products": {
+                    "x": {
+                        "current_best": 100.0,
+                        "historical_low": 90.0,
+                        "last_seen": "new-history",
+                    }
+                }
+            },
+        }
+        result = compact_restock_state(old, new)
+        self.assertEqual(
+            result["price_watch"]["products"]["x"]["last_seen"],
+            "old-watch",
+        )
+        self.assertEqual(
+            result["price_history"]["products"]["x"]["last_seen"],
+            "old-history",
+        )
+        self.assertEqual(result["_last_full_scan_epoch"], 100)
+
+    def test_restock_keeps_price_last_seen_on_real_price_change(self):
+        old = {
+            "price_watch": {
+                "products": {"x": {"current_best": 100.0, "last_seen": "old"}}
+            }
+        }
+        new = {
+            "price_watch": {
+                "products": {"x": {"current_best": 90.0, "last_seen": "new"}}
+            }
+        }
+        result = compact_restock_state(old, new)
+        self.assertEqual(
+            result["price_watch"]["products"]["x"]["last_seen"],
+            "new",
+        )
 
     def test_restock_keeps_fresh_health_timestamp_on_real_health_change(self):
         old = {
