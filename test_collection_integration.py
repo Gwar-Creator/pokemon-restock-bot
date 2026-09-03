@@ -54,6 +54,30 @@ class CollectionIntegrationTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "invalid Cardmarket product id"):
             cr.validate_collection(collection)
 
+    def test_unresolved_rows_are_explicit(self):
+        collection = {"cards": [
+            {"collection_key": "pokemon|set|1|mew|normal", "tcg": "POKEMON", "quantity": 1, "status": "owned", "name": "Mew", "set": "Set", "number": "1/10", "variant": "normal", "cardmarket_product_id": None},
+            {"collection_key": "pokemon|set|2|pikachu|normal", "tcg": "POKEMON", "quantity": 1, "status": "owned", "name": "Pikachu", "set": "Set", "number": "2/10", "variant": "normal", "cardmarket_product_id": "123"},
+        ]}
+        unresolved = cr.unresolved_collection_rows(collection)
+        self.assertEqual(len(unresolved), 1)
+        self.assertEqual(unresolved[0]["name"], "Mew")
+
+    def test_suppression_diagnostics_counts_exact_owned_and_incoming(self):
+        state = {"cards": {
+            "1": {"id": "101", "game": "POKÉMON", "name": "Pikachu", "set": "Set", "trend": 1, "avg7": 1.2, "avg30": 1.3},
+            "2": {"id": "202", "game": "POKÉMON", "name": "Mew", "set": "Set", "trend": 1, "avg7": 1.2, "avg30": 1.3},
+            "3": {"id": "303", "game": "POKÉMON", "name": "Snorlax", "set": "Set", "trend": 1, "avg7": 1.2, "avg30": 1.3},
+        }}
+        profile = {"owned_ids": [], "priority_pokemon": ["Pikachu", "Mew", "Snorlax"]}
+        collection = {"cards": [{"collection_key": "pokemon|set|1|pikachu|normal", "tcg": "POKEMON", "quantity": 1, "status": "owned", "cardmarket_product_id": "101"}]}
+        incoming = {"cards": [{"tcg": "POKEMON", "status": "incoming", "cardmarket_product_id": "202"}]}
+        diagnostics = cr.suppression_diagnostics(state, profile, collection, incoming)
+        self.assertEqual(diagnostics["baseline_personal_candidates"], 3)
+        self.assertEqual(diagnostics["owned_filtered"], 1)
+        self.assertEqual(diagnostics["incoming_filtered"], 1)
+        self.assertEqual(diagnostics["exact_filtered_union"], 2)
+
 
 if __name__ == "__main__":
     unittest.main()
