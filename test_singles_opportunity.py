@@ -40,23 +40,48 @@ class SinglesOpportunityTests(unittest.TestCase):
     def test_priority_card_with_strong_market_dip_can_be_review(self):
         row = so.evaluate_card(card(), PROFILE)
         self.assertEqual(row["signal"], "REVIEW")
+        self.assertEqual(row["market_band"], "CORE")
         self.assertIn("priority Pokémon", row["reasons"])
 
-    def test_purchase_budget_does_not_drive_signal(self):
+    def test_manual_budget_shapes_actionability_but_is_not_purchase_price(self):
         base = so.evaluate_card(card(trend=6, avg1=6, avg7=7, avg30=8), PROFILE)
         tiny_budget = {**PROFILE, "default_target_dkk": 10}
         changed = so.evaluate_card(card(trend=6, avg1=6, avg7=7, avg30=8), tiny_budget)
-        self.assertEqual(base["score"], changed["score"])
-        self.assertEqual(base["signal"], changed["signal"])
-        self.assertNotEqual(base["purchase_budget_dkk"], changed["purchase_budget_dkk"])
+        self.assertGreater(base["score"], changed["score"])
+        self.assertEqual(base["signal"], "REVIEW")
+        self.assertEqual(changed["signal"], "WATCH")
+        self.assertEqual(base["market_band"], "CORE")
+        self.assertEqual(changed["market_band"], "HIGH-END")
+        self.assertEqual(base["diagnostic_low_eur"], changed["diagnostic_low_eur"])
 
-    def test_target_override_is_metadata_only(self):
-        base = so.evaluate_card(card(), PROFILE)
+    def test_target_override_can_make_a_specific_card_actionable(self):
+        expensive = card(trend=30, avg1=30, avg7=35, avg30=40)
+        base = so.evaluate_card(expensive, PROFILE)
         override = {**PROFILE, "target_overrides_dkk": {"1": 300}}
-        raised = so.evaluate_card(card(), override)
-        self.assertEqual(base["score"], raised["score"])
-        self.assertEqual(base["signal"], raised["signal"])
+        raised = so.evaluate_card(expensive, override)
+        self.assertEqual(base["market_band"], "PREMIUM")
+        self.assertNotEqual(base["signal"], "REVIEW")
+        self.assertEqual(raised["market_band"], "CORE")
+        self.assertEqual(raised["signal"], "REVIEW")
         self.assertEqual(raised["purchase_budget_dkk"], 300.0)
+
+    def test_expensive_non_curated_priority_card_is_demoted_from_review(self):
+        expensive = so.evaluate_card(card(trend=50, avg1=50, avg7=60, avg30=70), PROFILE)
+        self.assertEqual(expensive["market_band"], "HIGH-END")
+        self.assertEqual(expensive["signal"], "WATCH")
+
+    def test_wishlist_can_keep_high_end_card_in_review(self):
+        wishlist = {**PROFILE, "wishlist_ids": ["1"]}
+        expensive = so.evaluate_card(card(trend=50, avg1=50, avg7=60, avg30=70), wishlist)
+        self.assertEqual(expensive["market_band"], "HIGH-END")
+        self.assertEqual(expensive["signal"], "REVIEW")
+        self.assertIn("wishlist", expensive["reasons"])
+
+    def test_market_scale_boundaries(self):
+        self.assertEqual(so.market_scale_fit(75, 75)[0], "CORE")
+        self.assertEqual(so.market_scale_fit(150, 75)[0], "STRETCH")
+        self.assertEqual(so.market_scale_fit(151, 75)[0], "PREMIUM")
+        self.assertEqual(so.market_scale_fit(301, 75)[0], "HIGH-END")
 
     def test_non_personal_card_is_filtered_before_scoring(self):
         self.assertIsNone(so.evaluate_card(card(name="Absol [Raid]"), PROFILE))
@@ -106,14 +131,16 @@ class SinglesOpportunityTests(unittest.TestCase):
         )
         self.assertEqual(row["signal"], "REVIEW")
         self.assertAlmostEqual(row["reference_dkk"], 29.69, places=2)
-        self.assertIn("aggregate reference is not purchase price", row["reasons"])
+        self.assertEqual(row["market_band"], "CORE")
+        self.assertIn("aggregate market scale: core", row["reasons"])
 
-    def test_report_uses_radar_language_and_never_buy(self):
+    def test_report_uses_v53_radar_language_and_never_buy(self):
         rows = [so.evaluate_card(card(), PROFILE)]
         report = so.build_report(rows, PROFILE)
-        self.assertIn("V50.1 shadow", report)
+        self.assertIn("V53 actionability shadow", report)
         self.assertIn("Market reference is NOT an EN/NM purchase price", report)
         self.assertIn("never emits BUY", report)
+        self.assertIn("CORE market scale", report)
         self.assertNotIn("reference within target", report)
 
 
