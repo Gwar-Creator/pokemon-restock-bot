@@ -21,7 +21,7 @@ V48 er en vedligeholdelsesrelease. Den ændrer ikke den tilsigtede restock-/pris
 
 `state_commit_guard.py` kompakterer kun kendte volatile felter før commit.
 
-Det er vigtigt, at `_last_full_scan_epoch` i `restock_state_v2.json` ikke fjernes eller genbruges fra HEAD. Feltet er recovery-heartbeat og skal fortsat opdateres ved succesfulde hovedscans.
+`_last_full_scan_epoch` i `restock_state_v2.json` er fortsat V44 recovery-heartbeat. Ved rene no-op scans genbruges den senest persisterede heartbeat i op til 15 minutter; derefter tillades en ny heartbeat-commit. Det holder den persisterede heartbeat sikkert under recovery-grænsen på 30 minutter uden at skabe et Git-commit hvert femte minut.
 
 ### Repository cleanup
 
