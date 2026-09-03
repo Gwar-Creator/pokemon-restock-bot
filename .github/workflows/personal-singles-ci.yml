@@ -8,7 +8,9 @@ on:
       - "test_singles_opportunity.py"
       - "test_singles_v54.py"
       - "test_singles_v55.py"
+      - "test_singles_v56.py"
       - "test_rarity_metadata_update.py"
+      - "test_cardmarket_official_listing_probe.py"
       - "test_collection_integration.py"
       - "test_cardmarket_link_overlay.py"
       - ".github/workflows/personal-singles-ci.yml"
@@ -19,7 +21,9 @@ on:
       - "test_singles_opportunity.py"
       - "test_singles_v54.py"
       - "test_singles_v55.py"
+      - "test_singles_v56.py"
       - "test_rarity_metadata_update.py"
+      - "test_cardmarket_official_listing_probe.py"
       - "test_collection_integration.py"
       - "test_cardmarket_link_overlay.py"
       - ".github/workflows/personal-singles-ci.yml"
@@ -47,14 +51,14 @@ jobs:
 
       - name: Compile and test Personal Singles
         run: |
-          python -m py_compile personal/singles_opportunity.py personal/singles_v54.py personal/singles_v55.py personal/singles_collection_runner.py personal/singles_collection_runner_v54.py personal/singles_collection_runner_v55.py personal/cardmarket_link_overlay.py personal/update_rarity_metadata.py
-          python -m unittest test_singles_opportunity.py test_singles_v54.py test_singles_v55.py test_rarity_metadata_update.py test_collection_integration.py test_cardmarket_link_overlay.py
+          python -m py_compile personal/singles_opportunity.py personal/singles_v54.py personal/singles_v55.py personal/singles_v56.py personal/singles_collection_runner.py personal/singles_collection_runner_v54.py personal/singles_collection_runner_v55.py personal/singles_collection_runner_v56.py personal/cardmarket_link_overlay.py personal/update_rarity_metadata.py personal/cardmarket_official_listing_probe.py
+          python -m unittest test_singles_opportunity.py test_singles_v54.py test_singles_v55.py test_singles_v56.py test_rarity_metadata_update.py test_cardmarket_official_listing_probe.py test_collection_integration.py test_cardmarket_link_overlay.py
 
-      - name: Run safe V55 shadow report
+      - name: Run safe V56 shadow report
         run: |
           LINKED_COLLECTION="$RUNNER_TEMP/personal_collection_linked.json"
           python -m personal.cardmarket_link_overlay --output "$LINKED_COLLECTION"
-          python -m personal.singles_collection_runner_v55 \
+          python -m personal.singles_collection_runner_v56 \
             --collection "$LINKED_COLLECTION" \
-            --output "$RUNNER_TEMP/personal_singles_opportunity_report.md" \
+            --output "$RUNNER_TEMP/personal_singles_listing_report.md" \
             --limit 10
