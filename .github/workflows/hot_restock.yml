@@ -10,6 +10,7 @@ on:
   push:
     paths:
       - "hot_restock.py"
+      - "state_commit_guard.py"
       - "salling_victini_watch.py"
       - "salling_early_radar.py"
       - "salling_early_radar_runner.py"
@@ -44,7 +45,8 @@ jobs:
 
       - name: Validate HOT scanner and Salling watchers
         run: |
-          python -m py_compile hot_restock.py salling_victini_watch.py salling_early_radar.py salling_early_radar_runner.py
+          python -m py_compile hot_restock.py salling_victini_watch.py salling_early_radar.py salling_early_radar_runner.py state_commit_guard.py
+          python -m unittest test_state_commit_guard.py
           python - <<'PY'
           import ast
           from pathlib import Path
@@ -98,6 +100,9 @@ jobs:
             echo "::warning::Salling background watcher exited non-zero; HOT scanner itself completed"
           fi
 
+      - name: Compact volatile state fields
+        run: python state_commit_guard.py --profile hot
+
       - name: Save HOT + Salling states
         run: |
           if [ ! -f hot_restock_state.json ]; then
@@ -108,10 +113,6 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          # Keep the state produced by this run outside the working tree.
-          # Another workflow writes to main frequently, so rebasing a state
-          # commit causes recurring conflicts. On every retry we instead take
-          # the newest main and overlay only this run's HOT/Salling state files.
           STATE_BACKUP="$(mktemp -d)"
           cp hot_restock_state.json "$STATE_BACKUP/hot_restock_state.json"
           if [ -f salling_victini_state.json ]; then
