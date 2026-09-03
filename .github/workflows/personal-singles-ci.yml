@@ -7,6 +7,7 @@ on:
       - "personal/**"
       - "test_singles_opportunity.py"
       - "test_singles_v54.py"
+      - "test_singles_v55.py"
       - "test_collection_integration.py"
       - "test_cardmarket_link_overlay.py"
       - ".github/workflows/personal-singles-ci.yml"
@@ -16,6 +17,7 @@ on:
       - "personal/**"
       - "test_singles_opportunity.py"
       - "test_singles_v54.py"
+      - "test_singles_v55.py"
       - "test_collection_integration.py"
       - "test_cardmarket_link_overlay.py"
       - ".github/workflows/personal-singles-ci.yml"
@@ -43,14 +45,14 @@ jobs:
 
       - name: Compile and test Personal Singles
         run: |
-          python -m py_compile personal/singles_opportunity.py personal/singles_v54.py personal/singles_collection_runner.py personal/singles_collection_runner_v54.py personal/cardmarket_link_overlay.py
-          python -m unittest test_singles_opportunity.py test_singles_v54.py test_collection_integration.py test_cardmarket_link_overlay.py
+          python -m py_compile personal/singles_opportunity.py personal/singles_v54.py personal/singles_v55.py personal/singles_collection_runner.py personal/singles_collection_runner_v54.py personal/singles_collection_runner_v55.py personal/cardmarket_link_overlay.py
+          python -m unittest test_singles_opportunity.py test_singles_v54.py test_singles_v55.py test_collection_integration.py test_cardmarket_link_overlay.py
 
-      - name: Run safe V54 shadow report
+      - name: Run safe V55 shadow report
         run: |
           LINKED_COLLECTION="$RUNNER_TEMP/personal_collection_linked.json"
           python -m personal.cardmarket_link_overlay --output "$LINKED_COLLECTION"
-          python -m personal.singles_collection_runner_v54 \
+          python -m personal.singles_collection_runner_v55 \
             --collection "$LINKED_COLLECTION" \
             --output "$RUNNER_TEMP/personal_singles_opportunity_report.md" \
             --limit 10
