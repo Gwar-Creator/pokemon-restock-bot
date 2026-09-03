@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
-"""V50.1 personal singles radar.
+"""V53 personal singles radar.
 
 Shadow-only decision layer over the existing aggregate Cardmarket state.
 It performs no network requests, sends no Discord messages, and writes no
 production state.
 
-V50.1 deliberately stops treating aggregate Cardmarket trend/averages as a
-purchase price. They are market-radar signals only. A card can therefore be
-flagged for manual review because its market trend looks interesting, but the
-engine never claims that the user's EN/NM/EU->DK purchase constraints are met.
+V53 keeps the V50.1 guardrail that aggregate Cardmarket trend/averages are not
+purchase prices. It now uses their *market scale* relative to the user's manual
+budget only as a ranking/actionability signal: cards far above the normal budget
+are demoted unless explicitly curated via wishlist/manual priority/target override.
 """
 
 from __future__ import annotations
@@ -125,7 +125,7 @@ def timing_score(card: dict[str, Any]) -> float:
 
 
 def personal_score(card: dict[str, Any], profile: dict[str, Any]) -> tuple[float, list[str]]:
-    """Personal relevance is now a gate, not a small bonus over the full catalogue."""
+    """Personal relevance is a gate and a major ranking component."""
     card_id = str(card.get("id") or "")
     reasons: list[str] = []
     score = 0.0
@@ -143,7 +143,7 @@ def personal_score(card: dict[str, Any], profile: dict[str, Any]) -> tuple[float
     primary = profile.get("priority_pokemon", [])
     secondary = profile.get("secondary_pokemon", [])
     if any(contains_name(card.get("name"), value) for value in primary):
-        score = max(score, 80.0)
+        score = max(score, 85.0)
         reasons.append("priority Pokémon")
     elif any(contains_name(card.get("name"), value) for value in secondary):
         score = max(score, 60.0)
@@ -153,11 +153,25 @@ def personal_score(card: dict[str, Any], profile: dict[str, Any]) -> tuple[float
 
 
 def target_for(card: dict[str, Any], profile: dict[str, Any]) -> float:
-    """Manual purchase budget metadata only; never compared with aggregate reference."""
+    """Return the user's manual budget target for market-scale ranking."""
     overrides = profile.get("target_overrides_dkk", {})
     override = number(overrides.get(str(card.get("id") or ""))) if isinstance(overrides, dict) else None
     default = number(profile.get("default_target_dkk")) or 75.0
     return override if override is not None and override > 0 else default
+
+
+def market_scale_fit(reference_dkk: float, target_dkk: float) -> tuple[str, float, float]:
+    """Classify aggregate market scale without treating it as an available offer."""
+    if target_dkk <= 0:
+        return "UNKNOWN", 35.0, math.inf
+    ratio = reference_dkk / target_dkk
+    if ratio <= 1.0:
+        return "CORE", 100.0, ratio
+    if ratio <= 2.0:
+        return "STRETCH", 65.0, ratio
+    if ratio <= 4.0:
+        return "PREMIUM", 30.0, ratio
+    return "HIGH-END", 10.0, ratio
 
 
 def evaluate_card(card: dict[str, Any], profile: dict[str, Any]) -> dict[str, Any] | None:
@@ -181,14 +195,21 @@ def evaluate_card(card: dict[str, Any], profile: dict[str, Any]) -> dict[str, An
     eur_dkk = number(profile.get("eur_to_dkk")) or 7.46
     reference_dkk = reference_eur * eur_dkk
     purchase_budget_dkk = target_for(card, profile)
+    market_band, market_fit, market_ratio = market_scale_fit(reference_dkk, purchase_budget_dkk)
     value = relative_value_score(card)
     timing = timing_score(card)
     confidence, spread = data_confidence(card)
     confidence_component = {"HIGH": 100.0, "MEDIUM": 70.0, "LOW": 20.0}[confidence]
 
-    # V50.1: no budget component. Aggregate price data cannot prove a usable
-    # English/NM/EU listing, so price-to-budget math must not drive the signal.
-    score = value * 0.45 + timing * 0.20 + personal * 0.25 + confidence_component * 0.10
+    # V53: personal relevance and actionability matter more than raw market dip.
+    # Aggregate reference still never proves a purchasable EN/NM/EU->DK offer.
+    score = (
+        value * 0.30
+        + timing * 0.15
+        + personal * 0.30
+        + confidence_component * 0.10
+        + market_fit * 0.15
+    )
     if confidence == "LOW":
         score = min(score, 59.9)
 
@@ -196,8 +217,11 @@ def evaluate_card(card: dict[str, Any], profile: dict[str, Any]) -> dict[str, An
     strong_dip = thirty_day is not None and thirty_day <= -20.0
     moderate_dip = thirty_day is not None and thirty_day <= -10.0
     explicitly_curated = "wishlist" in personal_reasons or "manual priority" in personal_reasons
+    actionably_scaled = market_ratio <= 2.0 or explicitly_curated
 
-    if confidence != "LOW" and score >= 72.0 and (strong_dip or (explicitly_curated and moderate_dip)):
+    if confidence != "LOW" and score >= 72.0 and actionably_scaled and (
+        strong_dip or (explicitly_curated and moderate_dip)
+    ):
         signal = "REVIEW"
     elif confidence != "LOW" and score >= 58.0 and moderate_dip:
         signal = "WATCH"
@@ -211,7 +235,7 @@ def evaluate_card(card: dict[str, Any], profile: dict[str, Any]) -> dict[str, An
             reasons.append(f"trend {abs(thirty_day):.1f}% under avg30")
         elif thirty_day >= 8:
             reasons.append(f"trend {thirty_day:.1f}% over avg30")
-    reasons.append("aggregate reference is not purchase price")
+    reasons.append(f"aggregate market scale: {market_band.lower()}")
     if confidence == "LOW":
         reasons.append("low aggregate confidence")
 
@@ -225,6 +249,8 @@ def evaluate_card(card: dict[str, Any], profile: dict[str, Any]) -> dict[str, An
         "reference_eur": round(reference_eur, 2),
         "reference_dkk": round(reference_dkk, 2),
         "purchase_budget_dkk": round(purchase_budget_dkk, 2),
+        "market_band": market_band,
+        "market_ratio_to_target": round(market_ratio, 3) if math.isfinite(market_ratio) else None,
         "trend_eur": number(card.get("trend")),
         "avg1_eur": number(card.get("avg1")),
         "avg7_eur": number(card.get("avg7")),
@@ -250,7 +276,17 @@ def evaluate_state(state: dict[str, Any], profile: dict[str, Any]) -> list[dict[
         if row is not None:
             rows.append(row)
     signal_order = {"REVIEW": 0, "WATCH": 1, "PASS": 2}
-    return sorted(rows, key=lambda row: (signal_order[row["signal"]], -row["score"], row["reference_dkk"], row["name"]))
+    band_order = {"CORE": 0, "STRETCH": 1, "PREMIUM": 2, "HIGH-END": 3, "UNKNOWN": 4}
+    return sorted(
+        rows,
+        key=lambda row: (
+            signal_order[row["signal"]],
+            -row["score"],
+            band_order.get(row.get("market_band"), 9),
+            row["reference_dkk"],
+            row["name"],
+        ),
+    )
 
 
 def fmt_money(value: Any, currency: str = "kr.") -> str:
@@ -264,27 +300,31 @@ def build_report(rows: list[dict[str, Any]], profile: dict[str, Any], limit: int
     visible = [row for row in rows if row["signal"] != "PASS"][:limit]
     reviews = sum(1 for row in rows if row["signal"] == "REVIEW")
     watches = sum(1 for row in rows if row["signal"] == "WATCH")
+    core = sum(1 for row in rows if row.get("market_band") == "CORE")
+    stretch = sum(1 for row in rows if row.get("market_band") == "STRETCH")
     lines = [
-        "# Personal Singles Scout · V50.1 shadow",
+        "# Personal Singles Scout · V53 actionability shadow",
         "",
         "> Aggregate Cardmarket radar only. REVIEW means: open the actual listings and verify them.",
-        "> Market reference is NOT an EN/NM purchase price and is never compared with the purchase budget.",
+        "> Market reference is NOT an EN/NM purchase price. V53 uses its scale only to rank cards closer to your manual budget higher.",
         "> Verify exact version, English, MT/NM, EU/EEA seller and shipping to Denmark before purchase.",
         "",
         f"- Personal candidate pool: {len(rows)} cards",
         f"- REVIEW: {reviews}",
         f"- WATCH: {watches}",
+        f"- CORE market scale (≤ target): {core}",
+        f"- STRETCH market scale (≤ 2× target): {stretch}",
         f"- Manual purchase budget: {fmt_money(profile.get('default_target_dkk', 75))}",
-        "- `low` has zero weight; aggregate trend/averages are market context only.",
+        "- `low` has zero weight; aggregate trend/averages remain market context only.",
         "- Non-personal cards and code cards are filtered before scoring.",
         "",
         "## Ranked radar candidates",
         "",
-        "| Signal | Score | Card | Set | Market ref | 30d move | Confidence | Why |",
-        "|---|---:|---|---|---:|---:|---|---|",
+        "| Signal | Score | Card | Set | Market ref | Band | 30d move | Confidence | Why |",
+        "|---|---:|---|---|---:|---|---:|---|---|",
     ]
     if not visible:
-        lines.append("| – | – | No current candidates | – | – | – | – | – |")
+        lines.append("| – | – | No current candidates | – | – | – | – | – | – |")
     for row in visible:
         move = row.get("trend_vs_avg30_pct")
         move_text = "–" if move is None else f"{move:+.1f}%"
@@ -292,15 +332,15 @@ def build_report(rows: list[dict[str, Any]], profile: dict[str, Any], limit: int
         lines.append(
             f"| {row['signal']} | {row['score']:.1f} | {row['name'].replace('|', '/')} | "
             f"{row['set'].replace('|', '/')} | {fmt_money(row['reference_dkk'])} | "
-            f"{move_text} | {row['confidence']} | {why} |"
+            f"{row['market_band']} | {move_text} | {row['confidence']} | {why} |"
         )
     lines.extend(
         [
             "",
             "## Guardrail",
             "",
-            "V50.1 never emits BUY and does not infer a purchase price from aggregate Cardmarket data.",
-            "REVIEW is only a manual-inspection signal. The 75 kr. budget is metadata until a concrete EN/NM/EU->DK offer is verified.",
+            "V53 never emits BUY and never treats aggregate Cardmarket data as an available purchase price.",
+            "REVIEW is only a manual-inspection signal. CORE/STRETCH/PREMIUM/HIGH-END describe aggregate market scale, not a verified offer.",
             "",
         ]
     )
