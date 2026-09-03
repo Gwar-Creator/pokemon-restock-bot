@@ -1,0 +1,56 @@
+name: Personal Singles CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "personal/**"
+      - "test_singles_opportunity.py"
+      - "test_singles_v54.py"
+      - "test_collection_integration.py"
+      - "test_cardmarket_link_overlay.py"
+      - ".github/workflows/personal-singles-ci.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "personal/**"
+      - "test_singles_opportunity.py"
+      - "test_singles_v54.py"
+      - "test_collection_integration.py"
+      - "test_cardmarket_link_overlay.py"
+      - ".github/workflows/personal-singles-ci.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  personal-singles:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Compile and test Personal Singles
+        run: |
+          python -m py_compile personal/singles_opportunity.py personal/singles_v54.py personal/singles_collection_runner.py personal/singles_collection_runner_v54.py personal/cardmarket_link_overlay.py
+          python -m unittest test_singles_opportunity.py test_singles_v54.py test_collection_integration.py test_cardmarket_link_overlay.py
+
+      - name: Run safe V54 shadow report
+        run: |
+          LINKED_COLLECTION="$RUNNER_TEMP/personal_collection_linked.json"
+          python -m personal.cardmarket_link_overlay --output "$LINKED_COLLECTION"
+          python -m personal.singles_collection_runner_v54 \
+            --collection "$LINKED_COLLECTION" \
+            --output "$RUNNER_TEMP/personal_singles_opportunity_report.md" \
+            --limit 10
