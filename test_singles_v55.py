@@ -26,13 +26,14 @@ def card(
     avg1=6,
     avg7=7,
     avg30=8,
+    variant="Normal",
 ):
     return {
         "game": "POKÉMON",
         "id": card_id,
         "name": name,
         "set": set_name,
-        "variant": "Normal",
+        "variant": variant,
         "trend": trend,
         "avg1": avg1,
         "avg7": avg7,
@@ -41,12 +42,13 @@ def card(
     }
 
 
-def metadata(rarity="Common", set_name="EX Holon Phantoms", source_id="ex13-79"):
+def metadata(rarity="Common", set_name="EX Holon Phantoms", source_id="ex13-79", finish="normal"):
     return {
         "1": {
             "source_card_id": source_id,
             "cardmarket_set": set_name,
             "canonical_rarity": rarity,
+            "finish": finish,
         }
     }
 
@@ -58,32 +60,46 @@ class SinglesV55Tests(unittest.TestCase):
         self.assertGreater(v55.canonical_rarity_score("Uncommon"), v55.canonical_rarity_score("Common"))
         self.assertGreater(v55.canonical_rarity_score("Special Illustration Rare"), v55.canonical_rarity_score("Rare Holo"))
 
-    def test_verified_common_delta_remains_strong_but_not_iconic(self):
+    def test_verified_common_delta_no_longer_unlocks_review_or_150(self):
         row = v55.evaluate_card(card(), PROFILE, metadata("Common"))
         self.assertTrue(row["canonical_rarity_verified"])
         self.assertEqual(row["canonical_rarity"], "Common")
-        self.assertEqual(row["collectability_tier"], "STRONG")
-        self.assertEqual(row["purchase_budget_dkk"], 150.0)
-        self.assertNotEqual(row["collectability_tier"], "ICONIC")
+        self.assertEqual(row["collectability_tier"], "STANDARD")
+        self.assertEqual(row["purchase_budget_dkk"], 75.0)
+        self.assertFalse(row["automatic_review_quality"])
+        self.assertNotEqual(row["signal"], "REVIEW")
 
     def test_verified_heritage_common_no_longer_unlocks_150(self):
         psyduck = card(name="Psyduck [Headache | Fury Swipes]", set_name="Fossil")
         row = v55.evaluate_card(psyduck, PROFILE, metadata("Common", "Fossil", "base3-53"))
-        self.assertEqual(row["collectability_tier"], "COLLECTABLE")
+        self.assertEqual(row["collectability_tier"], "STANDARD")
         self.assertEqual(row["purchase_budget_dkk"], 75.0)
+        self.assertNotEqual(row["signal"], "REVIEW")
+
+    def test_plain_rare_favourite_cannot_auto_review(self):
+        ditto = card(name="Pikachu [Zap]", set_name="Test Set")
+        row = v55.evaluate_card(ditto, PROFILE, metadata("Rare", "Test Set"))
+        self.assertFalse(row["automatic_review_quality"])
+        self.assertNotEqual(row["signal"], "REVIEW")
+
+    def test_holo_rare_can_pass_quality_gate(self):
+        holo = card(name="Pikachu [Zap]", set_name="Test Set", trend=4, avg1=4, avg7=5, avg30=6)
+        row = v55.evaluate_card(holo, PROFILE, metadata("Rare Holo", "Test Set", finish="holo"))
+        self.assertTrue(row["automatic_review_quality"])
+        self.assertGreater(row["collectability_score"], 70)
 
     def test_rarity_calibrates_same_card_upward(self):
         common = v55.evaluate_card(card(name="Pikachu [Zap]", set_name="Test Set"), PROFILE, metadata("Common", "Test Set"))
-        holo = v55.evaluate_card(card(name="Pikachu [Zap]", set_name="Test Set"), PROFILE, metadata("Rare Holo", "Test Set"))
-        self.assertGreater(holo["collectability_score"], common["collectability_score"])
-        self.assertGreater(holo["score"], common["score"])
+        sir = v55.evaluate_card(card(name="Pikachu [Zap]", set_name="Test Set"), PROFILE, metadata("Special Illustration Rare", "Test Set"))
+        self.assertGreater(sir["collectability_score"], common["collectability_score"])
+        self.assertGreater(sir["score"], common["score"])
 
     def test_unverified_rarity_cannot_create_review(self):
         row = v55.evaluate_card(card(), PROFILE, {})
         self.assertFalse(row["canonical_rarity_verified"])
         self.assertEqual(row["canonical_rarity"], "UNVERIFIED")
         self.assertNotEqual(row["signal"], "REVIEW")
-        self.assertLess(row["collectability_score"], 75.0)
+        self.assertLess(row["collectability_score"], 60.0)
 
     def test_set_mismatch_invalidates_exact_id_metadata(self):
         wrong = metadata("Rare Holo", "Different Set")
@@ -97,14 +113,14 @@ class SinglesV55Tests(unittest.TestCase):
         self.assertEqual(row["signal"], "REVIEW")
         self.assertFalse(row["canonical_rarity_verified"])
 
-    def test_report_surfaces_coverage_and_rarity_guardrail(self):
+    def test_report_surfaces_rarity_first_guardrail(self):
         verified = v55.evaluate_card(card(), PROFILE, metadata("Common"))
         unknown = v55.evaluate_card(card(card_id="2"), PROFILE, {})
         report = v55.build_report([verified, unknown], PROFILE)
-        self.assertIn("V55 canonical-rarity shadow", report)
+        self.assertIn("V55.2 rarity-first shadow", report)
         self.assertIn("Canonical rarity coverage: 1/2", report)
-        self.assertIn("Unverified rarity can WATCH but cannot REVIEW", report)
-        self.assertIn("| Common |", report)
+        self.assertIn("Plain Common/Uncommon/Rare cards", report)
+        self.assertIn("favourite Pokemon is a booster", report)
         self.assertIn("never emits BUY", report)
 
 
