@@ -15,7 +15,7 @@ on:
         default: false
         type: boolean
       personal_shadow:
-        description: "Kør kun V50.1 Personal Singles radar uden Cardmarket API-kald"
+        description: "Kør kun V51 collection-aware Singles radar uden Cardmarket API-kald"
         required: false
         default: false
         type: boolean
@@ -50,11 +50,11 @@ jobs:
 
       - name: Validate Cardmarket watcher
         run: |
-          python -m py_compile cardmarket_chase_watch.py cardmarket_feasibility.py personal/singles_opportunity.py
+          python -m py_compile cardmarket_chase_watch.py cardmarket_feasibility.py personal/singles_opportunity.py personal/singles_collection_runner.py
           if [ -f cardmarket_v16_replay.py ]; then
             python -m py_compile cardmarket_v16_replay.py
           fi
-          python -m unittest test_cardmarket_feasibility.py test_singles_opportunity.py
+          python -m unittest test_cardmarket_feasibility.py test_singles_opportunity.py test_collection_integration.py
 
       - name: Test Cardmarket Discord webhook
         if: ${{ inputs.test_webhook == true }}
@@ -105,10 +105,10 @@ jobs:
           fi
           python cardmarket_chase_watch.py
 
-      - name: Run V50.1 personal singles radar
+      - name: Run V51 collection-aware personal singles radar
         if: ${{ inputs.test_webhook != true }}
         run: |
-          python personal/singles_opportunity.py \
+          python personal/singles_collection_runner.py \
             --output "$RUNNER_TEMP/personal_singles_opportunity_report.md" \
             --limit 10
 
