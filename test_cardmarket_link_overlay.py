@@ -1,4 +1,6 @@
+import json
 import unittest
+from pathlib import Path
 
 from personal.cardmarket_link_overlay import apply_links
 
@@ -50,6 +52,16 @@ class CardmarketLinkOverlayTests(unittest.TestCase):
         linked, stats = apply_links(collection(), links)
         self.assertEqual(linked["groups"]["modern_pokemon"][1][-1], "222222")
         self.assertEqual(stats["applied_links"], 1)
+
+    def test_real_v52_sidecar_matches_collection_exactly(self):
+        real_collection = json.loads(Path("personal/collection.json").read_text(encoding="utf-8"))
+        real_links = json.loads(Path("personal/cardmarket_links.json").read_text(encoding="utf-8"))
+        linked, stats = apply_links(real_collection, real_links)
+        self.assertEqual(stats["collection_records"], 125)
+        self.assertEqual(stats["applied_links"], 116)
+        self.assertEqual(stats["linked_records"], 116)
+        self.assertEqual(stats["unlinked_records"], 9)
+        self.assertEqual(linked["totals"]["linked_cardmarket_product_ids"], 116)
 
 
 if __name__ == "__main__":
