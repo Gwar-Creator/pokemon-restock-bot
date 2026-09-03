@@ -1,17 +1,1224 @@
 {
-  "version": 1,
-  "source": "PokemonTCG/pokemon-tcg-data",
-  "source_commit": "8b4e387930ead7be6595b4d4c59b7ba7a3a79f08",
-  "matching_policy": "Exact Cardmarket product IDs only. Canonical source identity was manually verified by set, Pokemon name and attacks/ability text; source card number is supporting metadata only because Cardmarket numbering can differ.",
+  "version": 2,
+  "source": "TCGdex exact Cardmarket IDs + retained manually verified seed metadata",
+  "source_repository": "tcgdex/cards-database",
+  "matching_policy": "Exact Cardmarket product ID is required. TCGdex set and English card name must also agree with the personal Cardmarket radar state. No fuzzy rarity linking is accepted.",
   "cards": {
-    "277130": {
-      "source_card_id": "ex14-49",
-      "source_set_id": "ex14",
-      "cardmarket_set": "EX Crystal Guardians",
-      "canonical_name": "Charmander δ",
-      "canonical_number": "49",
+    "273758": {
+      "source": "TCGdex",
+      "source_card_id": "base1-63",
+      "source_set_id": "base1",
+      "cardmarket_set": "Base Set",
+      "canonical_name": "Squirtle",
+      "canonical_number": "63",
       "canonical_rarity": "Common",
-      "verified_by": ["set", "name", "Scratch", "Bite"]
+      "finish": "normal",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "273800": {
+      "source": "TCGdex",
+      "source_card_id": "base2-19",
+      "source_set_id": "base2",
+      "cardmarket_set": "Jungle",
+      "canonical_name": "Flareon",
+      "canonical_number": "19",
+      "canonical_rarity": "Rare",
+      "finish": "normal",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "273801": {
+      "source": "TCGdex",
+      "source_card_id": "base2-20",
+      "source_set_id": "base2",
+      "cardmarket_set": "Jungle",
+      "canonical_name": "Jolteon",
+      "canonical_number": "20",
+      "canonical_rarity": "Rare",
+      "finish": "normal",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "273808": {
+      "source": "TCGdex",
+      "source_card_id": "base2-11",
+      "source_set_id": "base2",
+      "cardmarket_set": "Jungle",
+      "canonical_name": "Snorlax",
+      "canonical_number": "11",
+      "canonical_rarity": "Rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "273809": {
+      "source": "TCGdex",
+      "source_card_id": "base2-12",
+      "source_set_id": "base2",
+      "cardmarket_set": "Jungle",
+      "canonical_name": "Vaporeon",
+      "canonical_number": "12",
+      "canonical_rarity": "Rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "273848": {
+      "source": "TCGdex",
+      "source_card_id": "base2-51",
+      "source_set_id": "base2",
+      "cardmarket_set": "Jungle",
+      "canonical_name": "Eevee",
+      "canonical_number": "51",
+      "canonical_rarity": "Common",
+      "finish": "normal",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "273857": {
+      "source": "TCGdex",
+      "source_card_id": "base2-60",
+      "source_set_id": "base2",
+      "cardmarket_set": "Jungle",
+      "canonical_name": "Pikachu",
+      "canonical_number": "60",
+      "canonical_rarity": "Common",
+      "finish": "normal",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "273864": {
+      "source": "TCGdex",
+      "source_card_id": "base3-3",
+      "source_set_id": "base3",
+      "cardmarket_set": "Fossil",
+      "canonical_name": "Ditto",
+      "canonical_number": "3",
+      "canonical_rarity": "Rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "273914": {
+      "source": "TCGdex",
+      "source_card_id": "base3-53",
+      "source_set_id": "base3",
+      "cardmarket_set": "Fossil",
+      "canonical_name": "Psyduck",
+      "canonical_number": "53",
+      "canonical_rarity": "Common",
+      "finish": "normal",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "273924": {
+      "source": "TCGdex",
+      "source_card_id": "base4-1",
+      "source_set_id": "base4",
+      "cardmarket_set": "Base Set 2",
+      "canonical_name": "Alakazam",
+      "canonical_number": "1",
+      "canonical_rarity": "Rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "273953": {
+      "source": "TCGdex",
+      "source_card_id": "base4-30",
+      "source_set_id": "base4",
+      "cardmarket_set": "Base Set 2",
+      "canonical_name": "Snorlax",
+      "canonical_number": "30",
+      "canonical_rarity": "Rare",
+      "finish": "normal",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "274016": {
+      "source": "TCGdex",
+      "source_card_id": "base4-93",
+      "source_set_id": "base4",
+      "cardmarket_set": "Base Set 2",
+      "canonical_name": "Squirtle",
+      "canonical_number": "93",
+      "canonical_rarity": "Common",
+      "finish": "normal",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "274054": {
+      "source": "TCGdex",
+      "source_card_id": "base5-18",
+      "source_set_id": "base5",
+      "cardmarket_set": "Team Rocket",
+      "canonical_name": "Dark Alakazam",
+      "canonical_number": "18",
+      "canonical_rarity": "Rare",
+      "finish": "normal",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "274169": {
+      "source": "TCGdex",
+      "source_card_id": "gym1-33",
+      "source_set_id": "gym1",
+      "cardmarket_set": "Gym Heroes",
+      "canonical_name": "Rocket's Snorlax",
+      "canonical_number": "33",
+      "canonical_rarity": "Rare",
+      "finish": "normal",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "274278": {
+      "source": "TCGdex",
+      "source_card_id": "gym2-10",
+      "source_set_id": "gym2",
+      "cardmarket_set": "Gym Challenge",
+      "canonical_name": "Koga's Ditto",
+      "canonical_number": "10",
+      "canonical_rarity": "Holo Rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "274284": {
+      "source": "TCGdex",
+      "source_card_id": "gym2-16",
+      "source_set_id": "gym2",
+      "cardmarket_set": "Gym Challenge",
+      "canonical_name": "Sabrina's Alakazam",
+      "canonical_number": "16",
+      "canonical_rarity": "Holo Rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "274409": {
+      "source": "TCGdex",
+      "source_card_id": "neo1-9",
+      "source_set_id": "neo1",
+      "cardmarket_set": "Neo Genesis",
+      "canonical_name": "Lugia",
+      "canonical_number": "9",
+      "canonical_rarity": "Rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "274512": {
+      "source": "TCGdex",
+      "source_card_id": "neo2-20",
+      "source_set_id": "neo2",
+      "cardmarket_set": "Neo Discovery",
+      "canonical_name": "Espeon",
+      "canonical_number": "20",
+      "canonical_rarity": "Rare",
+      "finish": "normal",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "274524": {
+      "source": "TCGdex",
+      "source_card_id": "neo2-32",
+      "source_set_id": "neo2",
+      "cardmarket_set": "Neo Discovery",
+      "canonical_name": "Umbreon",
+      "canonical_number": "32",
+      "canonical_rarity": "Rare",
+      "finish": "normal",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "274606": {
+      "source": "TCGdex",
+      "source_card_id": "neo3-20",
+      "source_set_id": "neo3",
+      "cardmarket_set": "Neo Revelation",
+      "canonical_name": "Lugia",
+      "canonical_number": "20",
+      "canonical_rarity": "Rare",
+      "finish": "normal",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "274656": {
+      "source": "TCGdex",
+      "source_card_id": "neo4-4",
+      "source_set_id": "neo4",
+      "cardmarket_set": "Neo Destiny",
+      "canonical_name": "Dark Espeon",
+      "canonical_number": "4",
+      "canonical_rarity": "Rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "274766": {
+      "source": "TCGdex",
+      "source_card_id": "lc-1",
+      "source_set_id": "lc",
+      "cardmarket_set": "Legendary Collection",
+      "canonical_name": "Alakazam",
+      "canonical_number": "1",
+      "canonical_rarity": "Holo Rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "274774": {
+      "source": "TCGdex",
+      "source_card_id": "lc-9",
+      "source_set_id": "lc",
+      "cardmarket_set": "Legendary Collection",
+      "canonical_name": "Dark Vaporeon",
+      "canonical_number": "9",
+      "canonical_rarity": "Holo Rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "274775": {
+      "source": "TCGdex",
+      "source_card_id": "lc-10",
+      "source_set_id": "lc",
+      "cardmarket_set": "Legendary Collection",
+      "canonical_name": "Flareon",
+      "canonical_number": "10",
+      "canonical_rarity": "Holo Rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "274779": {
+      "source": "TCGdex",
+      "source_card_id": "lc-14",
+      "source_set_id": "lc",
+      "cardmarket_set": "Legendary Collection",
+      "canonical_name": "Jolteon",
+      "canonical_number": "14",
+      "canonical_rarity": "Holo Rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "274829": {
+      "source": "TCGdex",
+      "source_card_id": "lc-64",
+      "source_set_id": "lc",
+      "cardmarket_set": "Legendary Collection",
+      "canonical_name": "Snorlax",
+      "canonical_number": "64",
+      "canonical_rarity": "Uncommon",
+      "finish": "normal",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "274835": {
+      "source": "TCGdex",
+      "source_card_id": "lc-70",
+      "source_set_id": "lc",
+      "cardmarket_set": "Legendary Collection",
+      "canonical_name": "Charmander",
+      "canonical_number": "70",
+      "canonical_rarity": "Common",
+      "finish": "normal",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "274839": {
+      "source": "TCGdex",
+      "source_card_id": "lc-74",
+      "source_set_id": "lc",
+      "cardmarket_set": "Legendary Collection",
+      "canonical_name": "Eevee",
+      "canonical_number": "74",
+      "canonical_rarity": "Common",
+      "finish": "normal",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "274851": {
+      "source": "TCGdex",
+      "source_card_id": "lc-86",
+      "source_set_id": "lc",
+      "cardmarket_set": "Legendary Collection",
+      "canonical_name": "Pikachu",
+      "canonical_number": "86",
+      "canonical_rarity": "Common",
+      "finish": "normal",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "274853": {
+      "source": "TCGdex",
+      "source_card_id": "lc-88",
+      "source_set_id": "lc",
+      "cardmarket_set": "Legendary Collection",
+      "canonical_name": "Psyduck",
+      "canonical_number": "88",
+      "canonical_rarity": "Common",
+      "finish": "normal",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "274860": {
+      "source": "TCGdex",
+      "source_card_id": "lc-95",
+      "source_set_id": "lc",
+      "cardmarket_set": "Legendary Collection",
+      "canonical_name": "Squirtle",
+      "canonical_number": "95",
+      "canonical_rarity": "Common",
+      "finish": "normal",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "274876": {
+      "source": "TCGdex",
+      "source_card_id": "ecard1-33",
+      "source_set_id": "ecard1",
+      "cardmarket_set": "Expedition Base Set",
+      "canonical_name": "Alakazam",
+      "canonical_number": "33",
+      "canonical_rarity": "Rare",
+      "finish": "reverse",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "274894": {
+      "source": "TCGdex",
+      "source_card_id": "ecard1-55",
+      "source_set_id": "ecard1",
+      "cardmarket_set": "Expedition Base Set",
+      "canonical_name": "Mew",
+      "canonical_number": "55",
+      "canonical_rarity": "Rare",
+      "finish": "reverse",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "275064": {
+      "source": "TCGdex",
+      "source_card_id": "ecard2-11",
+      "source_set_id": "ecard2",
+      "cardmarket_set": "Aquapolis",
+      "canonical_name": "Espeon",
+      "canonical_number": "11",
+      "canonical_rarity": "Rare",
+      "finish": "reverse",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "275070": {
+      "source": "TCGdex",
+      "source_card_id": "ecard2-41",
+      "source_set_id": "ecard2",
+      "cardmarket_set": "Aquapolis",
+      "canonical_name": "Umbreon",
+      "canonical_number": "41",
+      "canonical_rarity": "Rare",
+      "finish": "reverse",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "275149": {
+      "source": "TCGdex",
+      "source_card_id": "ecard2-75",
+      "source_set_id": "ecard2",
+      "cardmarket_set": "Aquapolis",
+      "canonical_name": "Eevee",
+      "canonical_number": "75",
+      "canonical_rarity": "Common",
+      "finish": "reverse",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "275180": {
+      "source": "TCGdex",
+      "source_card_id": "ecard2-104",
+      "source_set_id": "ecard2",
+      "cardmarket_set": "Aquapolis",
+      "canonical_name": "Psyduck",
+      "canonical_number": "104",
+      "canonical_rarity": "Common",
+      "finish": "reverse",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "275225": {
+      "source": "TCGdex",
+      "source_card_id": "ecard2-149",
+      "source_set_id": "ecard2",
+      "cardmarket_set": "Aquapolis",
+      "canonical_name": "Lugia",
+      "canonical_number": "149",
+      "canonical_rarity": "Rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "275238": {
+      "source": "TCGdex",
+      "source_card_id": "ecard3-2",
+      "source_set_id": "ecard3",
+      "cardmarket_set": "Skyridge",
+      "canonical_name": "Alakazam",
+      "canonical_number": "2",
+      "canonical_rarity": "Rare",
+      "finish": "reverse",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "275239": {
+      "source": "TCGdex",
+      "source_card_id": "ecard3-13",
+      "source_set_id": "ecard3",
+      "cardmarket_set": "Skyridge",
+      "canonical_name": "Jolteon",
+      "canonical_number": "13",
+      "canonical_rarity": "Rare",
+      "finish": "reverse",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "275252": {
+      "source": "TCGdex",
+      "source_card_id": "ecard3-H31",
+      "source_set_id": "ecard3",
+      "cardmarket_set": "Skyridge",
+      "canonical_name": "Vaporeon",
+      "canonical_number": "H31",
+      "canonical_rarity": "Holo Rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "275255": {
+      "source": "TCGdex",
+      "source_card_id": "ecard3-32",
+      "source_set_id": "ecard3",
+      "cardmarket_set": "Skyridge",
+      "canonical_name": "Umbreon",
+      "canonical_number": "32",
+      "canonical_rarity": "Rare",
+      "finish": "reverse",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "275309": {
+      "source": "TCGdex",
+      "source_card_id": "ecard3-51",
+      "source_set_id": "ecard3",
+      "cardmarket_set": "Skyridge",
+      "canonical_name": "Ditto",
+      "canonical_number": "51",
+      "canonical_rarity": "Common",
+      "finish": "reverse",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "275342": {
+      "source": "TCGdex",
+      "source_card_id": "ecard3-84",
+      "source_set_id": "ecard3",
+      "cardmarket_set": "Skyridge",
+      "canonical_name": "Pikachu",
+      "canonical_number": "84",
+      "canonical_rarity": "Common",
+      "finish": "reverse",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "275586": {
+      "source": "TCGdex",
+      "source_card_id": "base1-58",
+      "source_set_id": "base1",
+      "cardmarket_set": "Base Set",
+      "canonical_name": "Pikachu",
+      "canonical_number": "58",
+      "canonical_rarity": "Common",
+      "finish": "normal",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "275782": {
+      "source": "TCGdex",
+      "source_card_id": "ex2-5",
+      "source_set_id": "ex2",
+      "cardmarket_set": "EX Sandstorm",
+      "canonical_name": "Flareon",
+      "canonical_number": "5",
+      "canonical_rarity": "Holo Rare",
+      "finish": "reverse",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "275783": {
+      "source": "TCGdex",
+      "source_card_id": "ex2-6",
+      "source_set_id": "ex2",
+      "cardmarket_set": "EX Sandstorm",
+      "canonical_name": "Jolteon",
+      "canonical_number": "6",
+      "canonical_rarity": "Holo Rare",
+      "finish": "reverse",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "275801": {
+      "source": "TCGdex",
+      "source_card_id": "ex2-24",
+      "source_set_id": "ex2",
+      "cardmarket_set": "EX Sandstorm",
+      "canonical_name": "Umbreon",
+      "canonical_number": "24",
+      "canonical_rarity": "Rare",
+      "finish": "reverse",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "275802": {
+      "source": "TCGdex",
+      "source_card_id": "ex2-25",
+      "source_set_id": "ex2",
+      "cardmarket_set": "EX Sandstorm",
+      "canonical_name": "Vaporeon",
+      "canonical_number": "25",
+      "canonical_rarity": "Rare",
+      "finish": "reverse",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "275849": {
+      "source": "TCGdex",
+      "source_card_id": "ex2-72",
+      "source_set_id": "ex2",
+      "cardmarket_set": "EX Sandstorm",
+      "canonical_name": "Pikachu",
+      "canonical_number": "72",
+      "canonical_rarity": "Common",
+      "finish": "reverse",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "275850": {
+      "source": "TCGdex",
+      "source_card_id": "ex2-73",
+      "source_set_id": "ex2",
+      "cardmarket_set": "EX Sandstorm",
+      "canonical_name": "Psyduck",
+      "canonical_number": "73",
+      "canonical_rarity": "Common",
+      "finish": "reverse",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "275974": {
+      "source": "TCGdex",
+      "source_card_id": "ex3-97",
+      "source_set_id": "ex3",
+      "cardmarket_set": "EX Dragon",
+      "canonical_name": "Rayquaza ex",
+      "canonical_number": "97",
+      "canonical_rarity": "Rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "276180": {
+      "source": "TCGdex",
+      "source_card_id": "ex6-4",
+      "source_set_id": "ex6",
+      "cardmarket_set": "EX FireRed & LeafGreen",
+      "canonical_name": "Ditto",
+      "canonical_number": "4",
+      "canonical_rarity": "Rare",
+      "finish": "reverse",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "276191": {
+      "source": "TCGdex",
+      "source_card_id": "ex6-15",
+      "source_set_id": "ex6",
+      "cardmarket_set": "EX FireRed & LeafGreen",
+      "canonical_name": "Snorlax",
+      "canonical_number": "15",
+      "canonical_rarity": "Rare",
+      "finish": "reverse",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "276250": {
+      "source": "TCGdex",
+      "source_card_id": "ex6-74",
+      "source_set_id": "ex6",
+      "cardmarket_set": "EX FireRed & LeafGreen",
+      "canonical_name": "Pikachu",
+      "canonical_number": "74",
+      "canonical_rarity": "Common",
+      "finish": "reverse",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "276258": {
+      "source": "TCGdex",
+      "source_card_id": "ex6-82",
+      "source_set_id": "ex6",
+      "cardmarket_set": "EX FireRed & LeafGreen",
+      "canonical_name": "Squirtle",
+      "canonical_number": "82",
+      "canonical_rarity": "Common",
+      "finish": "reverse",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "276259": {
+      "source": "TCGdex",
+      "source_card_id": "ex6-83",
+      "source_set_id": "ex6",
+      "cardmarket_set": "EX FireRed & LeafGreen",
+      "canonical_name": "Squirtle",
+      "canonical_number": "83",
+      "canonical_rarity": "Common",
+      "finish": "reverse",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "276362": {
+      "source": "TCGdex",
+      "source_card_id": "ex7-70",
+      "source_set_id": "ex7",
+      "cardmarket_set": "EX Team Rocket Returns",
+      "canonical_name": "Psyduck",
+      "canonical_number": "70",
+      "canonical_rarity": "Common",
+      "finish": "normal",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "276396": {
+      "source": "TCGdex",
+      "source_card_id": "ex7-104",
+      "source_set_id": "ex7",
+      "cardmarket_set": "EX Team Rocket Returns",
+      "canonical_name": "Rocket's Snorlax ex",
+      "canonical_number": "104",
+      "canonical_rarity": "Rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "276425": {
+      "source": "TCGdex",
+      "source_card_id": "ex8-22",
+      "source_set_id": "ex8",
+      "cardmarket_set": "EX Deoxys",
+      "canonical_name": "Rayquaza",
+      "canonical_number": "22",
+      "canonical_rarity": "Rare",
+      "finish": "reverse",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "276505": {
+      "source": "TCGdex",
+      "source_card_id": "ex8-102",
+      "source_set_id": "ex8",
+      "cardmarket_set": "EX Deoxys",
+      "canonical_name": "Rayquaza ex",
+      "canonical_number": "102",
+      "canonical_rarity": "Rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "276520": {
+      "source": "TCGdex",
+      "source_card_id": "ex9-9",
+      "source_set_id": "ex9",
+      "cardmarket_set": "EX Emerald",
+      "canonical_name": "Rayquaza",
+      "canonical_number": "9",
+      "canonical_rarity": "Rare",
+      "finish": "reverse",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "276571": {
+      "source": "TCGdex",
+      "source_card_id": "ex9-60",
+      "source_set_id": "ex9",
+      "cardmarket_set": "EX Emerald",
+      "canonical_name": "Pikachu",
+      "canonical_number": "60",
+      "canonical_rarity": "Common",
+      "finish": "reverse",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "276651": {
+      "source": "TCGdex",
+      "source_card_id": "ex10-5",
+      "source_set_id": "ex10",
+      "cardmarket_set": "EX Unseen Forces",
+      "canonical_name": "Flareon",
+      "canonical_number": "5",
+      "canonical_rarity": "Rare",
+      "finish": "reverse",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "276654": {
+      "source": "TCGdex",
+      "source_card_id": "ex10-8",
+      "source_set_id": "ex10",
+      "cardmarket_set": "EX Unseen Forces",
+      "canonical_name": "Jolteon",
+      "canonical_number": "8",
+      "canonical_rarity": "Rare",
+      "finish": "reverse",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "276665": {
+      "source": "TCGdex",
+      "source_card_id": "ex10-19",
+      "source_set_id": "ex10",
+      "cardmarket_set": "EX Unseen Forces",
+      "canonical_name": "Vaporeon",
+      "canonical_number": "19",
+      "canonical_rarity": "Rare",
+      "finish": "reverse",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "276675": {
+      "source": "TCGdex",
+      "source_card_id": "ex10-29",
+      "source_set_id": "ex10",
+      "cardmarket_set": "EX Unseen Forces",
+      "canonical_name": "Lugia",
+      "canonical_number": "29",
+      "canonical_rarity": "Rare",
+      "finish": "reverse",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "276748": {
+      "source": "TCGdex",
+      "source_card_id": "ex10-102",
+      "source_set_id": "ex10",
+      "cardmarket_set": "EX Unseen Forces",
+      "canonical_name": "Espeon ex",
+      "canonical_number": "102",
+      "canonical_rarity": "Rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "276751": {
+      "source": "TCGdex",
+      "source_card_id": "ex10-105",
+      "source_set_id": "ex10",
+      "cardmarket_set": "EX Unseen Forces",
+      "canonical_name": "Lugia ex",
+      "canonical_number": "105",
+      "canonical_rarity": "Rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "276758": {
+      "source": "TCGdex",
+      "source_card_id": "ex10-112",
+      "source_set_id": "ex10",
+      "cardmarket_set": "EX Unseen Forces",
+      "canonical_name": "Umbreon ex",
+      "canonical_number": "112",
+      "canonical_rarity": "Rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "276832": {
+      "source": "TCGdex",
+      "source_card_id": "ex11-69",
+      "source_set_id": "ex11",
+      "cardmarket_set": "EX Delta Species",
+      "canonical_name": "Eevee",
+      "canonical_number": "69",
+      "canonical_rarity": "Common",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "276872": {
+      "source": "TCGdex",
+      "source_card_id": "ex11-109",
+      "source_set_id": "ex11",
+      "cardmarket_set": "EX Delta Species",
+      "canonical_name": "Jolteon ex",
+      "canonical_number": "109",
+      "canonical_rarity": "Rare",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "276873": {
+      "source": "TCGdex",
+      "source_card_id": "ex11-110",
+      "source_set_id": "ex11",
+      "cardmarket_set": "EX Delta Species",
+      "canonical_name": "Vaporeon ex",
+      "canonical_number": "110",
+      "canonical_rarity": "Rare",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "276887": {
+      "source": "TCGdex",
+      "source_card_id": "ex12-10",
+      "source_set_id": "ex12",
+      "cardmarket_set": "EX Legend Maker",
+      "canonical_name": "Mew",
+      "canonical_number": "10",
+      "canonical_rarity": "Rare",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "276965": {
+      "source": "TCGdex",
+      "source_card_id": "ex12-88",
+      "source_set_id": "ex12",
+      "cardmarket_set": "EX Legend Maker",
+      "canonical_name": "Mew ex",
+      "canonical_number": "88",
+      "canonical_rarity": "Rare",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "277048": {
+      "source": "TCGdex",
+      "source_card_id": "ex13-78",
+      "source_set_id": "ex13",
+      "cardmarket_set": "EX Holon Phantoms",
+      "canonical_name": "Pikachu",
+      "canonical_number": "78",
+      "canonical_rarity": "Common",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
     },
     "277049": {
       "source_card_id": "ex13-79",
@@ -20,52 +1227,106 @@
       "canonical_name": "Pikachu δ",
       "canonical_number": "79",
       "canonical_rarity": "Common",
-      "verified_by": ["set", "name", "Tail Whap", "Steel Headbutt"]
+      "verified_by": [
+        "set",
+        "name",
+        "Tail Whap",
+        "Steel Headbutt"
+      ]
     },
-    "280620": {
-      "source_card_id": "bw7-33",
-      "source_set_id": "bw7",
-      "cardmarket_set": "Boundaries Crossed",
-      "canonical_name": "Psyduck",
-      "canonical_number": "33",
-      "canonical_rarity": "Common",
-      "verified_by": ["set", "name", "Firefighting"]
-    },
-    "280695": {
-      "source_card_id": "bw7-108",
-      "source_set_id": "bw7",
-      "cardmarket_set": "Boundaries Crossed",
-      "canonical_name": "Ditto",
-      "canonical_number": "108",
-      "canonical_rarity": "Rare Holo",
-      "verified_by": ["set", "name", "Transform"]
-    },
-    "273914": {
-      "source_card_id": "base3-53",
-      "source_set_id": "base3",
-      "cardmarket_set": "Fossil",
-      "canonical_name": "Psyduck",
-      "canonical_number": "53",
-      "canonical_rarity": "Common",
-      "verified_by": ["set", "name", "Headache", "Fury Swipes"]
-    },
-    "284203": {
-      "source_card_id": "xy7-22",
-      "source_set_id": "xy7",
-      "cardmarket_set": "Ancient Origins",
-      "canonical_name": "Vaporeon",
-      "canonical_number": "22",
-      "canonical_rarity": "Uncommon",
-      "verified_by": ["set", "name", "Aqua Effect", "Hydro Splash"]
-    },
-    "436799": {
-      "source_card_id": "swsh1-140",
-      "source_set_id": "swsh1",
-      "cardmarket_set": "Sword & Shield",
-      "canonical_name": "Snorlax",
-      "canonical_number": "140",
+    "277070": {
+      "source": "TCGdex",
+      "source_card_id": "ex13-100",
+      "source_set_id": "ex13",
+      "cardmarket_set": "EX Holon Phantoms",
+      "canonical_name": "Mew ex",
+      "canonical_number": "100",
       "canonical_rarity": "Rare",
-      "verified_by": ["set", "name", "Rolling Tackle", "Heavy Impact"]
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "277081": {
+      "source": "TCGdex",
+      "source_card_id": "ex13-111",
+      "source_set_id": "ex13",
+      "cardmarket_set": "EX Holon Phantoms",
+      "canonical_name": "Mew",
+      "canonical_number": "111",
+      "canonical_rarity": "Rare",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "277130": {
+      "source_card_id": "ex14-49",
+      "source_set_id": "ex14",
+      "cardmarket_set": "EX Crystal Guardians",
+      "canonical_name": "Charmander δ",
+      "canonical_number": "49",
+      "canonical_rarity": "Common",
+      "verified_by": [
+        "set",
+        "name",
+        "Scratch",
+        "Bite"
+      ]
+    },
+    "277145": {
+      "source": "TCGdex",
+      "source_card_id": "ex14-64",
+      "source_set_id": "ex14",
+      "cardmarket_set": "EX Crystal Guardians",
+      "canonical_name": "Squirtle",
+      "canonical_number": "64",
+      "canonical_rarity": "Common",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "277354": {
+      "source": "TCGdex",
+      "source_card_id": "ex16-48",
+      "source_set_id": "ex16",
+      "cardmarket_set": "EX Power Keepers",
+      "canonical_name": "Charmander",
+      "canonical_number": "48",
+      "canonical_rarity": "Common",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "277363": {
+      "source": "TCGdex",
+      "source_card_id": "ex16-57",
+      "source_set_id": "ex16",
+      "cardmarket_set": "EX Power Keepers",
+      "canonical_name": "Pikachu",
+      "canonical_number": "57",
+      "canonical_rarity": "Common",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
     },
     "278608": {
       "source_card_id": "pl2-34",
@@ -74,16 +1335,13 @@
       "canonical_name": "Vaporeon",
       "canonical_number": "34",
       "canonical_rarity": "Rare",
-      "verified_by": ["set", "name", "Undevelop", "Muddy Water", "Evolving Aqua"]
-    },
-    "280616": {
-      "source_card_id": "bw7-29",
-      "source_set_id": "bw7",
-      "cardmarket_set": "Boundaries Crossed",
-      "canonical_name": "Squirtle",
-      "canonical_number": "29",
-      "canonical_rarity": "Common",
-      "verified_by": ["set", "name", "Shell Shield", "Water Splash"]
+      "verified_by": [
+        "set",
+        "name",
+        "Undevelop",
+        "Muddy Water",
+        "Evolving Aqua"
+      ]
     },
     "278655": {
       "source_card_id": "pl2-81",
@@ -92,7 +1350,2392 @@
       "canonical_name": "Snorlax",
       "canonical_number": "81",
       "canonical_rarity": "Common",
-      "verified_by": ["set", "name", "Bad Sleeping Habits", "Toss and Turn", "Heavy Press"]
+      "verified_by": [
+        "set",
+        "name",
+        "Bad Sleeping Habits",
+        "Toss and Turn",
+        "Heavy Press"
+      ]
+    },
+    "278685": {
+      "source": "TCGdex",
+      "source_card_id": "pl2-111",
+      "source_set_id": "pl2",
+      "cardmarket_set": "Rising Rivals",
+      "canonical_name": "Snorlax LV.X",
+      "canonical_number": "111",
+      "canonical_rarity": "Rare Holo LV.X",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "279085": {
+      "source": "TCGdex",
+      "source_card_id": "hgss1-114",
+      "source_set_id": "hgss1",
+      "cardmarket_set": "HeartGold & SoulSilver",
+      "canonical_name": "Lugia LEGEND",
+      "canonical_number": "114",
+      "canonical_rarity": "LEGEND",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "279255": {
+      "source": "TCGdex",
+      "source_card_id": "hgss3-2",
+      "source_set_id": "hgss3",
+      "cardmarket_set": "Undaunted",
+      "canonical_name": "Espeon",
+      "canonical_number": "2",
+      "canonical_rarity": "Holo Rare",
+      "finish": "reverse",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "279263": {
+      "source": "TCGdex",
+      "source_card_id": "hgss3-10",
+      "source_set_id": "hgss3",
+      "cardmarket_set": "Undaunted",
+      "canonical_name": "Umbreon",
+      "canonical_number": "10",
+      "canonical_rarity": "Holo Rare",
+      "finish": "reverse",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "279279": {
+      "source": "TCGdex",
+      "source_card_id": "hgss3-26",
+      "source_set_id": "hgss3",
+      "cardmarket_set": "Undaunted",
+      "canonical_name": "Flareon",
+      "canonical_number": "26",
+      "canonical_rarity": "Uncommon",
+      "finish": "reverse",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "279281": {
+      "source": "TCGdex",
+      "source_card_id": "hgss3-28",
+      "source_set_id": "hgss3",
+      "cardmarket_set": "Undaunted",
+      "canonical_name": "Jolteon",
+      "canonical_number": "28",
+      "canonical_rarity": "Uncommon",
+      "finish": "reverse",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "279294": {
+      "source": "TCGdex",
+      "source_card_id": "hgss3-41",
+      "source_set_id": "hgss3",
+      "cardmarket_set": "Undaunted",
+      "canonical_name": "Vaporeon",
+      "canonical_number": "41",
+      "canonical_rarity": "Uncommon",
+      "finish": "reverse",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "279314": {
+      "source": "TCGdex",
+      "source_card_id": "hgss3-61",
+      "source_set_id": "hgss3",
+      "cardmarket_set": "Undaunted",
+      "canonical_name": "Pikachu",
+      "canonical_number": "61",
+      "canonical_rarity": "Common",
+      "finish": "reverse",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "279334": {
+      "source": "TCGdex",
+      "source_card_id": "hgss3-81",
+      "source_set_id": "hgss3",
+      "cardmarket_set": "Undaunted",
+      "canonical_name": "Espeon",
+      "canonical_number": "81",
+      "canonical_rarity": "Rare PRIME",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "279339": {
+      "source": "TCGdex",
+      "source_card_id": "hgss3-86",
+      "source_set_id": "hgss3",
+      "cardmarket_set": "Undaunted",
+      "canonical_name": "Umbreon",
+      "canonical_number": "86",
+      "canonical_rarity": "Rare PRIME",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "279342": {
+      "source": "TCGdex",
+      "source_card_id": "hgss3-89",
+      "source_set_id": "hgss3",
+      "cardmarket_set": "Undaunted",
+      "canonical_name": "Rayquaza & Deoxys LEGEND",
+      "canonical_number": "89",
+      "canonical_rarity": "LEGEND",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "279343": {
+      "source": "TCGdex",
+      "source_card_id": "hgss3-90",
+      "source_set_id": "hgss3",
+      "cardmarket_set": "Undaunted",
+      "canonical_name": "Rayquaza & Deoxys LEGEND",
+      "canonical_number": "90",
+      "canonical_rarity": "LEGEND",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "279547": {
+      "source": "TCGdex",
+      "source_card_id": "hgss4-17",
+      "source_set_id": "hgss4",
+      "cardmarket_set": "Triumphant",
+      "canonical_name": "Ditto",
+      "canonical_number": "17",
+      "canonical_rarity": "Rare",
+      "finish": "reverse",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "279604": {
+      "source": "TCGdex",
+      "source_card_id": "hgss4-74",
+      "source_set_id": "hgss4",
+      "cardmarket_set": "Triumphant",
+      "canonical_name": "Psyduck",
+      "canonical_number": "74",
+      "canonical_rarity": "Common",
+      "finish": "reverse",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "279627": {
+      "source": "TCGdex",
+      "source_card_id": "hgss4-97",
+      "source_set_id": "hgss4",
+      "cardmarket_set": "Triumphant",
+      "canonical_name": "Mew",
+      "canonical_number": "97",
+      "canonical_rarity": "Rare PRIME",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "279635": {
+      "source": "TCGdex",
+      "source_card_id": "col1-20",
+      "source_set_id": "col1",
+      "cardmarket_set": "Call of Legends",
+      "canonical_name": "Rayquaza",
+      "canonical_number": "20",
+      "canonical_rarity": "Holo Rare",
+      "finish": "reverse",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "279637": {
+      "source": "TCGdex",
+      "source_card_id": "col1-15",
+      "source_set_id": "col1",
+      "cardmarket_set": "Call of Legends",
+      "canonical_name": "Lugia",
+      "canonical_number": "15",
+      "canonical_rarity": "Holo Rare",
+      "finish": "reverse",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "279647": {
+      "source": "TCGdex",
+      "source_card_id": "col1-4",
+      "source_set_id": "col1",
+      "cardmarket_set": "Call of Legends",
+      "canonical_name": "Espeon",
+      "canonical_number": "4",
+      "canonical_rarity": "Holo Rare",
+      "finish": "reverse",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "279665": {
+      "source": "TCGdex",
+      "source_card_id": "col1-22",
+      "source_set_id": "col1",
+      "cardmarket_set": "Call of Legends",
+      "canonical_name": "Umbreon",
+      "canonical_number": "22",
+      "canonical_rarity": "Holo Rare",
+      "finish": "reverse",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "279853": {
+      "source": "TCGdex",
+      "source_card_id": "bw1-115",
+      "source_set_id": "bw1",
+      "cardmarket_set": "Black & White",
+      "canonical_name": "Pikachu",
+      "canonical_number": "115",
+      "canonical_rarity": "Secret Rare",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "280264": {
+      "source": "TCGdex",
+      "source_card_id": "bw4-39",
+      "source_set_id": "bw4",
+      "cardmarket_set": "Next Destinies",
+      "canonical_name": "Pikachu",
+      "canonical_number": "39",
+      "canonical_rarity": "Common",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "280376": {
+      "source": "TCGdex",
+      "source_card_id": "bw5-48",
+      "source_set_id": "bw5",
+      "cardmarket_set": "Dark Explorers",
+      "canonical_name": "Espeon",
+      "canonical_number": "48",
+      "canonical_rarity": "Rare",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "280411": {
+      "source": "TCGdex",
+      "source_card_id": "bw5-84",
+      "source_set_id": "bw5",
+      "cardmarket_set": "Dark Explorers",
+      "canonical_name": "Eevee",
+      "canonical_number": "84",
+      "canonical_rarity": "Common",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "280616": {
+      "source": "TCGdex",
+      "source_card_id": "bw7-29",
+      "source_set_id": "bw7",
+      "cardmarket_set": "Boundaries Crossed",
+      "canonical_name": "Squirtle",
+      "canonical_number": "29",
+      "canonical_rarity": "Common",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "280619": {
+      "source": "TCGdex",
+      "source_card_id": "bw7-33",
+      "source_set_id": "bw7",
+      "cardmarket_set": "Boundaries Crossed",
+      "canonical_name": "Psyduck",
+      "canonical_number": "33",
+      "canonical_rarity": "Common",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "280620": {
+      "source_card_id": "bw7-33",
+      "source_set_id": "bw7",
+      "cardmarket_set": "Boundaries Crossed",
+      "canonical_name": "Psyduck",
+      "canonical_number": "33",
+      "canonical_rarity": "Common",
+      "verified_by": [
+        "set",
+        "name",
+        "Firefighting"
+      ]
+    },
+    "280637": {
+      "source": "TCGdex",
+      "source_card_id": "bw7-50",
+      "source_set_id": "bw7",
+      "cardmarket_set": "Boundaries Crossed",
+      "canonical_name": "Pikachu",
+      "canonical_number": "50",
+      "canonical_rarity": "Common",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "280695": {
+      "source": "TCGdex",
+      "source_card_id": "bw7-108",
+      "source_set_id": "bw7",
+      "cardmarket_set": "Boundaries Crossed",
+      "canonical_name": "Ditto",
+      "canonical_number": "108",
+      "canonical_rarity": "Rare",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "280696": {
+      "source": "TCGdex",
+      "source_card_id": "bw7-109",
+      "source_set_id": "bw7",
+      "cardmarket_set": "Boundaries Crossed",
+      "canonical_name": "Snorlax",
+      "canonical_number": "109",
+      "canonical_rarity": "Uncommon",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "280764": {
+      "source": "TCGdex",
+      "source_card_id": "bw8-24",
+      "source_set_id": "bw8",
+      "cardmarket_set": "Plasma Storm",
+      "canonical_name": "Squirtle",
+      "canonical_number": "24",
+      "canonical_rarity": "Common",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "280841": {
+      "source": "TCGdex",
+      "source_card_id": "bw8-101",
+      "source_set_id": "bw8",
+      "cardmarket_set": "Plasma Storm",
+      "canonical_name": "Snorlax",
+      "canonical_number": "101",
+      "canonical_rarity": "Rare",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "280890": {
+      "source": "TCGdex",
+      "source_card_id": "bw9-12",
+      "source_set_id": "bw9",
+      "cardmarket_set": "Plasma Freeze",
+      "canonical_name": "Flareon",
+      "canonical_number": "12",
+      "canonical_rarity": "Uncommon",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "280912": {
+      "source": "TCGdex",
+      "source_card_id": "bw9-34",
+      "source_set_id": "bw9",
+      "cardmarket_set": "Plasma Freeze",
+      "canonical_name": "Jolteon",
+      "canonical_number": "34",
+      "canonical_rarity": "Uncommon",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "280926": {
+      "source": "TCGdex",
+      "source_card_id": "bw9-48",
+      "source_set_id": "bw9",
+      "cardmarket_set": "Plasma Freeze",
+      "canonical_name": "Espeon",
+      "canonical_number": "48",
+      "canonical_rarity": "Uncommon",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "280942": {
+      "source": "TCGdex",
+      "source_card_id": "bw9-64",
+      "source_set_id": "bw9",
+      "cardmarket_set": "Plasma Freeze",
+      "canonical_name": "Umbreon",
+      "canonical_number": "64",
+      "canonical_rarity": "Rare",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "281011": {
+      "source": "TCGdex",
+      "source_card_id": "dv1-11",
+      "source_set_id": "dv1",
+      "cardmarket_set": "Dragon Vault",
+      "canonical_name": "Rayquaza",
+      "canonical_number": "11",
+      "canonical_rarity": "Rare",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "281138": {
+      "source": "TCGdex",
+      "source_card_id": "bw11-RC14",
+      "source_set_id": "bw11",
+      "cardmarket_set": "Legendary Treasures",
+      "canonical_name": "Eevee",
+      "canonical_number": "RC14",
+      "canonical_rarity": "Uncommon",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "281142": {
+      "source": "TCGdex",
+      "source_card_id": "bw11-RC7",
+      "source_set_id": "bw11",
+      "cardmarket_set": "Legendary Treasures",
+      "canonical_name": "Pikachu",
+      "canonical_number": "RC7",
+      "canonical_rarity": "Uncommon",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "281244": {
+      "source": "TCGdex",
+      "source_card_id": "bw11-93",
+      "source_set_id": "bw11",
+      "cardmarket_set": "Legendary Treasures",
+      "canonical_name": "Rayquaza",
+      "canonical_number": "93",
+      "canonical_rarity": "Rare",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "281291": {
+      "source": "TCGdex",
+      "source_card_id": "xy0-25",
+      "source_set_id": "xy0",
+      "cardmarket_set": "Kalos Starter Set",
+      "canonical_name": "Farfetch'd",
+      "canonical_number": "25",
+      "canonical_rarity": "None",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "281292": {
+      "source": "TCGdex",
+      "source_card_id": "xy0-26",
+      "source_set_id": "xy0",
+      "cardmarket_set": "Kalos Starter Set",
+      "canonical_name": "Snorlax",
+      "canonical_number": "26",
+      "canonical_rarity": "None",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "281379": {
+      "source": "TCGdex",
+      "source_card_id": "xy1-42",
+      "source_set_id": "xy1",
+      "cardmarket_set": "XY",
+      "canonical_name": "Pikachu",
+      "canonical_number": "42",
+      "canonical_rarity": "Common",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "281671": {
+      "source": "TCGdex",
+      "source_card_id": "xy3-7",
+      "source_set_id": "xy3",
+      "cardmarket_set": "Furious Fists",
+      "canonical_name": "Leafeon",
+      "canonical_number": "7",
+      "canonical_rarity": "Rare",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "281691": {
+      "source": "TCGdex",
+      "source_card_id": "xy3-27",
+      "source_set_id": "xy3",
+      "cardmarket_set": "Furious Fists",
+      "canonical_name": "Pikachu",
+      "canonical_number": "27",
+      "canonical_rarity": "Common",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "281736": {
+      "source": "TCGdex",
+      "source_card_id": "xy3-72",
+      "source_set_id": "xy3",
+      "cardmarket_set": "Furious Fists",
+      "canonical_name": "Sylveon",
+      "canonical_number": "72",
+      "canonical_rarity": "Rare",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "282728": {
+      "source": "TCGdex",
+      "source_card_id": "xy6-75",
+      "source_set_id": "xy6",
+      "cardmarket_set": "Roaring Skies",
+      "canonical_name": "Rayquaza EX",
+      "canonical_number": "75",
+      "canonical_rarity": "Ultra Rare",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "282755": {
+      "source": "TCGdex",
+      "source_card_id": "xy6-87",
+      "source_set_id": "xy6",
+      "cardmarket_set": "Roaring Skies",
+      "canonical_name": "Rayquaza Spirit Link",
+      "canonical_number": "87",
+      "canonical_rarity": "Uncommon",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "284203": {
+      "source": "TCGdex",
+      "source_card_id": "xy7-22",
+      "source_set_id": "xy7",
+      "cardmarket_set": "Ancient Origins",
+      "canonical_name": "Vaporeon",
+      "canonical_number": "22",
+      "canonical_rarity": "Uncommon",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "286294": {
+      "source": "TCGdex",
+      "source_card_id": "xy8-48",
+      "source_set_id": "xy8",
+      "cardmarket_set": "BREAKthrough",
+      "canonical_name": "Pikachu",
+      "canonical_number": "48",
+      "canonical_rarity": "Common",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "286364": {
+      "source": "TCGdex",
+      "source_card_id": "xy8-118",
+      "source_set_id": "xy8",
+      "cardmarket_set": "BREAKthrough",
+      "canonical_name": "Snorlax",
+      "canonical_number": "118",
+      "canonical_rarity": "Uncommon",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "288191": {
+      "source": "TCGdex",
+      "source_card_id": "xy9-16",
+      "source_set_id": "xy9",
+      "cardmarket_set": "BREAKpoint",
+      "canonical_name": "Psyduck",
+      "canonical_number": "16",
+      "canonical_rarity": "Common",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "288452": {
+      "source": "TCGdex",
+      "source_card_id": "g1-10",
+      "source_set_id": "g1",
+      "cardmarket_set": "Generations",
+      "canonical_name": "Leafeon EX",
+      "canonical_number": "10",
+      "canonical_rarity": "Ultra Rare",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "289855": {
+      "source": "TCGdex",
+      "source_card_id": "xy10-29",
+      "source_set_id": "xy10",
+      "cardmarket_set": "Fates Collide",
+      "canonical_name": "Mew",
+      "canonical_number": "29",
+      "canonical_rarity": "Rare",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "289898": {
+      "source": "TCGdex",
+      "source_card_id": "xy10-77",
+      "source_set_id": "xy10",
+      "cardmarket_set": "Fates Collide",
+      "canonical_name": "Snorlax",
+      "canonical_number": "77",
+      "canonical_rarity": "Rare",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "289900": {
+      "source": "TCGdex",
+      "source_card_id": "xy10-79",
+      "source_set_id": "xy10",
+      "cardmarket_set": "Fates Collide",
+      "canonical_name": "Lugia BREAK",
+      "canonical_number": "79",
+      "canonical_rarity": "Ultra Rare",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "289936": {
+      "source": "TCGdex",
+      "source_card_id": "xy10-116",
+      "source_set_id": "xy10",
+      "cardmarket_set": "Fates Collide",
+      "canonical_name": "Glaceon EX",
+      "canonical_number": "116",
+      "canonical_rarity": "Ultra Rare",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "289939": {
+      "source": "TCGdex",
+      "source_card_id": "xy10-119",
+      "source_set_id": "xy10",
+      "cardmarket_set": "Fates Collide",
+      "canonical_name": "Umbreon EX",
+      "canonical_number": "119",
+      "canonical_rarity": "Ultra Rare",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "289945": {
+      "source": "TCGdex",
+      "source_card_id": "xy10-125",
+      "source_set_id": "xy10",
+      "cardmarket_set": "Fates Collide",
+      "canonical_name": "Alakazam EX",
+      "canonical_number": "125",
+      "canonical_rarity": "Secret Rare",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "293472": {
+      "source": "TCGdex",
+      "source_card_id": "xy12-110",
+      "source_set_id": "xy12",
+      "cardmarket_set": "Evolutions",
+      "canonical_name": "Flying Pikachu",
+      "canonical_number": "110",
+      "canonical_rarity": "Secret Rare",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "293473": {
+      "source": "TCGdex",
+      "source_card_id": "xy12-111",
+      "source_set_id": "xy12",
+      "cardmarket_set": "Evolutions",
+      "canonical_name": "Surfing Pikachu",
+      "canonical_number": "111",
+      "canonical_rarity": "Secret Rare",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "295465": {
+      "source": "TCGdex",
+      "source_card_id": "sm1-152",
+      "source_set_id": "sm1",
+      "cardmarket_set": "Sun & Moon",
+      "canonical_name": "Espeon GX",
+      "canonical_number": "152",
+      "canonical_rarity": "Secret Rare",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "295467": {
+      "source": "TCGdex",
+      "source_card_id": "sm1-154",
+      "source_set_id": "sm1",
+      "cardmarket_set": "Sun & Moon",
+      "canonical_name": "Umbreon GX",
+      "canonical_number": "154",
+      "canonical_rarity": "Secret Rare",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "297606": {
+      "source": "TCGdex",
+      "source_card_id": "sm2-158",
+      "source_set_id": "sm2",
+      "cardmarket_set": "Guardians Rising",
+      "canonical_name": "Sylveon GX",
+      "canonical_number": "158",
+      "canonical_rarity": "Secret Rare",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "299444": {
+      "source": "TCGdex",
+      "source_card_id": "sm3-40",
+      "source_set_id": "sm3",
+      "cardmarket_set": "Burning Shadows",
+      "canonical_name": "Pikachu",
+      "canonical_number": "40",
+      "canonical_rarity": "Common",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "302166": {
+      "source": "TCGdex",
+      "source_card_id": "sm3.5-28",
+      "source_set_id": "sm3.5",
+      "cardmarket_set": "Shining Legends",
+      "canonical_name": "Pikachu",
+      "canonical_number": "28",
+      "canonical_rarity": "Common",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "302178": {
+      "source": "TCGdex",
+      "source_card_id": "sm3.5-40",
+      "source_set_id": "sm3.5",
+      "cardmarket_set": "Shining Legends",
+      "canonical_name": "Shining Mew",
+      "canonical_number": "40",
+      "canonical_rarity": "Ultra Rare",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "302193": {
+      "source": "TCGdex",
+      "source_card_id": "sm3.5-56",
+      "source_set_id": "sm3.5",
+      "cardmarket_set": "Shining Legends",
+      "canonical_name": "Shining Rayquaza",
+      "canonical_number": "56",
+      "canonical_rarity": "Ultra Rare",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "311880": {
+      "source": "TCGdex",
+      "source_card_id": "sm4-30",
+      "source_set_id": "sm4",
+      "cardmarket_set": "Crimson Invasion",
+      "canonical_name": "Pikachu",
+      "canonical_number": "30",
+      "canonical_rarity": "Common",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "355601": {
+      "source": "TCGdex",
+      "source_card_id": "sm6-87",
+      "source_set_id": "sm6",
+      "cardmarket_set": "Forbidden Light",
+      "canonical_name": "Sylveon",
+      "canonical_number": "87",
+      "canonical_rarity": "Rare",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "362170": {
+      "source": "TCGdex",
+      "source_card_id": "sm7-177",
+      "source_set_id": "sm7",
+      "cardmarket_set": "Celestial Storm",
+      "canonical_name": "Rayquaza GX",
+      "canonical_number": "177",
+      "canonical_rarity": "Secret Rare",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "363474": {
+      "source": "TCGdex",
+      "source_card_id": "sm7.5-1",
+      "source_set_id": "sm7.5",
+      "cardmarket_set": "Dragon Majesty",
+      "canonical_name": "Charmander",
+      "canonical_number": "1",
+      "canonical_rarity": "Common",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "365860": {
+      "source": "TCGdex",
+      "source_card_id": "sm8-227",
+      "source_set_id": "sm8",
+      "cardmarket_set": "Lost Thunder",
+      "canonical_name": "Lugia GX",
+      "canonical_number": "227",
+      "canonical_rarity": "Secret Rare",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "369087": {
+      "source": "TCGdex",
+      "source_card_id": "sm9-162",
+      "source_set_id": "sm9",
+      "cardmarket_set": "Team Up",
+      "canonical_name": "Pikachu & Zekrom GX",
+      "canonical_number": "162",
+      "canonical_rarity": "Ultra Rare",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "369096": {
+      "source": "TCGdex",
+      "source_card_id": "sm9-171",
+      "source_set_id": "sm9",
+      "cardmarket_set": "Team Up",
+      "canonical_name": "Eevee & Snorlax GX",
+      "canonical_number": "171",
+      "canonical_rarity": "Ultra Rare",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "370626": {
+      "source": "TCGdex",
+      "source_card_id": "det1-7",
+      "source_set_id": "det1",
+      "cardmarket_set": "Detective Pikachu",
+      "canonical_name": "Psyduck",
+      "canonical_number": "7",
+      "canonical_rarity": "Common",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "370769": {
+      "source": "TCGdex",
+      "source_card_id": "det1-4",
+      "source_set_id": "det1",
+      "cardmarket_set": "Detective Pikachu",
+      "canonical_name": "Charmander",
+      "canonical_number": "4",
+      "canonical_rarity": "Common",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "370774": {
+      "source": "TCGdex",
+      "source_card_id": "det1-10",
+      "source_set_id": "det1",
+      "cardmarket_set": "Detective Pikachu",
+      "canonical_name": "Detective Pikachu",
+      "canonical_number": "10",
+      "canonical_rarity": "Rare",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "370779": {
+      "source": "TCGdex",
+      "source_card_id": "det1-17",
+      "source_set_id": "det1",
+      "cardmarket_set": "Detective Pikachu",
+      "canonical_name": "Ditto",
+      "canonical_number": "17",
+      "canonical_rarity": "Ultra Rare",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "372446": {
+      "source": "TCGdex",
+      "source_card_id": "sm10-158",
+      "source_set_id": "sm10",
+      "cardmarket_set": "Unbroken Bonds",
+      "canonical_name": "Snorlax",
+      "canonical_number": "158",
+      "canonical_rarity": "Rare",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "377508": {
+      "source": "TCGdex",
+      "source_card_id": "sm11-72",
+      "source_set_id": "sm11",
+      "cardmarket_set": "Unified Minds",
+      "canonical_name": "Espeon & Deoxys GX",
+      "canonical_number": "72",
+      "canonical_rarity": "Ultra Rare",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "377511": {
+      "source": "TCGdex",
+      "source_card_id": "sm11-125",
+      "source_set_id": "sm11",
+      "cardmarket_set": "Unified Minds",
+      "canonical_name": "Umbreon & Darkrai GX",
+      "canonical_number": "125",
+      "canonical_rarity": "Ultra Rare",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "389002": {
+      "source": "TCGdex",
+      "source_card_id": "sm11-242",
+      "source_set_id": "sm11",
+      "cardmarket_set": "Unified Minds",
+      "canonical_name": "Mewtwo & Mew GX",
+      "canonical_number": "242",
+      "canonical_rarity": "Secret Rare",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "398534": {
+      "source": "TCGdex",
+      "source_card_id": "sm12-66",
+      "source_set_id": "sm12",
+      "cardmarket_set": "Cosmic Eclipse",
+      "canonical_name": "Pikachu",
+      "canonical_number": "66",
+      "canonical_rarity": "Common",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "436799": {
+      "source_card_id": "swsh1-140",
+      "source_set_id": "swsh1",
+      "cardmarket_set": "Sword & Shield",
+      "canonical_name": "Snorlax",
+      "canonical_number": "140",
+      "canonical_rarity": "Rare",
+      "verified_by": [
+        "set",
+        "name",
+        "Rolling Tackle",
+        "Heavy Impact"
+      ]
+    },
+    "437079": {
+      "source": "TCGdex",
+      "source_card_id": "swsh1-197",
+      "source_set_id": "swsh1",
+      "cardmarket_set": "Sword & Shield",
+      "canonical_name": "Snorlax V",
+      "canonical_number": "197",
+      "canonical_rarity": "Ultra Rare",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "437119": {
+      "source": "TCGdex",
+      "source_card_id": "swsh1-206",
+      "source_set_id": "swsh1",
+      "cardmarket_set": "Sword & Shield",
+      "canonical_name": "Snorlax VMAX",
+      "canonical_number": "206",
+      "canonical_rarity": "Secret Rare",
+      "finish": "root",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "512400": {
+      "source": "TCGdex",
+      "source_card_id": "swsh4-138",
+      "source_set_id": "swsh4",
+      "cardmarket_set": "Vivid Voltage",
+      "canonical_name": "Rayquaza",
+      "canonical_number": "138",
+      "canonical_rarity": "Amazing Rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "512560": {
+      "source": "TCGdex",
+      "source_card_id": "swsh4-170",
+      "source_set_id": "swsh4",
+      "cardmarket_set": "Vivid Voltage",
+      "canonical_name": "Pikachu V",
+      "canonical_number": "170",
+      "canonical_rarity": "Ultra Rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "512650": {
+      "source": "TCGdex",
+      "source_card_id": "swsh4-188",
+      "source_set_id": "swsh4",
+      "cardmarket_set": "Vivid Voltage",
+      "canonical_name": "Pikachu VMAX",
+      "canonical_number": "188",
+      "canonical_rarity": "Secret Rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "567332": {
+      "source": "TCGdex",
+      "source_card_id": "swsh6-224",
+      "source_set_id": "swsh6",
+      "cardmarket_set": "Chilling Reign",
+      "canonical_name": "Snorlax",
+      "canonical_number": "224",
+      "canonical_rarity": "Secret Rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "574225": {
+      "source": "TCGdex",
+      "source_card_id": "swsh7-167",
+      "source_set_id": "swsh7",
+      "cardmarket_set": "Evolving Skies",
+      "canonical_name": "Leafeon V",
+      "canonical_number": "167",
+      "canonical_rarity": "Ultra Rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "574233": {
+      "source": "TCGdex",
+      "source_card_id": "swsh7-175",
+      "source_set_id": "swsh7",
+      "cardmarket_set": "Evolving Skies",
+      "canonical_name": "Glaceon V",
+      "canonical_number": "175",
+      "canonical_rarity": "Ultra Rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "574238": {
+      "source": "TCGdex",
+      "source_card_id": "swsh7-180",
+      "source_set_id": "swsh7",
+      "cardmarket_set": "Evolving Skies",
+      "canonical_name": "Espeon V",
+      "canonical_number": "180",
+      "canonical_rarity": "Ultra Rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "574242": {
+      "source": "TCGdex",
+      "source_card_id": "swsh7-184",
+      "source_set_id": "swsh7",
+      "cardmarket_set": "Evolving Skies",
+      "canonical_name": "Sylveon V",
+      "canonical_number": "184",
+      "canonical_rarity": "Ultra Rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "574247": {
+      "source": "TCGdex",
+      "source_card_id": "swsh7-189",
+      "source_set_id": "swsh7",
+      "cardmarket_set": "Evolving Skies",
+      "canonical_name": "Umbreon V",
+      "canonical_number": "189",
+      "canonical_rarity": "Ultra Rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "574252": {
+      "source": "TCGdex",
+      "source_card_id": "swsh7-194",
+      "source_set_id": "swsh7",
+      "cardmarket_set": "Evolving Skies",
+      "canonical_name": "Rayquaza V",
+      "canonical_number": "194",
+      "canonical_rarity": "Ultra Rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "574263": {
+      "source": "TCGdex",
+      "source_card_id": "swsh7-205",
+      "source_set_id": "swsh7",
+      "cardmarket_set": "Evolving Skies",
+      "canonical_name": "Leafeon VMAX",
+      "canonical_number": "205",
+      "canonical_rarity": "Secret Rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "574267": {
+      "source": "TCGdex",
+      "source_card_id": "swsh7-209",
+      "source_set_id": "swsh7",
+      "cardmarket_set": "Evolving Skies",
+      "canonical_name": "Glaceon VMAX",
+      "canonical_number": "209",
+      "canonical_rarity": "Secret Rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "574270": {
+      "source": "TCGdex",
+      "source_card_id": "swsh7-212",
+      "source_set_id": "swsh7",
+      "cardmarket_set": "Evolving Skies",
+      "canonical_name": "Sylveon VMAX",
+      "canonical_number": "212",
+      "canonical_rarity": "Secret Rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "574273": {
+      "source": "TCGdex",
+      "source_card_id": "swsh7-215",
+      "source_set_id": "swsh7",
+      "cardmarket_set": "Evolving Skies",
+      "canonical_name": "Umbreon VMAX",
+      "canonical_number": "215",
+      "canonical_rarity": "Secret Rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "574276": {
+      "source": "TCGdex",
+      "source_card_id": "swsh7-218",
+      "source_set_id": "swsh7",
+      "cardmarket_set": "Evolving Skies",
+      "canonical_name": "Rayquaza VMAX",
+      "canonical_number": "218",
+      "canonical_rarity": "Secret Rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "576752": {
+      "source": "TCGdex",
+      "source_card_id": "cel25-7",
+      "source_set_id": "cel25",
+      "cardmarket_set": "Celebrations",
+      "canonical_name": "Flying Pikachu VMAX",
+      "canonical_number": "7",
+      "canonical_rarity": "Holo Rare VMAX",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "576770": {
+      "source": "TCGdex",
+      "source_card_id": "cel25-25",
+      "source_set_id": "cel25",
+      "cardmarket_set": "Celebrations",
+      "canonical_name": "Mew",
+      "canonical_number": "25",
+      "canonical_rarity": "Secret Rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "582987": {
+      "source": "TCGdex",
+      "source_card_id": "swsh8-251",
+      "source_set_id": "swsh8",
+      "cardmarket_set": "Fusion Strike",
+      "canonical_name": "Mew V",
+      "canonical_number": "251",
+      "canonical_rarity": "Ultra Rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "583019": {
+      "source": "TCGdex",
+      "source_card_id": "swsh8-269",
+      "source_set_id": "swsh8",
+      "cardmarket_set": "Fusion Strike",
+      "canonical_name": "Mew VMAX",
+      "canonical_number": "269",
+      "canonical_rarity": "Secret Rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "583020": {
+      "source": "TCGdex",
+      "source_card_id": "swsh8-270",
+      "source_set_id": "swsh8",
+      "cardmarket_set": "Fusion Strike",
+      "canonical_name": "Espeon VMAX",
+      "canonical_number": "270",
+      "canonical_rarity": "Secret Rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "608703": {
+      "source": "TCGdex",
+      "source_card_id": "swsh9-157",
+      "source_set_id": "swsh9",
+      "cardmarket_set": "Brilliant Stars",
+      "canonical_name": "Pikachu V",
+      "canonical_number": "157",
+      "canonical_rarity": "Ultra Rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "660161": {
+      "source": "TCGdex",
+      "source_card_id": "base1-66",
+      "source_set_id": "base1",
+      "cardmarket_set": "Base Set",
+      "canonical_name": "Tangela",
+      "canonical_number": "66",
+      "canonical_rarity": "Common",
+      "finish": "normal",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "660227": {
+      "source": "TCGdex",
+      "source_card_id": "base1-1",
+      "source_set_id": "base1",
+      "cardmarket_set": "Base Set",
+      "canonical_name": "Alakazam",
+      "canonical_number": "1",
+      "canonical_rarity": "Rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "665275": {
+      "source": "TCGdex",
+      "source_card_id": "swsh10.5-053",
+      "source_set_id": "swsh10.5",
+      "cardmarket_set": "Pokemon GO",
+      "canonical_name": "Ditto",
+      "canonical_number": "053",
+      "canonical_rarity": "Holo Rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "669496": {
+      "source": "TCGdex",
+      "source_card_id": "swsh10.5-027",
+      "source_set_id": "swsh10.5",
+      "cardmarket_set": "Pokemon GO",
+      "canonical_name": "Pikachu",
+      "canonical_number": "027",
+      "canonical_rarity": "Common",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "682234": {
+      "source": "TCGdex",
+      "source_card_id": "swsh12-186",
+      "source_set_id": "swsh12",
+      "cardmarket_set": "Silver Tempest",
+      "canonical_name": "Lugia V",
+      "canonical_number": "186",
+      "canonical_rarity": "Ultra Rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "682250": {
+      "source": "TCGdex",
+      "source_card_id": "swsh12-202",
+      "source_set_id": "swsh12",
+      "cardmarket_set": "Silver Tempest",
+      "canonical_name": "Lugia VSTAR",
+      "canonical_number": "202",
+      "canonical_rarity": "Secret Rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "691879": {
+      "source": "TCGdex",
+      "source_card_id": "swsh12.5-160",
+      "source_set_id": "swsh12.5",
+      "cardmarket_set": "Crown Zenith",
+      "canonical_name": "Pikachu",
+      "canonical_number": "160",
+      "canonical_rarity": "Secret Rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "721198": {
+      "source": "TCGdex",
+      "source_card_id": "sv03.5-007",
+      "source_set_id": "sv03.5",
+      "cardmarket_set": "151",
+      "canonical_name": "Squirtle",
+      "canonical_number": "007",
+      "canonical_rarity": "Common",
+      "finish": "normal",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "725278": {
+      "source": "TCGdex",
+      "source_card_id": "sv03-198",
+      "source_set_id": "sv03",
+      "cardmarket_set": "Obsidian Flames",
+      "canonical_name": "Gloom",
+      "canonical_number": "198",
+      "canonical_rarity": "Illustration rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "727069": {
+      "source": "TCGdex",
+      "source_card_id": "sv03-086",
+      "source_set_id": "sv03",
+      "cardmarket_set": "Obsidian Flames",
+      "canonical_name": "Espeon",
+      "canonical_number": "086",
+      "canonical_rarity": "Uncommon",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "727070": {
+      "source": "TCGdex",
+      "source_card_id": "sv03-130",
+      "source_set_id": "sv03",
+      "cardmarket_set": "Obsidian Flames",
+      "canonical_name": "Umbreon",
+      "canonical_number": "130",
+      "canonical_rarity": "Uncommon",
+      "finish": "normal",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "733768": {
+      "source": "TCGdex",
+      "source_card_id": "sv03.5-173",
+      "source_set_id": "sv03.5",
+      "cardmarket_set": "151",
+      "canonical_name": "Pikachu",
+      "canonical_number": "173",
+      "canonical_rarity": "Illustration rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "733770": {
+      "source": "TCGdex",
+      "source_card_id": "sv03.5-175",
+      "source_set_id": "sv03.5",
+      "cardmarket_set": "151",
+      "canonical_name": "Psyduck",
+      "canonical_number": "175",
+      "canonical_rarity": "Illustration rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "733796": {
+      "source": "TCGdex",
+      "source_card_id": "sv03.5-201",
+      "source_set_id": "sv03.5",
+      "cardmarket_set": "151",
+      "canonical_name": "Alakazam ex",
+      "canonical_number": "201",
+      "canonical_rarity": "Special illustration rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "748475": {
+      "source": "TCGdex",
+      "source_card_id": "sv03.5-133",
+      "source_set_id": "sv03.5",
+      "cardmarket_set": "151",
+      "canonical_name": "Eevee",
+      "canonical_number": "133",
+      "canonical_rarity": "Common",
+      "finish": "normal",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "751648": {
+      "source": "TCGdex",
+      "source_card_id": "sv04.5-109",
+      "source_set_id": "sv04.5",
+      "cardmarket_set": "Paldean Fates",
+      "canonical_name": "Charmander",
+      "canonical_number": "109",
+      "canonical_rarity": "Shiny rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "751670": {
+      "source": "TCGdex",
+      "source_card_id": "sv04.5-131",
+      "source_set_id": "sv04.5",
+      "cardmarket_set": "Paldean Fates",
+      "canonical_name": "Pikachu",
+      "canonical_number": "131",
+      "canonical_rarity": "Shiny rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "751740": {
+      "source": "TCGdex",
+      "source_card_id": "sv04.5-201",
+      "source_set_id": "sv04.5",
+      "cardmarket_set": "Paldean Fates",
+      "canonical_name": "Ditto",
+      "canonical_number": "201",
+      "canonical_rarity": "Shiny rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "751741": {
+      "source": "TCGdex",
+      "source_card_id": "sv04.5-202",
+      "source_set_id": "sv04.5",
+      "cardmarket_set": "Paldean Fates",
+      "canonical_name": "Snorlax",
+      "canonical_number": "202",
+      "canonical_rarity": "Shiny rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "751779": {
+      "source": "TCGdex",
+      "source_card_id": "sv04.5-232",
+      "source_set_id": "sv04.5",
+      "cardmarket_set": "Paldean Fates",
+      "canonical_name": "Mew ex",
+      "canonical_number": "232",
+      "canonical_rarity": "Special illustration rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "759873": {
+      "source": "TCGdex",
+      "source_card_id": "sv03.5-004",
+      "source_set_id": "sv03.5",
+      "cardmarket_set": "151",
+      "canonical_name": "Charmander",
+      "canonical_number": "004",
+      "canonical_rarity": "Common",
+      "finish": "reverse",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "769362": {
+      "source": "TCGdex",
+      "source_card_id": "sv06-188",
+      "source_set_id": "sv06",
+      "cardmarket_set": "Twilight Masquerade",
+      "canonical_name": "Eevee",
+      "canonical_number": "188",
+      "canonical_rarity": "Illustration rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "786002": {
+      "source": "TCGdex",
+      "source_card_id": "sv07-148",
+      "source_set_id": "sv07",
+      "cardmarket_set": "Stellar Crown",
+      "canonical_name": "Squirtle",
+      "canonical_number": "148",
+      "canonical_rarity": "Illustration rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "793388": {
+      "source": "TCGdex",
+      "source_card_id": "sv02-062",
+      "source_set_id": "sv02",
+      "cardmarket_set": "Paldea Evolved",
+      "canonical_name": "Pikachu",
+      "canonical_number": "062",
+      "canonical_rarity": "Common",
+      "finish": "normal",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "794611": {
+      "source": "TCGdex",
+      "source_card_id": "sv08-238",
+      "source_set_id": "sv08",
+      "cardmarket_set": "Surging Sparks",
+      "canonical_name": "Pikachu ex",
+      "canonical_number": "238",
+      "canonical_rarity": "Special illustration rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "805538": {
+      "source": "TCGdex",
+      "source_card_id": "sv08.5-144",
+      "source_set_id": "sv08.5",
+      "cardmarket_set": "Prismatic Evolutions",
+      "canonical_name": "Leafeon ex",
+      "canonical_number": "144",
+      "canonical_rarity": "Special illustration rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "805540": {
+      "source": "TCGdex",
+      "source_card_id": "sv08.5-146",
+      "source_set_id": "sv08.5",
+      "cardmarket_set": "Prismatic Evolutions",
+      "canonical_name": "Flareon ex",
+      "canonical_number": "146",
+      "canonical_rarity": "Special illustration rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "805543": {
+      "source": "TCGdex",
+      "source_card_id": "sv08.5-149",
+      "source_set_id": "sv08.5",
+      "cardmarket_set": "Prismatic Evolutions",
+      "canonical_name": "Vaporeon ex",
+      "canonical_number": "149",
+      "canonical_rarity": "Special illustration rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "805544": {
+      "source": "TCGdex",
+      "source_card_id": "sv08.5-150",
+      "source_set_id": "sv08.5",
+      "cardmarket_set": "Prismatic Evolutions",
+      "canonical_name": "Glaceon ex",
+      "canonical_number": "150",
+      "canonical_rarity": "Special illustration rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "805547": {
+      "source": "TCGdex",
+      "source_card_id": "sv08.5-153",
+      "source_set_id": "sv08.5",
+      "cardmarket_set": "Prismatic Evolutions",
+      "canonical_name": "Jolteon ex",
+      "canonical_number": "153",
+      "canonical_rarity": "Special illustration rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "805549": {
+      "source": "TCGdex",
+      "source_card_id": "sv08.5-155",
+      "source_set_id": "sv08.5",
+      "cardmarket_set": "Prismatic Evolutions",
+      "canonical_name": "Espeon ex",
+      "canonical_number": "155",
+      "canonical_rarity": "Special illustration rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "805550": {
+      "source": "TCGdex",
+      "source_card_id": "sv08.5-156",
+      "source_set_id": "sv08.5",
+      "cardmarket_set": "Prismatic Evolutions",
+      "canonical_name": "Sylveon ex",
+      "canonical_number": "156",
+      "canonical_rarity": "Special illustration rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "805555": {
+      "source": "TCGdex",
+      "source_card_id": "sv08.5-161",
+      "source_set_id": "sv08.5",
+      "cardmarket_set": "Prismatic Evolutions",
+      "canonical_name": "Umbreon ex",
+      "canonical_number": "161",
+      "canonical_rarity": "Special illustration rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "805561": {
+      "source": "TCGdex",
+      "source_card_id": "sv08.5-167",
+      "source_set_id": "sv08.5",
+      "cardmarket_set": "Prismatic Evolutions",
+      "canonical_name": "Eevee ex",
+      "canonical_number": "167",
+      "canonical_rarity": "Special illustration rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "805573": {
+      "source": "TCGdex",
+      "source_card_id": "sv08.5-179",
+      "source_set_id": "sv08.5",
+      "cardmarket_set": "Prismatic Evolutions",
+      "canonical_name": "Pikachu ex",
+      "canonical_number": "179",
+      "canonical_rarity": "Hyper rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "814545": {
+      "source": "TCGdex",
+      "source_card_id": "sv03.5-205",
+      "source_set_id": "sv03.5",
+      "cardmarket_set": "151",
+      "canonical_name": "Mew ex",
+      "canonical_number": "205",
+      "canonical_rarity": "Hyper rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "826067": {
+      "source": "TCGdex",
+      "source_card_id": "sv10-193",
+      "source_set_id": "sv10",
+      "cardmarket_set": "Destined Rivals",
+      "canonical_name": "Misty's Psyduck",
+      "canonical_number": "193",
+      "canonical_rarity": "Illustration rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "869837": {
+      "source": "TCGdex",
+      "source_card_id": "me02.5-226",
+      "source_set_id": "me02.5",
+      "cardmarket_set": "Ascended Heroes",
+      "canonical_name": "Psyduck",
+      "canonical_number": "226",
+      "canonical_rarity": "Illustration rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "869887": {
+      "source": "TCGdex",
+      "source_card_id": "me02.5-277",
+      "source_set_id": "me02.5",
+      "cardmarket_set": "Ascended Heroes",
+      "canonical_name": "Pikachu ex",
+      "canonical_number": "277",
+      "canonical_rarity": "Special illustration rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "869888": {
+      "source": "TCGdex",
+      "source_card_id": "me02.5-276",
+      "source_set_id": "me02.5",
+      "cardmarket_set": "Ascended Heroes",
+      "canonical_name": "Pikachu ex",
+      "canonical_number": "276",
+      "canonical_rarity": "Special illustration rare",
+      "finish": "holo",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "882914": {
+      "source": "TCGdex",
+      "source_card_id": "hgss3-17",
+      "source_set_id": "hgss3",
+      "cardmarket_set": "Undaunted",
+      "canonical_name": "Leafeon",
+      "canonical_number": "17",
+      "canonical_rarity": "Rare",
+      "finish": "normal",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
+    },
+    "882916": {
+      "source": "TCGdex",
+      "source_card_id": "col1-33",
+      "source_set_id": "col1",
+      "cardmarket_set": "Call of Legends",
+      "canonical_name": "Snorlax",
+      "canonical_number": "33",
+      "canonical_rarity": "Rare",
+      "finish": "normal",
+      "metadata_confidence": "EXACT_CARDMARKET_ID",
+      "verified_by": [
+        "exact Cardmarket idProduct",
+        "set",
+        "name"
+      ]
     }
   }
 }
