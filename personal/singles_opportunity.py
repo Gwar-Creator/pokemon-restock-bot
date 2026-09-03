@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
-"""V53 personal singles radar.
+"""V54 personal singles radar.
 
 Shadow-only decision layer over the existing aggregate Cardmarket state.
 It performs no network requests, sends no Discord messages, and writes no
 production state.
 
-V53 keeps the V50.1 guardrail that aggregate Cardmarket trend/averages are not
-purchase prices. It now uses their *market scale* relative to the user's manual
-budget only as a ranking/actionability signal: cards far above the normal budget
-are demoted unless explicitly curated via wishlist/manual priority/target override.
+V54 keeps the aggregate-price guardrail and adds collectability-aware ranking.
+The normal manual singles target remains 75 DKK, while cards with strong
+collectability evidence can use a 150 DKK target. Aggregate Cardmarket values are
+still market context only and never prove an available EN/NM/EU->DK offer.
 """
 
 from __future__ import annotations
@@ -32,6 +32,65 @@ NON_PHYSICAL_PATTERNS = (
     "online code",
     "online-code",
 )
+
+HERITAGE_SETS = {
+    "base set",
+    "base set 2",
+    "jungle",
+    "fossil",
+    "team rocket",
+    "gym heroes",
+    "gym challenge",
+    "neo genesis",
+    "neo discovery",
+    "neo revelation",
+    "neo destiny",
+    "legendary collection",
+    "expedition base set",
+    "aquapolis",
+    "skyridge",
+}
+
+OLDER_ERA_SETS = {
+    "diamond pearl",
+    "mysterious treasures",
+    "secret wonders",
+    "great encounters",
+    "majestic dawn",
+    "legends awakened",
+    "stormfront",
+    "platinum",
+    "rising rivals",
+    "supreme victors",
+    "arceus",
+    "heartgold soulsilver",
+    "unleashed",
+    "undaunted",
+    "triumphant",
+    "call of legends",
+    "black white",
+    "emerging powers",
+    "noble victories",
+    "next destinies",
+    "dark explorers",
+    "dragons exalted",
+    "boundaries crossed",
+    "plasma storm",
+    "plasma freeze",
+    "plasma blast",
+    "legendary treasures",
+    "xy",
+    "flashfire",
+    "furious fists",
+    "phantom forces",
+    "primal clash",
+    "roaring skies",
+    "ancient origins",
+    "breakthrough",
+    "breakpoint",
+    "fates collide",
+    "steam siege",
+}
 
 
 def load_json(path: Path, default: Any) -> Any:
@@ -152,12 +211,96 @@ def personal_score(card: dict[str, Any], profile: dict[str, Any]) -> tuple[float
     return score, reasons
 
 
-def target_for(card: dict[str, Any], profile: dict[str, Any]) -> float:
-    """Return the user's manual budget target for market-scale ranking."""
+def collectability_score(card: dict[str, Any]) -> tuple[float, str, list[str]]:
+    """Estimate collector interest from stable card/set metadata available in state.
+
+    The Cardmarket aggregate state does not contain a canonical rarity field, so
+    V54 deliberately uses conservative evidence only: era/set, explicit special
+    mechanics in the product name, and variant text when Cardmarket supplies it.
+    """
+    set_name = normalize_text(card.get("set"))
+    subject = normalize_text(subject_name(card.get("name")))
+    variant = normalize_text(card.get("variant"))
+    score = 35.0
+    reasons: list[str] = []
+
+    if set_name in HERITAGE_SETS:
+        score = max(score, 80.0)
+        reasons.append("heritage set")
+    elif set_name.startswith("ex "):
+        score = max(score, 78.0)
+        reasons.append("EX-era set")
+    elif set_name in OLDER_ERA_SETS:
+        score = max(score, 65.0)
+        reasons.append("older-era set")
+
+    if "gold star" in subject:
+        score = max(score, 100.0)
+        reasons.append("Gold Star")
+    elif "delta species" in subject or subject.endswith(" delta"):
+        score = max(score, 95.0)
+        reasons.append("Delta Species")
+    elif "shining" in subject:
+        score = max(score, 95.0)
+        reasons.append("Shining")
+    elif " lv x" in f" {subject}" or subject.endswith(" lv x"):
+        score = max(score, 90.0)
+        reasons.append("Lv.X")
+    elif " prime" in f" {subject}" or " legend" in f" {subject}":
+        score = max(score, 88.0)
+        reasons.append("special-era mechanic")
+    elif subject.endswith(" vmax") or subject.endswith(" vstar") or subject.endswith(" gx"):
+        score = max(score, 65.0)
+        reasons.append("special mechanic")
+    elif subject.endswith(" ex"):
+        score = max(score, 55.0)
+    elif subject.endswith(" v"):
+        score = max(score, 45.0)
+
+    variant_signals = (
+        ("special illustration", 95.0, "special illustration"),
+        ("illustration rare", 88.0, "illustration rare"),
+        ("trainer gallery", 85.0, "trainer gallery"),
+        ("full art", 85.0, "full art"),
+        ("secret rare", 90.0, "secret rare"),
+        ("rainbow", 85.0, "rainbow"),
+        ("radiant", 80.0, "radiant"),
+        ("shiny", 80.0, "shiny"),
+        ("1st edition", 90.0, "1st edition"),
+        ("promo", 75.0, "promo"),
+        ("reverse holo", 72.0, "reverse holo"),
+        ("holo", 68.0, "holo"),
+    )
+    for marker, value, reason in variant_signals:
+        if marker in variant:
+            score = max(score, value)
+            reasons.append(reason)
+            break
+
+    if score >= 90:
+        tier = "ICONIC"
+    elif score >= 75:
+        tier = "STRONG"
+    elif score >= 60:
+        tier = "COLLECTABLE"
+    else:
+        tier = "STANDARD"
+    return score, tier, reasons
+
+
+def target_for(card: dict[str, Any], profile: dict[str, Any], collectability: float | None = None) -> float:
+    """Return the manual budget target used only for market-scale ranking."""
     overrides = profile.get("target_overrides_dkk", {})
     override = number(overrides.get(str(card.get("id") or ""))) if isinstance(overrides, dict) else None
+    if override is not None and override > 0:
+        return override
+
     default = number(profile.get("default_target_dkk")) or 75.0
-    return override if override is not None and override > 0 else default
+    strong_target = number(profile.get("collectable_target_dkk")) or default
+    min_score = number(profile.get("collectable_target_min_score")) or 75.0
+    if collectability is not None and collectability >= min_score:
+        return max(default, strong_target)
+    return default
 
 
 def market_scale_fit(reference_dkk: float, target_dkk: float) -> tuple[str, float, float]:
@@ -192,23 +335,24 @@ def evaluate_card(card: dict[str, Any], profile: dict[str, Any]) -> dict[str, An
     if reference_eur is None or reference_eur <= 0:
         return None
 
+    collectability, collectability_tier, collectability_reasons = collectability_score(card)
     eur_dkk = number(profile.get("eur_to_dkk")) or 7.46
     reference_dkk = reference_eur * eur_dkk
-    purchase_budget_dkk = target_for(card, profile)
+    purchase_budget_dkk = target_for(card, profile, collectability)
     market_band, market_fit, market_ratio = market_scale_fit(reference_dkk, purchase_budget_dkk)
     value = relative_value_score(card)
     timing = timing_score(card)
     confidence, spread = data_confidence(card)
     confidence_component = {"HIGH": 100.0, "MEDIUM": 70.0, "LOW": 20.0}[confidence]
 
-    # V53: personal relevance and actionability matter more than raw market dip.
-    # Aggregate reference still never proves a purchasable EN/NM/EU->DK offer.
+    # V54: collectability gets explicit weight, while raw percentage dips matter less.
     score = (
-        value * 0.30
-        + timing * 0.15
-        + personal * 0.30
+        value * 0.25
+        + timing * 0.10
+        + personal * 0.25
         + confidence_component * 0.10
         + market_fit * 0.15
+        + collectability * 0.15
     )
     if confidence == "LOW":
         score = min(score, 59.9)
@@ -217,7 +361,8 @@ def evaluate_card(card: dict[str, Any], profile: dict[str, Any]) -> dict[str, An
     strong_dip = thirty_day is not None and thirty_day <= -20.0
     moderate_dip = thirty_day is not None and thirty_day <= -10.0
     explicitly_curated = "wishlist" in personal_reasons or "manual priority" in personal_reasons
-    actionably_scaled = market_ratio <= 2.0 or explicitly_curated
+    review_ceiling = number(profile.get("automatic_review_ceiling_dkk")) or 150.0
+    actionably_scaled = reference_dkk <= review_ceiling or explicitly_curated
 
     if confidence != "LOW" and score >= 72.0 and actionably_scaled and (
         strong_dip or (explicitly_curated and moderate_dip)
@@ -229,6 +374,8 @@ def evaluate_card(card: dict[str, Any], profile: dict[str, Any]) -> dict[str, An
         signal = "PASS"
 
     reasons = list(personal_reasons)
+    if collectability_reasons:
+        reasons.append(collectability_reasons[0])
     one_week = pct(card.get("avg1"), card.get("avg7"))
     if thirty_day is not None:
         if thirty_day <= -5:
@@ -251,6 +398,8 @@ def evaluate_card(card: dict[str, Any], profile: dict[str, Any]) -> dict[str, An
         "purchase_budget_dkk": round(purchase_budget_dkk, 2),
         "market_band": market_band,
         "market_ratio_to_target": round(market_ratio, 3) if math.isfinite(market_ratio) else None,
+        "collectability_score": round(collectability, 1),
+        "collectability_tier": collectability_tier,
         "trend_eur": number(card.get("trend")),
         "avg1_eur": number(card.get("avg1")),
         "avg7_eur": number(card.get("avg7")),
@@ -276,12 +425,14 @@ def evaluate_state(state: dict[str, Any], profile: dict[str, Any]) -> list[dict[
         if row is not None:
             rows.append(row)
     signal_order = {"REVIEW": 0, "WATCH": 1, "PASS": 2}
+    collect_order = {"ICONIC": 0, "STRONG": 1, "COLLECTABLE": 2, "STANDARD": 3}
     band_order = {"CORE": 0, "STRETCH": 1, "PREMIUM": 2, "HIGH-END": 3, "UNKNOWN": 4}
     return sorted(
         rows,
         key=lambda row: (
             signal_order[row["signal"]],
             -row["score"],
+            collect_order.get(row.get("collectability_tier"), 9),
             band_order.get(row.get("market_band"), 9),
             row["reference_dkk"],
             row["name"],
@@ -301,27 +452,32 @@ def build_report(rows: list[dict[str, Any]], profile: dict[str, Any], limit: int
     reviews = sum(1 for row in rows if row["signal"] == "REVIEW")
     watches = sum(1 for row in rows if row["signal"] == "WATCH")
     core = sum(1 for row in rows if row.get("market_band") == "CORE")
-    stretch = sum(1 for row in rows if row.get("market_band") == "STRETCH")
+    strong = sum(1 for row in rows if row.get("collectability_tier") in {"ICONIC", "STRONG"})
+    normal_target = profile.get("default_target_dkk", 75)
+    collectable_target = profile.get("collectable_target_dkk", normal_target)
+    review_ceiling = profile.get("automatic_review_ceiling_dkk", 150)
     lines = [
-        "# Personal Singles Scout · V53 actionability shadow",
+        "# Personal Singles Scout · V54 collectability shadow",
         "",
         "> Aggregate Cardmarket radar only. REVIEW means: open the actual listings and verify them.",
-        "> Market reference is NOT an EN/NM purchase price. V53 uses its scale only to rank cards closer to your manual budget higher.",
+        "> Market reference is NOT an EN/NM purchase price. Collectability changes ranking/budget tier only.",
         "> Verify exact version, English, MT/NM, EU/EEA seller and shipping to Denmark before purchase.",
         "",
         f"- Personal candidate pool: {len(rows)} cards",
         f"- REVIEW: {reviews}",
         f"- WATCH: {watches}",
-        f"- CORE market scale (≤ target): {core}",
-        f"- STRETCH market scale (≤ 2× target): {stretch}",
-        f"- Manual purchase budget: {fmt_money(profile.get('default_target_dkk', 75))}",
+        f"- Strong/iconic collectability: {strong}",
+        f"- CORE market scale (≤ card target): {core}",
+        f"- Normal singles target: {fmt_money(normal_target)}",
+        f"- Strong collectable target: {fmt_money(collectable_target)}",
+        f"- Automatic REVIEW ceiling: {fmt_money(review_ceiling)}",
         "- `low` has zero weight; aggregate trend/averages remain market context only.",
-        "- Non-personal cards and code cards are filtered before scoring.",
+        "- Collectability is conservative because the aggregate state has no canonical rarity field.",
         "",
         "## Ranked radar candidates",
         "",
-        "| Signal | Score | Card | Set | Market ref | Band | 30d move | Confidence | Why |",
-        "|---|---:|---|---|---:|---|---:|---|---|",
+        "| Signal | Score | Card | Set | Market ref | Collectability | Target | 30d move | Why |",
+        "|---|---:|---|---|---:|---|---:|---:|---|",
     ]
     if not visible:
         lines.append("| – | – | No current candidates | – | – | – | – | – | – |")
@@ -332,15 +488,16 @@ def build_report(rows: list[dict[str, Any]], profile: dict[str, Any], limit: int
         lines.append(
             f"| {row['signal']} | {row['score']:.1f} | {row['name'].replace('|', '/')} | "
             f"{row['set'].replace('|', '/')} | {fmt_money(row['reference_dkk'])} | "
-            f"{row['market_band']} | {move_text} | {row['confidence']} | {why} |"
+            f"{row['collectability_tier']} | {fmt_money(row['purchase_budget_dkk'])} | "
+            f"{move_text} | {why} |"
         )
     lines.extend(
         [
             "",
             "## Guardrail",
             "",
-            "V53 never emits BUY and never treats aggregate Cardmarket data as an available purchase price.",
-            "REVIEW is only a manual-inspection signal. CORE/STRETCH/PREMIUM/HIGH-END describe aggregate market scale, not a verified offer.",
+            "V54 never emits BUY and never treats aggregate Cardmarket data as an available purchase price.",
+            "The 150 kr. tier is reserved for strong/iconic collectability evidence or an explicit per-card override; it is not a blanket spending target.",
             "",
         ]
     )
