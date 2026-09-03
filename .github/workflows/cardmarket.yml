@@ -15,7 +15,7 @@ on:
         default: false
         type: boolean
       personal_shadow:
-        description: "Kør kun V50 Personal Singles shadow uden Cardmarket API-kald"
+        description: "Kør kun V50.1 Personal Singles radar uden Cardmarket API-kald"
         required: false
         default: false
         type: boolean
@@ -105,12 +105,12 @@ jobs:
           fi
           python cardmarket_chase_watch.py
 
-      - name: Run V50 personal singles shadow
+      - name: Run V50.1 personal singles radar
         if: ${{ inputs.test_webhook != true }}
         run: |
           python personal/singles_opportunity.py \
             --output "$RUNNER_TEMP/personal_singles_opportunity_report.md" \
-            --limit 20
+            --limit 10
 
       - name: Save Cardmarket state
         if: ${{ inputs.test_webhook != true && inputs.personal_shadow != true }}
