@@ -1,0 +1,88 @@
+name: Personal Rarity Metadata
+
+on:
+  schedule:
+    - cron: "35 5 * * 0"
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "personal/update_rarity_metadata.py"
+      - "personal/singles_profile.json"
+      - ".github/workflows/personal-rarity-metadata.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: personal-rarity-metadata
+  cancel-in-progress: false
+
+jobs:
+  refresh-rarity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Refresh exact rarity metadata
+        run: |
+          python -m py_compile personal/update_rarity_metadata.py
+          python -m unittest test_rarity_metadata_update.py test_singles_v55.py
+          python -m personal.update_rarity_metadata --workers 8
+
+      - name: Save rarity metadata
+        run: |
+          if git diff --quiet -- personal/pokemon_rarity_metadata.json; then
+            echo "Rarity metadata already current."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          BACKUP_DIR="$(mktemp -d)"
+          cp personal/pokemon_rarity_metadata.json "$BACKUP_DIR/pokemon_rarity_metadata.json"
+
+          for attempt in 1 2 3 4 5; do
+            echo "Rarity metadata push attempt $attempt/5"
+            git fetch origin main
+            git reset --hard origin/main
+            cp "$BACKUP_DIR/pokemon_rarity_metadata.json" personal/pokemon_rarity_metadata.json
+            git add personal/pokemon_rarity_metadata.json
+
+            if git diff --cached --quiet; then
+              echo "Rarity metadata already current on main."
+              rm -rf "$BACKUP_DIR"
+              exit 0
+            fi
+
+            git commit -m "Refresh personal rarity metadata"
+            if git push origin HEAD:main; then
+              echo "Rarity metadata pushed successfully."
+              rm -rf "$BACKUP_DIR"
+              exit 0
+            fi
+
+            echo "Push raced with another workflow; retrying from latest main."
+            if [ "$attempt" -lt 5 ]; then
+              sleep $((attempt * 5))
+            fi
+          done
+
+          rm -rf "$BACKUP_DIR"
+          echo "Failed to push rarity metadata after 5 fresh-main attempts."
+          exit 1
