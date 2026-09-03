@@ -43,7 +43,7 @@ State ligger fortsat i repository for at bevare eksisterende drift og historik. 
 - Local Stock genbruger `observed_at`, når produktets reelle data er uændrede.
 - HOT genbruger `last_success_at`/`updated_at`, når den øvrige source-state er uændret.
 - Salling early/Victini genbruger top-level `updated_at`, når indholdet ellers er identisk.
-- Hovedscannerens `_last_full_scan_epoch` **bevares altid frisk**, fordi den bruges af V44 recovery guard.
+- Hovedscannerens `_last_full_scan_epoch` persisteres mindst hvert 15. minut, så V44 recovery-heartbeat fortsat ligger sikkert under 30-minuttersgrænsen uden at skabe et Git-commit hvert femte minut.
 
 `restock.yml` stager kun kendte produktionsfiler og bruger ikke længere `git add -A`.
 
