@@ -2,56 +2,43 @@ name: Apply Price Watch Focus V58
 
 on:
   push:
-    branches: [main]
     paths:
-      - '.github/workflows/apply-price-watch-focus-v58.yml'
-  workflow_dispatch:
+      - ".github/workflows/apply-price-watch-focus-v58.yml"
 
 permissions:
   contents: write
 
-concurrency:
-  group: apply-price-watch-focus-v58
-  cancel-in-progress: false
-
 jobs:
-  migrate:
+  patch:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout main
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           ref: main
           fetch-depth: 0
 
-      - name: Patch Price Watch
+      - name: Patch focused Price Watch
         shell: bash
         run: |
           python - <<'PY'
           from pathlib import Path
           import ast
 
-          path = Path('restock_bot_github.py')
-          text = path.read_text(encoding='utf-8')
+          path = Path("restock_bot_github.py")
+          text = path.read_text(encoding="utf-8")
 
-          flag_anchor = 'RESTOCK_REPLAY_GUARD_V44 = True\n'
-          if 'PRICE_WATCH_FOCUS_V58 = True' not in text:
+          flag_anchor = "RESTOCK_REPLAY_GUARD_V44 = True\n"
+          if "PRICE_WATCH_FOCUS_V58 = True" not in text:
               if flag_anchor not in text:
-                  raise SystemExit('flag anchor not found')
+                  raise SystemExit("flag anchor not found")
               text = text.replace(
                   flag_anchor,
-                  flag_anchor + 'PRICE_WATCH_FOCUS_V58 = True\n',
+                  flag_anchor + "PRICE_WATCH_FOCUS_V58 = True\n",
                   1,
               )
 
-          old_gate = '''    if "BEDRE PRIS FUNDET" not in upper and "BILLIGSTE BUTIK ÆNDRET" not in upper:\n        return "", {}\n'''
-          new_gate = '''    if not any(\n        marker in upper\n        for marker in (\n            "BEDRE PRIS FUNDET",\n            "BILLIGSTE BUTIK ÆNDRET",\n            "PRISFALD",\n        )\n    ):\n        return "", {}\n'''
-          if old_gate in text:
-              text = text.replace(old_gate, new_gate, 1)
-          elif new_gate not in text:
-              raise SystemExit('price alert gate not found')
-
-          focus_marker = '\ndef get_price_watch_language(name):\n'
+          focus_marker = "\ndef get_price_watch_language(name):\n"
           focus_block = r'''
 
 # ============================================================
@@ -120,16 +107,10 @@ def get_price_watch_focus_type(name, game):
     if is_low_signal_accessory_name(name):
         return None
 
-    if (
-        "ultra premium collection" in text
-        or re.search(r"\bupc\b", text)
-    ):
+    if "ultra premium collection" in text or re.search(r"\bupc\b", text):
         return "UPC"
 
-    if (
-        "super premium collection" in text
-        or re.search(r"\bspc\b", text)
-    ):
+    if "super premium collection" in text or re.search(r"\bspc\b", text):
         return "SPC"
 
     if "elite trainer box" in text or re.search(r"\betb\b", text):
@@ -170,16 +151,22 @@ def _price_watch_focus_stock_lines(shop, source_key, product):
             lines.append(f"🏪 BR Kolding: **{kolding} stk.**")
         if esbjerg > 0:
             lines.append(f"🏪 BR Esbjerg: **{esbjerg} stk.**")
-        if online > 0:
-            lines.append(f"🌐 Online: **{online} stk.**")
+        if product.get("online_stock") or online > 0:
+            lines.append(
+                f"🌐 Online: **{online} stk.**" if online > 0
+                else "🌐 Online: **På lager**"
+            )
         store_count = safe_int(product.get("store_count"), 0)
         if store_count > 0:
             lines.append(f"🇩🇰 Butikker med lager: **{store_count}**")
 
     elif source_key in ("bilka", "foetex"):
         online = safe_int(product.get("online_count"), 0)
-        if online > 0:
-            lines.append(f"🌐 Online: **{online} stk.**")
+        if product.get("online_stock") or online > 0:
+            lines.append(
+                f"🌐 Online: **{online} stk.**" if online > 0
+                else "🌐 Online: **På lager**"
+            )
         for store in (product.get("local_stocks") or {}).values():
             stock = safe_int((store or {}).get("stock"), 0)
             if stock > 0:
@@ -191,13 +178,13 @@ def _price_watch_focus_stock_lines(shop, source_key, product):
 
     elif source_key == "elgiganten":
         if product.get("online_stock"):
-            online_display = product.get("online_display") or "på lager"
+            online_display = product.get("online_display") or "På lager"
             lines.append(f"🌐 Online: **{online_display}**")
         for store in (product.get("local_stocks") or {}).values():
             if not (store or {}).get("in_stock"):
                 continue
             store_name = (store or {}).get("name") or "Elgiganten"
-            display = (store or {}).get("display") or "på lager"
+            display = (store or {}).get("display") or "På lager"
             lines.append(f"🏪 {store_name}: **{display}**")
         store_count = safe_int(product.get("store_count"), 0)
         if store_count > 0:
@@ -305,10 +292,11 @@ def _price_watch_focus_alert(listing, old_price, combo=False):
     drop = old_price - new_price
     drop_pct = drop / old_price if old_price > 0 else 0.0
 
-    if combo:
-        headline = "🚨 **RESTOCK + PRISFALD**"
-    else:
-        headline = "📉 **PRISFALD**"
+    headline = (
+        "🚨 **BEDRE PRIS FUNDET · RESTOCK + PRISFALD**"
+        if combo
+        else "📉 **BEDRE PRIS FUNDET · PRISFALD**"
+    )
 
     type_label = PRICE_WATCH_FOCUS_TYPE_LABELS.get(
         listing["type"],
@@ -329,17 +317,18 @@ def _price_watch_focus_alert(listing, old_price, combo=False):
         + link_line
     )
 '''
-          if 'PRICE_WATCH_FOCUS_SETS = (' not in text:
+
+          if "PRICE_WATCH_FOCUS_SETS = (" not in text:
               if focus_marker not in text:
-                  raise SystemExit('focus insertion marker not found')
+                  raise SystemExit("focus insertion marker not found")
               text = text.replace(focus_marker, focus_block + focus_marker, 1)
 
-          start_marker = 'def process_price_watch(\n'
-          end_marker = '\n\n# =========================================================\n# PRICE HISTORY V1\n# =========================================================\n'
+          start_marker = "def process_price_watch(\n"
+          end_marker = "\n\n# =========================================================\n# PRICE HISTORY V1\n# =========================================================\n"
           start = text.find(start_marker)
           end = text.find(end_marker, start)
           if start < 0 or end < 0:
-              raise SystemExit('process_price_watch block markers not found')
+              raise SystemExit("process_price_watch block markers not found")
 
           replacement = r'''def process_price_watch(
     old_price_watch_state,
@@ -386,45 +375,26 @@ def _price_watch_focus_alert(listing, old_price, combo=False):
         except (TypeError, ValueError):
             old_seen_price = None
 
-        try:
-            last_in_stock_price = float(old.get("last_in_stock_price"))
-        except (TypeError, ValueError):
-            last_in_stock_price = None
-
-        reference_price = (
-            last_in_stock_price
-            if (not was_in_stock and current_in_stock and last_in_stock_price is not None)
-            else old_seen_price
-        )
-
         is_restock = bool(old) and not was_in_stock and current_in_stock
-        meaningful_drop = False
-
-        if reference_price is not None and reference_price > 0:
-            drop_dkk = reference_price - current_price
-            drop_pct = drop_dkk / reference_price
-            meaningful_drop = (
-                drop_dkk > 0.005
-                and (
-                    drop_dkk >= PRICE_ALERT_MIN_IMPROVEMENT_DKK
-                    or drop_pct >= PRICE_ALERT_MIN_IMPROVEMENT_PCT
-                )
-            )
+        price_is_lower = (
+            old_seen_price is not None
+            and current_price < old_seen_price - 0.005
+        )
 
         if (
             not baseline_only
             and current_in_stock
-            and meaningful_drop
-            and reference_price is not None
+            and price_is_lower
+            and old_seen_price is not None
         ):
             if _price_watch_focus_alert(
                 listing,
-                reference_price,
+                old_seen_price,
                 combo=is_restock,
             ):
                 alerts_sent += 1
 
-        entry = {
+        next_listings[listing_key] = {
             "source": listing["source"],
             "shop": listing["shop"],
             "raw_id": listing["raw_id"],
@@ -437,17 +407,8 @@ def _price_watch_focus_alert(listing, old_price, combo=False):
             "last_seen": now_local.isoformat(),
         }
 
-        if current_in_stock:
-            entry["last_in_stock_price"] = current_price
-        elif last_in_stock_price is not None:
-            entry["last_in_stock_price"] = last_in_stock_price
-
-        next_listings[listing_key] = entry
-
     if baseline_only:
-        print(
-            "PRICE WATCH V1.5: fokuseret sealed-baseline oprettet uden alerts."
-        )
+        print("PRICE WATCH V1.5: fokuseret sealed-baseline oprettet uden alerts.")
 
     set_counts = {}
     for listing in listings.values():
@@ -468,37 +429,69 @@ def _price_watch_focus_alert(listing, old_price, combo=False):
         "updated_at": now_local.isoformat(),
     }
 '''
+
           text = text[:start] + replacement + text[end:]
-
           ast.parse(text)
-          path.write_text(text, encoding='utf-8')
+          path.write_text(text, encoding="utf-8")
+          PY
 
+          python -m py_compile restock_bot_github.py
+
+      - name: Verify focused Price Watch markers
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          text = Path("restock_bot_github.py").read_text(encoding="utf-8")
           required = (
-              'PRICE_WATCH_FOCUS_V58 = True',
+              "PRICE_WATCH_FOCUS_V58 = True",
               '"Lost Origin"',
               '"Black Bolt"',
               '"White Flare"',
+              '"UPC": "UPC"',
+              '"SPC": "SPC"',
               '"COLLECTION": "Collection Box"',
               '"TIN": "Tin"',
-              'RESTOCK + PRISFALD',
-              'collect_price_watch_focus_listings',
+              "RESTOCK + PRISFALD",
+              "collect_price_watch_focus_listings",
               '"version": 15',
           )
           missing = [value for value in required if value not in text]
           if missing:
-              raise SystemExit(f'missing expected Price Watch V1.5 markers: {missing}')
+              raise SystemExit(f"missing markers: {missing}")
+          print("Focused Price Watch verification passed")
           PY
 
-          python -m py_compile restock_bot_github.py
+      - name: Run existing tests
+        shell: bash
+        run: |
           python -m unittest -q test_discord_cleanup.py test_alert_policy.py test_matraws_single_guard.py test_state_commit_guard.py
 
-      - name: Commit migration and remove one-off workflow
+      - name: Commit Price Watch change
         shell: bash
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          rm -f .github/workflows/apply-price-watch-focus-v58.yml
-          git add restock_bot_github.py .github/workflows/apply-price-watch-focus-v58.yml
+          git add -- restock_bot_github.py
+
+          if git diff --cached --quiet; then
+            echo "No code change to commit."
+            exit 0
+          fi
+
           git commit -m "Refocus Price Watch on selected sealed sets"
-          git pull --rebase origin main
-          git push origin HEAD:main
+
+          for attempt in 1 2 3; do
+            git fetch origin main
+            if git rebase origin/main && git push origin HEAD:main; then
+              echo "Price Watch change pushed successfully."
+              exit 0
+            fi
+            git rebase --abort || true
+            if [ "$attempt" -lt 3 ]; then
+              sleep $((attempt * 5))
+            fi
+          done
+
+          echo "Failed to push Price Watch change after 3 attempts."
+          exit 1
