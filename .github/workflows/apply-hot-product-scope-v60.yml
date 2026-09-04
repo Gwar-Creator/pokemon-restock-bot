@@ -85,6 +85,7 @@ jobs:
           python -m unittest -q test_state_commit_guard.py test_alert_policy.py test_matraws_single_guard.py
           python - <<'PY'
           import ast
+          import re
           from pathlib import Path
 
           source = Path('hot_restock.py').read_text(encoding='utf-8')
@@ -94,9 +95,12 @@ jobs:
           prefix = source[:source.index(marker)]
           fn = source[start:end]
 
-          namespace = {'re': __import__('re')}
+          namespace = {
+              're': re,
+              '_clean_name': lambda name: ' ' + re.sub(r'\s+', ' ', str(name or '').lower()).strip() + ' ',
+          }
+          tree = ast.parse(prefix)
           for name in ('CORE_MARKERS', 'COLLECTION_MARKERS', 'WATCH_MARKERS', 'PACK_MARKERS', 'TIN_MARKERS'):
-              tree = ast.parse(prefix)
               for node in tree.body:
                   if isinstance(node, ast.Assign) and any(getattr(t, 'id', None) == name for t in node.targets):
                       namespace[name] = ast.literal_eval(node.value)
