@@ -70,6 +70,7 @@ MATCHING_OPPORTUNITY_V40 = True
 V40_RUNTIME_FIX_V41 = True
 KELZ0R_STABILITY_V42 = True
 RESTOCK_REPLAY_GUARD_V44 = True
+PRICE_WATCH_FOCUS_V58 = True
 RESTOCK_RECOVERY_GAP_SECONDS = 30 * 60
 RESTOCK_DUPLICATE_COOLDOWN_SECONDS = 6 * 60 * 60
 RESTOCK_NEW_PRODUCT_COOLDOWN_SECONDS = 24 * 60 * 60
@@ -1849,6 +1850,283 @@ def get_price_watch_type(name, game):
 
     return None
 
+
+# ============================================================
+# PRICE WATCH V1.5 - FOCUSED SEALED WATCH
+# ============================================================
+
+PRICE_WATCH_FOCUS_SETS = (
+    ("Obsidian Flames", ("obsidian flames", "obsidian flame")),
+    ("Phantasmal Flames", ("phantasmal flames", "phantasmal flame")),
+    ("151", ("pokemon 151", "pokémon 151", "scarlet violet 151", "scarlet and violet 151", "151")),
+    ("Crown Zenith", ("crown zenith",)),
+    ("Paldean Fates", ("paldean fates", "paldean fate")),
+    ("Ascended Heroes", ("ascended heroes", "ascending heroes")),
+    ("Prismatic Evolutions", ("prismatic evolutions", "prismatic evolution")),
+    ("Destined Rivals", ("destined rivals", "destined rival")),
+    ("Lost Origin", ("lost origin",)),
+    ("Black Bolt", ("black bolt",)),
+    ("White Flare", ("white flare",)),
+)
+
+PRICE_WATCH_FOCUS_TYPE_LABELS = {
+    "ETB": "ETB",
+    "BOOSTER BOX": "Booster Box / Display",
+    "BOOSTER BUNDLE": "Booster Bundle",
+    "UPC": "UPC",
+    "SPC": "SPC",
+    "COLLECTION": "Collection Box",
+    "TIN": "Tin",
+}
+
+
+def _price_watch_focus_norm(value):
+    text = unicodedata.normalize("NFKD", str(value or "").lower())
+    text = "".join(char for char in text if not unicodedata.combining(char))
+    text = text.replace("&", " and ")
+    text = re.sub(r"[^a-z0-9 ]+", " ", text)
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def get_price_watch_focus_set(name):
+    text = _price_watch_focus_norm(name)
+    padded = f" {text} "
+
+    for canonical, aliases in PRICE_WATCH_FOCUS_SETS:
+        for alias in aliases:
+            alias_norm = _price_watch_focus_norm(alias)
+            if alias_norm == "151":
+                if re.search(r"\b151\b", text):
+                    return canonical
+                continue
+            if f" {alias_norm} " in padded:
+                return canonical
+
+    return None
+
+
+def get_price_watch_focus_type(name, game):
+    if game != "POKÉMON":
+        return None
+
+    text = _price_watch_focus_norm(name)
+
+    if not is_english_card_product(name):
+        return None
+
+    if is_low_signal_accessory_name(name):
+        return None
+
+    if "ultra premium collection" in text or re.search(r"\bupc\b", text):
+        return "UPC"
+
+    if "super premium collection" in text or re.search(r"\bspc\b", text):
+        return "SPC"
+
+    if "elite trainer box" in text or re.search(r"\betb\b", text):
+        return "ETB"
+
+    if "booster box" in text or "booster display" in text:
+        if "booster bundle display" in text or "bundle display" in text:
+            return None
+        return "BOOSTER BOX"
+
+    if "booster bundle" in text:
+        return "BOOSTER BUNDLE"
+
+    if re.search(r"\bmini tins?\b", text) or re.search(r"\btins?\b", text):
+        return "TIN"
+
+    if "collection" in text:
+        return "COLLECTION"
+
+    if re.search(r"\b(?:ex|v|vmax|vstar) box\b", text):
+        return "COLLECTION"
+
+    return None
+
+
+def _price_watch_focus_in_stock(source_key, product):
+    return bool(get_price_watch_availability(source_key, product))
+
+
+def _price_watch_focus_stock_lines(shop, source_key, product):
+    lines = []
+
+    if source_key == "br":
+        kolding = safe_int(product.get("kolding_stock"), 0)
+        esbjerg = safe_int(product.get("esbjerg_stock"), 0)
+        online = safe_int(product.get("online_count"), 0)
+        if kolding > 0:
+            lines.append(f"🏪 BR Kolding: **{kolding} stk.**")
+        if esbjerg > 0:
+            lines.append(f"🏪 BR Esbjerg: **{esbjerg} stk.**")
+        if product.get("online_stock") or online > 0:
+            lines.append(
+                f"🌐 Online: **{online} stk.**" if online > 0
+                else "🌐 Online: **På lager**"
+            )
+        store_count = safe_int(product.get("store_count"), 0)
+        if store_count > 0:
+            lines.append(f"🇩🇰 Butikker med lager: **{store_count}**")
+
+    elif source_key in ("bilka", "foetex"):
+        online = safe_int(product.get("online_count"), 0)
+        if product.get("online_stock") or online > 0:
+            lines.append(
+                f"🌐 Online: **{online} stk.**" if online > 0
+                else "🌐 Online: **På lager**"
+            )
+        for store in (product.get("local_stocks") or {}).values():
+            stock = safe_int((store or {}).get("stock"), 0)
+            if stock > 0:
+                store_name = (store or {}).get("name") or shop
+                lines.append(f"🏪 {store_name}: **{stock} stk.**")
+        store_count = safe_int(product.get("store_count"), 0)
+        if store_count > 0:
+            lines.append(f"🇩🇰 Butikker med lager: **{store_count}**")
+
+    elif source_key == "elgiganten":
+        if product.get("online_stock"):
+            online_display = product.get("online_display") or "På lager"
+            lines.append(f"🌐 Online: **{online_display}**")
+        for store in (product.get("local_stocks") or {}).values():
+            if not (store or {}).get("in_stock"):
+                continue
+            store_name = (store or {}).get("name") or "Elgiganten"
+            display = (store or {}).get("display") or "På lager"
+            lines.append(f"🏪 {store_name}: **{display}**")
+        store_count = safe_int(product.get("store_count"), 0)
+        if store_count > 0:
+            lines.append(f"🇩🇰 Butikker med lager: **{store_count}**")
+
+    elif source_key == "coolshop":
+        if product.get("online_stock"):
+            lines.append("🌐 Coolshop online: **På lager**")
+
+    elif source_key == "proshop":
+        stock = str(product.get("stock") or "").strip()
+        if stock:
+            lines.append(f"📦 Proshop: **{stock}**")
+
+    else:
+        stock = product.get("stock")
+        if isinstance(stock, (int, float)) and stock > 0:
+            lines.append(f"📦 {shop}: **{int(stock)} stk. på lager**")
+        elif product.get("in_stock"):
+            lines.append(f"📦 {shop}: **På lager**")
+
+    if not lines and _price_watch_focus_in_stock(source_key, product):
+        lines.append(f"📦 {shop}: **På lager**")
+
+    return lines
+
+
+def collect_price_watch_focus_listings(current_state, fresh_sources=None):
+    listings = {}
+
+    def add_products(shop, source_key, products, game_override=None):
+        if fresh_sources is not None and source_key not in fresh_sources:
+            return
+
+        for raw_id, product in (products or {}).items():
+            if not isinstance(product, dict):
+                continue
+
+            name = str(product.get("name") or "").strip()
+            game = game_override or product.get("game")
+            focus_set = get_price_watch_focus_set(name)
+            product_type = get_price_watch_focus_type(name, game)
+
+            if not name or not focus_set or not product_type:
+                continue
+
+            try:
+                price = float(product.get("price"))
+            except (TypeError, ValueError):
+                continue
+
+            if price <= 0:
+                continue
+
+            url = str(product.get("url") or "").strip()
+            if (
+                not url
+                and isinstance(raw_id, str)
+                and raw_id.startswith(("http://", "https://"))
+            ):
+                url = raw_id
+
+            listing_key = hashlib.sha256(
+                f"{source_key}|{raw_id}".encode("utf-8")
+            ).hexdigest()[:32]
+
+            listings[listing_key] = {
+                "listing_key": listing_key,
+                "source": source_key,
+                "shop": shop,
+                "raw_id": str(raw_id),
+                "name": name,
+                "set": focus_set,
+                "type": product_type,
+                "price": price,
+                "in_stock": _price_watch_focus_in_stock(source_key, product),
+                "stock_lines": _price_watch_focus_stock_lines(shop, source_key, product),
+                "url": url,
+            }
+
+    add_products("COOLSHOP", "coolshop", current_state.get("coolshop", {}))
+    add_products("PROSHOP", "proshop", current_state.get("proshop", {}), "POKÉMON")
+    add_products("BR", "br", current_state.get("br", {}), "POKÉMON")
+    add_products("BILKA", "bilka", current_state.get("bilka", {}), "POKÉMON")
+    add_products("FØTEX", "foetex", current_state.get("foetex", {}), "POKÉMON")
+    add_products("ELGIGANTEN", "elgiganten", current_state.get("elgiganten", {}), "POKÉMON")
+
+    shopify_state = current_state.get("shopify", {})
+    for site_key, site in SHOPIFY_SITES.items():
+        add_products(site["label"], site_key, shopify_state.get(site_key, {}))
+
+    woocommerce_state = current_state.get("woocommerce", {})
+    for site_key, site in WOOCOMMERCE_SITES.items():
+        add_products(site["label"], site_key, woocommerce_state.get(site_key, {}))
+
+    add_products("EPIC PANDA", "epicpanda", current_state.get("epicpanda", {}))
+    add_products("STEFFEN-O", "steffeno", current_state.get("steffeno", {}), "POKÉMON")
+    add_products("NEXT LEVEL GAMES", "nextlevel", current_state.get("nextlevel", {}))
+
+    return listings
+
+
+def _price_watch_focus_alert(listing, old_price, combo=False):
+    new_price = float(listing["price"])
+    drop = old_price - new_price
+    drop_pct = drop / old_price if old_price > 0 else 0.0
+
+    headline = (
+        "🚨 **BEDRE PRIS FUNDET · RESTOCK + PRISFALD**"
+        if combo
+        else "📉 **BEDRE PRIS FUNDET · PRISFALD**"
+    )
+
+    type_label = PRICE_WATCH_FOCUS_TYPE_LABELS.get(
+        listing["type"],
+        listing["type"],
+    )
+    stock_lines = listing.get("stock_lines") or [
+        f"📦 {listing['shop']}: **På lager**"
+    ]
+    link_line = f"\n🔗 {listing['url']}" if listing.get("url") else ""
+
+    return send_price_watch(
+        f"{headline}\n"
+        f"**{listing['shop']} · {listing['name']}**\n"
+        f"🎯 {listing['set']} · {type_label}\n"
+        f"💰 {format_price(old_price)} → **{format_price(new_price)}** "
+        f"(-{drop_pct * 100.0:.0f}%)\n"
+        + "\n".join(stock_lines)
+        + link_line
+    )
+
 def get_price_watch_language(name):
     text = (name or "").lower()
 
@@ -3067,53 +3345,9 @@ def process_price_watch(
     fresh_sources,
     history_state=None
 ):
-    candidates = collect_price_watch_candidates(
+    listings = collect_price_watch_focus_listings(
         current_state,
-        fresh_sources=fresh_sources
-    )
-
-    comparable_groups = build_price_watch_groups(
-        candidates
-    )
-
-    matching_audit = build_price_matching_audit(
-        candidates,
-        comparable_groups,
-    )
-    save_price_matching_audit(matching_audit)
-
-    opportunity_by_key = {
-        product_key: calculate_opportunity_score(
-            product_key,
-            products,
-            history_state=history_state,
-        )
-        for product_key, products in comparable_groups.items()
-    }
-    top_opportunities = sorted(
-        opportunity_by_key.items(),
-        key=lambda row: row[1]["score"],
-        reverse=True,
-    )[:5]
-    if top_opportunities:
-        print(
-            "OPPORTUNITY SCORE V1: "
-            + " | ".join(
-                f"{price_watch_display_name(product_key)} {score['score']}/100"
-                for product_key, score in top_opportunities
-            )
-        )
-
-    source_observations = build_price_watch_source_observations(
-        current_state,
-        fresh_sources
-    )
-
-    print(
-        f"PRICE WATCH V5: "
-        f"{len(candidates)} friske prislinjer | "
-        f"{len(comparable_groups)} produkter hos mindst 2 butikker | "
-        f"{len(fresh_sources)} friske kilder"
+        fresh_sources=fresh_sources,
     )
 
     previous = (
@@ -3121,226 +3355,87 @@ def process_price_watch(
         if isinstance(old_price_watch_state, dict)
         else {}
     )
-
-    previous_version = safe_int(
-        previous.get("version"),
-        0
-    )
-
-    previous_products = previous.get("products")
-    is_first_price_watch_run = not isinstance(previous_products, dict)
-
-    if not isinstance(previous_products, dict):
-        previous_products = {}
+    previous_version = safe_int(previous.get("version"), 0)
+    previous_listings = previous.get("listings")
+    if not isinstance(previous_listings, dict):
+        previous_listings = {}
 
     try:
         now_local = datetime.now(ZoneInfo(PRICE_WATCH_TIMEZONE))
     except Exception:
         now_local = datetime.now(ZoneInfo("Europe/Copenhagen"))
 
-    today = now_local.date().isoformat()
-    last_daily_date = str(previous.get("last_daily_date", "") or "")
+    baseline_only = previous_version < 15 or not previous_listings
+    next_listings = dict(previous_listings)
+    alerts_sent = 0
 
-    daily_due = (
-        bool(PRICE_WATCH_WEBHOOK_URL)
-        and now_local.hour >= PRICE_WATCH_DAILY_HOUR
-        and last_daily_date != today
-    )
+    for listing_key, listing in listings.items():
+        old = previous_listings.get(listing_key)
+        current_price = float(listing["price"])
+        current_in_stock = bool(listing.get("in_stock"))
 
-    daily_sent = False
+        if not isinstance(old, dict):
+            old = {}
 
-    if daily_due:
-        daily_sent = send_price_watch_daily_summary(
-            comparable_groups,
-            now_local,
-            history_state=history_state,
-        )
-        # Mark the daily evaluation complete even on a quiet day. This avoids
-        # an empty digest every five minutes while keeping intraday alerts on.
-        last_daily_date = today
-
-    # V4: Negative ændringer kræver både eksplicit kildebevis og to
-    # ens scans. En vare, der blot mangler fra et frisk kategori-feed,
-    # må aldrig løfte den registrerede bedste pris.
-    changes_enabled = (
-        bool(PRICE_WATCH_WEBHOOK_URL)
-        and last_daily_date == today
-        and not daily_sent
-        and not is_first_price_watch_run
-        and previous_version >= 4
-    )
-
-    next_products = dict(previous_products)
-
-    def confirmed_entry(product_key, best, current_best, current_shops, current_sources):
-        opportunity = opportunity_by_key.get(product_key) or {}
-        return {
-            "current_best": current_best,
-            "current_shop": best["shop"],
-            "current_shops": current_shops,
-            "current_sources": current_sources,
-            "name": price_watch_display_name(product_key),
-            "opportunity_score": safe_int(opportunity.get("score"), 0),
-            "opportunity_label": opportunity.get("label") or "NORMAL",
-            "opportunity": opportunity,
-            "last_seen": now_local.isoformat()
-        }
-
-    for product_key, products in comparable_groups.items():
-        best = price_watch_best_entry(products)
-        current_best = float(best["price"])
-        current_shops = price_watch_lowest_shops(products)
-        current_sources = sorted({
-            product["source"]
-            for product in products
-            if abs(product["price"] - current_best) < 0.005
-        })
-
-        old_entry = previous_products.get(product_key)
-
-        if not isinstance(old_entry, dict):
-            next_products[product_key] = confirmed_entry(
-                product_key,
-                best,
-                current_best,
-                current_shops,
-                current_sources
-            )
-            continue
+        was_in_stock = bool(old.get("in_stock"))
 
         try:
-            old_price = float(old_entry.get("current_best"))
+            old_seen_price = float(old.get("price"))
         except (TypeError, ValueError):
-            old_price = None
+            old_seen_price = None
 
-        old_shops = old_entry.get("current_shops")
-        if not isinstance(old_shops, list):
-            old_shop = old_entry.get("current_shop")
-            old_shops = [old_shop] if old_shop else []
-
-        old_sources = old_entry.get("current_sources")
-        if not isinstance(old_sources, list):
-            old_sources = []
-
+        is_restock = bool(old) and not was_in_stock and current_in_stock
         price_is_lower = (
-            old_price is not None
-            and current_best < old_price - 0.005
-        )
-        price_is_higher = (
-            old_price is not None
-            and current_best > old_price + 0.005
-        )
-        cheapest_shop_changed = (
-            old_price is not None
-            and abs(current_best - old_price) < 0.005
-            and bool(old_shops)
-            and not set(old_shops).intersection(current_shops)
+            old_seen_price is not None
+            and current_price < old_seen_price - 0.005
         )
 
-        # En reel lavere pris er positiv information fra en frisk kilde
-        # og kan derfor bekræftes med det samme.
-        if price_is_lower:
-            if changes_enabled:
-                send_price_watch_change(
-                    product_key,
-                    old_entry,
-                    products,
-                    history_state=history_state,
-                )
-
-            next_products[product_key] = confirmed_entry(
-                product_key,
-                best,
-                current_best,
-                current_shops,
-                current_sources
-            )
-            continue
-
-        # Pris op / billigste butik væk er negativ information. Før vi
-        # overhovedet starter 2-scan confirmation, skal den tidligere
-        # billigste kilde eksplicit vise samme produkt som udsolgt/preorder
-        # eller dyrere. Mangler produktet bare fra feedet, er status UNKNOWN.
-        if price_is_higher or cheapest_shop_changed:
-            old_offer_gone = price_watch_old_offer_explicitly_gone(
-                source_observations,
-                old_sources,
-                product_key,
-                old_price,
-            )
-
-            if not old_offer_gone:
-                kept = dict(old_entry)
-                kept.pop("pending_change", None)
-                kept["last_seen"] = now_local.isoformat()
-                kept["hold_reason"] = "former_cheapest_source_not_explicitly_resolved"
-                next_products[product_key] = kept
-                continue
-
-            signature = (
-                f"{current_best:.2f}|"
-                + ",".join(sorted(current_shops))
-            )
-            pending = old_entry.get("pending_change")
-
-            if (
-                isinstance(pending, dict)
-                and pending.get("signature") == signature
+        if (
+            not baseline_only
+            and current_in_stock
+            and price_is_lower
+            and old_seen_price is not None
+        ):
+            if _price_watch_focus_alert(
+                listing,
+                old_seen_price,
+                combo=is_restock,
             ):
-                pending_count = safe_int(pending.get("count"), 0) + 1
-            else:
-                pending_count = 1
+                alerts_sent += 1
 
-            if pending_count >= 2:
-                if changes_enabled:
-                    send_price_watch_change(
-                    product_key,
-                    old_entry,
-                    products,
-                    history_state=history_state,
-                )
+        next_listings[listing_key] = {
+            "source": listing["source"],
+            "shop": listing["shop"],
+            "raw_id": listing["raw_id"],
+            "name": listing["name"],
+            "set": listing["set"],
+            "type": listing["type"],
+            "price": current_price,
+            "in_stock": current_in_stock,
+            "url": listing.get("url") or "",
+            "last_seen": now_local.isoformat(),
+        }
 
-                next_products[product_key] = confirmed_entry(
-                    product_key,
-                    best,
-                    current_best,
-                    current_shops,
-                    current_sources
-                )
-            else:
-                kept = dict(old_entry)
-                kept["pending_change"] = {
-                    "signature": signature,
-                    "count": pending_count,
-                    "observed_best": current_best,
-                    "observed_shops": current_shops,
-                    "observed_sources": current_sources,
-                    "first_seen": now_local.isoformat()
-                }
-                kept["last_seen"] = now_local.isoformat()
-                next_products[product_key] = kept
+    if baseline_only:
+        print("PRICE WATCH V1.5: fokuseret sealed-baseline oprettet uden alerts.")
 
-            continue
+    set_counts = {}
+    for listing in listings.values():
+        set_counts[listing["set"]] = set_counts.get(listing["set"], 0) + 1
 
-        # Stabilt scan: opdater metadata og nulstil evt. pending flap.
-        next_products[product_key] = confirmed_entry(
-            product_key,
-            best,
-            current_best,
-            current_shops,
-            current_sources
-        )
-
-    if is_first_price_watch_run:
-        print("PRICE WATCH V4 baseline oprettet uden ændringsalerts.")
-    elif previous_version < 4:
-        print("PRICE WATCH V4 source-confirmed anti-flap aktiveret uden overgangsalerts.")
+    print(
+        "PRICE WATCH V1.5: "
+        f"{len(listings)} relevante listings | "
+        f"{len(set_counts)} fokus-sæt | "
+        f"{alerts_sent} alerts"
+    )
 
     return {
-        "version": 5,
-        "products": next_products,
-        "last_daily_date": last_daily_date,
-        "matching_audit": matching_audit,
+        "version": 15,
+        "mode": "focused_sealed_price_drops",
+        "sets": [canonical for canonical, _ in PRICE_WATCH_FOCUS_SETS],
+        "listings": next_listings,
+        "updated_at": now_local.isoformat(),
     }
 
 
