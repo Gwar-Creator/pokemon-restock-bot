@@ -1,12 +1,72 @@
 {
-  "candidate_lines": 341,
-  "coverage_pct": 67.7,
-  "exact_comparable_groups": 62,
+  "candidate_lines": 360,
+  "coverage_pct": 67.2,
+  "exact_comparable_groups": 64,
   "likely_alias_pairs": 20,
-  "matched_lines": 231,
-  "normalized_keys": 171,
-  "single_shop_keys": 109,
+  "matched_lines": 242,
+  "normalized_keys": 181,
+  "single_shop_keys": 117,
   "suspects": [
+    {
+      "game": "POKÉMON",
+      "language": "EN",
+      "left_names": [
+        "Pokémon TCG: Battle Styles Elite Trainer Box - Single Strike Urshifu (Sword & Shield)"
+      ],
+      "left_set": "battle styles single strike urshifu sword and shield",
+      "left_shops": [
+        "ROGERZ"
+      ],
+      "right_names": [
+        "Pokémon TCG: Sword & Shield: Battle Styles - Elite Trainer Box (Single Strike Urshifu)"
+      ],
+      "right_set": "sword and shield battle styles single strike urshifu",
+      "right_shops": [
+        "MATRAWS"
+      ],
+      "similarity": 1.0,
+      "type": "ETB"
+    },
+    {
+      "game": "POKÉMON",
+      "language": "EN",
+      "left_names": [
+        "Pokémon TCG: Pokemon GO Elite Trainer Box (Sword & Shield)"
+      ],
+      "left_set": "go sword and shield",
+      "left_shops": [
+        "ROGERZ"
+      ],
+      "right_names": [
+        "Pokémon TCG: Sword & Shield: Pokémon GO - Elite Trainer Box"
+      ],
+      "right_set": "sword and shield go",
+      "right_shops": [
+        "MATRAWS"
+      ],
+      "similarity": 1.0,
+      "type": "ETB"
+    },
+    {
+      "game": "POKÉMON",
+      "language": "EN",
+      "left_names": [
+        "Pokémon TCG: Astral Radiance Elite Trainer Box (Sword & Shield)"
+      ],
+      "left_set": "astral radiance sword and shield",
+      "left_shops": [
+        "ROGERZ"
+      ],
+      "right_names": [
+        "Pokémon TCG: Sword & Shield: Astral Radiance - Elite Trainer Box"
+      ],
+      "right_set": "sword and shield astral radiance",
+      "right_shops": [
+        "MATRAWS"
+      ],
+      "similarity": 1.0,
+      "type": "ETB"
+    },
     {
       "game": "LORCANA",
       "language": "EN",
@@ -28,39 +88,6 @@
       ],
       "similarity": 0.968,
       "type": "BOOSTER PACK"
-    },
-    {
-      "game": "POKÉMON",
-      "language": "EN",
-      "left_names": [
-        "Chaos Rising - Elite Trainer Box - Pokemon kort",
-        "Chaos Rising Elite Trainer Box"
-      ],
-      "left_set": "chaos rising",
-      "left_shops": [
-        "BILKA",
-        "CARDSDIRECT",
-        "CARDX",
-        "EPIC PANDA",
-        "FUN-SHOP",
-        "HALMES HULE",
-        "LUCKBOX",
-        "NOSTALGIC",
-        "POKEDEXET",
-        "POKEMONPORTALEN",
-        "ROGERZ",
-        "STAALZ",
-        "VAULTED"
-      ],
-      "right_names": [
-        "Pokémon TCG: Mega Evolution: Chaos Rising (ME04) - Elite Trainer Box (ETB)"
-      ],
-      "right_set": "chaos rising etb",
-      "right_shops": [
-        "POKEHULEN"
-      ],
-      "similarity": 0.94,
-      "type": "ETB"
     },
     {
       "game": "POKÉMON",
@@ -124,36 +151,6 @@
       "right_set": "featured image for chaos rising etb",
       "right_shops": [
         "KOCARDZ"
-      ],
-      "similarity": 0.94,
-      "type": "ETB"
-    },
-    {
-      "game": "POKÉMON",
-      "language": "EN",
-      "left_names": [
-        "Pokémon TCG: Mega Evolution: Pitch Black - Elite Trainer Box (ETB)"
-      ],
-      "left_set": "pitch black etb",
-      "left_shops": [
-        "POKEHULEN"
-      ],
-      "right_names": [
-        "Mega Evolution: Pitch Black Elite Trainer Box",
-        "Pitch Black - Elite Trainer Box - Pokemon kort"
-      ],
-      "right_set": "pitch black",
-      "right_shops": [
-        "CARDSDIRECT",
-        "EPIC PANDA",
-        "HALMES HULE",
-        "MUSEN & SLOTTET",
-        "NOSTALGIC",
-        "PBCARDS",
-        "POCKET MONSTER",
-        "ROGERZ",
-        "STAALZ",
-        "SYMBIZON"
       ],
       "similarity": 0.94,
       "type": "ETB"
@@ -317,6 +314,7 @@
       "left_shops": [
         "CARDX",
         "EPIC PANDA",
+        "MATRAWS",
         "MUSEN & SLOTTET",
         "NOSTALGIC",
         "POKECARDS.DK",
@@ -344,6 +342,7 @@
       "left_set": "journey together",
       "left_shops": [
         "CARDX",
+        "MATRAWS",
         "POKECARDS.DK",
         "POKEDEXET",
         "POKEHULEN",
@@ -371,6 +370,7 @@
       "left_set": "journey together",
       "left_shops": [
         "CARDX",
+        "MATRAWS",
         "POKECARDS.DK",
         "POKEDEXET",
         "POKEHULEN",
@@ -387,6 +387,32 @@
       ],
       "similarity": 0.94,
       "type": "BOOSTER PACK"
+    },
+    {
+      "game": "POKÉMON",
+      "language": "EN",
+      "left_names": [
+        "Mega Evolution: Perfect Order Elite Trainer Box",
+        "Perfect Order - Elite Trainer Box - Pokemon kort"
+      ],
+      "left_set": "perfect order",
+      "left_shops": [
+        "BALTZER GAMES",
+        "CARDSDIRECT",
+        "EPIC PANDA",
+        "POKEMONPORTALEN",
+        "ROGERZ",
+        "STAALZ"
+      ],
+      "right_names": [
+        "Pokémon TCG: Mega Evolution: Perfect Order - Elite Trainer Box (ETB)"
+      ],
+      "right_set": "perfect order etb",
+      "right_shops": [
+        "MATRAWS"
+      ],
+      "similarity": 0.94,
+      "type": "ETB"
     },
     {
       "game": "POKÉMON",
@@ -511,52 +537,6 @@
       ],
       "similarity": 0.94,
       "type": "BOOSTER BUNDLE"
-    },
-    {
-      "game": "POKÉMON",
-      "language": "EN",
-      "left_names": [
-        "Journey Together Elite Trainer Box",
-        "Pokémon TCG: Journey Together Elite Trainer Box"
-      ],
-      "left_set": "journey together",
-      "left_shops": [
-        "MTGWEBSHOP",
-        "POCKET MONSTER",
-        "ROGERZ"
-      ],
-      "right_names": [
-        "Pokémon Journey Together Elite Trainer Box (ETB) – Sealed (SV09)"
-      ],
-      "right_set": "journey together etb",
-      "right_shops": [
-        "STAALZ"
-      ],
-      "similarity": 0.94,
-      "type": "ETB"
-    },
-    {
-      "game": "POKÉMON",
-      "language": "EN",
-      "left_names": [
-        "Pokémon TCG: Shrouded Fable Elite Trainer Box (Scarlet & Violet)"
-      ],
-      "left_set": "shrouded fable scarlet and violet",
-      "left_shops": [
-        "ROGERZ"
-      ],
-      "right_names": [
-        "Elite Trainer Box – SV06.5 Shrouded Fable",
-        "Pokémon TCG: Shrouded Fable - Elite Trainer Box"
-      ],
-      "right_set": "shrouded fable",
-      "right_shops": [
-        "POKECARDS.DK",
-        "POKEMONS.DK",
-        "VAULTED"
-      ],
-      "similarity": 0.94,
-      "type": "ETB"
     }
   ],
   "version": 1
