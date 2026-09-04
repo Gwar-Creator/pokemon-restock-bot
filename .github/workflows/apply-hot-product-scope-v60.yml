@@ -1,0 +1,152 @@
+name: Apply HOT Product Scope V60
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/apply-hot-product-scope-v60.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: apply-hot-product-scope-v60
+  cancel-in-progress: false
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Patch HOT product scope
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import ast
+
+          path = Path('hot_restock.py')
+          text = path.read_text(encoding='utf-8')
+
+          text = text.replace('FILTER_VERSION = 1\n', 'FILTER_VERSION = 2\n', 1)
+
+          old_excluded = '''EXCLUDED_ETB_SETS = (\n    "chaos rising",\n    "pitch black",\n)\n\n'''
+          if old_excluded in text:
+              text = text.replace(old_excluded, '', 1)
+
+          old_collections = '''COLLECTION_MARKERS = (\n    "premium collection",\n    "ultra-premium collection",\n    "ultra premium collection",\n    "special collection",\n    "illustration collection",\n)\n\n'''
+          new_collections = '''COLLECTION_MARKERS = (\n    "premium collection",\n    "ultra-premium collection",\n    "ultra premium collection",\n    "super premium collection",\n    "super-premium collection",\n    "special collection",\n    "illustration collection",\n    "collection box",\n)\n\nTIN_MARKERS = (\n    "mini tin",\n    "poke ball tin",\n    "poké ball tin",\n)\n\n'''
+          if old_collections in text:
+              text = text.replace(old_collections, new_collections, 1)
+          elif 'TIN_MARKERS = (' not in text:
+              raise SystemExit('collection marker block not found')
+
+          old_etb = '''    is_etb = "elite trainer box" in text or bool(re.search(r"\\betb\\b", text))\n    if is_etb:\n        return not any(blocked in text for blocked in EXCLUDED_ETB_SETS)\n\n'''
+          new_etb = '''    # HOT/Restock følger de relevante produkttyper på tværs af ALLE sæt.\n    is_etb = "elite trainer box" in text or bool(re.search(r"\\betb\\b", text))\n    if is_etb:\n        return True\n\n'''
+          if old_etb in text:
+              text = text.replace(old_etb, new_etb, 1)
+          elif new_etb not in text:
+              raise SystemExit('ETB filter block not found')
+
+          old_collection_logic = '''    if any(marker in text for marker in COLLECTION_MARKERS):\n        return True\n\n    if " ultra premium " in text or bool(re.search(r"\\bupc\\b", text)):\n        return True\n\n    if any(marker in text for marker in WATCH_MARKERS):\n        return True\n'''
+          new_collection_logic = '''    if any(marker in text for marker in COLLECTION_MARKERS):\n        return True\n\n    # Standard EX/V/VSTAR/VMAX boxes are collection boxes even when the\n    # retailer omits the word "collection" from the title.\n    if re.search(r"\\b(?:ex|v|vmax|vstar)\\s+(?:collection\\s+)?box\\b", text):\n        return True\n\n    if " ultra premium " in text or bool(re.search(r"\\bupc\\b", text)):\n        return True\n\n    if " super premium " in text or bool(re.search(r"\\bspc\\b", text)):\n        return True\n\n    if any(marker in text for marker in TIN_MARKERS) or re.search(r"\\btins?\\b", text):\n        return True\n\n    # First Partner / 30th etc. remain explicit special watches even when the\n    # retailer uses an unusual product-family label.\n    if any(marker in text for marker in WATCH_MARKERS):\n        return True\n'''
+          if old_collection_logic in text:
+              text = text.replace(old_collection_logic, new_collection_logic, 1)
+          elif 're.search(r"\\btins?\\b", text)' not in text:
+              raise SystemExit('collection/tin logic anchor not found')
+
+          ast.parse(text)
+          path.write_text(text, encoding='utf-8')
+
+          required = (
+              'FILTER_VERSION = 2',
+              'TIN_MARKERS = (',
+              '"collection box"',
+              '"super premium collection"',
+              'return True\n\n    if any(marker in text for marker in CORE_MARKERS)',
+              're.search(r"\\btins?\\b", text)',
+              're.search(r"\\bspc\\b", text)',
+              '(?:collection\\s+)?box',
+          )
+          missing = [value for value in required if value not in text]
+          if missing:
+              raise SystemExit(f'missing V60 markers: {missing}')
+          PY
+
+      - name: Validate HOT scanner
+        shell: bash
+        run: |
+          python -m py_compile hot_restock.py restock_bot_github.py salling_victini_watch.py salling_early_radar.py salling_early_radar_runner.py state_commit_guard.py
+          python -m unittest -q test_state_commit_guard.py test_alert_policy.py test_matraws_single_guard.py
+          python - <<'PY'
+          import ast
+          from pathlib import Path
+
+          source = Path('hot_restock.py').read_text(encoding='utf-8')
+          marker = 'def hot_product_allowed(name):'
+          start = source.index(marker)
+          end = source.index('\n\ndef load_shared_namespace', start)
+          prefix = source[:source.index(marker)]
+          fn = source[start:end]
+
+          namespace = {'re': __import__('re')}
+          for name in ('CORE_MARKERS', 'COLLECTION_MARKERS', 'WATCH_MARKERS', 'PACK_MARKERS', 'TIN_MARKERS'):
+              tree = ast.parse(prefix)
+              for node in tree.body:
+                  if isinstance(node, ast.Assign) and any(getattr(t, 'id', None) == name for t in node.targets):
+                      namespace[name] = ast.literal_eval(node.value)
+          exec(fn, namespace)
+          allowed = namespace['hot_product_allowed']
+
+          positives = [
+              'Temporal Forces Elite Trainer Box',
+              'Journey Together Booster Bundle',
+              'Surging Sparks Booster Box',
+              'Shrouded Fable Kingambit Illustration Collection',
+              'Twilight Masquerade Ogerpon ex Box',
+              'Mega Evolution Super Premium Collection',
+              'Pokemon TCG SPC',
+              'Paradox Rift Mini Tin',
+              'Scarlet & Violet Poke Ball Tin',
+              'Pokemon TCG Collector Tin',
+              'First Partner random sealed product',
+          ]
+          negatives = [
+              'Temporal Forces Booster Pack',
+              '151 Sleeved Booster',
+              'Pokemon Card Sleeves',
+          ]
+          for title in positives:
+              assert allowed(title), title
+          for title in negatives:
+              assert not allowed(title), title
+          print('HOT V60 product-scope tests passed')
+          PY
+
+      - name: Commit change and remove one-off workflow
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          rm -f .github/workflows/apply-hot-product-scope-v60.yml
+          git add hot_restock.py .github/workflows/apply-hot-product-scope-v60.yml
+          git commit -m "Expand HOT restock product scope across all sets"
+
+          for attempt in 1 2 3; do
+            git fetch origin main
+            if git rebase origin/main && git push origin HEAD:main; then
+              exit 0
+            fi
+            git rebase --abort || true
+            if [ "$attempt" -lt 3 ]; then
+              sleep $((attempt * 5))
+            fi
+          done
+
+          echo "Failed to push HOT V60 after 3 attempts."
+          exit 1
