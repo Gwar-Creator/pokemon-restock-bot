@@ -92,11 +92,13 @@ jobs:
           print("CARD MARKET: Discord webhook test OK")
           PY
 
-      - name: Run daily Card Market Watch
+      - name: Run daily Card Market backend
         if: ${{ inputs.test_webhook != true && inputs.personal_shadow != true }}
         env:
           TCG_CARDMARKET_API_KEY: ${{ secrets.TCG_CARDMARKET_API_KEY }}
-          CARDMARKET_WEBHOOK_URL: ${{ secrets.CARDMARKET_WEBHOOK_URL }}
+          # Deliberately no CARDMARKET_WEBHOOK_URL here. The broad market/heat
+          # scanner remains backend data only; Discord is reserved for the
+          # collection-aware personal singles deltas below.
           CARDMARKET_TIMEZONE: "Europe/Copenhagen"
           CARDMARKET_DAILY_HOUR: "8"
           CARDMARKET_MAX_DAILY_REQUESTS: "98"
