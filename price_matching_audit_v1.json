@@ -1,20 +1,82 @@
 {
-  "candidate_lines": 314,
-  "coverage_pct": 66.6,
-  "exact_comparable_groups": 60,
+  "candidate_lines": 364,
+  "coverage_pct": 67.0,
+  "exact_comparable_groups": 65,
   "likely_alias_pairs": 20,
-  "matched_lines": 209,
-  "normalized_keys": 164,
-  "single_shop_keys": 104,
+  "matched_lines": 244,
+  "normalized_keys": 184,
+  "single_shop_keys": 119,
   "suspects": [
+    {
+      "game": "POKÉMON",
+      "language": "EN",
+      "left_names": [
+        "Pokémon TCG: Battle Styles Elite Trainer Box - Single Strike Urshifu (Sword & Shield)"
+      ],
+      "left_set": "battle styles single strike urshifu sword and shield",
+      "left_shops": [
+        "ROGERZ"
+      ],
+      "right_names": [
+        "Pokémon TCG: Sword & Shield: Battle Styles - Elite Trainer Box (Single Strike Urshifu)"
+      ],
+      "right_set": "sword and shield battle styles single strike urshifu",
+      "right_shops": [
+        "MATRAWS"
+      ],
+      "similarity": 1.0,
+      "type": "ETB"
+    },
+    {
+      "game": "POKÉMON",
+      "language": "EN",
+      "left_names": [
+        "Pokémon TCG: Pokemon GO Elite Trainer Box (Sword & Shield)"
+      ],
+      "left_set": "go sword and shield",
+      "left_shops": [
+        "ROGERZ"
+      ],
+      "right_names": [
+        "Pokémon TCG: Sword & Shield: Pokémon GO - Elite Trainer Box"
+      ],
+      "right_set": "sword and shield go",
+      "right_shops": [
+        "MATRAWS"
+      ],
+      "similarity": 1.0,
+      "type": "ETB"
+    },
+    {
+      "game": "POKÉMON",
+      "language": "EN",
+      "left_names": [
+        "Pokémon TCG: Astral Radiance Elite Trainer Box (Sword & Shield)"
+      ],
+      "left_set": "astral radiance sword and shield",
+      "left_shops": [
+        "ROGERZ"
+      ],
+      "right_names": [
+        "Pokémon TCG: Sword & Shield: Astral Radiance - Elite Trainer Box"
+      ],
+      "right_set": "sword and shield astral radiance",
+      "right_shops": [
+        "MATRAWS"
+      ],
+      "similarity": 1.0,
+      "type": "ETB"
+    },
     {
       "game": "LORCANA",
       "language": "EN",
       "left_names": [
-        "Disney Lorcana: Into the Inklands Booster Pack"
+        "Disney Lorcana: Into the Inklands Booster Pack",
+        "Into the Inklands - Booster - Disney Lorcana"
       ],
       "left_set": "into the inklands",
       "left_shops": [
+        "BALTZER GAMES",
         "ROGERZ"
       ],
       "right_names": [
@@ -44,38 +106,7 @@
         "HALMES HULE",
         "LUCKBOX",
         "NOSTALGIC",
-        "POKEMONPORTALEN",
-        "ROGERZ",
-        "STAALZ",
-        "VAULTED"
-      ],
-      "right_names": [
-        "Pokémon TCG: Mega Evolution: Chaos Rising (ME04) - Elite Trainer Box (ETB)"
-      ],
-      "right_set": "chaos rising etb",
-      "right_shops": [
-        "POKEHULEN"
-      ],
-      "similarity": 0.94,
-      "type": "ETB"
-    },
-    {
-      "game": "POKÉMON",
-      "language": "EN",
-      "left_names": [
-        "Chaos Rising - Elite Trainer Box - Pokemon kort",
-        "Chaos Rising Elite Trainer Box"
-      ],
-      "left_set": "chaos rising",
-      "left_shops": [
-        "BILKA",
-        "CARDSDIRECT",
-        "CARDX",
-        "EPIC PANDA",
-        "FUN-SHOP",
-        "HALMES HULE",
-        "LUCKBOX",
-        "NOSTALGIC",
+        "POKEDEXET",
         "POKEMONPORTALEN",
         "ROGERZ",
         "STAALZ",
@@ -108,6 +139,7 @@
         "HALMES HULE",
         "LUCKBOX",
         "NOSTALGIC",
+        "POKEDEXET",
         "POKEMONPORTALEN",
         "ROGERZ",
         "STAALZ",
@@ -127,31 +159,61 @@
       "game": "POKÉMON",
       "language": "EN",
       "left_names": [
-        "Pokémon TCG: Mega Evolution: Pitch Black - Elite Trainer Box (ETB)"
+        "Booster Pack – ME03 Perfect Order",
+        "Pokemon - Mega Evolution – Perfect Order –  Booster"
       ],
-      "left_set": "pitch black etb",
+      "left_set": "perfect order",
       "left_shops": [
-        "POKEHULEN"
+        "CARDX",
+        "FUN-SHOP",
+        "MUSEN & SLOTTET",
+        "NOSTALGIC",
+        "POKECARDS.DK",
+        "POKEDEXET",
+        "POKEHULEN",
+        "POKEMONS.DK",
+        "POKÉPULLS",
+        "ROGERZ"
       ],
       "right_names": [
-        "Mega Evolution: Pitch Black Elite Trainer Box",
-        "Pitch Black - Elite Trainer Box - Pokemon kort"
+        "Perfect Order: Booster Pakke"
       ],
-      "right_set": "pitch black",
+      "right_set": "perfect order pakke",
       "right_shops": [
-        "CARDSDIRECT",
+        "POKEMONPORTALEN"
+      ],
+      "similarity": 0.94,
+      "type": "BOOSTER PACK"
+    },
+    {
+      "game": "POKÉMON",
+      "language": "EN",
+      "left_names": [
+        "Booster Pack – SV10 Destined Rivals",
+        "Destined Rivals - Booster Pack - Pokemon kort"
+      ],
+      "left_set": "destined rivals",
+      "left_shops": [
+        "CARDX",
         "EPIC PANDA",
-        "HALMES HULE",
+        "MATRAWS",
         "MUSEN & SLOTTET",
         "NOSTALGIC",
         "PBCARDS",
-        "POCKET MONSTER",
-        "ROGERZ",
-        "STAALZ",
-        "SYMBIZON"
+        "POKECARDS.DK",
+        "POKEHULEN",
+        "POKEMONS.DK",
+        "ROGERZ"
+      ],
+      "right_names": [
+        "Pokemon SV10 Destined Rivals - Booster pakke"
+      ],
+      "right_set": "destined rivals pakke",
+      "right_shops": [
+        "FUN-SHOP"
       ],
       "similarity": 0.94,
-      "type": "ETB"
+      "type": "BOOSTER PACK"
     },
     {
       "game": "POKÉMON",
@@ -217,59 +279,31 @@
       "game": "POKÉMON",
       "language": "EN",
       "left_names": [
-        "Booster Pack – ME03 Perfect Order",
-        "Pokemon - Mega Evolution – Perfect Order –  Booster"
+        "Mega Evolution: Pitch Black Booster Bundle",
+        "Pitch Black - Booster Bundle - Pokemon kort"
       ],
-      "left_set": "perfect order",
+      "left_set": "pitch black",
       "left_shops": [
-        "CARDX",
-        "FUN-SHOP",
-        "MUSEN & SLOTTET",
-        "NOSTALGIC",
-        "POKECARDS.DK",
-        "POKEHULEN",
-        "POKEMONS.DK",
-        "POKÉPULLS",
-        "ROGERZ"
-      ],
-      "right_names": [
-        "Perfect Order: Booster Pakke"
-      ],
-      "right_set": "perfect order pakke",
-      "right_shops": [
-        "POKEMONPORTALEN"
-      ],
-      "similarity": 0.94,
-      "type": "BOOSTER PACK"
-    },
-    {
-      "game": "POKÉMON",
-      "language": "EN",
-      "left_names": [
-        "Booster Pack – SV10 Destined Rivals",
-        "Destined Rivals - Booster Pack - Pokemon kort"
-      ],
-      "left_set": "destined rivals",
-      "left_shops": [
-        "CARDX",
+        "CARDSDIRECT",
         "EPIC PANDA",
-        "MUSEN & SLOTTET",
+        "HALMES HULE",
+        "LUCKBOX",
         "NOSTALGIC",
         "PBCARDS",
-        "POKECARDS.DK",
-        "POKEHULEN",
-        "POKEMONS.DK",
-        "ROGERZ"
+        "POCKET MONSTER",
+        "POKEMONPORTALEN",
+        "STAALZ",
+        "SYMBIZON"
       ],
       "right_names": [
-        "Pokemon SV10 Destined Rivals - Booster pakke"
+        "Pokemon: TCG - Mega Evolutions: Pitch Black Booster Bundle (6 Pakker)"
       ],
-      "right_set": "destined rivals pakke",
+      "right_set": "mega evolutions pitch black",
       "right_shops": [
-        "FUN-SHOP"
+        "BALTZER GAMES"
       ],
       "similarity": 0.94,
-      "type": "BOOSTER PACK"
+      "type": "BOOSTER BUNDLE"
     },
     {
       "game": "POKÉMON",
@@ -337,7 +371,9 @@
       "left_set": "journey together",
       "left_shops": [
         "CARDX",
+        "MATRAWS",
         "POKECARDS.DK",
+        "POKEDEXET",
         "POKEHULEN",
         "POKEMONPORTALEN",
         "POKEMONS.DK",
@@ -363,7 +399,9 @@
       "left_set": "journey together",
       "left_shops": [
         "CARDX",
+        "MATRAWS",
         "POKECARDS.DK",
+        "POKEDEXET",
         "POKEHULEN",
         "POKEMONPORTALEN",
         "POKEMONS.DK",
@@ -378,6 +416,32 @@
       ],
       "similarity": 0.94,
       "type": "BOOSTER PACK"
+    },
+    {
+      "game": "POKÉMON",
+      "language": "EN",
+      "left_names": [
+        "Mega Evolution: Perfect Order Elite Trainer Box",
+        "Perfect Order - Elite Trainer Box - Pokemon kort"
+      ],
+      "left_set": "perfect order",
+      "left_shops": [
+        "BALTZER GAMES",
+        "CARDSDIRECT",
+        "EPIC PANDA",
+        "POKEMONPORTALEN",
+        "ROGERZ",
+        "STAALZ"
+      ],
+      "right_names": [
+        "Pokémon TCG: Mega Evolution: Perfect Order - Elite Trainer Box (ETB)"
+      ],
+      "right_set": "perfect order etb",
+      "right_shops": [
+        "MATRAWS"
+      ],
+      "similarity": 0.94,
+      "type": "ETB"
     },
     {
       "game": "POKÉMON",
@@ -441,13 +505,14 @@
       ],
       "right_names": [
         "Booster Pack – SV08 Surging Sparks",
-        "Pokémon TCG: Scarlet & Violet – Surging Sparks Booster Pack"
+        "Pokemon Booster Pack - Scarlet & Violet Surging Sparks"
       ],
       "right_set": "surging sparks",
       "right_shops": [
         "CARDX",
         "EPIC PANDA",
         "POKECARDS.DK",
+        "POKEDEXET",
         "POKEMONS.DK"
       ],
       "similarity": 0.94,
@@ -457,11 +522,12 @@
       "game": "LORCANA",
       "language": "EN",
       "left_names": [
-        "Disney Lorcana: Into the Inklands Booster Box",
-        "Disney Lorcana: Into the Inklands Booster Display"
+        "Disney Lorcana TCG - Into The Inklands Booster Display (24 Packs)",
+        "Disney Lorcana: Into the Inklands Booster Box"
       ],
       "left_set": "into the inklands",
       "left_shops": [
+        "BALTZER GAMES",
         "MTGWEBSHOP",
         "NEXT LEVEL GAMES",
         "ROGERZ",
@@ -476,75 +542,6 @@
       ],
       "similarity": 0.94,
       "type": "BOOSTER BOX"
-    },
-    {
-      "game": "POKÉMON",
-      "language": "EN",
-      "left_names": [
-        "Destined Rivals Booster Bundle",
-        "Pokémon TCG: Destined Rivals Booster Bundle"
-      ],
-      "left_set": "destined rivals",
-      "left_shops": [
-        "POKEMONPORTALEN",
-        "ROGERZ",
-        "VAULTED"
-      ],
-      "right_names": [
-        "Destined Rivals Booster Bundle - 6 Booster Packs - Scarlet & Violet - Pokemon kort"
-      ],
-      "right_set": "destined rivals scarlet and violet",
-      "right_shops": [
-        "LUCKBOX"
-      ],
-      "similarity": 0.94,
-      "type": "BOOSTER BUNDLE"
-    },
-    {
-      "game": "POKÉMON",
-      "language": "EN",
-      "left_names": [
-        "Journey Together Elite Trainer Box",
-        "Pokémon TCG: Journey Together Elite Trainer Box"
-      ],
-      "left_set": "journey together",
-      "left_shops": [
-        "MTGWEBSHOP",
-        "POCKET MONSTER",
-        "ROGERZ"
-      ],
-      "right_names": [
-        "Pokémon Journey Together Elite Trainer Box (ETB) – Sealed (SV09)"
-      ],
-      "right_set": "journey together etb",
-      "right_shops": [
-        "STAALZ"
-      ],
-      "similarity": 0.94,
-      "type": "ETB"
-    },
-    {
-      "game": "POKÉMON",
-      "language": "EN",
-      "left_names": [
-        "Pokémon TCG: Shrouded Fable Elite Trainer Box (Scarlet & Violet)"
-      ],
-      "left_set": "shrouded fable scarlet and violet",
-      "left_shops": [
-        "ROGERZ"
-      ],
-      "right_names": [
-        "Elite Trainer Box – SV06.5 Shrouded Fable",
-        "Pokémon TCG: Shrouded Fable - Elite Trainer Box"
-      ],
-      "right_set": "shrouded fable",
-      "right_shops": [
-        "POKECARDS.DK",
-        "POKEMONS.DK",
-        "VAULTED"
-      ],
-      "similarity": 0.94,
-      "type": "ETB"
     }
   ],
   "version": 1
