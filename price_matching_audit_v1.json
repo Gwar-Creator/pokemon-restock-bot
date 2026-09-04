@@ -1,11 +1,11 @@
 {
-  "candidate_lines": 361,
-  "coverage_pct": 67.0,
+  "candidate_lines": 360,
+  "coverage_pct": 67.2,
   "exact_comparable_groups": 64,
   "likely_alias_pairs": 20,
   "matched_lines": 242,
-  "normalized_keys": 182,
-  "single_shop_keys": 118,
+  "normalized_keys": 181,
+  "single_shop_keys": 117,
   "suspects": [
     {
       "game": "POKÉMON",
@@ -154,36 +154,6 @@
       ],
       "similarity": 0.94,
       "type": "ETB"
-    },
-    {
-      "game": "POKÉMON",
-      "language": "EN",
-      "left_names": [
-        "Booster Pack – ME03 Perfect Order",
-        "Pokemon - Mega Evolution – Perfect Order –  Booster"
-      ],
-      "left_set": "perfect order",
-      "left_shops": [
-        "CARDX",
-        "FUN-SHOP",
-        "MUSEN & SLOTTET",
-        "NOSTALGIC",
-        "POKECARDS.DK",
-        "POKEDEXET",
-        "POKEHULEN",
-        "POKEMONS.DK",
-        "POKÉPULLS",
-        "ROGERZ"
-      ],
-      "right_names": [
-        "Perfect Order: Booster Pakke"
-      ],
-      "right_set": "perfect order pakke",
-      "right_shops": [
-        "POKEMONPORTALEN"
-      ],
-      "similarity": 0.94,
-      "type": "BOOSTER PACK"
     },
     {
       "game": "POKÉMON",
@@ -543,6 +513,30 @@
       ],
       "similarity": 0.94,
       "type": "BOOSTER BOX"
+    },
+    {
+      "game": "POKÉMON",
+      "language": "EN",
+      "left_names": [
+        "Destined Rivals Booster Bundle",
+        "Pokemon Booster Bundle - Scarlet & Violet Destined Rivals"
+      ],
+      "left_set": "destined rivals",
+      "left_shops": [
+        "POKEDEXET",
+        "POKEMONPORTALEN",
+        "ROGERZ",
+        "VAULTED"
+      ],
+      "right_names": [
+        "Destined Rivals Booster Bundle - 6 Booster Packs - Scarlet & Violet - Pokemon kort"
+      ],
+      "right_set": "destined rivals scarlet and violet",
+      "right_shops": [
+        "LUCKBOX"
+      ],
+      "similarity": 0.94,
+      "type": "BOOSTER BUNDLE"
     }
   ],
   "version": 1
