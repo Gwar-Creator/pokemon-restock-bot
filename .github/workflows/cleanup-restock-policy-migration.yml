@@ -1,0 +1,79 @@
+name: Cleanup Restock policy migration
+
+on:
+  push:
+    paths:
+      - ".github/workflows/cleanup-restock-policy-migration.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Remove duplicate policy block
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path("restock_bot_github.py")
+          text = path.read_text(encoding="utf-8")
+          marker = "RESTOCK_DISCORD_ALLOWED_SOURCES = ("
+          starts = []
+          pos = 0
+          while True:
+              idx = text.find(marker, pos)
+              if idx < 0:
+                  break
+              starts.append(idx)
+              pos = idx + len(marker)
+
+          if len(starts) == 2:
+              text = text[:starts[0]] + text[starts[1]:]
+          elif len(starts) != 1:
+              raise SystemExit(f"Unexpected policy block count: {len(starts)}")
+
+          if text.count(marker) != 1:
+              raise SystemExit("Policy block cleanup failed")
+
+          path.write_text(text, encoding="utf-8")
+          PY
+
+          python -m py_compile restock_bot_github.py
+
+      - name: Remove one-off migration workflows
+        shell: bash
+        run: |
+          rm -f .github/workflows/apply-restock-channel-policy.yml
+          rm -f .github/workflows/cleanup-restock-policy-migration.yml
+
+      - name: Commit cleanup
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- restock_bot_github.py .github/workflows/apply-restock-channel-policy.yml .github/workflows/cleanup-restock-policy-migration.yml
+          git commit -m "Finalize Restock Discord source policy"
+
+          for attempt in 1 2 3; do
+            git fetch origin main
+            if git rebase origin/main && git push origin HEAD:main; then
+              echo "Cleanup pushed successfully."
+              exit 0
+            fi
+            git rebase --abort || true
+            if [ "$attempt" -lt 3 ]; then
+              sleep $((attempt * 5))
+            fi
+          done
+
+          echo "Failed to push cleanup after 3 attempts."
+          exit 1
