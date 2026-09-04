@@ -11,7 +11,7 @@ import requests
 ROOT = Path(__file__).resolve().parent
 SHARED_FILE = ROOT / "restock_bot_github.py"
 STATE_FILE = ROOT / "hot_restock_state.json"
-FILTER_VERSION = 1
+FILTER_VERSION = 2
 
 HOT_ITERATIONS = max(1, int(os.getenv("HOT_ITERATIONS", "1")))
 HOT_INTERVAL_SECONDS = max(30, int(os.getenv("HOT_INTERVAL_SECONDS", "60")))
@@ -47,11 +47,6 @@ RATE_LIMIT_MARKERS = (
     "service unavailable",
 )
 
-EXCLUDED_ETB_SETS = (
-    "chaos rising",
-    "pitch black",
-)
-
 CORE_MARKERS = (
     "booster bundle",
     "booster box",
@@ -62,8 +57,17 @@ COLLECTION_MARKERS = (
     "premium collection",
     "ultra-premium collection",
     "ultra premium collection",
+    "super premium collection",
+    "super-premium collection",
     "special collection",
     "illustration collection",
+    "collection box",
+)
+
+TIN_MARKERS = (
+    "mini tin",
+    "poke ball tin",
+    "poké ball tin",
 )
 
 WATCH_MARKERS = (
@@ -111,9 +115,10 @@ def hot_product_allowed(name):
     ):
         return False
 
+    # HOT/Restock følger de relevante produkttyper på tværs af ALLE sæt.
     is_etb = "elite trainer box" in text or bool(re.search(r"\betb\b", text))
     if is_etb:
-        return not any(blocked in text for blocked in EXCLUDED_ETB_SETS)
+        return True
 
     if any(marker in text for marker in CORE_MARKERS):
         return True
@@ -121,9 +126,22 @@ def hot_product_allowed(name):
     if any(marker in text for marker in COLLECTION_MARKERS):
         return True
 
+    # Standard EX/V/VSTAR/VMAX boxes are collection boxes even when the
+    # retailer omits the word "collection" from the title.
+    if re.search(r"\b(?:ex|v|vmax|vstar)\s+(?:collection\s+)?box\b", text):
+        return True
+
     if " ultra premium " in text or bool(re.search(r"\bupc\b", text)):
         return True
 
+    if " super premium " in text or bool(re.search(r"\bspc\b", text)):
+        return True
+
+    if any(marker in text for marker in TIN_MARKERS) or re.search(r"\btins?\b", text):
+        return True
+
+    # First Partner / 30th etc. remain explicit special watches even when the
+    # retailer uses an unusual product-family label.
     if any(marker in text for marker in WATCH_MARKERS):
         return True
 
