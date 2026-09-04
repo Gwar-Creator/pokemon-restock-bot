@@ -71,6 +71,7 @@ V40_RUNTIME_FIX_V41 = True
 KELZ0R_STABILITY_V42 = True
 RESTOCK_REPLAY_GUARD_V44 = True
 PRICE_WATCH_FOCUS_V58 = True
+PRICE_HISTORY_BACKEND_V59 = True
 RESTOCK_RECOVERY_GAP_SECONDS = 30 * 60
 RESTOCK_DUPLICATE_COOLDOWN_SECONDS = 6 * 60 * 60
 RESTOCK_NEW_PRODUCT_COOLDOWN_SECONDS = 24 * 60 * 60
@@ -78,8 +79,8 @@ PRICE_ALERT_COOLDOWN_SECONDS = 24 * 60 * 60
 PRICE_ALERT_MIN_IMPROVEMENT_DKK = 25.0
 PRICE_ALERT_MIN_IMPROVEMENT_PCT = 0.05
 
-# Kanalroller: Restock viser lagerhændelser. Prisændringer hører hjemme i
-# Price Watch / Price History, så samme prisfald ikke støjer i flere kanaler.
+# Kanalroller: Restock viser lagerhændelser. Price Watch viser relevante
+# prisfald. Price History gemmer historik som backend-data uden Discord-støj.
 RESTOCK_PRICE_ALERTS_ENABLED = False
 
 SOURCE_MIN_PRODUCTS = {
@@ -4292,12 +4293,11 @@ def process_price_history(old_history_state, current_state, fresh_sources):
     next_products = dict(previous_products)
     active_keys = set(groups.keys())
 
-    daily_due = (
-        bool(PRICE_HISTORY_WEBHOOK_URL)
-        and now_local.hour >= PRICE_HISTORY_DAILY_HOUR
-        and last_daily_date != today
-        and last_daily_attempt_date != today
-    )
+    # V59: Price History er nu backend-only. Vi gemmer fortsat alle
+    # observationer, prisændringer og historiske lows, men sender ingen
+    # daglige købssignaler, aktiveringsbeskeder eller CSV-filer til Discord.
+    # Cardmarket-reference flyttes/afgøres separat i Cardmarket-kanalen.
+    daily_due = False
 
     new_lows = []
 
@@ -4453,12 +4453,13 @@ def process_price_history(old_history_state, current_state, fresh_sources):
             last_daily_date = today
 
     print(
-        f"PRICE HISTORY V1: {len(active_keys)} aktive produkter | "
-        f"{len(new_lows)} nye historiske lows"
+        f"PRICE HISTORY V2 BACKEND: {len(active_keys)} aktive produkter | "
+        f"{len(new_lows)} nye historiske lows | Discord stille"
     )
 
     return {
-        "version": 1,
+        "version": 2,
+        "mode": "backend_only",
         "started_at": started_at,
         "last_daily_date": last_daily_date,
         "last_daily_attempt_date": last_daily_attempt_date,
