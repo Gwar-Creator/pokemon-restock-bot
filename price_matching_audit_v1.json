@@ -1,11 +1,11 @@
 {
-  "candidate_lines": 363,
-  "coverage_pct": 66.9,
-  "exact_comparable_groups": 65,
+  "candidate_lines": 328,
+  "coverage_pct": 67.1,
+  "exact_comparable_groups": 62,
   "likely_alias_pairs": 20,
-  "matched_lines": 243,
-  "normalized_keys": 184,
-  "single_shop_keys": 119,
+  "matched_lines": 220,
+  "normalized_keys": 169,
+  "single_shop_keys": 107,
   "suspects": [
     {
       "game": "POKÉMON",
@@ -103,13 +103,11 @@
         "CARDX",
         "EPIC PANDA",
         "FUN-SHOP",
-        "HALMES HULE",
         "LUCKBOX",
         "NOSTALGIC",
         "POKEDEXET",
         "POKEMONPORTALEN",
         "ROGERZ",
-        "STAALZ",
         "VAULTED"
       ],
       "right_names": [
@@ -136,13 +134,11 @@
         "CARDX",
         "EPIC PANDA",
         "FUN-SHOP",
-        "HALMES HULE",
         "LUCKBOX",
         "NOSTALGIC",
         "POKEDEXET",
         "POKEMONPORTALEN",
         "ROGERZ",
-        "STAALZ",
         "VAULTED"
       ],
       "right_names": [
@@ -184,96 +180,6 @@
       ],
       "similarity": 0.94,
       "type": "BOOSTER PACK"
-    },
-    {
-      "game": "POKÉMON",
-      "language": "EN",
-      "left_names": [
-        "Mega Evolution: Pitch Black Elite Trainer Box",
-        "Pitch Black - Elite Trainer Box - Pokemon kort"
-      ],
-      "left_set": "pitch black",
-      "left_shops": [
-        "CARDSDIRECT",
-        "EPIC PANDA",
-        "HALMES HULE",
-        "MUSEN & SLOTTET",
-        "NOSTALGIC",
-        "PBCARDS",
-        "POCKET MONSTER",
-        "ROGERZ",
-        "STAALZ",
-        "SYMBIZON"
-      ],
-      "right_names": [
-        "Pitch Black – Elite Trainer Box ( 9 Boosters )"
-      ],
-      "right_set": "pitch black 9 s",
-      "right_shops": [
-        "ANDCARDS"
-      ],
-      "similarity": 0.94,
-      "type": "ETB"
-    },
-    {
-      "game": "POKÉMON",
-      "language": "EN",
-      "left_names": [
-        "Mega Evolution: Pitch Black Elite Trainer Box",
-        "Pitch Black - Elite Trainer Box - Pokemon kort"
-      ],
-      "left_set": "pitch black",
-      "left_shops": [
-        "CARDSDIRECT",
-        "EPIC PANDA",
-        "HALMES HULE",
-        "MUSEN & SLOTTET",
-        "NOSTALGIC",
-        "PBCARDS",
-        "POCKET MONSTER",
-        "ROGERZ",
-        "STAALZ",
-        "SYMBIZON"
-      ],
-      "right_names": [
-        "Featured image for “Pitch Black ME05 - Elite Trainer Box (ETB)”"
-      ],
-      "right_set": "featured image for pitch black etb",
-      "right_shops": [
-        "KOCARDZ"
-      ],
-      "similarity": 0.94,
-      "type": "ETB"
-    },
-    {
-      "game": "POKÉMON",
-      "language": "EN",
-      "left_names": [
-        "Mega Evolution: Pitch Black Booster Bundle",
-        "Pitch Black - Booster Bundle - Pokemon kort"
-      ],
-      "left_set": "pitch black",
-      "left_shops": [
-        "CARDSDIRECT",
-        "EPIC PANDA",
-        "HALMES HULE",
-        "LUCKBOX",
-        "NOSTALGIC",
-        "PBCARDS",
-        "POCKET MONSTER",
-        "POKEMONPORTALEN",
-        "STAALZ",
-        "SYMBIZON"
-      ],
-      "right_names": [
-        "Pokemon: TCG - Mega Evolutions: Pitch Black Booster Bundle (6 Pakker)"
-      ],
-      "right_set": "mega evolutions pitch black",
-      "right_shops": [
-        "BALTZER GAMES"
-      ],
-      "similarity": 0.94,
-      "type": "BOOSTER BUNDLE"
     },
     {
       "game": "POKÉMON",
@@ -420,6 +326,90 @@
       "game": "POKÉMON",
       "language": "EN",
       "left_names": [
+        "Mega Evolution: Pitch Black Elite Trainer Box",
+        "Pitch Black - Elite Trainer Box - Pokemon kort"
+      ],
+      "left_set": "pitch black",
+      "left_shops": [
+        "CARDSDIRECT",
+        "EPIC PANDA",
+        "MUSEN & SLOTTET",
+        "NOSTALGIC",
+        "PBCARDS",
+        "POCKET MONSTER",
+        "ROGERZ",
+        "SYMBIZON"
+      ],
+      "right_names": [
+        "Pitch Black – Elite Trainer Box ( 9 Boosters )"
+      ],
+      "right_set": "pitch black 9 s",
+      "right_shops": [
+        "ANDCARDS"
+      ],
+      "similarity": 0.94,
+      "type": "ETB"
+    },
+    {
+      "game": "POKÉMON",
+      "language": "EN",
+      "left_names": [
+        "Mega Evolution: Pitch Black Elite Trainer Box",
+        "Pitch Black - Elite Trainer Box - Pokemon kort"
+      ],
+      "left_set": "pitch black",
+      "left_shops": [
+        "CARDSDIRECT",
+        "EPIC PANDA",
+        "MUSEN & SLOTTET",
+        "NOSTALGIC",
+        "PBCARDS",
+        "POCKET MONSTER",
+        "ROGERZ",
+        "SYMBIZON"
+      ],
+      "right_names": [
+        "Featured image for “Pitch Black ME05 - Elite Trainer Box (ETB)”"
+      ],
+      "right_set": "featured image for pitch black etb",
+      "right_shops": [
+        "KOCARDZ"
+      ],
+      "similarity": 0.94,
+      "type": "ETB"
+    },
+    {
+      "game": "POKÉMON",
+      "language": "EN",
+      "left_names": [
+        "Mega Evolution: Pitch Black Booster Bundle",
+        "Pitch Black - Booster Bundle - Pokemon kort"
+      ],
+      "left_set": "pitch black",
+      "left_shops": [
+        "CARDSDIRECT",
+        "EPIC PANDA",
+        "LUCKBOX",
+        "NOSTALGIC",
+        "PBCARDS",
+        "POCKET MONSTER",
+        "POKEMONPORTALEN",
+        "SYMBIZON"
+      ],
+      "right_names": [
+        "Pokemon: TCG - Mega Evolutions: Pitch Black Booster Bundle (6 Pakker)"
+      ],
+      "right_set": "mega evolutions pitch black",
+      "right_shops": [
+        "BALTZER GAMES"
+      ],
+      "similarity": 0.94,
+      "type": "BOOSTER BUNDLE"
+    },
+    {
+      "game": "POKÉMON",
+      "language": "EN",
+      "left_names": [
         "Mega Evolution: Perfect Order Elite Trainer Box",
         "Perfect Order - Elite Trainer Box - Pokemon kort"
       ],
@@ -429,8 +419,7 @@
         "CARDSDIRECT",
         "EPIC PANDA",
         "POKEMONPORTALEN",
-        "ROGERZ",
-        "STAALZ"
+        "ROGERZ"
       ],
       "right_names": [
         "Pokémon TCG: Mega Evolution: Perfect Order - Elite Trainer Box (ETB)"
@@ -438,56 +427,6 @@
       "right_set": "perfect order etb",
       "right_shops": [
         "MATRAWS"
-      ],
-      "similarity": 0.94,
-      "type": "ETB"
-    },
-    {
-      "game": "POKÉMON",
-      "language": "EN",
-      "left_names": [
-        "Pokémon TCG: Destined Rivals - Elite Trainer Box (ETB)"
-      ],
-      "left_set": "destined rivals etb",
-      "left_shops": [
-        "POKEHULEN"
-      ],
-      "right_names": [
-        "Destined Rivals Elite Trainer Box",
-        "Pokemon - Scarlet & Violet - Destined Rivals - Elite Trainer Box"
-      ],
-      "right_set": "destined rivals",
-      "right_shops": [
-        "HALMES HULE",
-        "MTGWEBSHOP",
-        "MUSEN & SLOTTET",
-        "NOSTALGIC",
-        "ROGERZ"
-      ],
-      "similarity": 0.94,
-      "type": "ETB"
-    },
-    {
-      "game": "POKÉMON",
-      "language": "EN",
-      "left_names": [
-        "Destined Rivals Elite Trainer Box",
-        "Pokemon - Scarlet & Violet - Destined Rivals - Elite Trainer Box"
-      ],
-      "left_set": "destined rivals",
-      "left_shops": [
-        "HALMES HULE",
-        "MTGWEBSHOP",
-        "MUSEN & SLOTTET",
-        "NOSTALGIC",
-        "ROGERZ"
-      ],
-      "right_names": [
-        "Featured image for “Destined Rivals - Elite Trainer Box (9 pakker)”"
-      ],
-      "right_set": "featured image for destined rivals 9 pakker",
-      "right_shops": [
-        "KOCARDZ"
       ],
       "similarity": 0.94,
       "type": "ETB"
@@ -541,6 +480,54 @@
       ],
       "similarity": 0.94,
       "type": "BOOSTER BOX"
+    },
+    {
+      "game": "POKÉMON",
+      "language": "EN",
+      "left_names": [
+        "Pokémon TCG: Destined Rivals - Elite Trainer Box (ETB)"
+      ],
+      "left_set": "destined rivals etb",
+      "left_shops": [
+        "POKEHULEN"
+      ],
+      "right_names": [
+        "Destined Rivals Elite Trainer Box",
+        "Pokemon - Scarlet & Violet - Destined Rivals - Elite Trainer Box"
+      ],
+      "right_set": "destined rivals",
+      "right_shops": [
+        "MTGWEBSHOP",
+        "MUSEN & SLOTTET",
+        "NOSTALGIC",
+        "ROGERZ"
+      ],
+      "similarity": 0.94,
+      "type": "ETB"
+    },
+    {
+      "game": "POKÉMON",
+      "language": "EN",
+      "left_names": [
+        "Destined Rivals Booster Bundle",
+        "Pokemon Booster Bundle - Scarlet & Violet Destined Rivals"
+      ],
+      "left_set": "destined rivals",
+      "left_shops": [
+        "POKEDEXET",
+        "POKEMONPORTALEN",
+        "ROGERZ",
+        "VAULTED"
+      ],
+      "right_names": [
+        "Destined Rivals Booster Bundle - 6 Booster Packs - Scarlet & Violet - Pokemon kort"
+      ],
+      "right_set": "destined rivals scarlet and violet",
+      "right_shops": [
+        "LUCKBOX"
+      ],
+      "similarity": 0.94,
+      "type": "BOOSTER BUNDLE"
     }
   ],
   "version": 1
