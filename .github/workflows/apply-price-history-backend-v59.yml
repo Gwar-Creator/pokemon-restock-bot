@@ -1,0 +1,106 @@
+name: Apply Price History Backend V59
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/apply-price-history-backend-v59.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: apply-price-history-backend-v59
+  cancel-in-progress: false
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Apply migration
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import ast
+
+          path = Path('restock_bot_github.py')
+          text = path.read_text(encoding='utf-8')
+
+          flag_anchor = 'PRICE_WATCH_FOCUS_V58 = True\n'
+          if 'PRICE_HISTORY_BACKEND_V59 = True' not in text:
+              if flag_anchor not in text:
+                  raise SystemExit('Price Watch V58 flag anchor not found')
+              text = text.replace(
+                  flag_anchor,
+                  flag_anchor + 'PRICE_HISTORY_BACKEND_V59 = True\n',
+                  1,
+              )
+
+          old_comment = '''# Kanalroller: Restock viser lagerhændelser. Prisændringer hører hjemme i\n# Price Watch / Price History, så samme prisfald ikke støjer i flere kanaler.\n'''
+          new_comment = '''# Kanalroller: Restock viser lagerhændelser. Price Watch viser relevante\n# prisfald. Price History gemmer historik som backend-data uden Discord-støj.\n'''
+          if old_comment in text:
+              text = text.replace(old_comment, new_comment, 1)
+
+          old_daily = '''    daily_due = (\n        bool(PRICE_HISTORY_WEBHOOK_URL)\n        and now_local.hour >= PRICE_HISTORY_DAILY_HOUR\n        and last_daily_date != today\n        and last_daily_attempt_date != today\n    )\n'''
+          new_daily = '''    # V59: Price History er nu backend-only. Vi gemmer fortsat alle\n    # observationer, prisændringer og historiske lows, men sender ingen\n    # daglige købssignaler, aktiveringsbeskeder eller CSV-filer til Discord.\n    # Cardmarket-reference flyttes/afgøres separat i Cardmarket-kanalen.\n    daily_due = False\n'''
+          if old_daily in text:
+              text = text.replace(old_daily, new_daily, 1)
+          elif new_daily not in text:
+              raise SystemExit('Price History daily_due block not found')
+
+          old_print = '''    print(\n        f"PRICE HISTORY V1: {len(active_keys)} aktive produkter | "\n        f"{len(new_lows)} nye historiske lows"\n    )\n\n    return {\n        "version": 1,\n'''
+          new_print = '''    print(\n        f"PRICE HISTORY V2 BACKEND: {len(active_keys)} aktive produkter | "\n        f"{len(new_lows)} nye historiske lows | Discord stille"\n    )\n\n    return {\n        "version": 2,\n        "mode": "backend_only",\n'''
+          if old_print in text:
+              text = text.replace(old_print, new_print, 1)
+          elif 'PRICE HISTORY V2 BACKEND' not in text:
+              raise SystemExit('Price History return block not found')
+
+          ast.parse(text)
+          path.write_text(text, encoding='utf-8')
+
+          required = (
+              'PRICE_HISTORY_BACKEND_V59 = True',
+              'daily_due = False',
+              'PRICE HISTORY V2 BACKEND',
+              '"mode": "backend_only"',
+          )
+          missing = [value for value in required if value not in text]
+          if missing:
+              raise SystemExit(f'missing expected V59 markers: {missing}')
+          PY
+
+      - name: Validate production scanner
+        shell: bash
+        run: |
+          python -m py_compile restock_bot_github.py
+          python -m unittest -q test_discord_cleanup.py test_alert_policy.py test_matraws_single_guard.py test_state_commit_guard.py
+
+      - name: Commit production change and clean migration workflow
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          rm -f .github/workflows/apply-price-history-backend-v59.yml
+          git add restock_bot_github.py .github/workflows/apply-price-history-backend-v59.yml
+          git commit -m "Make Price History backend-only"
+
+          for attempt in 1 2 3; do
+            git fetch origin main
+            if git rebase origin/main && git push origin HEAD:main; then
+              exit 0
+            fi
+            git rebase --abort || true
+            if [ "$attempt" -lt 3 ]; then
+              sleep $((attempt * 5))
+            fi
+          done
+
+          echo "Failed to push Price History V59 after 3 attempts."
+          exit 1
