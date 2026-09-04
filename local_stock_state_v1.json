@@ -299,7 +299,7 @@
       "sku": "11320995-EA",
       "price": 599.0,
       "visibility": "LIVE",
-      "store_count": 1,
+      "store_count": 0,
       "url": "https://www.bilka.dk/produkter/pokemon-tcg-pitch-black-elite-trainer-box/200380918/",
       "site": "BILKA",
       "stocks": {
@@ -312,7 +312,7 @@
           "stock": 0
         }
       },
-      "observed_at": "2026-09-03T04:11:33.867182+00:00"
+      "observed_at": "2026-09-04T15:21:42.111171+00:00"
     },
     "bilka:200366281": {
       "id": "200366281",
@@ -370,12 +370,21 @@
       "series_source": "metadata",
       "sku": "10667205-EA",
       "price": 299.0,
-      "visibility": "LIVE",
+      "visibility": "PRE-PUBLISH",
       "store_count": 0,
       "url": "https://www.bilka.dk/produkter/pokemon-tcg-scarlet-violetpaldean-fates-tin/200248869/",
       "site": "BILKA",
-      "stocks": {},
-      "observed_at": "2026-09-03T04:11:34.315953+00:00"
+      "stocks": {
+        "1662": {
+          "name": "Bilka Kolding",
+          "stock": 0
+        },
+        "1659": {
+          "name": "Bilka Esbjerg",
+          "stock": 0
+        }
+      },
+      "observed_at": "2026-09-04T15:21:42.890228+00:00"
     },
     "bilka:200245192": {
       "id": "200245192",
@@ -1549,12 +1558,33 @@
       "series_source": "metadata",
       "sku": "10667205-EA",
       "price": 299.0,
-      "visibility": "LIVE",
+      "visibility": "PRE-PUBLISH",
       "store_count": 0,
       "url": "https://www.foetex.dk/produkter/pokemon-tcg-scarlet-violetpaldean-fates-tin/200248869/",
       "site": "FØTEX",
-      "stocks": {},
-      "observed_at": "2026-09-03T04:12:00.700594+00:00"
+      "stocks": {
+        "1350": {
+          "name": "føtex Fredericia City",
+          "stock": 0
+        },
+        "1223": {
+          "name": "føtex Esbjerg Broen",
+          "stock": 0
+        },
+        "1343": {
+          "name": "føtex Fredericia, Venusvej",
+          "stock": 0
+        },
+        "1307": {
+          "name": "føtex Kolding",
+          "stock": 0
+        },
+        "1370": {
+          "name": "føtex Kolding Syd",
+          "stock": 0
+        }
+      },
+      "observed_at": "2026-09-04T15:22:12.229657+00:00"
     },
     "foetex:200371882": {
       "id": "200371882",
@@ -7830,6 +7860,6 @@
       "observed_at": "2026-09-03T04:12:23.519199+00:00"
     }
   },
-  "last_run": "2026-09-04T15:02:57.948583+00:00",
+  "last_run": "2026-09-04T15:22:47.787632+00:00",
   "last_run_errors": 0
 }
