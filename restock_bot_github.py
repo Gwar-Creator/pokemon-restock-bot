@@ -956,6 +956,35 @@ def restock_channel_alert_allowed(message):
     )
 
 
+RESTOCK_DISCORD_ALLOWED_SOURCES = (
+    "COOLSHOP",
+    "PROSHOP",
+    "BR",
+    "BILKA",
+    "FØTEX",
+)
+
+
+def restock_channel_alert_allowed(message):
+    """Mute ordinary restocks outside the selected retail sources."""
+    lines = [
+        line.replace("**", "").strip()
+        for line in str(message or "").splitlines()
+        if line.strip()
+    ]
+    headline = lines[0].upper() if lines else ""
+
+    # Actual product-restock headlines use [GAME] ... RESTOCK.
+    # New products, preorders and operational messages stay unchanged.
+    if not re.search(r"\[[^\]]+\].*\bRESTOCK\b", headline):
+        return True
+
+    return any(
+        re.search(rf"\b{re.escape(source)}\b", headline)
+        for source in RESTOCK_DISCORD_ALLOWED_SOURCES
+    )
+
+
 def send_discord(message):
     if not restock_channel_alert_allowed(message):
         headline = next(
