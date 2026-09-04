@@ -1,0 +1,164 @@
+name: Apply Price Watch V61 Cleanup
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/apply-price-watch-v61-cleanup.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: apply-price-watch-v61-cleanup
+  cancel-in-progress: false
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Patch Price Watch and cleanup
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import ast
+
+          path = Path('restock_bot_github.py')
+          text = path.read_text(encoding='utf-8')
+
+          marker = 'PRICE_HISTORY_BACKEND_V59 = True\n'
+          if 'PRICE_WATCH_LAST_IN_STOCK_V61 = True\n' not in text:
+              if marker not in text:
+                  raise SystemExit('V59 marker not found')
+              text = text.replace(
+                  marker,
+                  marker + 'PRICE_WATCH_LAST_IN_STOCK_V61 = True\n',
+                  1,
+              )
+
+          helper = '''def _price_watch_focus_reference_price(old):\n    """Return the last trustworthy in-stock price for a focused listing.\n\n    V1.5 stored only the latest observed display price. A retailer can change\n    that price while the item is out of stock, which must not erase the last\n    price at which the product was actually buyable. Existing V1.5 state is\n    migrated safely: only an old row that was itself in stock may seed the\n    reference from its legacy `price` field.\n    """\n    if not isinstance(old, dict):\n        return None\n\n    try:\n        reference = float(old.get("last_in_stock_price"))\n    except (TypeError, ValueError):\n        reference = None\n\n    if reference is not None and reference > 0:\n        return reference\n\n    if not bool(old.get("in_stock")):\n        return None\n\n    try:\n        legacy_price = float(old.get("price"))\n    except (TypeError, ValueError):\n        return None\n\n    return legacy_price if legacy_price > 0 else None\n\n\n'''
+
+          process_anchor = 'def process_price_watch(\n'
+          if helper.strip() not in text:
+              if process_anchor not in text:
+                  raise SystemExit('process_price_watch anchor not found')
+              text = text.replace(process_anchor, helper + process_anchor, 1)
+
+          old_logic = '''        was_in_stock = bool(old.get("in_stock"))\n\n        try:\n            old_seen_price = float(old.get("price"))\n        except (TypeError, ValueError):\n            old_seen_price = None\n\n        is_restock = bool(old) and not was_in_stock and current_in_stock\n        price_is_lower = (\n            old_seen_price is not None\n            and current_price < old_seen_price - 0.005\n        )\n\n        if (\n            not baseline_only\n            and current_in_stock\n            and price_is_lower\n            and old_seen_price is not None\n        ):\n            if _price_watch_focus_alert(\n                listing,\n                old_seen_price,\n                combo=is_restock,\n            ):\n                alerts_sent += 1\n\n        next_listings[listing_key] = {\n            "source": listing["source"],\n            "shop": listing["shop"],\n            "raw_id": listing["raw_id"],\n            "name": listing["name"],\n            "set": listing["set"],\n            "type": listing["type"],\n            "price": current_price,\n            "in_stock": current_in_stock,\n            "url": listing.get("url") or "",\n            "last_seen": now_local.isoformat(),\n        }\n'''
+
+          new_logic = '''        was_in_stock = bool(old.get("in_stock"))\n        reference_price = _price_watch_focus_reference_price(old)\n\n        is_restock = bool(old) and not was_in_stock and current_in_stock\n        price_is_lower = (\n            reference_price is not None\n            and current_price < reference_price - 0.005\n        )\n\n        if (\n            not baseline_only\n            and current_in_stock\n            and price_is_lower\n            and reference_price is not None\n        ):\n            if _price_watch_focus_alert(\n                listing,\n                reference_price,\n                combo=is_restock,\n            ):\n                alerts_sent += 1\n\n        # Only an actually buyable observation may advance this reference.\n        # While out of stock, preserve the previous in-stock price even if the\n        # retailer changes the displayed price.\n        last_in_stock_price = (\n            current_price\n            if current_in_stock\n            else reference_price\n        )\n\n        next_listings[listing_key] = {\n            "source": listing["source"],\n            "shop": listing["shop"],\n            "raw_id": listing["raw_id"],\n            "name": listing["name"],\n            "set": listing["set"],\n            "type": listing["type"],\n            "price": current_price,\n            "last_in_stock_price": last_in_stock_price,\n            "in_stock": current_in_stock,\n            "url": listing.get("url") or "",\n            "last_seen": now_local.isoformat(),\n        }\n'''
+
+          if old_logic in text:
+              text = text.replace(old_logic, new_logic, 1)
+          elif new_logic not in text:
+              raise SystemExit('Price Watch transition block not found')
+
+          text = text.replace(
+              'print("PRICE WATCH V1.5: fokuseret sealed-baseline oprettet uden alerts.")',
+              'print("PRICE WATCH V1.6: fokuseret sealed-baseline oprettet uden alerts.")',
+              1,
+          )
+          text = text.replace(
+              '"PRICE WATCH V1.5: "',
+              '"PRICE WATCH V1.6: "',
+              1,
+          )
+          text = text.replace(
+              '"version": 15,\n        "mode": "focused_sealed_price_drops",',
+              '"version": 16,\n        "mode": "focused_sealed_price_drops",',
+              1,
+          )
+
+          # The Restock source gate was accidentally duplicated verbatim.
+          block = '''RESTOCK_DISCORD_ALLOWED_SOURCES = (\n    "COOLSHOP",\n    "PROSHOP",\n    "BR",\n    "BILKA",\n    "FØTEX",\n)\n\n\ndef restock_channel_alert_allowed(message):\n    """Mute ordinary restocks outside the selected retail sources."""\n    lines = [\n        line.replace("**", "").strip()\n        for line in str(message or "").splitlines()\n        if line.strip()\n    ]\n    headline = lines[0].upper() if lines else ""\n\n    # Actual product-restock headlines use [GAME] ... RESTOCK.\n    # New products, preorders and operational messages stay unchanged.\n    if not re.search(r"\\[[^\\]]+\\].*\\bRESTOCK\\b", headline):\n        return True\n\n    return any(\n        re.search(rf"\\b{re.escape(source)}\\b", headline)\n        for source in RESTOCK_DISCORD_ALLOWED_SOURCES\n    )\n'''
+          doubled = block + '\n\n' + block
+          if doubled in text:
+              text = text.replace(doubled, block, 1)
+          elif text.count('RESTOCK_DISCORD_ALLOWED_SOURCES = (') != 1:
+              raise SystemExit('Restock source-gate duplicate shape changed')
+
+          ast.parse(text)
+          path.write_text(text, encoding='utf-8')
+
+          workflow = Path('.github/workflows/restock.yml')
+          workflow_text = workflow.read_text(encoding='utf-8')
+          workflow_text = workflow_text.replace(
+              '          SCANNER_HEALTH_WEBHOOK_URL: ${{ secrets.SCANNER_HEALTH_WEBHOOK_URL }}\n',
+              '',
+              1,
+          )
+          workflow_text = workflow_text.replace(
+              '      - name: Audit scanner health\n',
+              '      - name: Audit scanner health (Actions only)\n',
+              1,
+          )
+          workflow.write_text(workflow_text, encoding='utf-8')
+
+          required = (
+              'PRICE_WATCH_LAST_IN_STOCK_V61 = True',
+              'def _price_watch_focus_reference_price(old):',
+              '"last_in_stock_price": last_in_stock_price',
+              '"version": 16',
+              'PRICE WATCH V1.6',
+          )
+          missing = [value for value in required if value not in text]
+          if missing:
+              raise SystemExit(f'missing V61 markers: {missing}')
+          if text.count('RESTOCK_DISCORD_ALLOWED_SOURCES = (') != 1:
+              raise SystemExit('duplicate Restock gate still present')
+          if 'SCANNER_HEALTH_WEBHOOK_URL:' in workflow_text:
+              raise SystemExit('Scanner Health webhook env still wired')
+          PY
+
+      - name: Validate production behavior
+        shell: bash
+        env:
+          DISCORD_WEBHOOK_URL: https://example.invalid/restock
+        run: |
+          python -m py_compile restock_bot_github.py local_stock_watch.py scanner_health_audit.py discord_cleanup.py state_commit_guard.py
+          python -m unittest -q test_discord_cleanup.py test_alert_policy.py test_matraws_single_guard.py test_state_commit_guard.py
+          python - <<'PY'
+          import restock_bot_github as bot
+
+          ref = bot._price_watch_focus_reference_price
+          assert ref({"in_stock": True, "price": 599}) == 599.0
+          assert ref({"in_stock": False, "price": 499}) is None
+          assert ref({"in_stock": False, "price": 499, "last_in_stock_price": 599}) == 599.0
+          assert ref({"in_stock": True, "price": 499, "last_in_stock_price": 549}) == 549.0
+          assert ref({}) is None
+
+          source = open('restock_bot_github.py', encoding='utf-8').read()
+          assert source.count('RESTOCK_DISCORD_ALLOWED_SOURCES = (') == 1
+          assert '"version": 16' in source
+          print('Price Watch V61 reference-price tests passed')
+          PY
+
+      - name: Commit production changes and remove one-off workflow
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          rm -f .github/workflows/apply-price-watch-v61-cleanup.yml
+          git add restock_bot_github.py .github/workflows/restock.yml .github/workflows/apply-price-watch-v61-cleanup.yml
+          git commit -m "Preserve Price Watch in-stock reference and clean scanner wiring"
+
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            if git rebase origin/main && git push origin HEAD:main; then
+              exit 0
+            fi
+            git rebase --abort || true
+            if [ "$attempt" -lt 5 ]; then
+              sleep $((attempt * 5))
+            fi
+          done
+
+          echo "Failed to push V61 after 5 attempts."
+          exit 1
