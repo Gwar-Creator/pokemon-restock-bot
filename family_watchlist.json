@@ -1,5 +1,5 @@
 {
-  "version": 4,
+  "version": 5,
   "source": "Dated digital flyers via eTilbudsavis with direct Løvbjerg Vejen fallback",
   "allowed_stores": [
     "Netto",
@@ -9,6 +9,8 @@
     "Matas",
     "Kvickly",
     "Bilka",
+    "føtex",
+    "MENY",
     "SuperBrugsen",
     "Dagli Brugsen",
     "365discount"
@@ -17,34 +19,62 @@
     {
       "id": "sensilac_2",
       "label": "NAN ExpertPro Sensilac 2",
-      "queries": ["sensilac", "nan"],
+      "queries": ["sensilac", "nan sensilac", "nan expertpro", "modermælkserstatning"],
       "include_all": ["sensilac"],
       "include_any": ["sensilac 2", "expertpro sensilac 2", "sensilac pro 2"],
       "exclude_any": ["sensilac 1"]
     },
     {
+      "id": "semper_grod_pulver",
+      "label": "Semper grød-pulver",
+      "queries": ["semper grød", "babygrød", "semper havregrød", "semper"],
+      "include_all": ["semper", "grød"],
+      "include_any": [],
+      "exclude_any": ["klemmepose", "klem pose", "pouch", "smoothie", "spiseklar", "120 g"]
+    },
+    {
       "id": "semper_grodposer",
       "label": "Semper grød-/klemmeposer",
-      "queries": ["semper", "babymat", "klemmepose"],
+      "queries": ["semper", "babymad", "klemmepose", "semper grød"],
       "include_all": ["semper"],
-      "include_any": ["grod", "klemmepose", "klemmeposer", "grod pouch", "grodpouch", "spiseklar grod"],
-      "exclude_any": ["pulver"]
+      "include_any": ["klemmepose", "klem pose", "grød klem", "grødpose", "grød pouch", "grødpouch", "spiseklar grød"],
+      "exclude_any": ["pulver", "smoothie"]
     },
     {
       "id": "baby_smoothies",
       "label": "Baby-smoothies / frugtmos",
-      "queries": ["semper", "babymat", "smoothie", "frugtmos"],
+      "queries": ["smoothie", "frugtmos", "semper", "babymad"],
       "include_all": [],
-      "include_any": ["semper smoothie", "grod smoothie", "grod-smoothie", "frugtsmoothie", "baby smoothie", "frugtmos", "hipp smoothie", "ellas smoothie", "ella's smoothie", "organix smoothie"],
-      "exclude_any": ["protein", "juicepresser", "blender", "straw", "sugeror", "drikkevarer"]
+      "include_any": [],
+      "include_any_sets": [
+        ["smoothie", "frugtmos", "frugt pouch", "frugtpose"],
+        ["semper", "hipp", "ella's", "ellas", "organix", "baby", "6 mdr", "8 mdr", "12 mdr", "grød"]
+      ],
+      "exclude_any": ["protein", "juicepresser", "blender", "straw", "sugerør", "drikkevarer"]
+    },
+    {
+      "id": "bleer",
+      "label": "Babybleer",
+      "queries": ["bleer", "libero", "pampers", "babybleer"],
+      "include_all": [],
+      "include_any": ["bleer", "babyble", "natbleer", "libero", "pampers", "junior pants", "pants"],
+      "exclude_any": ["voksen", "inkontinens", "tena", "libresse", "bind", "trusseindlæg"]
     },
     {
       "id": "vadservietter",
       "label": "Vådservietter",
-      "queries": ["vådservietter", "vådserviet", "baby wipes"],
+      "queries": ["vådservietter", "vådserviet", "baby wipes", "babypleje"],
       "include_all": [],
-      "include_any": ["vadserviet", "wipes"],
-      "exclude_any": []
+      "include_any": ["vådserviet", "wipes"],
+      "exclude_any": ["rengøringsserviet"]
+    },
+    {
+      "id": "bornetoj",
+      "label": "Børnetøj / babytøj",
+      "queries": ["børnetøj", "babytøj", "baby body", "børnenattøj", "børnepyjamas"],
+      "include_all": [],
+      "include_any": ["børnetøj", "babytøj", "baby body", "bodystocking", "børnenattøj", "børnepyjamas", "kids tøj", "junior tøj"],
+      "exclude_any": ["dametøj", "herretøj", "voksen"]
     }
   ]
 }
