@@ -8,6 +8,13 @@ on:
         required: true
         default: true
         type: boolean
+  push:
+    branches: [main]
+    paths:
+      - "family_watch.py"
+      - "family_watchlist.json"
+      - "test_family_watch.py"
+      - ".github/workflows/family-watch.yml"
   schedule:
     - cron: "17 */4 * * *"
 
@@ -51,8 +58,10 @@ jobs:
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             DRY_RUN="${REQUESTED_DRY_RUN:-true}"
-          else
+          elif [ "${{ github.event_name }}" = "schedule" ]; then
             DRY_RUN="false"
+          else
+            DRY_RUN="true"
           fi
 
           if [ -z "$FAMILY_WATCH_WEBHOOK_URL" ]; then
