@@ -17,36 +17,28 @@ jobs:
         with:
           python-version: "3.13"
       - run: pip install -r requirements.txt
-      - name: Probe Coop publication feed
+      - name: Inspect Coop frontend catalog requests
         run: |
           python - <<'PY'
           import re, requests
+          from urllib.parse import urljoin
           from bs4 import BeautifulSoup
 
-          urls={
-            'Kvickly':'https://kvickly.coop.dk/avis/',
-            'SuperBrugsen':'https://superbrugsen.coop.dk/avis/',
-            'DagliBrugsen':'https://brugsen.coop.dk/avis/',
-            '365discount':'https://365discount.coop.dk/365avis/',
-          }
-          endpoint='https://squid-api.tjek.com/v4/rpc/generate_incito_from_publication'
-          for store,url in urls.items():
-            r=requests.get(url,headers={'User-Agent':'Mozilla/5.0'},timeout=30)
-            covers=re.findall(r'business_incito_publications%2F([^%&]+)%2F([^%&]+)%2Fcover',r.text,re.I)
-            print('\n###',store,'covers',covers[:5])
-            for business,pub in covers[:3]:
-              body={
-                'id':pub,
-                'device_category':'desktop',
-                'orientation':'vertical',
-                'pointer':'fine',
-                'pixel_ratio':1,
-                'max_width':1000,
-                'versions_supported':['1.0.0'],
-              }
-              rr=requests.post(endpoint,json=body,headers={'User-Agent':'Mozilla/5.0','Content-Type':'application/json'},timeout=30)
-              print('POST',business,pub,rr.status_code,rr.text[:500])
-            soup=BeautifulSoup(r.text,'html.parser')
-            scripts=[s.get('src') for s in soup.find_all('script') if s.get('src')]
-            print('SCRIPTS',scripts[-15:])
+          base='https://superbrugsen.coop.dk/avis/'
+          r=requests.get(base,headers={'User-Agent':'Mozilla/5.0'},timeout=30)
+          soup=BeautifulSoup(r.text,'html.parser')
+          wanted=[]
+          for s in soup.find_all('script'):
+            src=s.get('src')
+            if src and any(name in src for name in ['shopgun.js','catalogDataController.js','catalog.js','incito.js','catalogSearchController.js','offerController.js']):
+              wanted.append(urljoin(base,src))
+          for url in wanted:
+            rr=requests.get(url,headers={'User-Agent':'Mozilla/5.0'},timeout=30)
+            print('\n###',url,rr.status_code,'len',len(rr.text))
+            text=rr.text
+            for needle in ['api_key','apiKey','X-Api-Key','squid-api','generate_incito','publication','catalogData','offerSearch','shopgun']:
+              hits=list(re.finditer(re.escape(needle),text,re.I))[:5]
+              print('NEEDLE',needle,'hits',len(hits))
+              for m in hits:
+                print(repr(text[max(0,m.start()-700):m.start()+1800]))
           PY
