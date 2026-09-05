@@ -51,8 +51,7 @@ jobs:
       - name: Validate Family Watch
         run: |
           python -m py_compile family_watch.py family_watch_runner.py
-          python -m unittest test_family_watch.py
-          python -m unittest test_family_watch_runner.py
+          python -m unittest test_family_watch.py test_family_watch_runner.py
 
       - name: Scan current family offers
         env:
