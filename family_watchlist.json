@@ -1,5 +1,5 @@
 {
-  "version": 11,
+  "version": 12,
   "source": "Dated digital flyers via eTilbudsavis with direct Løvbjerg Vejen fallback",
   "max_offer_days": 45,
   "allowed_stores": [
@@ -83,14 +83,10 @@
     },
     {
       "id": "frosne_kyllingestrimler",
-      "label": "Frosne kyllingestrimler",
-      "queries": ["kyllingestrimler frost", "frosne kyllingestrimler", "kyllinge strimler frost", "chicken strips frost"],
+      "label": "Kyllingestrimler på frost",
+      "queries": ["kyllingestrimler på frost", "kyllingestrimler frost", "frosne kyllingestrimler", "kyllinge strimler frost", "chicken strips frost"],
       "include_all": [],
-      "include_any": [],
-      "include_any_sets": [
-        ["kyllingestrimler", "kyllinge strimler", "chicken strips"],
-        ["frost", "frossen", "frosne", "dybfrost"]
-      ],
+      "include_any": ["kyllingestrimler", "kyllinge strimler", "chicken strips"],
       "exclude_any": ["fersk", "køl", "kølevare", "sandwich", "salat"]
     },
     {
