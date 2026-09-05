@@ -1,5 +1,5 @@
 {
-  "version": 8,
+  "version": 9,
   "source": "Dated digital flyers via eTilbudsavis with direct Løvbjerg Vejen fallback",
   "max_offer_days": 45,
   "allowed_stores": [
@@ -57,6 +57,7 @@
       "id": "bleer",
       "label": "Babybleer",
       "queries": ["bleer", "libero", "pampers", "babybleer"],
+      "allowed_stores": ["Rema 1000"],
       "include_all": [],
       "include_any": ["bleer", "babyble", "natbleer", "libero", "pampers", "junior pants", "pants"],
       "exclude_any": ["voksen", "inkontinens", "tena", "libresse", "bind", "trusseindlæg"]
@@ -73,6 +74,8 @@
       "id": "bornetoj",
       "label": "Børnetøj / babytøj",
       "queries": ["børnetøj", "babytøj", "baby body", "børnenattøj", "børnepyjamas"],
+      "allowed_stores": ["Bilka", "Kvickly", "SuperBrugsen"],
+      "aggregate": "store_period",
       "include_all": [],
       "include_any": [],
       "exclude_any": ["dametøj", "herretøj", "voksen", "esmara"],
