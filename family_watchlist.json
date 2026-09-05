@@ -1,5 +1,5 @@
 {
-  "version": 6,
+  "version": 7,
   "source": "Dated digital flyers via eTilbudsavis with direct Løvbjerg Vejen fallback",
   "allowed_stores": [
     "Netto",
@@ -74,7 +74,8 @@
       "queries": ["børnetøj", "babytøj", "baby body", "børnenattøj", "børnepyjamas"],
       "include_all": [],
       "include_any": [],
-      "exclude_any": ["dametøj", "herretøj", "voksen", "esmara"]
+      "exclude_any": ["dametøj", "herretøj", "voksen", "esmara"],
+      "skip_lovbjerg_direct": true
     }
   ]
 }
