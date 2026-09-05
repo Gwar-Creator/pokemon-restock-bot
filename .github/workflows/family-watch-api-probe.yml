@@ -20,23 +20,17 @@ jobs:
           python-version: "3.13"
       - name: Install requests
         run: pip install requests
-      - name: Probe Tjek widget network endpoints
+      - name: Inspect Tjek widget fetch paths
         run: |
           python - <<'PY'
-          import re, requests
-          s=requests.Session(); s.headers.update({'User-Agent':'Mozilla/5.0'})
-          urls=['https://widgets.tjek.com/v1.js','https://js-sdk.tjek.com/sgn-sdk-4.x.x.min.js']
-          for url in urls:
-              r=s.get(url,timeout=30)
-              print('\n===',url,'STATUS',r.status_code,'LEN',len(r.text),'===')
-              r.raise_for_status(); text=r.text
-              domains=sorted(set(re.findall(r'https?://[^"\'` )]+', text)))
-              print('URLS')
-              for x in domains[:200]:
-                  if any(k in x.lower() for k in ['tjek','shopgun','api','publication']): print(x[:500])
-              for needle in ['api.shopgun','api.tjek','paged_publication','paged-publication','publication_v2','publications','hotspots','apiKey','api-key','Authorization','Bearer']:
-                  i=text.find(needle)
-                  if i>=0:
-                      print('\nNEEDLE',needle,'INDEX',i)
-                      print(text[max(0,i-800):i+1800].replace('\n',' ')[:2800])
+          import requests
+          text=requests.get('https://widgets.tjek.com/v1.js',timeout=30).text
+          for needle in ['function fetchPublications','const fetchPublications','fetchPublications =','fetchPublication','squid-api.tjek.com','/publications','/publication','/offers','/hotspots','X-Api-Key']:
+              start=0
+              while True:
+                  i=text.find(needle,start)
+                  if i<0: break
+                  print('\n===',needle,'AT',i,'===')
+                  print(text[max(0,i-1400):i+3500].replace('\n',' '))
+                  start=i+1
           PY
