@@ -19,8 +19,6 @@ on:
       - "family_watch_direct.py"
       - "family_watchlist.json"
       - ".github/workflows/family-watch-email.yml"
-  schedule:
-    - cron: "0 7 * * *"
 
 permissions:
   contents: write
@@ -65,13 +63,7 @@ jobs:
           FAMILY_WATCH_EMAIL_FROM: ${{ secrets.FAMILY_WATCH_EMAIL_FROM }}
           REQUESTED_DRY_RUN: ${{ inputs.dry_run }}
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            DRY_RUN="${REQUESTED_DRY_RUN:-true}"
-          elif [ "${{ github.event_name }}" = "schedule" ]; then
-            DRY_RUN="false"
-          else
-            DRY_RUN="true"
-          fi
+          DRY_RUN="${REQUESTED_DRY_RUN:-true}"
 
           if [ -z "$FAMILY_WATCH_EMAIL_TO" ] || [ -z "$FAMILY_WATCH_SMTP_USERNAME" ] || [ -z "$FAMILY_WATCH_SMTP_PASSWORD" ]; then
             echo "Email secrets are incomplete; forcing dry run."
