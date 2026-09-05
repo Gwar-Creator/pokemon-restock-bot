@@ -17,10 +17,10 @@ jobs:
         with:
           python-version: "3.13"
       - run: pip install -r requirements.txt
-      - name: Verify direct Coop offer feeds
+      - name: Discover Coop catalog lists
         run: |
           python - <<'PY'
-          import re, requests
+          import re, requests, json
           from bs4 import BeautifulSoup
 
           sites={
@@ -29,43 +29,50 @@ jobs:
             'DagliBrugsen':'https://brugsen.coop.dk/avis/',
             '365discount':'https://365discount.coop.dk/365avis/',
           }
-          headers={'User-Agent':'Mozilla/5.0'}
+          headers0={'User-Agent':'Mozilla/5.0'}
           for store,base in sites.items():
-              print('\n###',store,base)
-              r=requests.get(base,headers=headers,timeout=30)
+              r=requests.get(base,headers=headers0,timeout=30)
               soup=BeautifulSoup(r.text,'html.parser')
-              keym=re.search(r"_shopgunApiKey=['\"]([^'\"]+)",r.text,re.I)
-              key=keym.group(1) if keym else ''
-              wrappers=soup.select('.incito-wrapper[data-publication-id], .shopgun-wrapper[data-publication-id]')
-              print('KEY?',bool(key),'WRAPPERS',[(w.get('class'),w.get('data-publication-id')) for w in wrappers])
-
-              for route in [
-                  '/umbraco/api/CatalogSearch/Search',
-                  '/umbraco/api/catalogsearch/search',
+              key=re.search(r"_shopgunApiKey=['\"]([^'\"]+)",r.text,re.I).group(1)
+              wrapper=soup.select_one('.incito-wrapper[data-publication-id], .shopgun-wrapper[data-publication-id]')
+              pub=wrapper.get('data-publication-id') if wrapper else ''
+              headers={**headers0,'X-Api-Key':key,'X-Widgets-Version':'v1'}
+              print('\n###',store,'pub',pub)
+              for url in [
+                  f'https://squid-api.tjek.com/v2/catalogs/{pub}',
+                  f'https://squid-api.tjek.com/v2/publications/{pub}',
               ]:
-                  rr=requests.get(base.rstrip('/')+route,params={'searchTerm':'Cheasy'},headers=headers,timeout=30)
-                  print('SEARCH',route,rr.status_code,rr.text[:1200])
+                  rr=requests.get(url,headers=headers,timeout=30)
+                  print('DETAIL',url,rr.status_code,rr.text[:2500])
 
-              endpoint='https://squid-api.tjek.com/v4/rpc/generate_incito_from_publication'
-              for w in wrappers[:2]:
-                  pub=w.get('data-publication-id')
-                  body={
-                    'id':pub,
-                    'device_category':'desktop',
-                    'orientation':'vertical',
-                    'pointer':'fine',
-                    'pixel_ratio':1,
-                    'max_width':1000,
-                    'versions_supported':['1.0.0'],
-                  }
-                  rr=requests.post(endpoint,json=body,headers={**headers,'Content-Type':'application/json','X-Api-Key':key},timeout=30)
-                  print('TJEK',pub,rr.status_code,'len',len(rr.text),rr.text[:1000])
+              root=requests.post(
+                  'https://squid-api.tjek.com/v4/rpc/generate_incito_from_publication',
+                  headers={**headers,'Content-Type':'application/json'},
+                  json={'id':pub,'device_category':'desktop','orientation':'vertical','pointer':'fine','pixel_ratio':1,'max_width':1000,'versions_supported':['1.0.0']},timeout=30
+              ).json()
+              hits=[]
+              def walk(v,path=''):
+                  if isinstance(v,dict):
+                      for k,x in v.items():
+                          p=f'{path}.{k}' if path else k
+                          if any(t in k.lower() for t in ['dealer','business','run_from','run_till','publish']):
+                              hits.append((p,x if not isinstance(x,(dict,list)) else type(x).__name__))
+                          walk(x,p)
+                  elif isinstance(v,list):
+                      for i,x in enumerate(v): walk(x,f'{path}[{i}]')
+              walk(root)
+              print('ROOT_META',hits[:100])
 
-              for suffix in ['naesteuge/','næsteuge/','?tilbudType=next']:
-                  u=base+suffix
-                  rr=requests.get(u,headers=headers,timeout=30)
-                  ss=BeautifulSoup(rr.text,'html.parser')
-                  ww=ss.select('.incito-wrapper[data-publication-id], .shopgun-wrapper[data-publication-id]')
-                  period=' '.join(x.get_text(' ',strip=True) for x in ss.select('.date-periode'))
-                  print('NEXT?',u,rr.status_code,rr.url,'wrappers',[x.get('data-publication-id') for x in ww],'period',period[:250])
+              candidates=[]
+              for pat in [r'business_incito_publications%2F([^%&]+)%2F',r'uploads/businesses/([^/]+)/']:
+                  candidates += re.findall(pat,r.text,re.I)
+              candidates=list(dict.fromkeys(candidates))
+              print('DEALER_CANDIDATES',candidates[:20])
+              for dealer in candidates[:10]:
+                  rr=requests.get('https://squid-api.tjek.com/v2/catalogs',params={'dealer_id':dealer,'types':'paged,incito'},headers=headers,timeout=30)
+                  if rr.status_code==200:
+                      try: data=rr.json()
+                      except: data=[]
+                      if isinstance(data,list) and data:
+                          print('CATALOGS',dealer,len(data),[(x.get('id'),x.get('label'),x.get('run_from'),x.get('run_till'),x.get('publish'),x.get('types')) for x in data[:10]])
           PY
