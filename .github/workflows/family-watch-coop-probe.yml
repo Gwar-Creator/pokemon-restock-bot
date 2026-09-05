@@ -17,28 +17,36 @@ jobs:
         with:
           python-version: "3.13"
       - run: pip install -r requirements.txt
-      - name: Inspect Coop flyer widget metadata
+      - name: Probe Coop publication feed
         run: |
           python - <<'PY'
           import re, requests
           from bs4 import BeautifulSoup
+
           urls={
             'Kvickly':'https://kvickly.coop.dk/avis/',
             'SuperBrugsen':'https://superbrugsen.coop.dk/avis/',
             'DagliBrugsen':'https://brugsen.coop.dk/avis/',
             '365discount':'https://365discount.coop.dk/365avis/',
           }
+          endpoint='https://squid-api.tjek.com/v4/rpc/generate_incito_from_publication'
           for store,url in urls.items():
             r=requests.get(url,headers={'User-Agent':'Mozilla/5.0'},timeout=30)
+            covers=re.findall(r'business_incito_publications%2F([^%&]+)%2F([^%&]+)%2Fcover',r.text,re.I)
+            print('\n###',store,'covers',covers[:5])
+            for business,pub in covers[:3]:
+              body={
+                'id':pub,
+                'device_category':'desktop',
+                'orientation':'vertical',
+                'pointer':'fine',
+                'pixel_ratio':1,
+                'max_width':1000,
+                'versions_supported':['1.0.0'],
+              }
+              rr=requests.post(endpoint,json=body,headers={'User-Agent':'Mozilla/5.0','Content-Type':'application/json'},timeout=30)
+              print('POST',business,pub,rr.status_code,rr.text[:500])
             soup=BeautifulSoup(r.text,'html.parser')
-            print('\n###',store)
-            for sel in ['.tjek-widget','[data-api-key]','[data-business-id]','[data-id]']:
-              nodes=soup.select(sel)
-              print('SEL',sel,'count',len(nodes))
-              for n in nodes[:8]:
-                print(str(n)[:2500])
-            for needle in ['squid-api.tjek.com','tjek.com','data-api-key','publication-viewer','catalog']:
-              print('NEEDLE',needle)
-              for m in list(re.finditer(re.escape(needle),r.text,re.I))[:3]:
-                print(repr(r.text[max(0,m.start()-1000):m.start()+2500]))
+            scripts=[s.get('src') for s in soup.find_all('script') if s.get('src')]
+            print('SCRIPTS',scripts[-15:])
           PY
