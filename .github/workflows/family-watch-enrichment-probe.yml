@@ -1,0 +1,53 @@
+name: Family Watch Enrichment Probe
+
+on:
+  push:
+    paths:
+      - ".github/workflows/family-watch-enrichment-probe.yml"
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          ref: main
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Verify live app and membership metadata
+        run: |
+          python - <<'PY'
+          import requests
+          import family_watch as fw
+          import family_watch_runner as runner
+
+          html = requests.get(
+              'https://etilbudsavis.dk/soeg/slik',
+              headers={'User-Agent': fw.USER_AGENT},
+              timeout=30,
+          ).text
+          products = runner.extract_embedded_product_dicts(html)
+          special = [p for p in products if p.get('appPrice') is not None or p.get('membershipPrice') is not None]
+          print('products', len(products), 'special_prices', len(special))
+          assert products, 'No embedded eTilbudsavis products parsed'
+          assert special, 'No live app/membership prices parsed'
+          for p in special[:10]:
+              business = p.get('business') or {}
+              store = business.get('name', '') if isinstance(business, dict) else ''
+              app = fw.maybe_float(p.get('appPrice'))
+              member = fw.maybe_float(p.get('membershipPrice'))
+              note = runner.infer_access_note(store, str(p.get('description') or ''), app, member)
+              print(store, '|', p.get('name'), '| regular', p.get('price'), '| app', p.get('appPrice'), '| member', p.get('membershipPrice'), '| note', note)
+          assert any(runner.infer_access_note(
+              (p.get('business') or {}).get('name', '') if isinstance(p.get('business'), dict) else '',
+              str(p.get('description') or ''),
+              fw.maybe_float(p.get('appPrice')),
+              fw.maybe_float(p.get('membershipPrice')),
+          ) for p in special), 'Special prices were found but no access requirement could be inferred'
+          PY
