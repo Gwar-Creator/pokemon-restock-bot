@@ -13,9 +13,11 @@ on:
     paths:
       - "family_watch.py"
       - "family_watch_runner.py"
+      - "family_watch_direct.py"
       - "family_watchlist.json"
       - "test_family_watch.py"
       - "test_family_watch_runner.py"
+      - "test_family_watch_direct.py"
       - ".github/workflows/family-watch.yml"
   schedule:
     - cron: "17 */4 * * *"
@@ -50,8 +52,8 @@ jobs:
 
       - name: Validate Family Watch
         run: |
-          python -m py_compile family_watch.py family_watch_runner.py
-          python -m unittest test_family_watch.py test_family_watch_runner.py
+          python -m py_compile family_watch.py family_watch_runner.py family_watch_direct.py
+          python -m unittest test_family_watch.py test_family_watch_runner.py test_family_watch_direct.py
 
       - name: Scan current family offers
         env:
@@ -72,7 +74,7 @@ jobs:
           fi
 
           export FAMILY_WATCH_DRY_RUN="$DRY_RUN"
-          python family_watch_runner.py | tee family_watch_run.log
+          python family_watch_direct.py | tee family_watch_run.log
 
       - name: Save Family Watch state
         if: ${{ hashFiles('family_watch_state.json') != '' }}
