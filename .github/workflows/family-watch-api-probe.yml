@@ -19,25 +19,55 @@ jobs:
         with:
           python-version: "3.13"
       - name: Install requests
-        run: pip install requests
-      - name: Probe Madpris product fields
+        run: pip install requests beautifulsoup4
+      - name: Probe Madpris product fields and frontend
         run: |
           python - <<'PY'
-          import json, requests
+          import json, re, requests
+          from bs4 import BeautifulSoup
+
+          s=requests.Session()
           base='https://madpris.gratis.dk/api/products'
-          queries=['semper klemmepose','semper smoothie','semper','vådservietter']
-          for q in queries:
+
+          for q in ['semper klemmepose','klemmepose','semper smoothie','semper']:
               print('\n=== QUERY:', q, '===')
-              r=requests.get(base, params={'q':q,'sort':'price','order':'asc','page':1}, timeout=20)
-              print('STATUS', r.status_code)
+              r=s.get(base, params={'q':q,'sort':'price','order':'asc','page':1}, timeout=20)
               r.raise_for_status()
               data=r.json()
-              print('TOP_KEYS', sorted(data.keys()))
-              products=data.get('products',[])
-              print('COUNT_PAGE', len(products))
-              for p in products[:20]:
-                  store=str(p.get('store',''))
-                  name=str(p.get('name',''))
-                  if q=='semper' or 'semper' in name.lower() or 'løvbjerg' in store.lower() or 'lovbjerg' in store.lower() or 'lidl' in store.lower():
+              print('TOTAL', data.get('total'), 'COUNT_PAGE', len(data.get('products',[])))
+              for p in data.get('products',[])[:50]:
+                  if q in {'semper klemmepose','klemmepose'} or str(p.get('store','')).lower() in {'lidl','løvbjerg','lovbjerg'}:
                       print(json.dumps(p, ensure_ascii=False, sort_keys=True))
+
+          print('\n=== FRONTEND SCRIPTS ===')
+          home=s.get('https://madpris.gratis.dk/',timeout=20)
+          home.raise_for_status()
+          soup=BeautifulSoup(home.text,'html.parser')
+          scripts=[]
+          for tag in soup.find_all('script', src=True):
+              src=tag['src']
+              if src.startswith('/'):
+                  src='https://madpris.gratis.dk'+src
+              elif src.startswith('//'):
+                  src='https:'+src
+              scripts.append(src)
+              print(src)
+
+          needles=('valid_from','valid_to','start_date','end_date','offer_from','offer_to','upcoming','leaflet','catalog','/api/offers','/api/offer')
+          for src in scripts:
+              try:
+                  text=s.get(src,timeout=20).text
+              except Exception as e:
+                  print('SCRIPT_ERR',src,e)
+                  continue
+              low=text.lower()
+              hits=[n for n in needles if n in low]
+              if hits:
+                  print('\nSCRIPT_HITS',src,hits)
+                  for n in hits:
+                      i=low.find(n)
+                      print('CONTEXT',n, text[max(0,i-250):i+500].replace('\n',' '))
+              api_paths=sorted(set(re.findall(r"/api/[A-Za-z0-9_?&=./{}:-]+", text)))
+              if api_paths:
+                  print('API_PATHS',src,api_paths[:100])
           PY
