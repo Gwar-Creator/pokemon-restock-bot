@@ -1,6 +1,6 @@
 {
-  "version": 12,
-  "source": "Dated digital flyers via eTilbudsavis with direct Løvbjerg Vejen fallback",
+  "version": 13,
+  "source": "Dated digital flyers via retailer-direct Coop/Løvbjerg feeds with eTilbudsavis fallback for other chains",
   "max_offer_days": 45,
   "allowed_stores": [
     "Netto",
@@ -76,6 +76,21 @@
       "aggregate": "store_period",
       "highlight_label": "ULD-FUND",
       "highlight_terms": ["uld", "merino", "merinould", "wool"],
+      "direct_include_any": [
+        "friends",
+        "børnetøj",
+        "babytøj",
+        "heldragt",
+        "flyverdragt",
+        "bodystocking",
+        "baby body",
+        "uldbody",
+        "uld body",
+        "ulddragt",
+        "uldbukser",
+        "uldbluse",
+        "uldtrøje"
+      ],
       "include_all": [],
       "include_any": [],
       "exclude_any": ["dametøj", "herretøj", "voksen", "esmara"],
