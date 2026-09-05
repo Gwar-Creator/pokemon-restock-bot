@@ -213,6 +213,22 @@ def _extract_size_ranges(offers: list[fw.Offer]) -> list[str]:
     return found[:4]
 
 
+def _matches_highlight(offer: fw.Offer, terms: list[str]) -> bool:
+    text = _norm(f"{offer.name} {offer.description}")
+    for raw_term in terms:
+        term = _norm(raw_term)
+        if not term:
+            continue
+        if term == "uld":
+            # Match uld, uldbody, uldblanding etc., but not unrelated words like guld.
+            if re.search(r"(?<![a-z0-9])uld", text):
+                return True
+            continue
+        if term in text:
+            return True
+    return False
+
+
 def _aggregate_group_offers(offers: list[fw.Offer], group: dict[str, Any]) -> list[fw.Offer]:
     if group.get("aggregate") != "store_period":
         return offers
@@ -234,10 +250,17 @@ def _aggregate_group_offers(offers: list[fw.Offer], group: dict[str, Any]) -> li
         for item in items:
             if item.name not in names:
                 names.append(item.name)
-            _, meta = _access_from_description(item.description)
-            note = str(meta.get("access") or "")
+            _, item_meta = _access_from_description(item.description)
+            note = str(item_meta.get("access") or "")
             if note and note not in access_notes:
                 access_notes.append(note)
+
+        highlight_terms = [str(value) for value in group.get("highlight_terms", []) if value]
+        highlighted = [item for item in items if _matches_highlight(item, highlight_terms)]
+        highlighted_names: list[str] = []
+        for item in highlighted:
+            if item.name not in highlighted_names:
+                highlighted_names.append(item.name)
 
         prices = [item.price for item in items if item.price is not None]
         meta = {
@@ -247,9 +270,16 @@ def _aggregate_group_offers(offers: list[fw.Offer], group: dict[str, Any]) -> li
             "max_price": max(prices) if prices else None,
             "sizes": _extract_size_ranges(items),
             "access": access_notes,
+            "highlight_label": str(group.get("highlight_label") or ""),
+            "highlight_count": len(highlighted),
+            "highlight_items": highlighted_names[:6],
         }
         first = items[0]
         aggregate_id = f"{group['id']}:{store_key}:{start}:{end}"
+        # Keep the old key when no highlight is present, but allow one extra
+        # alert if a high-signal item (e.g. wool) appears later in the period.
+        if highlighted:
+            aggregate_id += ":highlight"
         aggregated.append(
             fw.Offer(
                 source="family_watch_aggregate",
@@ -295,7 +325,6 @@ def collect_offers(config: dict[str, Any], session: Any, now: Any = None):
         group_offers = [offer for offer in filtered if offer.group_id == group_id]
         final.extend(_aggregate_group_offers(group_offers, group))
 
-    # Preserve any offers from unknown groups defensively.
     known_ids = set(groups)
     final.extend(offer for offer in filtered if offer.group_id not in known_ids)
 
@@ -358,10 +387,21 @@ def build_message(offer: fw.Offer, phase: str) -> str:
         lines = [
             heading,
             "**Børnetøj i tilbudsavisen**",
+        ]
+        highlight_count = int(aggregate.get("highlight_count") or 0)
+        highlight_label = str(aggregate.get("highlight_label") or "").strip()
+        highlight_items = [str(value) for value in aggregate.get("highlight_items", []) if value]
+        if highlight_count:
+            label = highlight_label or "SÆRLIGT FUND"
+            lines.append(f"🧶🔥 **{label}: {highlight_count} tilbud**")
+            if highlight_items:
+                lines.append("🧶 " + " · ".join(highlight_items[:5]))
+
+        lines.extend([
             f"👕 **{int(aggregate.get('count') or 0)} relevante tøjtilbud samlet**",
             f"💰 **{_format_price_range(aggregate)}**",
             f"📅 Gælder: **{fw.format_period(offer)}**",
-        ]
+        ])
         sizes = [str(value) for value in aggregate.get("sizes", []) if value]
         if sizes:
             lines.append("📏 Størrelser: " + " · ".join(sizes))
