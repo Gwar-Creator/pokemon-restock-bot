@@ -1,13 +1,13 @@
 import unittest
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 import family_watch
 import family_watch_runner as runner
 
 
 class FamilyWatchRunnerTests(unittest.TestCase):
-    def test_extracts_embedded_app_price_product(self):
-        html = '''<script>{"data":[{"publicId":"offer1","name":"Baby wipes","description":"Gælder kun med Netto+ appen","price":25,"membershipPrice":null,"appPrice":20,"validFrom":"2026-09-04T22:00:00+0000","validUntil":"2026-09-11T21:59:59+0000","business":{"name":"Netto"},"publicationPublicId":"pub1"}]}</script>'''
+    def test_extracts_html_escaped_app_price_product(self):
+        html = '''<app-data data-status="success">{&quot;data&quot;:[{&quot;publicId&quot;:&quot;offer1&quot;,&quot;name&quot;:&quot;Baby wipes&quot;,&quot;description&quot;:&quot;Gælder kun med Netto+ appen&quot;,&quot;price&quot;:25,&quot;membershipPrice&quot;:null,&quot;appPrice&quot;:20,&quot;validFrom&quot;:&quot;2026-09-04T22:00:00+0000&quot;,&quot;validUntil&quot;:&quot;2026-09-11T21:59:59+0000&quot;,&quot;business&quot;:{&quot;name&quot;:&quot;Netto&quot;},&quot;publicationPublicId&quot;:&quot;pub1&quot;}]}</app-data>'''
         products = runner.extract_embedded_product_dicts(html)
         self.assertEqual(len(products), 1)
         self.assertEqual(products[0]["appPrice"], 20)
@@ -17,7 +17,7 @@ class FamilyWatchRunnerTests(unittest.TestCase):
         <script type="application/ld+json">
         {"@type":"Offer","name":"Baby wipes","description":"Gælder kun med Netto+ appen","price":25,"validFrom":"2026-09-04T22:00:00+0000","validThrough":"2026-09-11T21:59:59+0000","seller":{"name":"Netto"},"url":"https://etilbudsavis.dk/Netto?publication=pub1&offer=offer1"}
         </script>
-        <script>{"data":[{"publicId":"offer1","name":"Baby wipes","description":"Gælder kun med Netto+ appen","price":25,"membershipPrice":null,"appPrice":20,"validFrom":"2026-09-04T22:00:00+0000","validUntil":"2026-09-11T21:59:59+0000","business":{"name":"Netto"},"publicationPublicId":"pub1"}]}</script>
+        <app-data>{&quot;data&quot;:[{&quot;publicId&quot;:&quot;offer1&quot;,&quot;name&quot;:&quot;Baby wipes&quot;,&quot;description&quot;:&quot;Gælder kun med Netto+ appen&quot;,&quot;price&quot;:25,&quot;membershipPrice&quot;:null,&quot;appPrice&quot;:20,&quot;validFrom&quot;:&quot;2026-09-04T22:00:00+0000&quot;,&quot;validUntil&quot;:&quot;2026-09-11T21:59:59+0000&quot;,&quot;business&quot;:{&quot;name&quot;:&quot;Netto&quot;},&quot;publicationPublicId&quot;:&quot;pub1&quot;}]}</app-data>
         '''
         raw = runner.extract_etilbudsavis_offer_dicts(html)
         self.assertEqual(raw[0]["price"], 20)
@@ -63,6 +63,28 @@ class FamilyWatchRunnerTests(unittest.TestCase):
         }
         filtered = runner.config_for_lovbjerg(config)
         self.assertEqual([g["id"] for g in filtered["watch_groups"]], ["bleer"])
+
+    def test_collect_offers_filters_long_running_catalogue_entries(self):
+        now = datetime(2026, 9, 5, tzinfo=timezone.utc)
+        short = family_watch.Offer(
+            source="etilbudsavis", group_id="bleer", group_label="Babybleer",
+            store="Netto", name="Libero", description="", price=75,
+            valid_from=now, valid_until=now + timedelta(days=7), offer_id="1",
+            publication_id="p", publication_label="", url="",
+        )
+        long = family_watch.Offer(
+            source="etilbudsavis", group_id="bleer", group_label="Babybleer",
+            store="Lidl", name="Lupilu", description="", price=20,
+            valid_from=now, valid_until=now + timedelta(days=120), offer_id="2",
+            publication_id="p2", publication_label="", url="",
+        )
+        original = runner._ORIGINAL_COLLECT
+        try:
+            runner._ORIGINAL_COLLECT = lambda config, session, now=None: ([short, long], [])
+            offers, _ = runner.collect_offers({"max_offer_days": 45}, None, now=now)
+        finally:
+            runner._ORIGINAL_COLLECT = original
+        self.assertEqual([offer.name for offer in offers], ["Libero"])
 
     def test_message_shows_access_requirement_and_regular_price(self):
         offer = family_watch.Offer(
