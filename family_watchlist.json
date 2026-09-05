@@ -1,6 +1,6 @@
 {
-  "version": 3,
-  "source": "Madpris public API / current offers",
+  "version": 4,
+  "source": "Dated digital flyers via eTilbudsavis with direct Løvbjerg Vejen fallback",
   "allowed_stores": [
     "Netto",
     "Rema 1000",
@@ -17,33 +17,33 @@
     {
       "id": "sensilac_2",
       "label": "NAN ExpertPro Sensilac 2",
-      "queries": ["sensilac 2", "nan sensilac"],
+      "queries": ["sensilac", "nan"],
       "include_all": ["sensilac"],
-      "include_any": ["sensilac 2", "expertpro sensilac 2"],
+      "include_any": ["sensilac 2", "expertpro sensilac 2", "sensilac pro 2"],
       "exclude_any": ["sensilac 1"]
     },
     {
       "id": "semper_grodposer",
-      "label": "Semper grødposer",
-      "queries": ["semper grød 120 g", "semper spiseklar grød", "semper grødpose"],
-      "include_all": ["semper", "grød"],
-      "include_any": ["120 g", "120g", "spiseklar", "pose", "pouch"],
+      "label": "Semper grød-/klemmeposer",
+      "queries": ["semper", "babymat", "klemmepose"],
+      "include_all": ["semper"],
+      "include_any": ["grod", "klemmepose", "klemmeposer", "grod pouch", "grodpouch", "spiseklar grod"],
       "exclude_any": ["pulver"]
     },
     {
       "id": "baby_smoothies",
       "label": "Baby-smoothies / frugtmos",
-      "queries": ["baby smoothie", "semper smoothie", "hipp smoothie", "frugtmos"],
+      "queries": ["semper", "babymat", "smoothie", "frugtmos"],
       "include_all": [],
-      "include_any": ["baby", "semper", "hipp", "ella's", "ellas", "organix", "frugtmos", "6 mdr", "8 mdr", "12 mdr"],
-      "exclude_any": ["protein", "juicepresser", "blender", "straw", "sugerør", "drikkevarer"]
+      "include_any": ["semper smoothie", "grod smoothie", "grod-smoothie", "frugtsmoothie", "baby smoothie", "frugtmos", "hipp smoothie", "ellas smoothie", "ella's smoothie", "organix smoothie"],
+      "exclude_any": ["protein", "juicepresser", "blender", "straw", "sugeror", "drikkevarer"]
     },
     {
       "id": "vadservietter",
       "label": "Vådservietter",
-      "queries": ["vådserviet", "vådservietter", "baby wipes"],
+      "queries": ["vådservietter", "vådserviet", "baby wipes"],
       "include_all": [],
-      "include_any": ["vådserviet", "wipes"],
+      "include_any": ["vadserviet", "wipes"],
       "exclude_any": []
     }
   ]
