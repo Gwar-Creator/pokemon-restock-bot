@@ -17,29 +17,55 @@ jobs:
         with:
           python-version: "3.13"
       - run: pip install -r requirements.txt
-      - name: Inspect exact Coop offer API calls
+      - name: Verify direct Coop offer feeds
         run: |
           python - <<'PY'
           import re, requests
-          from urllib.parse import urljoin
           from bs4 import BeautifulSoup
 
-          base='https://superbrugsen.coop.dk/avis/'
-          r=requests.get(base,headers={'User-Agent':'Mozilla/5.0'},timeout=30)
-          soup=BeautifulSoup(r.text,'html.parser')
+          sites={
+            'Kvickly':'https://kvickly.coop.dk/avis/',
+            'SuperBrugsen':'https://superbrugsen.coop.dk/avis/',
+            'DagliBrugsen':'https://brugsen.coop.dk/avis/',
+            '365discount':'https://365discount.coop.dk/365avis/',
+          }
+          headers={'User-Agent':'Mozilla/5.0'}
+          for store,base in sites.items():
+              print('\n###',store,base)
+              r=requests.get(base,headers=headers,timeout=30)
+              soup=BeautifulSoup(r.text,'html.parser')
+              keym=re.search(r"_shopgunApiKey=['\"]([^'\"]+)",r.text,re.I)
+              key=keym.group(1) if keym else ''
+              wrappers=soup.select('.incito-wrapper[data-publication-id], .shopgun-wrapper[data-publication-id]')
+              print('KEY?',bool(key),'WRAPPERS',[(w.get('class'),w.get('data-publication-id')) for w in wrappers])
 
-          print('PAGE GLOBALS')
-          for needle in ['_shopgunApiKey','_shopGunTrackId','shopgun-wrapper','incito-wrapper','publication-id','publicationId']:
-              for m in list(re.finditer(re.escape(needle),r.text,re.I))[:8]:
-                  print('\n',needle,repr(r.text[max(0,m.start()-900):m.start()+2200]))
+              for route in [
+                  '/umbraco/api/CatalogSearch/Search',
+                  '/umbraco/api/catalogsearch/search',
+              ]:
+                  rr=requests.get(base.rstrip('/')+route,params={'searchTerm':'Cheasy'},headers=headers,timeout=30)
+                  print('SEARCH',route,rr.status_code,rr.text[:1200])
 
-          for name in ['catalogSearchController.js','offerController.js']:
-              src=next((s.get('src') for s in soup.find_all('script') if s.get('src') and name in s.get('src')),None)
-              if not src:
-                  print('MISSING',name)
-                  continue
-              url=urljoin(base,src)
-              rr=requests.get(url,headers={'User-Agent':'Mozilla/5.0'},timeout=30)
-              print('\n### FULL',name,url,rr.status_code)
-              print(rr.text)
+              endpoint='https://squid-api.tjek.com/v4/rpc/generate_incito_from_publication'
+              for w in wrappers[:2]:
+                  pub=w.get('data-publication-id')
+                  body={
+                    'id':pub,
+                    'device_category':'desktop',
+                    'orientation':'vertical',
+                    'pointer':'fine',
+                    'pixel_ratio':1,
+                    'max_width':1000,
+                    'versions_supported':['1.0.0'],
+                  }
+                  rr=requests.post(endpoint,json=body,headers={**headers,'Content-Type':'application/json','X-Api-Key':key},timeout=30)
+                  print('TJEK',pub,rr.status_code,'len',len(rr.text),rr.text[:1000])
+
+              for suffix in ['naesteuge/','næsteuge/','?tilbudType=next']:
+                  u=base+suffix
+                  rr=requests.get(u,headers=headers,timeout=30)
+                  ss=BeautifulSoup(rr.text,'html.parser')
+                  ww=ss.select('.incito-wrapper[data-publication-id], .shopgun-wrapper[data-publication-id]')
+                  period=' '.join(x.get_text(' ',strip=True) for x in ss.select('.date-periode'))
+                  print('NEXT?',u,rr.status_code,rr.url,'wrappers',[x.get('data-publication-id') for x in ww],'period',period[:250])
           PY
