@@ -1,5 +1,5 @@
 {
-  "version": 9,
+  "version": 10,
   "source": "Dated digital flyers via eTilbudsavis with direct Løvbjerg Vejen fallback",
   "max_offer_days": 45,
   "allowed_stores": [
@@ -73,9 +73,11 @@
     {
       "id": "bornetoj",
       "label": "Børnetøj / babytøj",
-      "queries": ["børnetøj", "babytøj", "baby body", "børnenattøj", "børnepyjamas"],
+      "queries": ["børnetøj", "babytøj", "baby body", "børnenattøj", "børnepyjamas", "uldtøj", "merinould"],
       "allowed_stores": ["Bilka", "Kvickly", "SuperBrugsen"],
       "aggregate": "store_period",
+      "highlight_label": "ULD-FUND",
+      "highlight_terms": ["uld", "merino", "merinould", "wool"],
       "include_all": [],
       "include_any": [],
       "exclude_any": ["dametøj", "herretøj", "voksen", "esmara"],
