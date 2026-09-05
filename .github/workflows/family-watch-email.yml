@@ -1,0 +1,109 @@
+name: Family Watch Email Digest
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry run: build/log digest only, do not send email or write email state"
+        required: true
+        default: true
+        type: boolean
+  push:
+    branches: [main]
+    paths:
+      - "family_watch_email_digest.py"
+      - "family_watch_email_state.json"
+      - "test_family_watch_email_digest.py"
+      - "family_watch.py"
+      - "family_watch_runner.py"
+      - "family_watch_direct.py"
+      - "family_watchlist.json"
+      - ".github/workflows/family-watch-email.yml"
+  schedule:
+    - cron: "0 7 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: family-watch-email
+  cancel-in-progress: false
+
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Validate email digest
+        run: |
+          python -m py_compile family_watch_email_digest.py
+          python -m unittest test_family_watch_email_digest.py
+
+      - name: Build or send daily digest
+        env:
+          FAMILY_WATCH_EMAIL_TO: ${{ secrets.FAMILY_WATCH_EMAIL_TO }}
+          FAMILY_WATCH_SMTP_HOST: ${{ secrets.FAMILY_WATCH_SMTP_HOST }}
+          FAMILY_WATCH_SMTP_PORT: ${{ secrets.FAMILY_WATCH_SMTP_PORT }}
+          FAMILY_WATCH_SMTP_USERNAME: ${{ secrets.FAMILY_WATCH_SMTP_USERNAME }}
+          FAMILY_WATCH_SMTP_PASSWORD: ${{ secrets.FAMILY_WATCH_SMTP_PASSWORD }}
+          FAMILY_WATCH_EMAIL_FROM: ${{ secrets.FAMILY_WATCH_EMAIL_FROM }}
+          REQUESTED_DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            DRY_RUN="${REQUESTED_DRY_RUN:-true}"
+          elif [ "${{ github.event_name }}" = "schedule" ]; then
+            DRY_RUN="false"
+          else
+            DRY_RUN="true"
+          fi
+
+          if [ -z "$FAMILY_WATCH_EMAIL_TO" ] || [ -z "$FAMILY_WATCH_SMTP_USERNAME" ] || [ -z "$FAMILY_WATCH_SMTP_PASSWORD" ]; then
+            echo "Email secrets are incomplete; forcing dry run."
+            DRY_RUN="true"
+          fi
+
+          export FAMILY_WATCH_EMAIL_DRY_RUN="$DRY_RUN"
+          python family_watch_email_digest.py | tee family_watch_email_run.log
+
+      - name: Save email digest state
+        if: ${{ hashFiles('family_watch_email_state.json') != '' }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- family_watch_email_state.json
+
+          if git diff --cached --quiet; then
+            echo "No email digest state changes to save."
+            exit 0
+          fi
+
+          git commit -m "Update Family Watch email state"
+
+          for attempt in 1 2 3; do
+            git fetch origin main
+            if git rebase origin/main && git push origin HEAD:main; then
+              exit 0
+            fi
+            git rebase --abort || true
+            if [ "$attempt" -lt 3 ]; then
+              sleep $((attempt * 5))
+            fi
+          done
+
+          exit 1
