@@ -20,45 +20,29 @@ jobs:
           python-version: "3.13"
       - name: Install requests
         run: pip install requests beautifulsoup4
-      - name: Probe direct Løvbjerg Tjek publication data
+      - name: Probe Løvbjerg Incito offer structure
         run: |
           python - <<'PY'
-          import re, requests
+          import json, requests
           from bs4 import BeautifulSoup
 
-          page_url='https://www.lovbjerg.dk/avis/denne-uges-avis/vejen'
-          base_headers={'User-Agent':'Mozilla/5.0'}
-          page=requests.get(page_url,headers=base_headers,timeout=30)
+          page=requests.get('https://www.lovbjerg.dk/avis/denne-uges-avis/vejen',headers={'User-Agent':'Mozilla/5.0'},timeout=30)
           page.raise_for_status()
           soup=BeautifulSoup(page.text,'html.parser')
           widget=soup.select_one('.tjek-widget[data-type="publication-viewer"]')
-          if not widget:
-              raise SystemExit('No Løvbjerg publication widget found')
-          key=widget.get('data-api-key')
-          pub=widget.get('data-id')
-          dealer=widget.get('data-business-id')
-          if not key or not pub or not dealer:
-              raise SystemExit('Missing Tjek widget metadata')
-          print('WIDGET publication',pub,'dealer',dealer,'key_present',bool(key))
-
-          headers={**base_headers,'X-Api-Key':key,'X-Widgets-Version':'v1'}
-          endpoints=[
-              ('catalogs',f'https://squid-api.tjek.com/v2/catalogs?dealer_id={dealer}&types=paged,incito'),
-              ('pages',f'https://squid-api.tjek.com/v2/catalogs/{pub}/pages'),
-              ('viewer',f'https://publication-viewer.tjek.com/v1/embeds/{pub}?api_key={key}&context=headless&view_direction=vertical&view_mode=continuous&ui=none&offers_interactive=true'),
-          ]
-          for label,url in endpoints:
-              r=requests.get(url,headers=headers,timeout=30)
-              print('\n===',label,'STATUS',r.status_code,'TYPE',r.headers.get('content-type'),'LEN',len(r.text),'===')
-              r.raise_for_status()
-              if label != 'viewer':
-                  print(r.text[:5000].replace('\n',' '))
-              else:
-                  low=r.text.lower()
-                  for needle in ['semper','klemmepose','grød','offerid','data-offer','offersclicked','offerclicked']:
-                      i=low.find(needle.lower())
-                      print('NEEDLE',needle,'INDEX',i)
-                      if i>=0:
-                          print(r.text[max(0,i-1000):i+2500].replace('\n',' ')[:3500])
-                  print('VIEWER_HEAD',r.text[:5000].replace('\n',' '))
+          key=widget.get('data-api-key'); pub=widget.get('data-id')
+          headers={'User-Agent':'Mozilla/5.0','X-Api-Key':key,'X-Widgets-Version':'v1','Content-Type':'application/json'}
+          body={'id':pub,'device_category':'desktop','orientation':'vertical','pointer':'fine','pixel_ratio':1,'max_width':1000,'versions_supported':['1.0.0']}
+          r=requests.post('https://squid-api.tjek.com/v4/rpc/generate_incito_from_publication',headers=headers,json=body,timeout=30)
+          print('STATUS',r.status_code,'TYPE',r.headers.get('content-type'),'LEN',len(r.text))
+          r.raise_for_status()
+          data=r.json()
+          print('TOP_KEYS',list(data)[:50] if isinstance(data,dict) else type(data).__name__)
+          raw=json.dumps(data,ensure_ascii=False)
+          for needle in ['Semper','klemmepose','KLEMMEPOSE','grød','Yummies','offer_id','offerId','offer']:
+              i=raw.lower().find(needle.lower())
+              print('\nNEEDLE',needle,'INDEX',i)
+              if i>=0:
+                  print(raw[max(0,i-1500):i+4000])
+          print('\nHEAD',raw[:10000])
           PY
