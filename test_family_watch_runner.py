@@ -24,6 +24,15 @@ class FamilyWatchRunnerTests(unittest.TestCase):
         self.assertIn("Netto+ app", raw[0]["description"])
         self.assertIn("regular_price", raw[0]["description"])
 
+    def test_jsonld_description_alone_marks_netto_plus(self):
+        html = '''
+        <script type="application/ld+json">
+        {"@type":"Offer","name":"Baby wipes","description":"Gælder kun med Netto+ appen","price":20,"validFrom":"2026-09-04T22:00:00+0000","validThrough":"2026-09-11T21:59:59+0000","seller":{"name":"Netto"},"url":"https://etilbudsavis.dk/Netto?publication=pub1&offer=offer1"}
+        </script>
+        '''
+        raw = runner.extract_etilbudsavis_offer_dicts(html)
+        self.assertIn("Netto+ app", raw[0]["description"])
+
     def test_lidl_plus_note(self):
         note = runner.infer_access_note("Lidl", "Med Lidl Plus", 10.0, None)
         self.assertEqual(note, "Lidl Plus app/medlemskab")
@@ -44,6 +53,16 @@ class FamilyWatchRunnerTests(unittest.TestCase):
         }
         self.assertTrue(runner.matches_group({"name": "Smoothie yoghurt m. abrikos fra Semper"}, group))
         self.assertFalse(runner.matches_group({"name": "Valsølille Smoothie med æble"}, group))
+
+    def test_lovbjerg_config_drops_query_context_groups(self):
+        config = {
+            "watch_groups": [
+                {"id": "bleer"},
+                {"id": "bornetoj", "skip_lovbjerg_direct": True},
+            ]
+        }
+        filtered = runner.config_for_lovbjerg(config)
+        self.assertEqual([g["id"] for g in filtered["watch_groups"]], ["bleer"])
 
     def test_message_shows_access_requirement_and_regular_price(self):
         offer = family_watch.Offer(
