@@ -56,6 +56,14 @@ def combined_product_text(product: dict[str, Any]) -> str:
     return normalize_text(" ".join(str(product.get(k) or "") for k in ("name", "brand", "category", "subcategory")))
 
 
+def store_is_allowed(product: dict[str, Any], config: dict[str, Any]) -> bool:
+    allowed = {normalize_text(store).replace(" ", "") for store in config.get("allowed_stores", []) if store}
+    if not allowed:
+        return True
+    current = normalize_text(product.get("store")).replace(" ", "")
+    return current in allowed
+
+
 def matches_group(product: dict[str, Any], group: dict[str, Any]) -> bool:
     text = combined_product_text(product)
     include_all = [normalize_text(x) for x in group.get("include_all", []) if x]
@@ -125,7 +133,7 @@ def collect_offers(config: dict[str, Any], session: requests.Session) -> tuple[l
                 continue
 
             for product in products:
-                if product.get("on_sale") is False:
+                if product.get("on_sale") is False or not store_is_allowed(product, config):
                     continue
                 pid = str(product.get("id") or "")
                 fallback = "|".join([
