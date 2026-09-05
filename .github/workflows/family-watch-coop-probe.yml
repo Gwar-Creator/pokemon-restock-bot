@@ -1,0 +1,47 @@
+name: Family Watch Coop Probe
+
+on:
+  push:
+    paths:
+      - ".github/workflows/family-watch-coop-probe.yml"
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - run: pip install -r requirements.txt
+      - name: Inspect Coop flyer HTML
+        run: |
+          python - <<'PY'
+          import re, requests
+          from bs4 import BeautifulSoup
+
+          urls={
+            'Kvickly':'https://kvickly.coop.dk/avis/',
+            'SuperBrugsen':'https://superbrugsen.coop.dk/avis/',
+            'DagliBrugsen':'https://brugsen.coop.dk/avis/',
+            '365discount':'https://365discount.coop.dk/365avis/',
+          }
+          for store,url in urls.items():
+            r=requests.get(url,headers={'User-Agent':'Mozilla/5.0'},timeout=30)
+            print('\n###',store,r.status_code,'len',len(r.text),r.url)
+            soup=BeautifulSoup(r.text,'html.parser')
+            text=' '.join(soup.stripped_strings)
+            m=re.search(r'Avisen gælder fra.{0,180}',text,re.I)
+            print('PERIOD',m.group(0) if m else 'NONE')
+            for needle in ['Cheasy skyr','Arla proteindrik','Stay Strong','view_id','offer_','medlemspris','appPrice','price']:
+              i=r.text.lower().find(needle.lower())
+              print('MARK',needle,i)
+              if i>=0:
+                print(repr(r.text[max(0,i-500):i+1800]))
+            print('JSONLD',len(soup.find_all('script',attrs={'type':'application/ld+json'})))
+            print('APPDATA',len(soup.find_all('app-data')))
+            print('LINKS_NEXT',[(a.get_text(' ',strip=True),a.get('href')) for a in soup.find_all('a') if 'næste' in a.get_text(' ',strip=True).lower()][:5])
+          PY
