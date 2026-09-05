@@ -157,6 +157,43 @@ class FamilyWatchRunnerTests(unittest.TestCase):
         self.assertIn("Flyverdragt", message)
         self.assertNotIn("Cardigan", message)
 
+    def test_wool_is_highlighted_without_guld_false_positive(self):
+        now = datetime(2026, 9, 5, tzinfo=timezone.utc)
+        end = now + timedelta(days=7)
+        wool = family_watch.Offer(
+            source="etilbudsavis", group_id="bornetoj", group_label="Børnetøj / babytøj",
+            store="Bilka", name="Body i merinould", description="Str. 74-92 cm, 100% uld", price=149,
+            valid_from=now, valid_until=end, offer_id="w1", publication_id="p", publication_label="", url="u1",
+        )
+        gold = family_watch.Offer(
+            source="etilbudsavis", group_id="bornetoj", group_label="Børnetøj / babytøj",
+            store="Bilka", name="Guld cardigan", description="Str. 98-116 cm", price=99,
+            valid_from=now, valid_until=end, offer_id="g1", publication_id="p", publication_label="", url="u2",
+        )
+        config = {
+            "max_offer_days": 45,
+            "watch_groups": [{
+                "id": "bornetoj",
+                "allowed_stores": ["Bilka", "Kvickly", "SuperBrugsen"],
+                "aggregate": "store_period",
+                "highlight_label": "ULD-FUND",
+                "highlight_terms": ["uld", "merino", "merinould", "wool"],
+            }],
+        }
+        original = runner._ORIGINAL_COLLECT
+        try:
+            runner._ORIGINAL_COLLECT = lambda config, session, now=None: ([wool, gold], [])
+            offers, _ = runner.collect_offers(config, None, now=now)
+        finally:
+            runner._ORIGINAL_COLLECT = original
+
+        self.assertEqual(len(offers), 1)
+        self.assertTrue(offers[0].offer_id.endswith(":highlight"))
+        message = runner.build_message(offers[0], "current")
+        self.assertIn("ULD-FUND: 1 tilbud", message)
+        self.assertIn("Body i merinould", message)
+        self.assertNotIn("🧶 Guld cardigan", message)
+
     def test_message_shows_access_requirement_and_regular_price(self):
         offer = family_watch.Offer(
             source="etilbudsavis",
