@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "source": "Madpris public API / current offers",
+  "watch_groups": [
+    {
+      "id": "sensilac_2",
+      "label": "NAN ExpertPro Sensilac 2",
+      "queries": ["sensilac", "nan sensilac"],
+      "include_all": ["sensilac"],
+      "include_any": ["2", "expertpro"],
+      "exclude_any": []
+    },
+    {
+      "id": "semper_grodposer",
+      "label": "Semper grødposer",
+      "queries": ["semper grød", "semper"],
+      "include_all": ["semper"],
+      "include_any": ["grød", "pose", "pouch"],
+      "exclude_any": []
+    },
+    {
+      "id": "baby_smoothies",
+      "label": "Smoothies / frugtmos",
+      "queries": ["smoothie", "frugtmos", "frugtpuré"],
+      "include_all": [],
+      "include_any": ["smoothie", "frugtmos", "frugtpuré"],
+      "exclude_any": ["protein", "juicepresser", "blender"]
+    },
+    {
+      "id": "vadservietter",
+      "label": "Vådservietter",
+      "queries": ["vådserviet", "vådservietter", "baby wipes"],
+      "include_all": [],
+      "include_any": ["vådserviet", "wipes"],
+      "exclude_any": []
+    }
+  ]
+}
