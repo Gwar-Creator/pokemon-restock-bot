@@ -9,6 +9,7 @@ from typing import Any
 import family_watch as fw
 
 ACCESS_MARKER = "[FW_ACCESS]"
+AGG_MARKER = "[FW_AGG]"
 _COOP_STORES = {"365discount", "superbrugsen", "kvickly", "daglibrugsen", "brugsen"}
 
 _ORIGINAL_EXTRACT = fw.extract_etilbudsavis_offer_dicts
@@ -73,12 +74,7 @@ def _collect_rich_offer_dicts(value: Any, found: dict[str, dict[str, Any]]) -> N
 
 
 def extract_embedded_product_dicts(html: str) -> list[dict[str, Any]]:
-    """Extract eTilbudsavis' richer offer data from <app-data> hydration JSON.
-
-    eTilbudsavis HTML-escapes the JSON inside the custom app-data element.
-    This payload contains appPrice/membershipPrice, which the JSON-LD layer
-    does not always expose.
-    """
+    """Extract eTilbudsavis' richer offer data from <app-data> hydration JSON."""
     found: dict[str, dict[str, Any]] = {}
 
     for match in re.finditer(r"<app-data\b[^>]*>(.*?)</app-data>", html, flags=re.I | re.S):
@@ -91,8 +87,6 @@ def extract_embedded_product_dicts(html: str) -> list[dict[str, Any]]:
             continue
         _collect_rich_offer_dicts(payload, found)
 
-    # Fallback for tests/alternate responses where product objects are not
-    # wrapped in app-data and are already plain JSON in the HTML.
     decoder = json.JSONDecoder()
     for match in re.finditer(r'\{"publicId":', html):
         try:
@@ -169,8 +163,6 @@ def extract_etilbudsavis_offer_dicts(html: str) -> list[dict[str, Any]]:
             candidates = loose.get((_norm(raw.get("name")), fw.canonical_store(_store_from_raw(raw))), [])
             if len(candidates) == 1:
                 product = candidates[0]
-        # Even without hydration data, inspect the JSON-LD description for
-        # explicit phrases such as Netto+, Lidl Plus and medlemspris.
         enriched.append(_with_access_metadata(raw, product or raw))
     return enriched
 
@@ -187,11 +179,6 @@ def matches_group(product: dict[str, Any], group: dict[str, Any]) -> bool:
 
 
 def config_for_lovbjerg(config: dict[str, Any]) -> dict[str, Any]:
-    """Remove groups that only make sense with a focused search query.
-
-    Direct Løvbjerg scans the complete catalogue, so query-context groups such
-    as child clothing must not be allowed to match every catalogue item.
-    """
     filtered = deepcopy(config)
     filtered["watch_groups"] = [
         group for group in config.get("watch_groups", []) if not group.get("skip_lovbjerg_direct")
@@ -203,23 +190,130 @@ def collect_lovbjerg_offers(config: dict[str, Any], session: Any, now: Any = Non
     return _ORIGINAL_LOVBJERG(config_for_lovbjerg(config), session, now=now)
 
 
+def _group_map(config: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    return {str(group.get("id")): group for group in config.get("watch_groups", []) if group.get("id")}
+
+
+def _store_allowed_for_group(offer: fw.Offer, group: dict[str, Any]) -> bool:
+    allowed = {fw.canonical_store(store) for store in group.get("allowed_stores", []) if store}
+    if not allowed:
+        return True
+    return fw.canonical_store(offer.store) in allowed
+
+
+def _extract_size_ranges(offers: list[fw.Offer]) -> list[str]:
+    found: list[str] = []
+    for offer in offers:
+        text = f"{offer.name} {offer.description}"
+        for match in re.findall(r"\b\d{2,3}\s*[-–]\s*\d{2,3}\s*cm\b", text, flags=re.I):
+            clean = re.sub(r"\s+", "", match).replace("-", "–")
+            clean = clean.replace("cm", " cm")
+            if clean not in found:
+                found.append(clean)
+    return found[:4]
+
+
+def _aggregate_group_offers(offers: list[fw.Offer], group: dict[str, Any]) -> list[fw.Offer]:
+    if group.get("aggregate") != "store_period":
+        return offers
+
+    buckets: dict[tuple[str, str, str], list[fw.Offer]] = {}
+    for offer in offers:
+        key = (
+            fw.canonical_store(offer.store),
+            offer.valid_from.isoformat(),
+            offer.valid_until.isoformat(),
+        )
+        buckets.setdefault(key, []).append(offer)
+
+    aggregated: list[fw.Offer] = []
+    for (store_key, start, end), items in buckets.items():
+        items = sorted(items, key=lambda o: (o.price if o.price is not None else 10**9, o.name))
+        names: list[str] = []
+        access_notes: list[str] = []
+        for item in items:
+            if item.name not in names:
+                names.append(item.name)
+            _, meta = _access_from_description(item.description)
+            note = str(meta.get("access") or "")
+            if note and note not in access_notes:
+                access_notes.append(note)
+
+        prices = [item.price for item in items if item.price is not None]
+        meta = {
+            "count": len(items),
+            "items": names[:6],
+            "min_price": min(prices) if prices else None,
+            "max_price": max(prices) if prices else None,
+            "sizes": _extract_size_ranges(items),
+            "access": access_notes,
+        }
+        first = items[0]
+        aggregate_id = f"{group['id']}:{store_key}:{start}:{end}"
+        aggregated.append(
+            fw.Offer(
+                source="family_watch_aggregate",
+                group_id=first.group_id,
+                group_label=first.group_label,
+                store=first.store,
+                name="Børnetøj i tilbudsavisen",
+                description=AGG_MARKER + json.dumps(meta, ensure_ascii=False, separators=(",", ":")),
+                price=min(prices) if prices else None,
+                valid_from=first.valid_from,
+                valid_until=first.valid_until,
+                offer_id=aggregate_id,
+                publication_id="grouped",
+                publication_label="",
+                url=first.url,
+                image="",
+            )
+        )
+    return aggregated
+
+
 def collect_offers(config: dict[str, Any], session: Any, now: Any = None):
     offers, errors = _ORIGINAL_COLLECT(config, session, now=now)
     max_days = int(config.get("max_offer_days", 45))
-    if max_days <= 0:
-        return offers, errors
+    groups = _group_map(config)
 
     filtered: list[fw.Offer] = []
-    skipped = 0
+    skipped_long = 0
+    skipped_store = 0
     for offer in offers:
         duration_days = (offer.valid_until - offer.valid_from).total_seconds() / 86400
-        if duration_days > max_days:
-            skipped += 1
+        if max_days > 0 and duration_days > max_days:
+            skipped_long += 1
+            continue
+        group = groups.get(offer.group_id, {})
+        if not _store_allowed_for_group(offer, group):
+            skipped_store += 1
             continue
         filtered.append(offer)
-    if skipped:
-        print(f"Family Watch sanity: skipped {skipped} long-running catalogue offers (> {max_days} days)")
-    return filtered, errors
+
+    final: list[fw.Offer] = []
+    for group_id, group in groups.items():
+        group_offers = [offer for offer in filtered if offer.group_id == group_id]
+        final.extend(_aggregate_group_offers(group_offers, group))
+
+    # Preserve any offers from unknown groups defensively.
+    known_ids = set(groups)
+    final.extend(offer for offer in filtered if offer.group_id not in known_ids)
+
+    if skipped_long:
+        print(f"Family Watch sanity: skipped {skipped_long} long-running catalogue offers (> {max_days} days)")
+    if skipped_store:
+        print(f"Family Watch sanity: skipped {skipped_store} offers outside group-specific store rules")
+
+    return sorted(
+        final,
+        key=lambda o: (
+            0 if fw.offer_phase(o, now) == "current" else 1,
+            o.valid_from,
+            o.group_label,
+            o.price if o.price is not None else 10**9,
+            o.store,
+        ),
+    ), errors
 
 
 def _access_from_description(description: str) -> tuple[str, dict[str, Any]]:
@@ -233,7 +327,54 @@ def _access_from_description(description: str) -> tuple[str, dict[str, Any]]:
     return clean.rstrip(), meta if isinstance(meta, dict) else {}
 
 
+def _aggregate_meta(description: str) -> dict[str, Any]:
+    if not description.startswith(AGG_MARKER):
+        return {}
+    try:
+        value = json.loads(description[len(AGG_MARKER):])
+    except json.JSONDecodeError:
+        return {}
+    return value if isinstance(value, dict) else {}
+
+
+def _format_price_range(meta: dict[str, Any]) -> str:
+    low = fw.maybe_float(meta.get("min_price"))
+    high = fw.maybe_float(meta.get("max_price"))
+    if low is None and high is None:
+        return "pris ikke oplyst"
+    if high is None or low == high:
+        return fw.format_price(low)
+    return f"{fw.format_price(low)}–{fw.format_price(high)}"
+
+
 def build_message(offer: fw.Offer, phase: str) -> str:
+    aggregate = _aggregate_meta(offer.description)
+    if aggregate:
+        heading = (
+            f"🟡 **KOMMENDE TØJTILBUD — {offer.store}**"
+            if phase == "upcoming"
+            else f"🟢 **AKTUELT TØJTILBUD — {offer.store}**"
+        )
+        lines = [
+            heading,
+            "**Børnetøj i tilbudsavisen**",
+            f"👕 **{int(aggregate.get('count') or 0)} relevante tøjtilbud samlet**",
+            f"💰 **{_format_price_range(aggregate)}**",
+            f"📅 Gælder: **{fw.format_period(offer)}**",
+        ]
+        sizes = [str(value) for value in aggregate.get("sizes", []) if value]
+        if sizes:
+            lines.append("📏 Størrelser: " + " · ".join(sizes))
+        names = [str(value) for value in aggregate.get("items", []) if value]
+        if names:
+            lines.append("🧥 Fx: " + " · ".join(names[:5]))
+        access = [str(value) for value in aggregate.get("access", []) if value]
+        if access:
+            lines.append("🔐 Nogle tilbud kræver: **" + " / ".join(access) + "**")
+        if offer.url:
+            lines.append(offer.url)
+        return "\n".join(lines)
+
     if phase == "upcoming":
         heading = f"🟡 **KOMMENDE TILBUD — {offer.store}**"
     else:
