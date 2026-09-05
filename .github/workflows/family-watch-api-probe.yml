@@ -20,10 +20,10 @@ jobs:
           python-version: "3.13"
       - name: Install requests
         run: pip install requests beautifulsoup4
-      - name: Probe Løvbjerg Incito offer structure
+      - name: Find Family Watch products in Løvbjerg offers
         run: |
           python - <<'PY'
-          import json, requests
+          import concurrent.futures, json, requests
           from bs4 import BeautifulSoup
 
           page=requests.get('https://www.lovbjerg.dk/avis/denne-uges-avis/vejen',headers={'User-Agent':'Mozilla/5.0'},timeout=30)
@@ -33,16 +33,35 @@ jobs:
           key=widget.get('data-api-key'); pub=widget.get('data-id')
           headers={'User-Agent':'Mozilla/5.0','X-Api-Key':key,'X-Widgets-Version':'v1','Content-Type':'application/json'}
           body={'id':pub,'device_category':'desktop','orientation':'vertical','pointer':'fine','pixel_ratio':1,'max_width':1000,'versions_supported':['1.0.0']}
-          r=requests.post('https://squid-api.tjek.com/v4/rpc/generate_incito_from_publication',headers=headers,json=body,timeout=30)
-          print('STATUS',r.status_code,'TYPE',r.headers.get('content-type'),'LEN',len(r.text))
-          r.raise_for_status()
-          data=r.json()
-          print('TOP_KEYS',list(data)[:50] if isinstance(data,dict) else type(data).__name__)
-          raw=json.dumps(data,ensure_ascii=False)
-          for needle in ['Semper','klemmepose','KLEMMEPOSE','grød','Yummies','offer_id','offerId','offer']:
-              i=raw.lower().find(needle.lower())
-              print('\nNEEDLE',needle,'INDEX',i)
-              if i>=0:
-                  print(raw[max(0,i-1500):i+4000])
-          print('\nHEAD',raw[:10000])
+          data=requests.post('https://squid-api.tjek.com/v4/rpc/generate_incito_from_publication',headers=headers,json=body,timeout=30).json()
+
+          ids=[]
+          def walk(node):
+              if isinstance(node,dict):
+                  if node.get('role')=='offer' and node.get('id'):
+                      ids.append(str(node['id']))
+                  for value in node.values(): walk(value)
+              elif isinstance(node,list):
+                  for value in node: walk(value)
+          walk(data.get('root_view'))
+          ids=list(dict.fromkeys(ids))
+          print('OFFER_IDS',len(ids))
+
+          def fetch_offer(oid):
+              r=requests.get(f'https://widgets.tjek.com/api/offers/{oid}',headers=headers,timeout=20)
+              if r.status_code != 200:
+                  return oid, None, r.status_code
+              return oid, r.json(), 200
+
+          hits=[]; errors=[]
+          with concurrent.futures.ThreadPoolExecutor(max_workers=16) as pool:
+              for oid,offer,status in pool.map(fetch_offer,ids):
+                  if not offer:
+                      errors.append((oid,status)); continue
+                  raw=json.dumps(offer,ensure_ascii=False).lower()
+                  if any(term in raw for term in ['semper','klemmepose','klemme pose','grød','grod','smoothie','sensilac','vådserviet','vadserviet']):
+                      hits.append(offer)
+          print('ERRORS',len(errors),'HITS',len(hits))
+          for offer in hits:
+              print('MATCH',json.dumps(offer,ensure_ascii=False,sort_keys=True))
           PY
