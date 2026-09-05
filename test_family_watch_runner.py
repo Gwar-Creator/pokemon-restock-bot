@@ -86,6 +86,77 @@ class FamilyWatchRunnerTests(unittest.TestCase):
             runner._ORIGINAL_COLLECT = original
         self.assertEqual([offer.name for offer in offers], ["Libero"])
 
+    def test_diapers_are_rema_only(self):
+        now = datetime(2026, 9, 5, tzinfo=timezone.utc)
+        rema = family_watch.Offer(
+            source="etilbudsavis", group_id="bleer", group_label="Babybleer",
+            store="Rema 1000", name="Libero", description="", price=69,
+            valid_from=now, valid_until=now + timedelta(days=7), offer_id="r1",
+            publication_id="p1", publication_label="", url="",
+        )
+        bilka = family_watch.Offer(
+            source="etilbudsavis", group_id="bleer", group_label="Babybleer",
+            store="Bilka", name="Libero", description="", price=59,
+            valid_from=now, valid_until=now + timedelta(days=7), offer_id="b1",
+            publication_id="p2", publication_label="", url="",
+        )
+        config = {
+            "max_offer_days": 45,
+            "watch_groups": [{"id": "bleer", "allowed_stores": ["Rema 1000"]}],
+        }
+        original = runner._ORIGINAL_COLLECT
+        try:
+            runner._ORIGINAL_COLLECT = lambda config, session, now=None: ([rema, bilka], [])
+            offers, _ = runner.collect_offers(config, None, now=now)
+        finally:
+            runner._ORIGINAL_COLLECT = original
+        self.assertEqual([(o.store, o.name) for o in offers], [("Rema 1000", "Libero")])
+
+    def test_clothing_is_store_scoped_and_aggregated(self):
+        now = datetime(2026, 9, 5, tzinfo=timezone.utc)
+        end = now + timedelta(days=7)
+        offers_in = [
+            family_watch.Offer(
+                source="etilbudsavis", group_id="bornetoj", group_label="Børnetøj / babytøj",
+                store="Bilka", name="Bukser", description="98-152 cm", price=79,
+                valid_from=now, valid_until=end, offer_id="1", publication_id="p", publication_label="", url="u1",
+            ),
+            family_watch.Offer(
+                source="etilbudsavis", group_id="bornetoj", group_label="Børnetøj / babytøj",
+                store="Bilka", name="Flyverdragt", description="74-92 cm", price=399,
+                valid_from=now, valid_until=end, offer_id="2", publication_id="p", publication_label="", url="u2",
+            ),
+            family_watch.Offer(
+                source="etilbudsavis", group_id="bornetoj", group_label="Børnetøj / babytøj",
+                store="føtex", name="Cardigan", description="98-152 cm", price=129,
+                valid_from=now, valid_until=end, offer_id="3", publication_id="p2", publication_label="", url="u3",
+            ),
+        ]
+        config = {
+            "max_offer_days": 45,
+            "watch_groups": [{
+                "id": "bornetoj",
+                "allowed_stores": ["Bilka", "Kvickly", "SuperBrugsen"],
+                "aggregate": "store_period",
+            }],
+        }
+        original = runner._ORIGINAL_COLLECT
+        try:
+            runner._ORIGINAL_COLLECT = lambda config, session, now=None: (offers_in, [])
+            offers, _ = runner.collect_offers(config, None, now=now)
+        finally:
+            runner._ORIGINAL_COLLECT = original
+
+        self.assertEqual(len(offers), 1)
+        self.assertEqual(offers[0].store, "Bilka")
+        self.assertEqual(offers[0].name, "Børnetøj i tilbudsavisen")
+        message = runner.build_message(offers[0], "current")
+        self.assertIn("2 relevante tøjtilbud samlet", message)
+        self.assertIn("79 kr.–399 kr.", message)
+        self.assertIn("Bukser", message)
+        self.assertIn("Flyverdragt", message)
+        self.assertNotIn("Cardigan", message)
+
     def test_message_shows_access_requirement_and_regular_price(self):
         offer = family_watch.Offer(
             source="etilbudsavis",
