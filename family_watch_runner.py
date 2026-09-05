@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import re
 from copy import deepcopy
+from html import unescape
 from typing import Any
 
 import family_watch as fw
@@ -13,6 +14,7 @@ _COOP_STORES = {"365discount", "superbrugsen", "kvickly", "daglibrugsen", "brugs
 _ORIGINAL_EXTRACT = fw.extract_etilbudsavis_offer_dicts
 _ORIGINAL_MATCHES = fw.matches_group
 _ORIGINAL_LOVBJERG = fw.collect_lovbjerg_offers
+_ORIGINAL_COLLECT = fw.collect_offers
 
 
 def _norm(value: Any) -> str:
@@ -41,29 +43,65 @@ def _offer_match_key(raw: dict[str, Any]) -> tuple[str, str, str, str]:
     )
 
 
-def extract_embedded_product_dicts(html: str) -> list[dict[str, Any]]:
-    """Best-effort extraction of richer eTilbudsavis product hydration data.
+def _is_rich_offer_dict(value: dict[str, Any]) -> bool:
+    return bool(
+        value.get("publicId")
+        and value.get("name")
+        and isinstance(value.get("business"), dict)
+        and any(
+            key in value
+            for key in (
+                "price",
+                "appPrice",
+                "membershipPrice",
+                "validFrom",
+                "publicationPublicId",
+            )
+        )
+    )
 
-    The ordinary GitHub runner currently receives a lean server response, so
-    this is optional enrichment. Access requirements are also detected from
-    the JSON-LD offer descriptions, which keeps the feature useful without it.
+
+def _collect_rich_offer_dicts(value: Any, found: dict[str, dict[str, Any]]) -> None:
+    if isinstance(value, dict):
+        if _is_rich_offer_dict(value):
+            found[str(value["publicId"])] = value
+        for child in value.values():
+            _collect_rich_offer_dicts(child, found)
+    elif isinstance(value, list):
+        for child in value:
+            _collect_rich_offer_dicts(child, found)
+
+
+def extract_embedded_product_dicts(html: str) -> list[dict[str, Any]]:
+    """Extract eTilbudsavis' richer offer data from <app-data> hydration JSON.
+
+    eTilbudsavis HTML-escapes the JSON inside the custom app-data element.
+    This payload contains appPrice/membershipPrice, which the JSON-LD layer
+    does not always expose.
     """
-    decoder = json.JSONDecoder()
     found: dict[str, dict[str, Any]] = {}
+
+    for match in re.finditer(r"<app-data\b[^>]*>(.*?)</app-data>", html, flags=re.I | re.S):
+        payload_text = unescape(match.group(1)).strip()
+        if not payload_text:
+            continue
+        try:
+            payload = json.loads(payload_text)
+        except json.JSONDecodeError:
+            continue
+        _collect_rich_offer_dicts(payload, found)
+
+    # Fallback for tests/alternate responses where product objects are not
+    # wrapped in app-data and are already plain JSON in the HTML.
+    decoder = json.JSONDecoder()
     for match in re.finditer(r'\{"publicId":', html):
         try:
             value, _ = decoder.raw_decode(html[match.start():])
         except (json.JSONDecodeError, ValueError):
             continue
-        if not isinstance(value, dict):
-            continue
-        if not value.get("publicId") or not value.get("name"):
-            continue
-        if not isinstance(value.get("business"), dict):
-            continue
-        if not any(key in value for key in ("price", "appPrice", "membershipPrice", "validFrom", "publicationPublicId")):
-            continue
-        found[str(value["publicId"])] = value
+        if isinstance(value, dict) and _is_rich_offer_dict(value):
+            found[str(value["publicId"])] = value
+
     return list(found.values())
 
 
@@ -82,7 +120,7 @@ def infer_access_note(store: str, description: str, app_price: float | None, mem
         return "Club Matas"
     if "medlemspris" in text or "medlemskab" in text or membership_price is not None:
         return "medlemskab"
-    if ("gælder kun med" in text or "kun med" in text) and "app" in text:
+    if ("gaelder kun med" in text or "kun med" in text) and "app" in text:
         return "app"
     if app_price is not None:
         return "app/medlemskab"
@@ -165,6 +203,25 @@ def collect_lovbjerg_offers(config: dict[str, Any], session: Any, now: Any = Non
     return _ORIGINAL_LOVBJERG(config_for_lovbjerg(config), session, now=now)
 
 
+def collect_offers(config: dict[str, Any], session: Any, now: Any = None):
+    offers, errors = _ORIGINAL_COLLECT(config, session, now=now)
+    max_days = int(config.get("max_offer_days", 45))
+    if max_days <= 0:
+        return offers, errors
+
+    filtered: list[fw.Offer] = []
+    skipped = 0
+    for offer in offers:
+        duration_days = (offer.valid_until - offer.valid_from).total_seconds() / 86400
+        if duration_days > max_days:
+            skipped += 1
+            continue
+        filtered.append(offer)
+    if skipped:
+        print(f"Family Watch sanity: skipped {skipped} long-running catalogue offers (> {max_days} days)")
+    return filtered, errors
+
+
 def _access_from_description(description: str) -> tuple[str, dict[str, Any]]:
     if ACCESS_MARKER not in description:
         return description, {}
@@ -213,6 +270,7 @@ def patch_family_watch() -> None:
     fw.extract_etilbudsavis_offer_dicts = extract_etilbudsavis_offer_dicts
     fw.matches_group = matches_group
     fw.collect_lovbjerg_offers = collect_lovbjerg_offers
+    fw.collect_offers = collect_offers
     fw.build_message = build_message
 
 
