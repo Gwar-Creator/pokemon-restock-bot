@@ -19,37 +19,24 @@ jobs:
         with:
           python-version: "3.13"
       - name: Install requests
-        run: pip install requests beautifulsoup4
-      - name: Probe Løvbjerg Vejen flyer source
+        run: pip install requests
+      - name: Probe Tjek widget network endpoints
         run: |
           python - <<'PY'
           import re, requests
-          from bs4 import BeautifulSoup
-
-          s=requests.Session()
-          s.headers.update({'User-Agent':'Mozilla/5.0'})
-          url='https://www.lovbjerg.dk/avis/denne-uges-avis/vejen'
-          r=s.get(url,timeout=30)
-          print('STATUS',r.status_code,'LEN',len(r.text),'TYPE',r.headers.get('content-type'))
-          r.raise_for_status()
-          text=r.text
-          for needle in ['Avisen gælder','Download PDF','pdf','iframe','QDW7NY6N','publication','catalog','catalogue','viewer']:
-              i=text.lower().find(needle.lower())
-              print('\nNEEDLE',needle,'INDEX',i)
-              if i>=0:
-                  print(text[max(0,i-700):i+1800].replace('\n',' ')[:2600])
-          soup=BeautifulSoup(text,'html.parser')
-          print('\nLINKS')
-          for tag in soup.find_all(['a','iframe'], href=True)+soup.find_all('iframe',src=True):
-              target=tag.get('href') or tag.get('src')
-              if target and any(k in target.lower() for k in ['pdf','avis','catalog','viewer','superego']):
-                  print(tag.name,target)
-          print('\nSCRIPTS')
-          for tag in soup.find_all('script'):
-              body=tag.string or tag.get_text() or ''
-              if any(k in body.lower() for k in ['qdw7ny6n','pdf','catalog','publication','avis']):
-                  print(body[:5000].replace('\n',' '))
-          print('\nPDF_URLS')
-          for m in sorted(set(re.findall(r'https?://[^"\'<> ]+\.pdf[^"\'<> ]*', text, re.I))):
-              print(m)
+          s=requests.Session(); s.headers.update({'User-Agent':'Mozilla/5.0'})
+          urls=['https://widgets.tjek.com/v1.js','https://js-sdk.tjek.com/sgn-sdk-4.x.x.min.js']
+          for url in urls:
+              r=s.get(url,timeout=30)
+              print('\n===',url,'STATUS',r.status_code,'LEN',len(r.text),'===')
+              r.raise_for_status(); text=r.text
+              domains=sorted(set(re.findall(r'https?://[^"\'` )]+', text)))
+              print('URLS')
+              for x in domains[:200]:
+                  if any(k in x.lower() for k in ['tjek','shopgun','api','publication']): print(x[:500])
+              for needle in ['api.shopgun','api.tjek','paged_publication','paged-publication','publication_v2','publications','hotspots','apiKey','api-key','Authorization','Bearer']:
+                  i=text.find(needle)
+                  if i>=0:
+                      print('\nNEEDLE',needle,'INDEX',i)
+                      print(text[max(0,i-800):i+1800].replace('\n',' ')[:2800])
           PY
