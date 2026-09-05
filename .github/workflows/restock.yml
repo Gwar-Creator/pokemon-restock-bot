@@ -61,7 +61,6 @@ jobs:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           PRICE_WATCH_WEBHOOK_URL: ${{ secrets.PRICE_WATCH_WEBHOOK_URL }}
           PRICE_HISTORY_WEBHOOK_URL: ${{ secrets.PRICE_HISTORY_WEBHOOK_URL }}
-          SCANNER_HEALTH_WEBHOOK_URL: ${{ secrets.SCANNER_HEALTH_WEBHOOK_URL }}
           RUN_ONCE: "1"
         run: |
           set +e
@@ -85,7 +84,7 @@ jobs:
             exit "$RESTOCK_STATUS"
           fi
 
-      - name: Audit scanner health
+      - name: Audit scanner health (Actions only)
         continue-on-error: true
         run: python scanner_health_audit.py
 
