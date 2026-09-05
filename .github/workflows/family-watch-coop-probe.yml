@@ -17,12 +17,11 @@ jobs:
         with:
           python-version: "3.13"
       - run: pip install -r requirements.txt
-      - name: Inspect Coop flyer HTML
+      - name: Inspect Coop flyer widget metadata
         run: |
           python - <<'PY'
           import re, requests
           from bs4 import BeautifulSoup
-
           urls={
             'Kvickly':'https://kvickly.coop.dk/avis/',
             'SuperBrugsen':'https://superbrugsen.coop.dk/avis/',
@@ -31,17 +30,15 @@ jobs:
           }
           for store,url in urls.items():
             r=requests.get(url,headers={'User-Agent':'Mozilla/5.0'},timeout=30)
-            print('\n###',store,r.status_code,'len',len(r.text),r.url)
             soup=BeautifulSoup(r.text,'html.parser')
-            text=' '.join(soup.stripped_strings)
-            m=re.search(r'Avisen gælder fra.{0,180}',text,re.I)
-            print('PERIOD',m.group(0) if m else 'NONE')
-            for needle in ['Cheasy skyr','Arla proteindrik','Stay Strong','view_id','offer_','medlemspris','appPrice','price']:
-              i=r.text.lower().find(needle.lower())
-              print('MARK',needle,i)
-              if i>=0:
-                print(repr(r.text[max(0,i-500):i+1800]))
-            print('JSONLD',len(soup.find_all('script',attrs={'type':'application/ld+json'})))
-            print('APPDATA',len(soup.find_all('app-data')))
-            print('LINKS_NEXT',[(a.get_text(' ',strip=True),a.get('href')) for a in soup.find_all('a') if 'næste' in a.get_text(' ',strip=True).lower()][:5])
+            print('\n###',store)
+            for sel in ['.tjek-widget','[data-api-key]','[data-business-id]','[data-id]']:
+              nodes=soup.select(sel)
+              print('SEL',sel,'count',len(nodes))
+              for n in nodes[:8]:
+                print(str(n)[:2500])
+            for needle in ['squid-api.tjek.com','tjek.com','data-api-key','publication-viewer','catalog']:
+              print('NEEDLE',needle)
+              for m in list(re.finditer(re.escape(needle),r.text,re.I))[:3]:
+                print(repr(r.text[max(0,m.start()-1000):m.start()+2500]))
           PY
