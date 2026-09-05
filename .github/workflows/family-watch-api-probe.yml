@@ -1,0 +1,43 @@
+name: Family Watch API Probe
+
+on:
+  push:
+    paths:
+      - ".github/workflows/family-watch-api-probe.yml"
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          ref: main
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Install requests
+        run: pip install requests
+      - name: Probe Madpris product fields
+        run: |
+          python - <<'PY'
+          import json, requests
+          base='https://madpris.gratis.dk/api/products'
+          queries=['semper klemmepose','semper smoothie','semper','vådservietter']
+          for q in queries:
+              print('\n=== QUERY:', q, '===')
+              r=requests.get(base, params={'q':q,'sort':'price','order':'asc','page':1}, timeout=20)
+              print('STATUS', r.status_code)
+              r.raise_for_status()
+              data=r.json()
+              print('TOP_KEYS', sorted(data.keys()))
+              products=data.get('products',[])
+              print('COUNT_PAGE', len(products))
+              for p in products[:20]:
+                  store=str(p.get('store',''))
+                  name=str(p.get('name',''))
+                  if q=='semper' or 'semper' in name.lower() or 'løvbjerg' in store.lower() or 'lovbjerg' in store.lower() or 'lidl' in store.lower():
+                      print(json.dumps(p, ensure_ascii=False, sort_keys=True))
+          PY
