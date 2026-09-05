@@ -1,5 +1,5 @@
 {
-  "version": 10,
+  "version": 11,
   "source": "Dated digital flyers via eTilbudsavis with direct Løvbjerg Vejen fallback",
   "max_offer_days": 45,
   "allowed_stores": [
@@ -10,8 +10,6 @@
     "Matas",
     "Kvickly",
     "Bilka",
-    "føtex",
-    "MENY",
     "SuperBrugsen",
     "Dagli Brugsen",
     "365discount"
@@ -82,6 +80,50 @@
       "include_any": [],
       "exclude_any": ["dametøj", "herretøj", "voksen", "esmara"],
       "skip_lovbjerg_direct": true
+    },
+    {
+      "id": "frosne_kyllingestrimler",
+      "label": "Frosne kyllingestrimler",
+      "queries": ["kyllingestrimler frost", "frosne kyllingestrimler", "kyllinge strimler frost", "chicken strips frost"],
+      "include_all": [],
+      "include_any": [],
+      "include_any_sets": [
+        ["kyllingestrimler", "kyllinge strimler", "chicken strips"],
+        ["frost", "frossen", "frosne", "dybfrost"]
+      ],
+      "exclude_any": ["fersk", "køl", "kølevare", "sandwich", "salat"]
+    },
+    {
+      "id": "arla_protein_drik",
+      "label": "Arla Protein drik",
+      "queries": ["arla protein drik", "arla protein mælkedrik", "arla protein shake", "arla protein yoghurtdrik"],
+      "include_all": ["arla", "protein"],
+      "include_any": ["mælkedrik", "mælke drik", "proteindrik", "shake", "yoghurtdrik", "drikkemåltid"],
+      "exclude_any": ["skyr", "pudding", "dessert", "bar"]
+    },
+    {
+      "id": "stay_strong_skyr",
+      "label": "Stay Strong skyr",
+      "queries": ["stay strong skyr", "stay strong pro skyr", "staystrong skyr"],
+      "include_all": [],
+      "include_any": [],
+      "include_any_sets": [
+        ["stay strong", "staystrong"],
+        ["skyr"]
+      ],
+      "exclude_any": ["granola bar", "proteinbar"]
+    },
+    {
+      "id": "cheasy_skyr",
+      "label": "Cheasy skyr",
+      "queries": ["cheasy skyr", "cheesy skyr"],
+      "include_all": [],
+      "include_any": [],
+      "include_any_sets": [
+        ["cheasy", "cheesy"],
+        ["skyr"]
+      ],
+      "exclude_any": ["fraiche", "yoghurt"]
     }
   ]
 }
