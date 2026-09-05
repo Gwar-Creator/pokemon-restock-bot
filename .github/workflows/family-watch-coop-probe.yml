@@ -17,7 +17,7 @@ jobs:
         with:
           python-version: "3.13"
       - run: pip install -r requirements.txt
-      - name: Inspect Coop frontend catalog requests
+      - name: Inspect exact Coop offer API calls
         run: |
           python - <<'PY'
           import re, requests
@@ -27,18 +27,19 @@ jobs:
           base='https://superbrugsen.coop.dk/avis/'
           r=requests.get(base,headers={'User-Agent':'Mozilla/5.0'},timeout=30)
           soup=BeautifulSoup(r.text,'html.parser')
-          wanted=[]
-          for s in soup.find_all('script'):
-            src=s.get('src')
-            if src and any(name in src for name in ['shopgun.js','catalogDataController.js','catalog.js','incito.js','catalogSearchController.js','offerController.js']):
-              wanted.append(urljoin(base,src))
-          for url in wanted:
-            rr=requests.get(url,headers={'User-Agent':'Mozilla/5.0'},timeout=30)
-            print('\n###',url,rr.status_code,'len',len(rr.text))
-            text=rr.text
-            for needle in ['api_key','apiKey','X-Api-Key','squid-api','generate_incito','publication','catalogData','offerSearch','shopgun']:
-              hits=list(re.finditer(re.escape(needle),text,re.I))[:5]
-              print('NEEDLE',needle,'hits',len(hits))
-              for m in hits:
-                print(repr(text[max(0,m.start()-700):m.start()+1800]))
+
+          print('PAGE GLOBALS')
+          for needle in ['_shopgunApiKey','_shopGunTrackId','shopgun-wrapper','incito-wrapper','publication-id','publicationId']:
+              for m in list(re.finditer(re.escape(needle),r.text,re.I))[:8]:
+                  print('\n',needle,repr(r.text[max(0,m.start()-900):m.start()+2200]))
+
+          for name in ['catalogSearchController.js','offerController.js']:
+              src=next((s.get('src') for s in soup.find_all('script') if s.get('src') and name in s.get('src')),None)
+              if not src:
+                  print('MISSING',name)
+                  continue
+              url=urljoin(base,src)
+              rr=requests.get(url,headers={'User-Agent':'Mozilla/5.0'},timeout=30)
+              print('\n### FULL',name,url,rr.status_code)
+              print(rr.text)
           PY
