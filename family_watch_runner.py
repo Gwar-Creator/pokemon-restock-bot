@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import json
 import re
+from copy import deepcopy
 from typing import Any
-from urllib.parse import quote
 
 import family_watch as fw
 
@@ -12,6 +12,7 @@ _COOP_STORES = {"365discount", "superbrugsen", "kvickly", "daglibrugsen", "brugs
 
 _ORIGINAL_EXTRACT = fw.extract_etilbudsavis_offer_dicts
 _ORIGINAL_MATCHES = fw.matches_group
+_ORIGINAL_LOVBJERG = fw.collect_lovbjerg_offers
 
 
 def _norm(value: Any) -> str:
@@ -41,10 +42,11 @@ def _offer_match_key(raw: dict[str, Any]) -> tuple[str, str, str, str]:
 
 
 def extract_embedded_product_dicts(html: str) -> list[dict[str, Any]]:
-    """Extract eTilbudsavis' richer product objects from page hydration JSON.
+    """Best-effort extraction of richer eTilbudsavis product hydration data.
 
-    These objects include appPrice/membershipPrice and department metadata that
-    are not consistently present in the JSON-LD Offer objects.
+    The ordinary GitHub runner currently receives a lean server response, so
+    this is optional enrichment. Access requirements are also detected from
+    the JSON-LD offer descriptions, which keeps the feature useful without it.
     """
     decoder = json.JSONDecoder()
     found: dict[str, dict[str, Any]] = {}
@@ -74,13 +76,13 @@ def infer_access_note(store: str, description: str, app_price: float | None, mem
         return "Netto+ app"
     if "lidl plus" in text or (canonical == "lidl" and has_special_price):
         return "Lidl Plus app/medlemskab"
-    if canonical in _COOP_STORES and (has_special_price or "medlemspris" in text or "coop app" in text):
+    if canonical in _COOP_STORES and (has_special_price or "medlemspris" in text or "medlemskab" in text or "coop app" in text):
         return "Coop-medlemskab/app"
     if canonical == "matas" and (has_special_price or "club matas" in text):
         return "Club Matas"
     if "medlemspris" in text or "medlemskab" in text or membership_price is not None:
         return "medlemskab"
-    if "gælder kun med" in text and "app" in text:
+    if ("gælder kun med" in text or "kun med" in text) and "app" in text:
         return "app"
     if app_price is not None:
         return "app/medlemskab"
@@ -115,8 +117,6 @@ def _with_access_metadata(raw_offer: dict[str, Any], product: dict[str, Any]) ->
 def extract_etilbudsavis_offer_dicts(html: str) -> list[dict[str, Any]]:
     jsonld = _ORIGINAL_EXTRACT(html)
     products = extract_embedded_product_dicts(html)
-    if not products:
-        return jsonld
 
     exact: dict[tuple[str, str, str, str], dict[str, Any]] = {}
     loose: dict[tuple[str, str], list[dict[str, Any]]] = {}
@@ -131,7 +131,9 @@ def extract_etilbudsavis_offer_dicts(html: str) -> list[dict[str, Any]]:
             candidates = loose.get((_norm(raw.get("name")), fw.canonical_store(_store_from_raw(raw))), [])
             if len(candidates) == 1:
                 product = candidates[0]
-        enriched.append(_with_access_metadata(raw, product) if product else raw)
+        # Even without hydration data, inspect the JSON-LD description for
+        # explicit phrases such as Netto+, Lidl Plus and medlemspris.
+        enriched.append(_with_access_metadata(raw, product or raw))
     return enriched
 
 
@@ -144,6 +146,23 @@ def matches_group(product: dict[str, Any], group: dict[str, Any]) -> bool:
         if tokens and not any(token in text for token in tokens):
             return False
     return True
+
+
+def config_for_lovbjerg(config: dict[str, Any]) -> dict[str, Any]:
+    """Remove groups that only make sense with a focused search query.
+
+    Direct Løvbjerg scans the complete catalogue, so query-context groups such
+    as child clothing must not be allowed to match every catalogue item.
+    """
+    filtered = deepcopy(config)
+    filtered["watch_groups"] = [
+        group for group in config.get("watch_groups", []) if not group.get("skip_lovbjerg_direct")
+    ]
+    return filtered
+
+
+def collect_lovbjerg_offers(config: dict[str, Any], session: Any, now: Any = None):
+    return _ORIGINAL_LOVBJERG(config_for_lovbjerg(config), session, now=now)
 
 
 def _access_from_description(description: str) -> tuple[str, dict[str, Any]]:
@@ -193,6 +212,7 @@ def build_message(offer: fw.Offer, phase: str) -> str:
 def patch_family_watch() -> None:
     fw.extract_etilbudsavis_offer_dicts = extract_etilbudsavis_offer_dicts
     fw.matches_group = matches_group
+    fw.collect_lovbjerg_offers = collect_lovbjerg_offers
     fw.build_message = build_message
 
 
