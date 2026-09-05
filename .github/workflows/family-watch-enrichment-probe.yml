@@ -20,34 +20,30 @@ jobs:
           python-version: "3.13"
       - name: Install dependencies
         run: pip install -r requirements.txt
-      - name: Verify live app and membership metadata
+      - name: Diagnose live product data
         run: |
           python - <<'PY'
+          import re
           import requests
+          from curl_cffi import requests as crequests
           import family_watch as fw
           import family_watch_runner as runner
 
-          html = requests.get(
-              'https://etilbudsavis.dk/soeg/slik',
-              headers={'User-Agent': fw.USER_AGENT},
-              timeout=30,
-          ).text
-          products = runner.extract_embedded_product_dicts(html)
-          special = [p for p in products if p.get('appPrice') is not None or p.get('membershipPrice') is not None]
-          print('products', len(products), 'special_prices', len(special))
-          assert products, 'No embedded eTilbudsavis products parsed'
-          assert special, 'No live app/membership prices parsed'
-          for p in special[:10]:
-              business = p.get('business') or {}
-              store = business.get('name', '') if isinstance(business, dict) else ''
-              app = fw.maybe_float(p.get('appPrice'))
-              member = fw.maybe_float(p.get('membershipPrice'))
-              note = runner.infer_access_note(store, str(p.get('description') or ''), app, member)
-              print(store, '|', p.get('name'), '| regular', p.get('price'), '| app', p.get('appPrice'), '| member', p.get('membershipPrice'), '| note', note)
-          assert any(runner.infer_access_note(
-              (p.get('business') or {}).get('name', '') if isinstance(p.get('business'), dict) else '',
-              str(p.get('description') or ''),
-              fw.maybe_float(p.get('appPrice')),
-              fw.maybe_float(p.get('membershipPrice')),
-          ) for p in special), 'Special prices were found but no access requirement could be inferred'
+          url='https://etilbudsavis.dk/soeg/slik'
+          variants=[]
+          r=requests.get(url,headers={'User-Agent':'Mozilla/5.0'},timeout=30)
+          variants.append(('requests',r.status_code,r.url,r.text))
+          c=crequests.get(url,impersonate='chrome',timeout=30)
+          variants.append(('chrome',c.status_code,c.url,c.text))
+
+          for label,status,final_url,html in variants:
+              print('\nVARIANT',label,'status',status,'len',len(html),'url',final_url)
+              print('markers', {m: html.find(m) for m in ['publicId','appPrice','membershipPrice','self.__next_f.push','__NEXT_DATA__','KujH1JEc']})
+              print('scripts', len(re.findall(r'<script', html, flags=re.I)))
+              products=runner.extract_embedded_product_dicts(html)
+              print('parsed_products',len(products),'special',sum(1 for p in products if p.get('appPrice') is not None or p.get('membershipPrice') is not None))
+              for marker in ['publicId','appPrice','self.__next_f.push']:
+                  i=html.find(marker)
+                  if i>=0:
+                      print('SNIP',marker,repr(html[max(0,i-500):i+1500]))
           PY
