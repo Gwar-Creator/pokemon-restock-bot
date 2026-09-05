@@ -1,0 +1,91 @@
+name: Family Watch
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry run: log matches only, no Discord/state writes"
+        required: true
+        default: true
+        type: boolean
+  schedule:
+    - cron: "17 */4 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: family-watch
+  cancel-in-progress: false
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Validate Family Watch
+        run: |
+          python -m py_compile family_watch.py
+          python -m unittest test_family_watch.py
+
+      - name: Scan current family offers
+        env:
+          FAMILY_WATCH_WEBHOOK_URL: ${{ secrets.FAMILY_WATCH_WEBHOOK_URL }}
+          REQUESTED_DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            DRY_RUN="${REQUESTED_DRY_RUN:-true}"
+          else
+            DRY_RUN="false"
+          fi
+
+          if [ -z "$FAMILY_WATCH_WEBHOOK_URL" ]; then
+            echo "FAMILY_WATCH_WEBHOOK_URL is not configured; forcing dry run."
+            DRY_RUN="true"
+          fi
+
+          export FAMILY_WATCH_DRY_RUN="$DRY_RUN"
+          python family_watch.py | tee family_watch_run.log
+
+      - name: Save Family Watch state
+        if: ${{ hashFiles('family_watch_state.json') != '' }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- family_watch_state.json
+
+          if git diff --cached --quiet; then
+            echo "No Family Watch state changes to save."
+            exit 0
+          fi
+
+          git commit -m "Update Family Watch state"
+
+          for attempt in 1 2 3; do
+            git fetch origin main
+            if git rebase origin/main && git push origin HEAD:main; then
+              exit 0
+            fi
+            git rebase --abort || true
+            if [ "$attempt" -lt 3 ]; then
+              sleep $((attempt * 5))
+            fi
+          done
+
+          exit 1
