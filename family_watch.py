@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import sys
 import time
 import unicodedata
@@ -22,6 +23,19 @@ USER_AGENT = "family-watch/0.1 (+github.com/Gwar-Creator/pokemon-restock-bot)"
 STATE_RETENTION_DAYS = 45
 
 DANISH_TRANSLATION = str.maketrans({"æ": "ae", "ø": "o", "å": "a", "Æ": "ae", "Ø": "o", "Å": "a"})
+
+STORE_ALIASES = {
+    "rema": "rema1000",
+    "rema1000": "rema1000",
+    "daglibrugsen": "daglibrugsen",
+    "daglibrugsen": "daglibrugsen",
+    "365": "365discount",
+    "coop365": "365discount",
+    "365discount": "365discount",
+    "discount365": "365discount",
+    "superbrugsen": "superbrugsen",
+    "lovbjerg": "lovbjerg",
+}
 
 
 @dataclass(frozen=True)
@@ -52,16 +66,20 @@ def normalize_text(value: Any) -> str:
     return " ".join(text.split())
 
 
+def canonical_store(value: Any) -> str:
+    compact = re.sub(r"[^a-z0-9]", "", normalize_text(value))
+    return STORE_ALIASES.get(compact, compact)
+
+
 def combined_product_text(product: dict[str, Any]) -> str:
     return normalize_text(" ".join(str(product.get(k) or "") for k in ("name", "brand", "category", "subcategory")))
 
 
 def store_is_allowed(product: dict[str, Any], config: dict[str, Any]) -> bool:
-    allowed = {normalize_text(store).replace(" ", "") for store in config.get("allowed_stores", []) if store}
+    allowed = {canonical_store(store) for store in config.get("allowed_stores", []) if store}
     if not allowed:
         return True
-    current = normalize_text(product.get("store")).replace(" ", "")
-    return current in allowed
+    return canonical_store(product.get("store")) in allowed
 
 
 def matches_group(product: dict[str, Any], group: dict[str, Any]) -> bool:
