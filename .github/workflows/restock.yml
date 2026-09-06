@@ -39,6 +39,8 @@ jobs:
           python -m py_compile restock_v2_runner.py
           python -m py_compile faraos_parser_v2.py
           python -m py_compile alert_policy.py
+          python -m py_compile tier_b_wave1_sources.py
+          python -m py_compile tier_b_wave1_shadow.py
           python -m py_compile local_stock_watch.py
           python -m py_compile scanner_health_audit.py
           python -m py_compile discord_cleanup.py
@@ -48,6 +50,7 @@ jobs:
           python -m unittest test_alert_policy_v2.py
           python -m unittest test_restock_v2_runner.py
           python -m unittest test_faraos_parser_v2.py
+          python -m unittest test_tier_b_wave1.py
           python -m unittest test_matraws_single_guard.py
           python -m unittest test_state_commit_guard.py
 
@@ -62,7 +65,7 @@ jobs:
           DISCORD_RETENTION_HOURS: "24"
         run: python discord_cleanup.py
 
-      - name: Run Restock V2 + Local Stock in parallel
+      - name: Run Restock V2 + Local Stock + Tier B Wave 1 shadow in parallel
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           PRICE_WATCH_WEBHOOK_URL: ${{ secrets.PRICE_WATCH_WEBHOOK_URL }}
@@ -74,15 +77,23 @@ jobs:
           RESTOCK_PID=$!
           python local_stock_watch.py &
           LOCAL_STOCK_PID=$!
+          python tier_b_wave1_shadow.py &
+          WAVE1_PID=$!
 
           wait "$RESTOCK_PID"
           RESTOCK_STATUS=$?
           wait "$LOCAL_STOCK_PID"
           LOCAL_STOCK_STATUS=$?
+          wait "$WAVE1_PID"
+          WAVE1_STATUS=$?
           set -e
 
           if [ "$LOCAL_STOCK_STATUS" -ne 0 ]; then
             echo "::warning::Local Stock Watch exited with status $LOCAL_STOCK_STATUS; main restock state is still saved"
+          fi
+
+          if [ "$WAVE1_STATUS" -ne 0 ]; then
+            echo "::warning::Tier B Wave 1 shadow exited with status $WAVE1_STATUS; production alerts are unaffected"
           fi
 
           if [ "$RESTOCK_STATUS" -ne 0 ]; then
@@ -107,6 +118,7 @@ jobs:
           git add -- \
             restock_state_v2.json \
             local_stock_state_v1.json \
+            tier_b_wave1_shadow_state.json \
             price_matching_audit_v1.json
 
           if git diff --cached --quiet; then

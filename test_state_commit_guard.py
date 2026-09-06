@@ -5,6 +5,7 @@ from state_commit_guard import (
     compact_local_stock,
     compact_restock_state,
     compact_updated_at_only,
+    compact_wave1_shadow,
 )
 
 
@@ -177,6 +178,88 @@ class StateCommitGuardTests(unittest.TestCase):
         }
         result = compact_restock_state(old, new)
         self.assertEqual(result["_source_health"]["shop"]["last_attempt"], "new-a")
+
+    def test_wave1_shadow_reuses_noop_health_timestamps_and_updated_at(self):
+        old = {
+            "version": 1,
+            "mode": "shadow",
+            "updated_at": "old-u",
+            "sources": {
+                "shop": {
+                    "label": "SHOP",
+                    "mode": "shadow",
+                    "health": {
+                        "status": "ok",
+                        "last_attempt": "old-a",
+                        "last_success": "old-s",
+                        "consecutive_failures": 0,
+                        "last_error": "",
+                        "observed_count": 1,
+                    },
+                    "products": {"x": {"price": 100.0}},
+                }
+            },
+        }
+        new = {
+            "version": 1,
+            "mode": "shadow",
+            "updated_at": "new-u",
+            "sources": {
+                "shop": {
+                    "label": "SHOP",
+                    "mode": "shadow",
+                    "health": {
+                        "status": "ok",
+                        "last_attempt": "new-a",
+                        "last_success": "new-s",
+                        "consecutive_failures": 0,
+                        "last_error": "",
+                        "observed_count": 1,
+                    },
+                    "products": {"x": {"price": 100.0}},
+                }
+            },
+        }
+        result = compact_wave1_shadow(old, new)
+        health = result["sources"]["shop"]["health"]
+        self.assertEqual(health["last_attempt"], "old-a")
+        self.assertEqual(health["last_success"], "old-s")
+        self.assertEqual(result["updated_at"], "old-u")
+
+    def test_wave1_shadow_keeps_current_timestamps_on_real_change(self):
+        old = {
+            "updated_at": "old-u",
+            "sources": {
+                "shop": {
+                    "health": {
+                        "status": "ok",
+                        "last_attempt": "old-a",
+                        "last_success": "old-s",
+                        "consecutive_failures": 0,
+                        "observed_count": 1,
+                    },
+                    "products": {"x": {"price": 100.0}},
+                }
+            },
+        }
+        new = {
+            "updated_at": "new-u",
+            "sources": {
+                "shop": {
+                    "health": {
+                        "status": "failed",
+                        "last_attempt": "new-a",
+                        "last_success": "old-s",
+                        "consecutive_failures": 1,
+                        "observed_count": 0,
+                    },
+                    "products": {"x": {"price": 100.0}},
+                }
+            },
+        }
+        result = compact_wave1_shadow(old, new)
+        self.assertEqual(result["updated_at"], "new-u")
+        self.assertEqual(result["sources"]["shop"]["health"]["last_attempt"], "new-a")
 
     def test_hot_reuses_success_and_updated_at_when_only_heartbeat_changed(self):
         old = {

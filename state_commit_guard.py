@@ -10,6 +10,7 @@ from pathlib import Path
 MAIN_FILES = (
     "restock_state_v2.json",
     "local_stock_state_v1.json",
+    "tier_b_wave1_shadow_state.json",
 )
 
 HOT_FILES = (
@@ -162,6 +163,42 @@ def compact_restock_state(old, new):
     return compact
 
 
+def compact_wave1_shadow(old, new):
+    """Remove no-op health timestamps from the shadow source state."""
+    compact = copy.deepcopy(new)
+    old_sources = old.get("sources") or {}
+    new_sources = compact.get("sources") or {}
+
+    if isinstance(old_sources, dict) and isinstance(new_sources, dict):
+        for source_key, new_source in new_sources.items():
+            old_source = old_sources.get(source_key)
+            if not isinstance(old_source, dict) or not isinstance(new_source, dict):
+                continue
+
+            old_health = old_source.get("health") or {}
+            new_health = new_source.get("health") or {}
+            if isinstance(old_health, dict) and isinstance(new_health, dict):
+                ignored = {"last_attempt", "last_success"}
+                if _same_except_keys(old_health, new_health, ignored):
+                    for key in ignored:
+                        if key in old_health:
+                            new_health[key] = old_health[key]
+                        else:
+                            new_health.pop(key, None)
+
+    old_cmp = copy.deepcopy(old)
+    new_cmp = copy.deepcopy(compact)
+    old_cmp.pop("updated_at", None)
+    new_cmp.pop("updated_at", None)
+    if old_cmp == new_cmp:
+        if "updated_at" in old:
+            compact["updated_at"] = old["updated_at"]
+        else:
+            compact.pop("updated_at", None)
+
+    return compact
+
+
 def compact_hot_state(old, new):
     compact = copy.deepcopy(new)
     old_controls = old.get("source_controls") or {}
@@ -210,6 +247,8 @@ def compact_state(path, old, new):
         return compact_local_stock(old, new)
     if path == "restock_state_v2.json":
         return compact_restock_state(old, new)
+    if path == "tier_b_wave1_shadow_state.json":
+        return compact_wave1_shadow(old, new)
     if path == "hot_restock_state.json":
         return compact_hot_state(old, new)
     if path == "salling_early_radar_state.json":
