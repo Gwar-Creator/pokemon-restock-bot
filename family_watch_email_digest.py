@@ -45,6 +45,34 @@ def phase_token(offer: fw.Offer, phase: str) -> str:
     return f"{offer.key}|{phase}"
 
 
+def _local_date(value: datetime) -> str:
+    return value.astimezone(fw.COPENHAGEN).date().isoformat()
+
+
+def _matches_sent_entry(offer: fw.Offer, phase: str, entry: object) -> bool:
+    if not isinstance(entry, dict):
+        return False
+    if str(entry.get("phase") or "").strip().lower() != phase:
+        return False
+    if fw.canonical_store(entry.get("store")) != fw.canonical_store(offer.store):
+        return False
+    if fw.normalize_text(entry.get("name")) != fw.normalize_text(offer.name):
+        return False
+
+    sent_from = fw.parse_timestamp(entry.get("valid_from"))
+    sent_until = fw.parse_timestamp(entry.get("valid_until"))
+    if sent_from is None or sent_until is None:
+        return False
+
+    return _local_date(sent_from) == _local_date(offer.valid_from) and _local_date(sent_until) == _local_date(offer.valid_until)
+
+
+def _phase_already_sent(offer: fw.Offer, phase: str, sent: dict) -> bool:
+    if phase_token(offer, phase) in sent:
+        return True
+    return any(_matches_sent_entry(offer, phase, entry) for entry in sent.values())
+
+
 def pending_items(offers: list[fw.Offer], state: dict, now: datetime) -> list[tuple[str, fw.Offer]]:
     sent = state.get("sent", {}) if isinstance(state.get("sent"), dict) else {}
     items: list[tuple[str, fw.Offer]] = []
@@ -52,7 +80,7 @@ def pending_items(offers: list[fw.Offer], state: dict, now: datetime) -> list[tu
         phase = fw.offer_phase(offer, now)
         if phase not in {"upcoming", "current"}:
             continue
-        if phase_token(offer, phase) in sent:
+        if _phase_already_sent(offer, phase, sent):
             continue
         items.append((phase, offer))
     return items
