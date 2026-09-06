@@ -8,29 +8,21 @@ from pathlib import Path
 
 import requests
 
+from alert_policy import TIER_A_SOURCES
+
 ROOT = Path(__file__).resolve().parent
 SHARED_FILE = ROOT / "restock_bot_github.py"
 STATE_FILE = ROOT / "hot_restock_state.json"
-FILTER_VERSION = 2
+FILTER_VERSION = 3
 
 HOT_ITERATIONS = max(1, int(os.getenv("HOT_ITERATIONS", "1")))
 HOT_INTERVAL_SECONDS = max(30, int(os.getenv("HOT_INTERVAL_SECONDS", "60")))
 HOT_DRY_RUN = os.getenv("HOT_DRY_RUN", "0").strip() == "1"
 WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL", "").strip()
 
-# Proshop HOT uses two independent public views:
-# 1) the existing Jina-backed curated route for stable coverage, and
-# 2) Proshop's own live search frontend through a browser TLS fingerprint for
-#    freshness. The direct frontend is best-effort: Cloudflare may return 403
-#    from GitHub runners, but that must never take the stable Proshop source
-#    offline. When both succeed, the live frontend wins explicit price/stock.
 PROSHOP_FRONTEND_URL = "https://www.proshop.dk/?s=Pokemon+TCG"
 PROSHOP_DISCOVERY_VERSION = 4
 
-# Each source normally gets checked every HOT loop. If a source starts
-# returning rate-limit/bot-block signals, only that source slows down:
-# 1 min -> 2 min -> 5 min -> 15 min. Successful checks recover one step
-# at a time so the remaining sources can continue at full speed.
 RATE_LIMIT_BACKOFF_SECONDS = (0, 120, 300, 900)
 RATE_LIMIT_MARKERS = (
     "429",
@@ -47,105 +39,16 @@ RATE_LIMIT_MARKERS = (
     "service unavailable",
 )
 
-CORE_MARKERS = (
-    "booster bundle",
-    "booster box",
-    "booster display",
-)
-
-COLLECTION_MARKERS = (
-    "premium collection",
-    "ultra-premium collection",
-    "ultra premium collection",
-    "super premium collection",
-    "super-premium collection",
-    "special collection",
-    "illustration collection",
-    "collection box",
-)
-
-TIN_MARKERS = (
-    "mini tin",
-    "poke ball tin",
-    "poké ball tin",
-)
-
-WATCH_MARKERS = (
-    "first partner",
-    "30th anniversary",
-    "30th",
-    "ascended heroes",
-    "white flare",
-    "black bolt",
-)
-
-PACK_MARKERS = (
-    "booster pack",
-    "sleeved booster",
-    "sleeve booster",
-)
-
 SOURCE_LABELS = {
+    "coolshop": "COOLSHOP",
     "proshop": "PROSHOP",
     "br": "BR",
     "bilka": "BILKA",
     "foetex": "FØTEX",
 }
 
-
-def _clean_name(name):
-    return " " + re.sub(r"\s+", " ", str(name or "").lower()).strip() + " "
-
-
-def hot_product_allowed(name):
-    text = _clean_name(name)
-
-    # Single packs stay out of the fast lane, even for watched sets.
-    if any(marker in text for marker in PACK_MARKERS):
-        return False
-
-    # Some shops call a loose pack simply "booster". Keep it out unless the
-    # title explicitly says bundle/box/display.
-    if (
-        " booster " in text
-        and not any(marker in text for marker in CORE_MARKERS)
-        and "elite trainer box" not in text
-        and not re.search(r"\betb\b", text)
-        and not any(marker in text for marker in COLLECTION_MARKERS)
-    ):
-        return False
-
-    # HOT/Restock følger de relevante produkttyper på tværs af ALLE sæt.
-    is_etb = "elite trainer box" in text or bool(re.search(r"\betb\b", text))
-    if is_etb:
-        return True
-
-    if any(marker in text for marker in CORE_MARKERS):
-        return True
-
-    if any(marker in text for marker in COLLECTION_MARKERS):
-        return True
-
-    # Standard EX/V/VSTAR/VMAX boxes are collection boxes even when the
-    # retailer omits the word "collection" from the title.
-    if re.search(r"\b(?:ex|v|vmax|vstar)\s+(?:collection\s+)?box\b", text):
-        return True
-
-    if " ultra premium " in text or bool(re.search(r"\bupc\b", text)):
-        return True
-
-    if " super premium " in text or bool(re.search(r"\bspc\b", text)):
-        return True
-
-    if any(marker in text for marker in TIN_MARKERS) or re.search(r"\btins?\b", text):
-        return True
-
-    # First Partner / 30th etc. remain explicit special watches even when the
-    # retailer uses an unusual product-family label.
-    if any(marker in text for marker in WATCH_MARKERS):
-        return True
-
-    return False
+if tuple(SOURCE_LABELS) != tuple(TIER_A_SOURCES):
+    raise RuntimeError("HOT source list er ikke synkron med TIER_A_SOURCES")
 
 
 def load_shared_namespace():
@@ -273,6 +176,9 @@ def _source_wait_seconds(state, source_key):
 
 
 def product_available(source_key, product):
+    if source_key == "coolshop":
+        return bool(product.get("online_stock"))
+
     if source_key == "proshop":
         return product.get("stock") == "PÅ LAGER"
 
@@ -297,6 +203,9 @@ def product_available(source_key, product):
 
 
 def availability_text(source_key, product):
+    if source_key == "coolshop":
+        return "Online" if product.get("online_stock") else "Ikke på lager"
+
     if source_key == "proshop":
         return product.get("stock") or "UKENDT"
 
@@ -349,24 +258,22 @@ def send_hot_alert(source_key, product, event):
     if not WEBHOOK_URL:
         raise RuntimeError("DISCORD_WEBHOOK_URL mangler til HOT scanner")
 
-    response = requests.post(
-        WEBHOOK_URL,
-        json={"content": message},
-        timeout=15,
-    )
+    response = requests.post(WEBHOOK_URL, json={"content": message}, timeout=15)
     response.raise_for_status()
 
 
 def filter_hot_products(shared, products):
+    """Tier A is a frequency tier, not a second product taxonomy."""
     allowed = {}
     shared_relevance = shared["restock_alert_allowed"]
 
     for product_id, product in (products or {}).items():
         if not isinstance(product, dict):
             continue
-        if not shared_relevance(product, "POKÉMON"):
+        game = str(product.get("game") or "POKÉMON").upper()
+        if game not in {"POKÉMON", "POKEMON"}:
             continue
-        if not hot_product_allowed(product.get("name")):
+        if not shared_relevance(product, "POKÉMON"):
             continue
         allowed[str(product_id)] = product
 
@@ -382,13 +289,7 @@ def _proshop_raw_link_count(text):
 
 
 def _fetch_proshop_frontend_products(shared):
-    """Read Proshop's live public search page without the Jina cache layer.
-
-    This mirrors a normal browser request with curl_cffi's Chrome TLS
-    fingerprint. It is intentionally best-effort because Proshop/Cloudflare
-    can block GitHub-hosted traffic. The stable curated Jina route remains an
-    independent fallback and keeps Proshop healthy when this lane is blocked.
-    """
+    """Read Proshop's live frontend as a best-effort freshness lane."""
     curl_requests = shared.get("curl_requests")
     if curl_requests is None:
         raise RuntimeError("curl_cffi er ikke tilgængelig til Proshop frontend")
@@ -430,12 +331,6 @@ def _fetch_proshop_frontend_products(shared):
 
 
 def _merge_proshop_products(*product_sets):
-    """Merge Proshop views by stable product id without degrading good data.
-
-    Later views win for explicit price/stock. The direct frontend is therefore
-    merged last so a fresh live stock state can beat a stale Reader snapshot,
-    while Reader values remain when the frontend omits a field.
-    """
     merged = {}
 
     for products in product_sets:
@@ -450,7 +345,6 @@ def _merge_proshop_products(*product_sets):
                 continue
 
             combined = dict(current)
-
             for key in ("name", "url"):
                 if product.get(key):
                     combined[key] = product[key]
@@ -476,7 +370,6 @@ def _merge_proshop_products(*product_sets):
 
 
 def _fetch_expanded_proshop_products(shared):
-    """Fetch stable curated data and the live frontend concurrently."""
     curated = {}
     frontend = {}
     errors = []
@@ -502,7 +395,6 @@ def _fetch_expanded_proshop_products(shared):
     if errors:
         print("HOT PROSHOP discovery warning: " + "; ".join(errors))
 
-    # Stable Reader first, fresh direct frontend last so live price/stock wins.
     merged = _merge_proshop_products(curated, frontend)
     curated_ids = set(map(str, curated))
     frontend_ids = set(map(str, frontend))
@@ -517,6 +409,8 @@ def _fetch_expanded_proshop_products(shared):
 
 
 def fetch_source(shared, source_key, old_products):
+    if source_key == "coolshop":
+        return shared["get_coolshop_products"]()
     if source_key == "proshop":
         return _fetch_expanded_proshop_products(shared)
     if source_key == "br":
@@ -565,10 +459,7 @@ def run_scan(shared, state):
                 print(f"HOT {label} FEJL: {error}")
             continue
 
-        previous_level, current_level = _register_source_success(
-            state,
-            source_key,
-        )
+        previous_level, current_level = _register_source_success(state, source_key)
         if previous_level > current_level:
             next_delay = RATE_LIMIT_BACKOFF_SECONDS[current_level]
             if next_delay:
@@ -577,9 +468,7 @@ def run_scan(shared, state):
                     f"{current_level}; næste tjek om {next_delay}s"
                 )
             else:
-                print(
-                    f"HOT {label} RECOVERY: tilbage på normal 1-minuts frekvens"
-                )
+                print(f"HOT {label} RECOVERY: tilbage på normal 1-minuts frekvens")
 
         successful += 1
 

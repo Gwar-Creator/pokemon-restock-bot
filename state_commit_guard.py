@@ -15,7 +15,6 @@ MAIN_FILES = (
 HOT_FILES = (
     "hot_restock_state.json",
     "salling_early_radar_state.json",
-    "salling_victini_state.json",
 )
 
 HEARTBEAT_COMMIT_INTERVAL_SECONDS = 15 * 60
@@ -213,7 +212,7 @@ def compact_state(path, old, new):
         return compact_restock_state(old, new)
     if path == "hot_restock_state.json":
         return compact_hot_state(old, new)
-    if path in {"salling_early_radar_state.json", "salling_victini_state.json"}:
+    if path == "salling_early_radar_state.json":
         return compact_updated_at_only(old, new)
     return new
 

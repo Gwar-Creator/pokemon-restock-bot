@@ -1,0 +1,57 @@
+name: Restock V2 CI
+
+on:
+  pull_request:
+    paths:
+      - "alert_policy.py"
+      - "restock_v2_runner.py"
+      - "hot_restock.py"
+      - "state_commit_guard.py"
+      - "test_alert_policy.py"
+      - "test_alert_policy_v2.py"
+      - "test_restock_v2_runner.py"
+      - "test_state_commit_guard.py"
+      - ".github/workflows/restock.yml"
+      - ".github/workflows/hot_restock.yml"
+      - ".github/workflows/restock_v2_ci.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      DISCORD_WEBHOOK_URL: https://example.invalid/webhook
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Compile changed scanner modules
+        run: python -m py_compile alert_policy.py restock_v2_runner.py hot_restock.py state_commit_guard.py
+
+      - name: Test legacy alert policy compatibility
+        run: timeout 60s python -m unittest test_alert_policy.py
+
+      - name: Test Restock V2 policy
+        run: timeout 60s python -m unittest test_alert_policy_v2.py
+
+      - name: Test Restock V2 channel routing
+        run: timeout 60s python -m unittest test_restock_v2_runner.py
+
+      - name: Test Matraws single guard
+        run: timeout 60s python -m unittest test_matraws_single_guard.py
+
+      - name: Test state commit guard
+        run: timeout 60s python -m unittest test_state_commit_guard.py
