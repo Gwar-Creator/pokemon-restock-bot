@@ -11,6 +11,7 @@ import re
 from pathlib import Path
 
 from alert_policy import TIER_A_SOURCES, tier_b_signal_allowed
+from faraos_parser_v2 import faraos_name_v2
 
 SCANNER_FILE = Path(__file__).resolve().parent / "restock_bot_github.py"
 START_MARKER = (
@@ -90,6 +91,18 @@ def load_scanner_parts():
     return definitions, startup
 
 
+def _install_faraos_parser(namespace):
+    legacy_name = namespace.get("_faraos_name")
+    clean_text = namespace.get("woocommerce_clean_text")
+    if legacy_name is None or clean_text is None:
+        raise RuntimeError("Faraos parser-hook mangler forventede legacy-funktioner")
+
+    def patched_faraos_name(card):
+        return faraos_name_v2(card, legacy_name, clean_text)
+
+    namespace["_faraos_name"] = patched_faraos_name
+
+
 def main():
     definitions, startup = load_scanner_parts()
     namespace = {
@@ -99,6 +112,7 @@ def main():
 
     exec(compile(definitions, str(SCANNER_FILE), "exec"), namespace)
     legacy_policy = namespace["restock_channel_alert_allowed"]
+    _install_faraos_parser(namespace)
 
     def channel_policy(message):
         return restock_v2_channel_alert_allowed(

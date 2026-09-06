@@ -37,6 +37,7 @@ jobs:
         run: |
           python -m py_compile restock_bot_github.py
           python -m py_compile restock_v2_runner.py
+          python -m py_compile faraos_parser_v2.py
           python -m py_compile alert_policy.py
           python -m py_compile local_stock_watch.py
           python -m py_compile scanner_health_audit.py
@@ -46,6 +47,7 @@ jobs:
           python -m unittest test_alert_policy.py
           python -m unittest test_alert_policy_v2.py
           python -m unittest test_restock_v2_runner.py
+          python -m unittest test_faraos_parser_v2.py
           python -m unittest test_matraws_single_guard.py
           python -m unittest test_state_commit_guard.py
 
