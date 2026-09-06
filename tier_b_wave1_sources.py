@@ -1,7 +1,7 @@
 """Read-only source adapters for Tier B Wave 1.
 
 These sources are deliberately isolated from Discord and Price Watch while they
-are validated in shadow mode.  Every adapter returns the same small normalized
+are validated in shadow mode. Every adapter returns the same small normalized
 product shape so promotion into the normal Tier B pipeline can happen later
 without rewriting the source parsers.
 """
@@ -11,7 +11,7 @@ from __future__ import annotations
 import hashlib
 import html
 import re
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlparse
 
 import requests
 from bs4 import BeautifulSoup
@@ -28,6 +28,7 @@ BROWSER_HEADERS = {
 
 SHOPIFY_PAGE_SIZE = 250
 SHOPIFY_MAX_PAGES = 10
+HTML_MAX_PAGES = 10
 
 WAVE1_SOURCES = {
     "cardcollective": {
@@ -47,16 +48,20 @@ WAVE1_SOURCES = {
         "feeds": [
             {"path": "/products.json", "game": None},
         ],
+        # Flinamania's public products.json currently reports every variant as
+        # unavailable even while the storefront shows active Add-to-cart
+        # controls. Overlay only the stock bit from the server-rendered cards.
+        "html_stock_path": "/collections/all",
     },
     "softgunshoppen": {
         "label": "SOFTGUNSHOPPEN",
         "kind": "softgun_html",
         "base": "https://www.softgunshoppen.com",
         "minimum": 5,
-        "url": (
-            "https://www.softgunshoppen.com/pokemon-shop-danmark/"
-            "engelske-pokemon-serier.html"
-        ),
+        # GitHub runners receive 404 for the English child category. The parent
+        # Pokemon category is public and contains the same English products plus
+        # a small multilingual tail, which the language filter removes.
+        "url": "https://www.softgunshoppen.com/pokemon-shop-danmark.html",
     },
     "pockomonsters": {
         "label": "POCKO MONSTERS",
@@ -102,6 +107,10 @@ WAVE1_SOURCES = {
         "feeds": [
             {"path": "/collections/pokemon/products.json", "game": "POKÉMON"},
         ],
+        # Validate Shopify availability against the rendered Pokemon category.
+        # Only exact product handles are overlaid, so singles/livebreak products
+        # excluded by the JSON filter cannot leak back into the shadow state.
+        "html_stock_path": "/collections/pokemon",
     },
 }
 
@@ -116,6 +125,7 @@ NON_ENGLISH_MARKERS = (
     "kinesisk",
     "simplified chinese",
     "traditional chinese",
+    "(chn)",
 )
 
 SINGLE_MARKERS = (
@@ -192,6 +202,23 @@ ACCESSORY_MARKERS = (
     "display case",
     "card case",
     "card holder",
+)
+
+
+IN_STOCK_TEXT_MARKERS = (
+    "læg i kurv",
+    "laeg i kurv",
+    "tilføj kurv",
+    "tilfoj kurv",
+    "add to cart",
+)
+
+OUT_OF_STOCK_TEXT_MARKERS = (
+    "udsolgt",
+    "ikke på lager",
+    "ikke pa lager",
+    "out of stock",
+    "sold out",
 )
 
 
@@ -292,6 +319,12 @@ def _is_preorder(text):
     )
 
 
+def _product_handle_from_url(url):
+    path = urlparse(str(url or "")).path
+    match = re.search(r"/products/([^/?#]+)", path)
+    return match.group(1).strip().lower() if match else ""
+
+
 def fetch_shopify_feed(base: str, path: str):
     collected = {}
     for page in range(1, SHOPIFY_MAX_PAGES + 1):
@@ -322,8 +355,90 @@ def fetch_shopify_feed(base: str, path: str):
     return list(collected.values())
 
 
+def _nearest_shopify_product_card(link):
+    """Find a small rendered product container without depending on one theme."""
+    node = link
+    best = link
+    for _ in range(8):
+        parent = getattr(node, "parent", None)
+        if parent is None or not getattr(parent, "name", None):
+            break
+        node = parent
+        text = _clean(node.get_text(" ", strip=True))
+        product_links = node.select('a[href*="/products/"]')
+        if product_links:
+            best = node
+        # Product-card controls normally appear within a compact ancestor.
+        low = text.lower()
+        if any(marker in low for marker in IN_STOCK_TEXT_MARKERS + OUT_OF_STOCK_TEXT_MARKERS):
+            if len(product_links) <= 4:
+                return node
+        # Stop before collection grids that contain many different products.
+        handles = {
+            _product_handle_from_url(anchor.get("href"))
+            for anchor in product_links
+            if _product_handle_from_url(anchor.get("href"))
+        }
+        if len(handles) > 4:
+            break
+    return best
+
+
+def parse_shopify_html_stock(document: str):
+    soup = BeautifulSoup(document, "html.parser")
+    stock = {}
+
+    for link in soup.select('a[href*="/products/"]'):
+        handle = _product_handle_from_url(link.get("href"))
+        if not handle:
+            continue
+        card = _nearest_shopify_product_card(link)
+        text = _clean(card.get_text(" ", strip=True)).lower()
+
+        if any(marker in text for marker in OUT_OF_STOCK_TEXT_MARKERS):
+            value = False
+        elif any(marker in text for marker in IN_STOCK_TEXT_MARKERS):
+            value = True
+        else:
+            continue
+
+        # A theme can render the same product link several times. Positive and
+        # negative cards must agree; if they do not, prefer buyable because the
+        # storefront currently offers an Add-to-cart path for that handle.
+        if handle not in stock or value is True:
+            stock[handle] = value
+
+    return stock
+
+
+def fetch_shopify_html_stock(base: str, path: str):
+    collected = {}
+    for page in range(1, HTML_MAX_PAGES + 1):
+        response = requests.get(
+            base.rstrip("/") + path,
+            headers={
+                **BROWSER_HEADERS,
+                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+            },
+            params={"page": page},
+            timeout=30,
+        )
+        response.raise_for_status()
+        page_stock = parse_shopify_html_stock(response.text)
+        if not page_stock:
+            break
+
+        before = len(collected)
+        collected.update(page_stock)
+        if len(collected) == before:
+            break
+
+    return collected
+
+
 def fetch_shopify_source(config):
     products = {}
+    handles = {}
     for feed in config.get("feeds") or []:
         rows = fetch_shopify_feed(config["base"], feed["path"])
         for raw in rows:
@@ -348,6 +463,16 @@ def fetch_shopify_source(config):
                 "preorder": _is_preorder(metadata),
                 "url": f"{config['base'].rstrip('/')}/products/{handle}",
             }
+            handles[handle.lower()] = product_id
+
+    html_stock_path = config.get("html_stock_path")
+    if html_stock_path:
+        overlay = fetch_shopify_html_stock(config["base"], html_stock_path)
+        for handle, in_stock in overlay.items():
+            product_id = handles.get(handle)
+            if product_id and product_id in products:
+                products[product_id]["in_stock"] = bool(in_stock)
+
     return products
 
 
@@ -393,11 +518,8 @@ def parse_softgun_html(document: str, base: str):
             continue
 
         low = card_text.lower()
-        explicit_out = "ikke på lager" in low or "ikke pa lager" in low or "out of stock" in low
-        explicit_in = any(
-            marker in low
-            for marker in ("tilføj kurv", "tilfoj kurv", "læg i kurv", "laeg i kurv", "add to cart", "på lager")
-        )
+        explicit_out = any(marker in low for marker in OUT_OF_STOCK_TEXT_MARKERS)
+        explicit_in = any(marker in low for marker in IN_STOCK_TEXT_MARKERS)
         preorder = _is_preorder(card_text)
         prices = _parse_danish_prices(card_text)
         product_id = hashlib.sha256(product_url.encode("utf-8")).hexdigest()[:20]
