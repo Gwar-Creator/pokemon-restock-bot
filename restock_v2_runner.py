@@ -28,6 +28,27 @@ TIER_A_LABELS = {
     "foetex": "FØTEX",
 }
 
+# Faraos' top-level Pokemon category currently reports many products but only
+# renders part of the catalogue in the repeated card structure used by the
+# legacy parser. Scan the stable public sealed subcategories instead. Keep the
+# parent pages first so existing IDs remain stable for products still visible
+# there, while the granular feeds recover the missing catalogue rows.
+FARAOS_V3_FEEDS = (
+    ("POKÉMON", "https://www.faraos.dk/games/kortspil/pokemon"),
+    ("POKÉMON", "https://www.faraos.dk/games/kortspil/pokemon/booster"),
+    ("POKÉMON", "https://www.faraos.dk/games/kortspil/pokemon/boosterdisplay"),
+    ("POKÉMON", "https://www.faraos.dk/games/kortspil/pokemon/pokemondisplays"),
+    ("POKÉMON", "https://www.faraos.dk/games/kortspil/pokemon/collectionbokse"),
+    ("POKÉMON", "https://www.faraos.dk/games/kortspil/pokemon/elitetrainerbox"),
+    ("POKÉMON", "https://www.faraos.dk/games/kortspil/pokemon/premiumcollection"),
+    ("POKÉMON", "https://www.faraos.dk/games/kortspil/pokemon/tins"),
+    ("POKÉMON", "https://www.faraos.dk/games/kortspil/pokemon/3-pak"),
+    ("POKÉMON", "https://www.faraos.dk/games/kortspil/pokemon/2-pack"),
+    ("POKÉMON", "https://www.faraos.dk/games/kortspil/pokemon/checklane"),
+    ("LORCANA", "https://www.faraos.dk/games/kortspil/lorcana"),
+    ("LORCANA", "https://www.faraos.dk/games/kortspil/lorcana/boosters"),
+)
+
 if tuple(TIER_A_LABELS) != tuple(TIER_A_SOURCES):
     raise RuntimeError("Restock runner er ikke synkron med TIER_A_SOURCES")
 
@@ -101,6 +122,7 @@ def _install_faraos_parser(namespace):
         return faraos_name_v2(card, legacy_name, clean_text)
 
     namespace["_faraos_name"] = patched_faraos_name
+    namespace["FARAOS_FEEDS"] = FARAOS_V3_FEEDS
 
 
 def main():
