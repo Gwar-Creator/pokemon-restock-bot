@@ -12,6 +12,8 @@ import re
 import restock_bot_github as bot
 from alert_policy import TIER_A_SOURCES, tier_b_signal_allowed
 
+LEGACY_CHANNEL_POLICY = bot.restock_channel_alert_allowed
+
 TIER_A_LABELS = {
     "coolshop": "COOLSHOP",
     "proshop": "PROSHOP",
@@ -63,7 +65,7 @@ def restock_v2_channel_alert_allowed(message):
     # Non-product operational output keeps the legacy decision until those
     # concerns are moved to their dedicated channels in a later cleanup.
     if event is None:
-        return bot.restock_channel_alert_allowed(message)
+        return LEGACY_CHANNEL_POLICY(message)
 
     if _is_tier_a_headline(headline):
         return True
