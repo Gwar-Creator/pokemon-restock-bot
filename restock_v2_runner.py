@@ -2,17 +2,22 @@
 """Thin production runner for Restock V2 Discord routing.
 
 The legacy scanner remains the data/fetch engine while channel policy is moved
-out of its large module. Tier A is always allowed through the Restock channel;
-Tier B uses the strict central policy. This keeps broad ingestion separate from
-Discord noise without duplicating retailer parsers.
+out of its large module. The legacy file has executable startup code after its
+START marker, so this runner loads definitions first, patches the channel gate,
+and only then executes the startup section.
 """
 
 import re
+from pathlib import Path
 
-import restock_bot_github as bot
 from alert_policy import TIER_A_SOURCES, tier_b_signal_allowed
 
-LEGACY_CHANNEL_POLICY = bot.restock_channel_alert_allowed
+SCANNER_FILE = Path(__file__).resolve().parent / "restock_bot_github.py"
+START_MARKER = (
+    "# =========================================================\n"
+    "# START\n"
+    "# ========================================================="
+)
 
 TIER_A_LABELS = {
     "coolshop": "COOLSHOP",
@@ -53,7 +58,7 @@ def _is_tier_a_headline(headline):
     )
 
 
-def restock_v2_channel_alert_allowed(message):
+def restock_v2_channel_alert_allowed(message, legacy_policy=None):
     """Keep Tier A fast; make Tier B Discord output deliberately strict."""
     lines = _clean_lines(message)
     if not lines:
@@ -65,7 +70,7 @@ def restock_v2_channel_alert_allowed(message):
     # Non-product operational output keeps the legacy decision until those
     # concerns are moved to their dedicated channels in a later cleanup.
     if event is None:
-        return LEGACY_CHANNEL_POLICY(message)
+        return legacy_policy(message) if legacy_policy is not None else True
 
     if _is_tier_a_headline(headline):
         return True
@@ -77,9 +82,32 @@ def restock_v2_channel_alert_allowed(message):
     return tier_b_signal_allowed(product_name, event=event)
 
 
+def load_scanner_parts():
+    source = SCANNER_FILE.read_text(encoding="utf-8")
+    if START_MARKER not in source:
+        raise RuntimeError("Kunne ikke finde START-markøren i restock_bot_github.py")
+    definitions, startup = source.split(START_MARKER, 1)
+    return definitions, startup
+
+
 def main():
-    bot.restock_channel_alert_allowed = restock_v2_channel_alert_allowed
-    bot.main()
+    definitions, startup = load_scanner_parts()
+    namespace = {
+        "__name__": "restock_v2_scanner",
+        "__file__": str(SCANNER_FILE),
+    }
+
+    exec(compile(definitions, str(SCANNER_FILE), "exec"), namespace)
+    legacy_policy = namespace["restock_channel_alert_allowed"]
+
+    def channel_policy(message):
+        return restock_v2_channel_alert_allowed(
+            message,
+            legacy_policy=legacy_policy,
+        )
+
+    namespace["restock_channel_alert_allowed"] = channel_policy
+    exec(compile(startup, str(SCANNER_FILE), "exec"), namespace)
 
 
 if __name__ == "__main__":
