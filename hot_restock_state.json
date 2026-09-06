@@ -1,7 +1,64 @@
 {
-  "filter_version": 2,
+  "filter_version": 3,
   "sources": {
+    "coolshop": {
+      "https://www.coolshop.dk/produkt/pokemon-first-partner-illustration-collection-series-3-pok10410-101/23XF7H/": {
+        "name": "Pokémon - First Partner Illustration Collection: Series 3 (POK10410-101)",
+        "game": "POKÉMON",
+        "price": 449.0,
+        "online_stock": true
+      },
+      "https://www.coolshop.dk/produkt/pokemon-mega-evolution-2-pack-blister-pok10412-101/23XF7E/": {
+        "name": "Pokémon - Mega Evolution: 2-pack Blister (POK10412-101)",
+        "game": "POKÉMON",
+        "price": 129.0,
+        "online_stock": true
+      },
+      "https://www.coolshop.dk/produkt/pokemon-pokeball-tin-pok10273-104/23XH6F/": {
+        "name": "Pokémon - Pokeball Tin (POK10273-104)",
+        "game": "POKÉMON",
+        "price": 249.0,
+        "online_stock": true
+      },
+      "https://www.coolshop.dk/produkt/pokemon-deck-pro-poke-mega-charizard-y/23UF9A/": {
+        "name": "Pokémon - Deck Pro Poke - Mega Charizard Y",
+        "game": "POKÉMON",
+        "price": 62.0,
+        "online_stock": true
+      },
+      "https://www.coolshop.dk/produkt/pokemon-first-partner-illustration-collection-series-2-pok10395-101/23XF7G/": {
+        "name": "Pokémon - First Partner Illustration Collection: Series 2 (POK10395-101)",
+        "game": "POKÉMON",
+        "price": 599.0,
+        "online_stock": false
+      },
+      "https://www.coolshop.dk/produkt/pokemon-mega-evolution-me05-pitch-black-booster-bundle-pok10422-101/23XF5J/": {
+        "name": "Pokémon - Mega Evolution ME05: Pitch Black - Booster Bundle (POK10422-101)",
+        "game": "POKÉMON",
+        "price": 399.95,
+        "online_stock": false
+      },
+      "https://www.coolshop.dk/produkt/pokemon-mega-evolution-me02-5-ascended-heroes-elite-trainer-box-pok10315-101/23V948/": {
+        "name": "Pokémon - Mega Evolution ME02.5: Ascended Heroes - Elite Trainer Box (POK10315-101)",
+        "game": "POKÉMON",
+        "price": 1999.0,
+        "online_stock": false
+      },
+      "https://www.coolshop.dk/produkt/pokemon-2026-summer-lumiose-city-mini-tin-pok10392-101/23XF7C/": {
+        "name": "Pokémon - 2026 Summer Lumiose City Mini Tin (POK10392-101)",
+        "game": "POKÉMON",
+        "price": 129.94,
+        "online_stock": false
+      }
+    },
     "proshop": {
+      "3421827": {
+        "name": "Pokemon TCG 2024 World Championships Deck",
+        "price": 329.0,
+        "stock": "PÅ LAGER",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
+        "fetch_via": "jina_reader+direct_frontend_search"
+      },
       "3417744": {
         "name": "Pokemon TCG Mega Charizard X ex Ultra Premium Collection",
         "price": null,
@@ -32,6 +89,18 @@
       }
     },
     "br": {
+      "200279925": {
+        "name": "Pokémon Battle Academy 2024",
+        "price": 299.0,
+        "online_count": 444,
+        "online_stock": true,
+        "store_count": 30,
+        "kolding_stock": 26,
+        "esbjerg_stock": 0,
+        "quantity_limit": null,
+        "sku": "10791068-EA",
+        "url": "https://www.br.dk/produkter/pokemon-battle-academy-2024/200279925/"
+      },
       "200366278": {
         "name": "Pokémon TCG Chaos Rising booster bundle - samlekort",
         "price": 299.0,
@@ -43,12 +112,230 @@
         "quantity_limit": 1,
         "sku": "11263281-EA",
         "url": "https://www.br.dk/produkter/pokemon-tcg-chaos-rising-booster-bundle-samlekort/200366278/"
+      },
+      "200291392": {
+        "name": "Pokémon trainer toolkit",
+        "price": 479.0,
+        "online_count": 0,
+        "online_stock": false,
+        "store_count": 1,
+        "kolding_stock": 0,
+        "esbjerg_stock": 0,
+        "quantity_limit": null,
+        "sku": "10831913-EA",
+        "url": "https://www.br.dk/produkter/pokemon-trainer-toolkit/200291392/"
+      },
+      "200203851": {
+        "name": "Pokémon TCG: Crown Zenith Premium Playmat Collection - Morpeko V-UNION",
+        "price": 499.0,
+        "online_count": 0,
+        "online_stock": false,
+        "store_count": 0,
+        "kolding_stock": 0,
+        "esbjerg_stock": 0,
+        "quantity_limit": null,
+        "sku": "10396387-EA",
+        "url": "https://www.br.dk/produkter/pokemon-tcg-crown-zenith-premium-playmat-collection-morpeko-v-union/200203851/"
       }
     },
-    "bilka": {},
-    "foetex": {}
+    "bilka": {
+      "200279925": {
+        "name": "Pokémon Battle Academy 2024",
+        "price": 299.0,
+        "online_count": 444,
+        "online_stock": true,
+        "store_count": 19,
+        "local_stocks": {
+          "1662": {
+            "name": "Bilka Kolding",
+            "stock": 7
+          },
+          "1659": {
+            "name": "Bilka Esbjerg",
+            "stock": 10
+          }
+        },
+        "quantity_limit": null,
+        "sku": "10791068-EA",
+        "url": "https://www.bilka.dk/produkter/pokemon-battle-academy-2024/200279925/"
+      },
+      "200366277": {
+        "name": "Pokémon TCG booster pack samlekort",
+        "price": 49.0,
+        "online_count": 0,
+        "online_stock": false,
+        "store_count": 13,
+        "local_stocks": {
+          "1662": {
+            "name": "Bilka Kolding",
+            "stock": 46
+          },
+          "1659": {
+            "name": "Bilka Esbjerg",
+            "stock": 19
+          }
+        },
+        "quantity_limit": 6,
+        "sku": "11263280-EA",
+        "url": "https://www.bilka.dk/produkter/pokemon-tcg-booster-pack-samlekort/200366277/"
+      }
+    },
+    "foetex": {
+      "200279925": {
+        "name": "Pokémon Battle Academy 2024",
+        "price": 299.0,
+        "online_count": 444,
+        "online_stock": true,
+        "store_count": 2,
+        "local_stocks": {
+          "1307": {
+            "name": "føtex Kolding",
+            "stock": 0
+          },
+          "1370": {
+            "name": "føtex Kolding Syd",
+            "stock": 0
+          },
+          "1223": {
+            "name": "føtex Esbjerg Broen",
+            "stock": 0
+          }
+        },
+        "quantity_limit": null,
+        "sku": "10791068-EA",
+        "url": "https://www.foetex.dk/produkter/pokemon-battle-academy-2024/200279925/"
+      },
+      "200356077": {
+        "name": "Pokémon Mega Evolution pokémonkort",
+        "price": 49.0,
+        "online_count": 0,
+        "online_stock": false,
+        "store_count": 9,
+        "local_stocks": {
+          "1307": {
+            "name": "føtex Kolding",
+            "stock": 0
+          },
+          "1370": {
+            "name": "føtex Kolding Syd",
+            "stock": 0
+          },
+          "1223": {
+            "name": "føtex Esbjerg Broen",
+            "stock": 0
+          }
+        },
+        "quantity_limit": 6,
+        "sku": "11221186-EA",
+        "url": "https://www.foetex.dk/produkter/pokemon-mega-evolution-pokemonkort/200356077/"
+      },
+      "200340784": {
+        "name": "Pokémon Collector's Chest kuffert med samlekort",
+        "price": 399.0,
+        "online_count": 0,
+        "online_stock": false,
+        "store_count": 3,
+        "local_stocks": {
+          "1307": {
+            "name": "føtex Kolding",
+            "stock": 0
+          },
+          "1370": {
+            "name": "føtex Kolding Syd",
+            "stock": 3
+          },
+          "1223": {
+            "name": "føtex Esbjerg Broen",
+            "stock": 0
+          }
+        },
+        "quantity_limit": 1,
+        "sku": "11125894-EA",
+        "url": "https://www.foetex.dk/produkter/pokemon-collector-s-chest-kuffert-med-samlekort/200340784/"
+      },
+      "200315624": {
+        "name": "Pokémon booster sv9 journey together – flere varianter – assorteret",
+        "price": 49.0,
+        "online_count": 0,
+        "online_stock": false,
+        "store_count": 1,
+        "local_stocks": {
+          "1307": {
+            "name": "føtex Kolding",
+            "stock": 0
+          },
+          "1370": {
+            "name": "føtex Kolding Syd",
+            "stock": 0
+          },
+          "1223": {
+            "name": "føtex Esbjerg Broen",
+            "stock": 0
+          }
+        },
+        "quantity_limit": null,
+        "sku": "10973365-EA",
+        "url": "https://www.foetex.dk/produkter/pokemon-booster-sv9-journey-together-flere-varianter-assorteret/200315624/"
+      },
+      "200278309": {
+        "name": "Pokemon rare coll sv6.5 shrouded fable",
+        "price": 279.0,
+        "online_count": 0,
+        "online_stock": false,
+        "store_count": 1,
+        "local_stocks": {
+          "1307": {
+            "name": "føtex Kolding",
+            "stock": 0
+          },
+          "1370": {
+            "name": "føtex Kolding Syd",
+            "stock": 2
+          },
+          "1223": {
+            "name": "føtex Esbjerg Broen",
+            "stock": 0
+          }
+        },
+        "quantity_limit": 1,
+        "sku": "10786062-EA",
+        "url": "https://www.foetex.dk/produkter/pokemon-rare-coll-sv6-5-shrouded-fable/200278309/"
+      },
+      "200203851": {
+        "name": "Pokémon TCG: Crown Zenith Premium Playmat Collection - Morpeko V-UNION",
+        "price": 499.0,
+        "online_count": 0,
+        "online_stock": false,
+        "store_count": 0,
+        "local_stocks": {
+          "1307": {
+            "name": "føtex Kolding",
+            "stock": 0
+          },
+          "1370": {
+            "name": "føtex Kolding Syd",
+            "stock": 0
+          },
+          "1223": {
+            "name": "føtex Esbjerg Broen",
+            "stock": 0
+          }
+        },
+        "quantity_limit": null,
+        "sku": "10396387-EA",
+        "url": "https://www.foetex.dk/produkter/pokemon-tcg-crown-zenith-premium-playmat-collection-morpeko-v-union/200203851/"
+      }
+    }
   },
   "source_controls": {
+    "coolshop": {
+      "backoff_level": 0,
+      "next_allowed_at": 0.0,
+      "generic_failures": 0,
+      "last_error": null,
+      "last_failure_at": null,
+      "last_success_at": "2026-09-06T20:29:23.623971+00:00"
+    },
     "proshop": {
       "backoff_level": 0,
       "next_allowed_at": 0.0,
@@ -62,8 +349,8 @@
       "next_allowed_at": 0.0,
       "generic_failures": 0,
       "last_error": null,
-      "last_failure_at": "2026-09-06T09:51:16.118429+00:00",
-      "last_success_at": "2026-09-06T09:54:36.996918+00:00"
+      "last_failure_at": null,
+      "last_success_at": "2026-09-06T20:29:29.739485+00:00"
     },
     "bilka": {
       "backoff_level": 0,
@@ -82,6 +369,6 @@
       "last_success_at": "2026-09-04T20:59:40.632991+00:00"
     }
   },
-  "updated_at": "2026-09-06T09:54:48.175926+00:00",
+  "updated_at": "2026-09-06T20:29:39.260519+00:00",
   "proshop_discovery_version": 4
 }
