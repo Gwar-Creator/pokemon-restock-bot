@@ -6,12 +6,15 @@ on:
       - "alert_policy.py"
       - "restock_v2_runner.py"
       - "faraos_parser_v2.py"
+      - "tier_b_wave1_sources.py"
+      - "tier_b_wave1_shadow.py"
       - "hot_restock.py"
       - "state_commit_guard.py"
       - "test_alert_policy.py"
       - "test_alert_policy_v2.py"
       - "test_restock_v2_runner.py"
       - "test_faraos_parser_v2.py"
+      - "test_tier_b_wave1.py"
       - "test_state_commit_guard.py"
       - ".github/workflows/restock.yml"
       - ".github/workflows/hot_restock.yml"
@@ -41,7 +44,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Compile changed scanner modules
-        run: python -m py_compile alert_policy.py restock_v2_runner.py faraos_parser_v2.py hot_restock.py state_commit_guard.py
+        run: python -m py_compile alert_policy.py restock_v2_runner.py faraos_parser_v2.py tier_b_wave1_sources.py tier_b_wave1_shadow.py hot_restock.py state_commit_guard.py
 
       - name: Test legacy alert policy compatibility
         run: timeout 60s python -m unittest test_alert_policy.py
@@ -54,6 +57,9 @@ jobs:
 
       - name: Test Faraos parser V2
         run: timeout 60s python -m unittest test_faraos_parser_v2.py
+
+      - name: Test Tier B Wave 1 shadow
+        run: timeout 60s python -m unittest test_tier_b_wave1.py
 
       - name: Test Matraws single guard
         run: timeout 60s python -m unittest test_matraws_single_guard.py
