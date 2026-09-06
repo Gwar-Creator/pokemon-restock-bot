@@ -40,10 +40,13 @@ class RestockV2PolicyTests(unittest.TestCase):
         self.assertTrue(tier_b_signal_allowed("Pitch Black Booster Bundle"))
         self.assertTrue(tier_b_signal_allowed("Chaos Rising Booster Box"))
 
-    def test_preorder_and_non_restock_channels(self):
-        self.assertTrue(
-            tier_b_signal_allowed("Future Collection Box", event="PREORDER")
-        )
+    def test_new_and_preorder_events_are_actionable(self):
+        self.assertTrue(tier_b_signal_allowed("Future Collection Box", event="PREORDER"))
+        self.assertTrue(tier_b_signal_allowed("Brand New Collection Box", event="NEW"))
+        # ABUNDANT remains strict even when a product is newly discovered.
+        self.assertFalse(tier_b_signal_allowed("Pitch Black Elite Trainer Box", event="NEW"))
+
+    def test_non_restock_channels_are_blocked(self):
         self.assertFalse(
             tier_b_signal_allowed("Pokemon 151 Elite Trainer Box", event="PRICE")
         )
