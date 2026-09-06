@@ -16,7 +16,7 @@ import family_watch_runner as runner
 STATE_PATH = Path(os.getenv("FAMILY_WATCH_EMAIL_STATE", "family_watch_email_state.json"))
 EMAIL_TO = [x.strip() for x in os.getenv("FAMILY_WATCH_EMAIL_TO", "").split(",") if x.strip()]
 SMTP_HOST = os.getenv("FAMILY_WATCH_SMTP_HOST", "smtp.gmail.com").strip()
-SMTP_PORT = int(os.getenv("FAMILY_WATCH_SMTP_PORT", "587"))
+SMTP_PORT = int((os.getenv("FAMILY_WATCH_SMTP_PORT") or "587").strip() or "587")
 SMTP_USERNAME = os.getenv("FAMILY_WATCH_SMTP_USERNAME", "").strip()
 SMTP_PASSWORD = os.getenv("FAMILY_WATCH_SMTP_PASSWORD", "")
 EMAIL_FROM = os.getenv("FAMILY_WATCH_EMAIL_FROM", "").strip() or SMTP_USERNAME
