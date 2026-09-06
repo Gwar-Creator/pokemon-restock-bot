@@ -91,10 +91,12 @@ def run_scan(fetcher=fetch_wave1_source):
         old_products = old_entry.get("products") or {}
         old_health = old_entry.get("health") or {}
         now = _now()
+        fetched_products = None
 
         try:
-            products = fetcher(source_key)
-            _validate_snapshot(source_key, products, old_products)
+            fetched_products = fetcher(source_key)
+            _validate_snapshot(source_key, fetched_products, old_products)
+            products = fetched_products
             health = _health_success(old_health, len(products), now)
             pokemon, lorcana, stock, preorders = _counts(products)
             print(
@@ -103,11 +105,7 @@ def run_scan(fetcher=fetch_wave1_source):
             )
         except Exception as error:
             failures += 1
-            observed = None
-            try:
-                observed = len(products)  # type: ignore[name-defined]
-            except Exception:
-                observed = None
+            observed = len(fetched_products) if isinstance(fetched_products, dict) else None
             products = old_products
             health = _health_failure(old_health, error, observed, now)
             print(
