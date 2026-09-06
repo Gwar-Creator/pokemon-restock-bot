@@ -42,6 +42,23 @@ class FamilyWatchEmailDigestTests(unittest.TestCase):
         state = {"sent": {digest.phase_token(offer, "current"): {"sent_at": "x"}}}
         self.assertEqual(digest.pending_items([offer], state, now), [])
 
+    def test_same_logical_offer_is_not_repeated_when_source_key_changes(self):
+        now = datetime(2026, 9, 5, 12, tzinfo=timezone.utc)
+        offer = self._offer(name="Cheasy skyr eller Matilde kakaomælk*", store="365discount")
+        state = {
+            "sent": {
+                "manual|365discount|cheasy-skyr-eller-matilde-kakaomaelk|2026-09-05|current": {
+                    "sent_at": "2026-09-05T11:00:30Z",
+                    "phase": "current",
+                    "store": "365discount",
+                    "name": "Cheasy skyr eller Matilde kakaomælk*",
+                    "valid_from": offer.valid_from.isoformat().replace("+00:00", "Z"),
+                    "valid_until": offer.valid_until.isoformat().replace("+00:00", "Z"),
+                }
+            }
+        }
+        self.assertEqual(digest.pending_items([offer], state, now), [])
+
     def test_digest_contains_official_link_and_period(self):
         now = datetime(2026, 9, 5, 12, tzinfo=timezone.utc)
         offer = self._offer()
