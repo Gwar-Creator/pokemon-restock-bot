@@ -36,12 +36,15 @@ jobs:
       - name: Validate production scanner
         run: |
           python -m py_compile restock_bot_github.py
+          python -m py_compile restock_v2_runner.py
+          python -m py_compile alert_policy.py
           python -m py_compile local_stock_watch.py
           python -m py_compile scanner_health_audit.py
           python -m py_compile discord_cleanup.py
           python -m py_compile state_commit_guard.py
           python -m unittest test_discord_cleanup.py
           python -m unittest test_alert_policy.py
+          python -m unittest test_alert_policy_v2.py
           python -m unittest test_matraws_single_guard.py
           python -m unittest test_state_commit_guard.py
 
@@ -56,7 +59,7 @@ jobs:
           DISCORD_RETENTION_HOURS: "24"
         run: python discord_cleanup.py
 
-      - name: Run restock + Local Stock in parallel
+      - name: Run Restock V2 + Local Stock in parallel
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           PRICE_WATCH_WEBHOOK_URL: ${{ secrets.PRICE_WATCH_WEBHOOK_URL }}
@@ -64,7 +67,7 @@ jobs:
           RUN_ONCE: "1"
         run: |
           set +e
-          python restock_bot_github.py &
+          python restock_v2_runner.py &
           RESTOCK_PID=$!
           python local_stock_watch.py &
           LOCAL_STOCK_PID=$!
