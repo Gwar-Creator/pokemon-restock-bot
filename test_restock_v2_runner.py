@@ -55,6 +55,27 @@ class RestockV2RunnerTests(unittest.TestCase):
         )
         self.assertTrue(runner.restock_v2_channel_alert_allowed(message))
 
+    def test_faraos_v3_installs_granular_category_feeds(self):
+        namespace = {
+            "_faraos_name": lambda _card: "Journey Together",
+            "woocommerce_clean_text": lambda value: str(value or ""),
+            "FARAOS_FEEDS": (("POKÉMON", "https://example.invalid/old"),),
+        }
+
+        runner._install_faraos_parser(namespace)
+
+        self.assertEqual(namespace["FARAOS_FEEDS"], runner.FARAOS_V3_FEEDS)
+        self.assertGreaterEqual(len(namespace["FARAOS_FEEDS"]), 10)
+        urls = {url for _game, url in namespace["FARAOS_FEEDS"]}
+        self.assertIn(
+            "https://www.faraos.dk/games/kortspil/pokemon/booster",
+            urls,
+        )
+        self.assertIn(
+            "https://www.faraos.dk/games/kortspil/lorcana/boosters",
+            urls,
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
