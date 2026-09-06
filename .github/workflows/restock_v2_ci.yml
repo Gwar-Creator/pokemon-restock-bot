@@ -1,0 +1,54 @@
+name: Restock V2 CI
+
+on:
+  pull_request:
+    paths:
+      - "alert_policy.py"
+      - "restock_v2_runner.py"
+      - "hot_restock.py"
+      - "state_commit_guard.py"
+      - "test_alert_policy.py"
+      - "test_alert_policy_v2.py"
+      - "test_restock_v2_runner.py"
+      - "test_state_commit_guard.py"
+      - ".github/workflows/restock.yml"
+      - ".github/workflows/hot_restock.yml"
+      - ".github/workflows/restock_v2_ci.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Compile changed scanner modules
+        env:
+          DISCORD_WEBHOOK_URL: https://example.invalid/webhook
+        run: |
+          python -m py_compile alert_policy.py restock_v2_runner.py hot_restock.py state_commit_guard.py
+
+      - name: Run policy and state tests
+        env:
+          DISCORD_WEBHOOK_URL: https://example.invalid/webhook
+        run: |
+          python -m unittest \
+            test_alert_policy.py \
+            test_alert_policy_v2.py \
+            test_restock_v2_runner.py \
+            test_matraws_single_guard.py \
+            test_state_commit_guard.py
