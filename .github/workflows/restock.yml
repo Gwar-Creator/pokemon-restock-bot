@@ -45,6 +45,7 @@ jobs:
           python -m unittest test_discord_cleanup.py
           python -m unittest test_alert_policy.py
           python -m unittest test_alert_policy_v2.py
+          python -m unittest test_restock_v2_runner.py
           python -m unittest test_matraws_single_guard.py
           python -m unittest test_state_commit_guard.py
 
