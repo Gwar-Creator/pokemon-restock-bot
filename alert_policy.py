@@ -178,7 +178,10 @@ def tier_b_signal_allowed(
     if status == "ABUNDANT":
         return abundant_set_signal_allowed(name, series)
 
-    if event in {"PREORDER", "FORUDBESTILLING"}:
+    # The legacy scanner only emits NEW when a relevant product is already
+    # buyable. PREORDER is likewise actionable. Upstream sealed/language
+    # relevance still applies before either event reaches this Discord gate.
+    if event in {"NEW", "PREORDER", "FORUDBESTILLING"}:
         return True
 
     if status in {"WATCH", "NEW"}:
