@@ -9,9 +9,9 @@ on:
       - requested
   push:
     paths:
+      - "alert_policy.py"
       - "hot_restock.py"
       - "state_commit_guard.py"
-      - "salling_victini_watch.py"
       - "salling_early_radar.py"
       - "salling_early_radar_runner.py"
       - ".github/workflows/hot_restock.yml"
@@ -43,21 +43,19 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Validate HOT scanner and Salling watchers
+      - name: Validate Tier A HOT scanner and Salling Early Radar
         run: |
-          python -m py_compile hot_restock.py salling_victini_watch.py salling_early_radar.py salling_early_radar_runner.py state_commit_guard.py
-          python -m unittest test_state_commit_guard.py
+          python -m py_compile alert_policy.py hot_restock.py salling_early_radar.py salling_early_radar_runner.py state_commit_guard.py
+          python -m unittest test_state_commit_guard.py test_alert_policy_v2.py
           python - <<'PY'
           import ast
           from pathlib import Path
 
           source = Path('hot_restock.py').read_text(encoding='utf-8')
           module = ast.parse(source)
-          assert any(isinstance(node, ast.FunctionDef) and node.name == 'hot_product_allowed' for node in module.body)
-
-          watcher_source = Path('salling_victini_watch.py').read_text(encoding='utf-8')
-          watcher_module = ast.parse(watcher_source)
-          assert any(isinstance(node, ast.FunctionDef) and node.name == 'fetch_target' for node in watcher_module.body)
+          assert any(isinstance(node, ast.FunctionDef) and node.name == 'filter_hot_products' for node in module.body)
+          assert 'hot_product_allowed' not in source
+          assert 'coolshop' in source
 
           radar_source = Path('salling_early_radar.py').read_text(encoding='utf-8')
           radar_module = ast.parse(radar_source)
@@ -66,10 +64,10 @@ jobs:
           runner_source = Path('salling_early_radar_runner.py').read_text(encoding='utf-8')
           runner_module = ast.parse(runner_source)
           assert any(isinstance(node, ast.FunctionDef) and node.name == 'ignore_epoch_only_change' for node in runner_module.body)
-          print('HOT scanner + Victini watcher + Early Radar runner syntax OK')
+          print('Tier A HOT scanner + Early Radar syntax OK')
           PY
 
-      - name: Run HOT lane + Salling early watches
+      - name: Run Tier A HOT lane + Salling Early Radar
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           HOT_ITERATIONS: "5"
@@ -77,11 +75,7 @@ jobs:
         run: |
           (
             for iteration in 1 2 3 4 5; do
-              echo "SALLING early scan $iteration/5"
-
-              if ! python salling_victini_watch.py; then
-                echo "::warning::Victini watcher failed transiently on iteration $iteration; HOT run continues"
-              fi
+              echo "SALLING Early Radar scan $iteration/5"
 
               if ! python salling_early_radar_runner.py; then
                 echo "::warning::Salling Early Radar failed transiently on iteration $iteration; HOT run continues"
@@ -97,13 +91,13 @@ jobs:
           python hot_restock.py
 
           if ! wait "$SALLING_PID"; then
-            echo "::warning::Salling background watcher exited non-zero; HOT scanner itself completed"
+            echo "::warning::Salling Early Radar background watcher exited non-zero; HOT scanner itself completed"
           fi
 
       - name: Compact volatile state fields
         run: python state_commit_guard.py --profile hot
 
-      - name: Save HOT + Salling states
+      - name: Save HOT + Salling Early Radar states
         run: |
           if [ ! -f hot_restock_state.json ]; then
             echo "No HOT state produced."
@@ -115,9 +109,6 @@ jobs:
 
           STATE_BACKUP="$(mktemp -d)"
           cp hot_restock_state.json "$STATE_BACKUP/hot_restock_state.json"
-          if [ -f salling_victini_state.json ]; then
-            cp salling_victini_state.json "$STATE_BACKUP/salling_victini_state.json"
-          fi
           if [ -f salling_early_radar_state.json ]; then
             cp salling_early_radar_state.json "$STATE_BACKUP/salling_early_radar_state.json"
           fi
@@ -129,17 +120,11 @@ jobs:
             git reset --hard origin/main
 
             cp "$STATE_BACKUP/hot_restock_state.json" hot_restock_state.json
-            if [ -f "$STATE_BACKUP/salling_victini_state.json" ]; then
-              cp "$STATE_BACKUP/salling_victini_state.json" salling_victini_state.json
-            fi
             if [ -f "$STATE_BACKUP/salling_early_radar_state.json" ]; then
               cp "$STATE_BACKUP/salling_early_radar_state.json" salling_early_radar_state.json
             fi
 
             git add hot_restock_state.json
-            if [ -f salling_victini_state.json ]; then
-              git add salling_victini_state.json
-            fi
             if [ -f salling_early_radar_state.json ]; then
               git add salling_early_radar_state.json
             fi
