@@ -33,6 +33,12 @@ class TierBWave1SourceTests(unittest.TestCase):
         )
         self.assertFalse(
             sources._sealed_allowed(
+                "Pokemon Display (CHN)",
+                "Pokemon Scorching Skies Display (CHN)",
+            )
+        )
+        self.assertFalse(
+            sources._sealed_allowed(
                 "Charizard ex Collection",
                 "Pokemon Singles Charizard ex Collection",
             )
@@ -87,7 +93,50 @@ class TierBWave1SourceTests(unittest.TestCase):
         self.assertTrue(products["123"]["in_stock"])
         self.assertTrue(products["123"]["preorder"])
 
-    def test_softgun_magento_fixture_parses_stock_and_blocks_repack(self):
+    def test_shopify_html_stock_parser_distinguishes_cart_and_sold_out(self):
+        document = """
+        <div class="grid">
+          <div class="card-wrapper">
+            <a href="/products/live-booster-box">Pokemon Live Booster Box</a>
+            <span>1.700,00 DKK</span><button>Læg i kurv</button>
+          </div>
+          <div class="card-wrapper">
+            <a href="/products/sold-etb">Pokemon Sold ETB</a>
+            <span>700,00 DKK</span><button>Udsolgt</button>
+          </div>
+        </div>
+        """
+        stock = sources.parse_shopify_html_stock(document)
+        self.assertTrue(stock["live-booster-box"])
+        self.assertFalse(stock["sold-etb"])
+
+    def test_shopify_html_overlay_can_correct_false_json_availability(self):
+        config = {
+            "base": "https://example.test",
+            "feeds": [{"path": "/products.json", "game": "POKÉMON"}],
+            "html_stock_path": "/collections/all",
+        }
+        raw = {
+            "id": 123,
+            "handle": "booster-box",
+            "title": "Pokemon Booster Box",
+            "product_type": "Sealed Pokemon",
+            "vendor": "Pokemon",
+            "tags": [],
+            "variants": [{"available": False, "price": "999.00"}],
+        }
+        with (
+            patch.object(sources, "fetch_shopify_feed", return_value=[raw]),
+            patch.object(
+                sources,
+                "fetch_shopify_html_stock",
+                return_value={"booster-box": True},
+            ),
+        ):
+            products = sources.fetch_shopify_source(config)
+        self.assertTrue(products["123"]["in_stock"])
+
+    def test_softgun_magento_fixture_parses_stock_and_blocks_repack_and_chn(self):
         document = """
         <ol class="products">
           <li class="product-item">
@@ -109,6 +158,17 @@ class TierBWave1SourceTests(unittest.TestCase):
                 </a>
               </strong>
               <span class="price">99,00 kr.</span>
+              <button>Tilføj kurv</button>
+            </div>
+          </li>
+          <li class="product-item">
+            <div class="product-item-info">
+              <strong class="product-item-name">
+                <a class="product-item-link" href="/pokemon/chn.html">
+                  Pokemon Scorching Skies Display (CHN)
+                </a>
+              </strong>
+              <span class="price">580,00 kr.</span>
               <button>Tilføj kurv</button>
             </div>
           </li>
