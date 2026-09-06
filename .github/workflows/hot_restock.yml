@@ -8,6 +8,8 @@ on:
     types:
       - requested
   push:
+    branches:
+      - main
     paths:
       - "alert_policy.py"
       - "hot_restock.py"
