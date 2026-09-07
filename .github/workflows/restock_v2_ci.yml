@@ -16,6 +16,7 @@ on:
       - "test_restock_v2_runner.py"
       - "test_faraos_parser_v2.py"
       - "test_tier_b_wave1.py"
+      - "test_tier_b_wave1_live.py"
       - "test_flinamania_product_probe.py"
       - "test_state_commit_guard.py"
       - ".github/workflows/restock.yml"
@@ -60,10 +61,13 @@ jobs:
       - name: Test Faraos parser V2
         run: timeout 60s python -m unittest test_faraos_parser_v2.py
 
-      - name: Test Tier B Wave 1 shadow
+      - name: Test Tier B Wave 1 source health
         run: timeout 60s python -m unittest test_tier_b_wave1.py
 
-      - name: Test Flinamania product probe
+      - name: Test Tier B Wave 1 live routing
+        run: timeout 60s python -m unittest test_tier_b_wave1_live.py
+
+      - name: Test dormant Flinamania product probe
         run: timeout 60s python -m unittest test_flinamania_product_probe.py
 
       - name: Test Matraws single guard
