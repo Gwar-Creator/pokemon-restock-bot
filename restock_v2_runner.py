@@ -36,6 +36,23 @@ PRICE_WATCH_FOCUS_MAX_PRICE = {
     "TIN": 500.0,
 }
 
+PRICE_WATCH_EXTRA_FOCUS_SETS = (
+    ("Surging Sparks", ("surging sparks", "surging spark")),
+    ("Twilight Masquerade", ("twilight masquerade",)),
+    ("Mega Evolution", ("mega evolution",)),
+    ("Journey Together", ("journey together",)),
+    (
+        "30th Anniversary",
+        (
+            "pokemon 30th",
+            "pokémon 30th",
+            "30th anniversary",
+            "30th celebration",
+            "30th celebrations",
+        ),
+    ),
+)
+
 # Faraos' top-level Pokemon category currently reports many products but only
 # renders part of the catalogue in the repeated card structure used by the
 # legacy parser. Scan the stable public sealed subcategories instead. Keep the
@@ -121,6 +138,20 @@ def load_scanner_parts():
         raise RuntimeError("Kunne ikke finde START-markøren i restock_bot_github.py")
     definitions, startup = source.split(START_MARKER, 1)
     return definitions, startup
+
+
+def _install_price_watch_focus_sets(namespace):
+    current = tuple(namespace.get("PRICE_WATCH_FOCUS_SETS") or ())
+    if not current:
+        raise RuntimeError("Price Watch focus hook mangler PRICE_WATCH_FOCUS_SETS")
+
+    existing = {canonical for canonical, _aliases in current}
+    additions = tuple(
+        entry
+        for entry in PRICE_WATCH_EXTRA_FOCUS_SETS
+        if entry[0] not in existing
+    )
+    namespace["PRICE_WATCH_FOCUS_SETS"] = current + additions
 
 
 def _install_price_watch_focus_caps(namespace):
@@ -315,6 +346,7 @@ def main():
 
     exec(compile(definitions, str(SCANNER_FILE), "exec"), namespace)
     legacy_policy = namespace["restock_channel_alert_allowed"]
+    _install_price_watch_focus_sets(namespace)
     _install_price_watch_focus_caps(namespace)
     _install_faraos_parser(namespace)
     _install_kelz0r_fast_fetch(namespace)
