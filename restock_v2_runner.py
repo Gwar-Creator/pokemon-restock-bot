@@ -7,6 +7,7 @@ START marker, so this runner loads definitions first, patches the channel gate,
 and only then executes the startup section.
 """
 
+from concurrent.futures import ThreadPoolExecutor
 import re
 from pathlib import Path
 
@@ -125,6 +126,157 @@ def _install_faraos_parser(namespace):
     namespace["FARAOS_FEEDS"] = FARAOS_V3_FEEDS
 
 
+def _install_kelz0r_fast_fetch(namespace):
+    """Scan Kelz0r's two independent categories concurrently.
+
+    The legacy implementation walks each category page-by-page in sequence.
+    We keep that conservative per-category request pattern, but run the booster
+    and tin categories in parallel. This caps Kelz0r at two simultaneous HTTP
+    requests while preserving product IDs, filtering and state semantics.
+    """
+    required = (
+        "KELZ0R_FEEDS",
+        "requests",
+        "BeautifulSoup",
+        "BROWSER_HEADERS",
+        "urljoin",
+        "hashlib",
+        "woocommerce_clean_text",
+        "woocommerce_is_relevant_sealed",
+        "_wave5_synthetic",
+        "_wave5_nearest_card",
+        "_wave5_anchor_name",
+        "_wave5_price",
+        "_wave5_product",
+    )
+    missing = [name for name in required if namespace.get(name) is None]
+    if missing:
+        raise RuntimeError("Kelz0r fast hook mangler: " + ", ".join(missing))
+
+    feeds = tuple(namespace["KELZ0R_FEEDS"])
+    requests_mod = namespace["requests"]
+    soup_cls = namespace["BeautifulSoup"]
+    headers = namespace["BROWSER_HEADERS"]
+    urljoin = namespace["urljoin"]
+    hashlib_mod = namespace["hashlib"]
+    clean_text = namespace["woocommerce_clean_text"]
+    relevant_sealed = namespace["woocommerce_is_relevant_sealed"]
+    wave5_synthetic = namespace["_wave5_synthetic"]
+    nearest_card = namespace["_wave5_nearest_card"]
+    anchor_name = namespace["_wave5_anchor_name"]
+    wave5_price = namespace["_wave5_price"]
+    wave5_product = namespace["_wave5_product"]
+
+    def is_product_url(value):
+        return bool(re.search(r"-p-\d+\.html(?:$|[?#])", value or "", flags=re.I))
+
+    def canonical_url(value):
+        return str(value or "").split("#", 1)[0].split("?", 1)[0].rstrip("/")
+
+    def stable_product_id(product_url):
+        match = re.search(r"-p-(\d+)\.html$", product_url, flags=re.I)
+        if match:
+            return f"kelz0r:{match.group(1)}"
+        return "kelz0r:" + hashlib_mod.sha256(product_url.encode("utf-8")).hexdigest()[:20]
+
+    def fetch_feed(base_url):
+        products = {}
+        seen_urls = set()
+        session = requests_mod.Session()
+        session.headers.update(
+            {
+                **headers,
+                "Accept-Language": "da-DK,da;q=0.9,en;q=0.8",
+            }
+        )
+
+        for page in range(1, 31):
+            separator = "&" if "?" in base_url else "?"
+            page_url = base_url if page == 1 else f"{base_url}{separator}page={page}"
+            response = session.get(page_url, timeout=30)
+            response.raise_for_status()
+            soup = soup_cls(response.text, "html.parser")
+
+            page_product_urls = set()
+            for anchor in soup.find_all("a", href=True):
+                href = urljoin(page_url, anchor.get("href"))
+                if is_product_url(href):
+                    page_product_urls.add(canonical_url(href))
+
+            if not page_product_urls:
+                break
+
+            # Some shops repeat the final catalogue page for out-of-range page
+            # numbers. Stop as soon as pagination yields no unseen product URLs.
+            if not (page_product_urls - seen_urls):
+                break
+
+            for anchor in soup.find_all("a", href=True):
+                href = urljoin(page_url, anchor.get("href"))
+                if not is_product_url(href):
+                    continue
+
+                product_url = canonical_url(href)
+                if product_url in seen_urls:
+                    continue
+
+                card = nearest_card(anchor, is_product_url)
+                name = anchor_name(anchor, card)
+                if not name or not relevant_sealed(wave5_synthetic(name, "POKÉMON")):
+                    seen_urls.add(product_url)
+                    continue
+
+                card_text = clean_text(card.get_text(" ", strip=True))
+                low = card_text.lower()
+                preorder = any(
+                    marker in low
+                    for marker in (
+                        "[preorder]", "preorder", "pre-order", "forudbestil",
+                        "forudbestilling", "forhåndsbestilling", "forhandsbestilling",
+                    )
+                )
+                explicit_out = any(
+                    marker in low
+                    for marker in (
+                        "meddela", "notify", "giv mig besked", "udsolgt",
+                        "ikke på lager", "ikke pa lager",
+                    )
+                )
+                explicit_in = any(
+                    marker in low
+                    for marker in (
+                        "køb nu", "koeb nu", "köp nu", "kop nu", "buy now",
+                        "læg i indkøbskurv", "laeg i indkoebskurv",
+                        "læg i kurv", "laeg i kurv", "add to cart",
+                    )
+                )
+
+                product_id = stable_product_id(product_url)
+                products[product_id] = wave5_product(
+                    name,
+                    "POKÉMON",
+                    wave5_price(card_text),
+                    explicit_in and not explicit_out,
+                    preorder,
+                    product_url,
+                )
+                seen_urls.add(product_url)
+
+        return products
+
+    def fast_kelz0r_products():
+        if len(feeds) < 2:
+            return fetch_feed(feeds[0]) if feeds else {}
+
+        products = {}
+        with ThreadPoolExecutor(max_workers=min(2, len(feeds))) as executor:
+            for partial in executor.map(fetch_feed, feeds):
+                products.update(partial)
+        return products
+
+    namespace["get_kelz0r_products"] = fast_kelz0r_products
+
+
 def main():
     definitions, startup = load_scanner_parts()
     namespace = {
@@ -135,6 +287,7 @@ def main():
     exec(compile(definitions, str(SCANNER_FILE), "exec"), namespace)
     legacy_policy = namespace["restock_channel_alert_allowed"]
     _install_faraos_parser(namespace)
+    _install_kelz0r_fast_fetch(namespace)
 
     def channel_policy(message):
         return restock_v2_channel_alert_allowed(
