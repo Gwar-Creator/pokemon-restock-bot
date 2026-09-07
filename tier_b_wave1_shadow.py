@@ -170,6 +170,10 @@ def _post_discord(message):
     response.raise_for_status()
 
 
+def _noop_sender(_message):
+    return None
+
+
 def _emit_live_alerts(source_key, label, old_products, products, *, sender=_post_discord):
     if source_key not in LIVE_SOURCES:
         return 0
@@ -197,7 +201,12 @@ def _emit_live_alerts(source_key, label, old_products, products, *, sender=_post
     return sent
 
 
-def run_scan(fetcher=fetch_wave1_source, sender=_post_discord):
+def run_scan(fetcher=fetch_wave1_source, sender=None):
+    # Injected fetchers are used by deterministic tests/fixtures. Keep those
+    # offline unless a sender is explicitly injected as well.
+    if sender is None:
+        sender = _post_discord if fetcher is fetch_wave1_source else _noop_sender
+
     old_state = _load_state()
     old_sources = old_state.get("sources") or {}
     new_sources = {}
