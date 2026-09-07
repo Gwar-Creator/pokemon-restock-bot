@@ -95,7 +95,7 @@ jobs:
           python tier_b_wave2_shadow.py &
           WAVE2_PID=$!
 
-          # Wave 3 is now qualified/live. Stagger its start so it does not join
+          # Wave 3 is qualified/live. Stagger its start so it does not join
           # the initial request burst, but let it overlap the slower legacy tail.
           (
             sleep 75
@@ -124,7 +124,7 @@ jobs:
           fi
 
           if [ "$WAVE2_STATUS" -ne 0 ]; then
-            echo "::warning::Tier B Wave 2 shadow exited with status $WAVE2_STATUS; production alerts are unaffected"
+            echo "::warning::Tier B Wave 2 live runner exited with status $WAVE2_STATUS; primary production alerts are unaffected"
           fi
 
           if [ "$WAVE3_STATUS" -ne 0 ]; then
