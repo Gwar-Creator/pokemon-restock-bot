@@ -34,7 +34,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
         with:
-          fetch-depth: 0
+          # HOT only needs the current state plus a small race window for the
+          # final state refresh. Avoid fetching every historical branch/run.
+          fetch-depth: 10
 
       - name: Set up Python
         uses: actions/setup-python@v6
