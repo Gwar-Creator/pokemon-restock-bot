@@ -41,10 +41,6 @@ SITES = {
 
 TARGET_STORE_MARKERS = (
     "kolding",
-    "fredericia",
-    "vejen",
-    "brørup",
-    "brorup",
     "esbjerg",
 )
 
@@ -486,7 +482,6 @@ def short_series_name(value):
 
 
 
-
 def canonical_salling_product_key(product):
     """Stable identity shared across BR/Bilka/Foetex for discovery de-duplication."""
     sku = str((product or {}).get("sku") or "").strip().upper()
@@ -557,6 +552,7 @@ def send_discovery_alert(products):
     response = requests.post(WEBHOOK_URL, json=payload, timeout=20)
     response.raise_for_status()
 
+
 def send_local_alert(product, transitions):
     # V46_UNIFIED_ABUNDANT_SET_POLICY
     if not abundant_set_signal_allowed(
@@ -611,10 +607,7 @@ def send_local_alert(product, transitions):
                 "description": "\n".join(lines)[:4096],
                 "color": color,
                 "footer": {
-                    "text": (
-                        "MasterBot · Local Stock Watch · "
-                        "Kolding/Fredericia/Vejen/Brørup/Esbjerg"
-                    )
+                    "text": "MasterBot · Local Stock Watch · Kolding/Esbjerg"
                 },
             }
         ],
