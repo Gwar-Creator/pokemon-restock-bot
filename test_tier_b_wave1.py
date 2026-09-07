@@ -39,6 +39,12 @@ class TierBWave1SourceTests(unittest.TestCase):
         )
         self.assertFalse(
             sources._sealed_allowed(
+                "Pokemon Paradox Rift Booster Bundle GERMAN",
+                "Pokemon Paradox Rift Booster Bundle GERMAN",
+            )
+        )
+        self.assertFalse(
+            sources._sealed_allowed(
                 "Charizard ex Collection",
                 "Pokemon Singles Charizard ex Collection",
             )
@@ -103,6 +109,27 @@ class TierBWave1SourceTests(unittest.TestCase):
           <div class="card-wrapper">
             <a href="/products/sold-etb">Pokemon Sold ETB</a>
             <span>700,00 DKK</span><button>Udsolgt</button>
+          </div>
+        </div>
+        """
+        stock = sources.parse_shopify_html_stock(document)
+        self.assertTrue(stock["live-booster-box"])
+        self.assertFalse(stock["sold-etb"])
+
+    def test_shopify_html_stock_uses_unique_handle_not_duplicate_link_count(self):
+        document = """
+        <div class="grid">
+          <div class="card-wrapper">
+            <a href="/products/live-booster-box">Image</a>
+            <a href="/products/live-booster-box">Title</a>
+            <a href="/products/live-booster-box">Mobile image</a>
+            <a href="/products/live-booster-box">Mobile title</a>
+            <a href="/products/live-booster-box">Quick view</a>
+            <button>Læg i kurv</button>
+          </div>
+          <div class="card-wrapper">
+            <a href="/products/sold-etb">Pokemon Sold ETB</a>
+            <button>Udsolgt</button>
           </div>
         </div>
         """
