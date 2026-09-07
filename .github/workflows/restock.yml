@@ -22,7 +22,9 @@ jobs:
           # workflow_dispatch may wait behind the previous scan. Resolve main
           # when the job actually starts instead of checking out its stale event SHA.
           ref: main
-          fetch-depth: 0
+          # Full history was costing ~15-30s while fetching every branch. Ten
+          # commits is ample for the state rebase/push race window used below.
+          fetch-depth: 10
 
       - name: Set up Python
         uses: actions/setup-python@v6
@@ -91,6 +93,14 @@ jobs:
           python tier_b_wave2_shadow.py &
           WAVE2_PID=$!
 
+          # Wave 3 is now qualified/live. Stagger its start so it does not join
+          # the initial request burst, but let it overlap the slower legacy tail.
+          (
+            sleep 75
+            python tier_b_wave3_shadow.py
+          ) &
+          WAVE3_PID=$!
+
           wait "$RESTOCK_PID"
           RESTOCK_STATUS=$?
           wait "$LOCAL_STOCK_PID"
@@ -99,10 +109,7 @@ jobs:
           WAVE1_STATUS=$?
           wait "$WAVE2_PID"
           WAVE2_STATUS=$?
-
-          # Wave 3 is qualification-only. Run it after the established scans so
-          # six new retailers do not add request pressure while production is busy.
-          python tier_b_wave3_shadow.py
+          wait "$WAVE3_PID"
           WAVE3_STATUS=$?
           set -e
 
@@ -119,7 +126,7 @@ jobs:
           fi
 
           if [ "$WAVE3_STATUS" -ne 0 ]; then
-            echo "::warning::Tier B Wave 3 shadow exited with status $WAVE3_STATUS; production alerts are unaffected"
+            echo "::warning::Tier B Wave 3 live runner exited with status $WAVE3_STATUS; primary production alerts are unaffected"
           fi
 
           if [ "$RESTOCK_STATUS" -ne 0 ]; then
