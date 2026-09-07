@@ -1,83 +1,74 @@
-"""Temporary CI-only diagnostics for Wave 3 storefront markup."""
+"""Temporary CI-only live validation for Wave 3 source adapters."""
 
-import re
-from urllib.parse import urljoin, urlparse
+from collections import Counter
+import time
 
 import requests
 from bs4 import BeautifulSoup
 
-from tier_b_wave1_sources import BROWSER_HEADERS, _clean
+import tier_b_wave3_sources as sources
 
 
-TARGET = "https://www.mugglealley.dk/shop/240-pokemon-kort-pakke/"
-MARKERS = (
-    "køb", "koeb", "lagerstatus", "udsolgt", "ikke på lager", "ikke pa lager",
-    "kan på nuværende tidspunkt ikke bestilles", "kan pa nuvaerende tidspunkt ikke bestilles",
-)
+def summarize(source_key: str):
+    started = time.monotonic()
+    try:
+        products = sources.fetch_wave3_source(source_key)
+    except Exception as exc:
+        print(f"LIVE {source_key.upper()}: ERROR {type(exc).__name__}: {exc}")
+        return
+
+    games = Counter(product.get("game") for product in products.values())
+    stock = sum(product.get("in_stock") is True for product in products.values())
+    preorder = sum(product.get("preorder") is True for product in products.values())
+    elapsed = time.monotonic() - started
+    print(
+        f"LIVE {source_key.upper()}: total={len(products)} "
+        f"pokemon={games.get('POKÉMON', 0)} lorcana={games.get('LORCANA', 0)} "
+        f"stock={stock} preorder={preorder} elapsed={elapsed:.1f}s"
+    )
+    for product in list(products.values())[:5]:
+        print(
+            "  SAMPLE",
+            repr(product.get("name")),
+            "stock=", product.get("in_stock"),
+            "preorder=", product.get("preorder"),
+            "price=", product.get("price"),
+            "url=", product.get("url"),
+        )
 
 
-def classes(node):
-    return ".".join(node.get("class") or [])
+def validate_muggle_renderer():
+    config = sources.WAVE3_SOURCES["mugglealley"]
+    try:
+        response = requests.get(
+            config["url"],
+            headers=sources.MUGGLE_RENDER_HEADERS,
+            timeout=30,
+        )
+        response.raise_for_status()
+    except Exception as exc:
+        print(f"MUGGLE RENDERER: ERROR {type(exc).__name__}: {exc}")
+        return
+
+    soup = BeautifulSoup(response.text, "html.parser")
+    matches = []
+    for anchor in soup.select("a[href]"):
+        url = sources._normalized_product_url(config["base"], anchor.get("href"))
+        if sources._path_matches(url, config["link_pattern"]):
+            matches.append(url)
+    matches = list(dict.fromkeys(matches))
+    print(
+        f"MUGGLE RENDERER: status={response.status_code} bytes={len(response.content)} "
+        f"matching_product_links={len(matches)}"
+    )
+    for url in matches[:5]:
+        print("  MUGGLE LINK", url)
 
 
 def main():
-    response = requests.get(
-        TARGET,
-        headers={
-            **BROWSER_HEADERS,
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-        },
-        timeout=30,
-    )
-    print("status", response.status_code, "bytes", len(response.content), "final", response.url)
-    response.raise_for_status()
-    soup = BeautifulSoup(response.text, "html.parser")
-
-    candidates = []
-    for anchor in soup.select("a[href]"):
-        href = str(anchor.get("href") or "")
-        text = _clean(anchor.get_text(" ", strip=True)) or _clean(anchor.get("title"))
-        low = f"{href} {text}".lower()
-        if "/shop/" in low or "vis produkt" in low or "pokemon" in low:
-            candidates.append((anchor, href, text))
-
-    print("candidate anchors", len(candidates))
-    seen = set()
-    shown = 0
-    for anchor, href, text in candidates:
-        key = (href, text)
-        if key in seen:
-            continue
-        seen.add(key)
-        print("ANCHOR", repr(href), "|", repr(text[:180]))
-        node = anchor
-        for depth in range(1, 5):
-            node = getattr(node, "parent", None)
-            if node is None or not getattr(node, "name", None):
-                break
-            snippet = _clean(node.get_text(" ", strip=True)).lower()
-            hits = [marker for marker in MARKERS if marker in snippet]
-            links = [str(a.get("href") or "") for a in node.select("a[href]")][:8]
-            print(
-                "  A", depth, node.name, classes(node)[:120],
-                "markers", hits,
-                "links", [repr(value) for value in links],
-                "text", snippet[:360],
-            )
-        shown += 1
-        if shown >= 25:
-            break
-
-    print("DATA ATTRIBUTES")
-    shown = 0
-    for node in soup.find_all(True):
-        attrs = {str(k): str(v) for k, v in node.attrs.items()}
-        packed = " ".join(f"{k}={v}" for k, v in attrs.items()).lower()
-        if "product" in packed and ("id" in packed or "url" in packed or "href" in packed):
-            print(node.name, classes(node)[:100], repr(packed[:500]))
-            shown += 1
-            if shown >= 20:
-                break
+    validate_muggle_renderer()
+    for source_key in sources.WAVE3_SOURCES:
+        summarize(source_key)
 
 
 if __name__ == "__main__":
