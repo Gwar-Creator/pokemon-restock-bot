@@ -87,7 +87,7 @@ def _source_specific_overlay(source_key, products):
     return products
 
 
-def run_scan(fetcher=fetch_wave1_source):
+def run_scan(fetcher=fetch_wave1_source, overlay=_source_specific_overlay):
     old_state = _load_state()
     old_sources = old_state.get("sources") or {}
     new_sources = {}
@@ -102,7 +102,7 @@ def run_scan(fetcher=fetch_wave1_source):
 
         try:
             fetched_products = fetcher(source_key)
-            fetched_products = _source_specific_overlay(source_key, fetched_products)
+            fetched_products = overlay(source_key, fetched_products)
             _validate_snapshot(source_key, fetched_products, old_products)
             products = fetched_products
             health = _health_success(old_health, len(products), now)
