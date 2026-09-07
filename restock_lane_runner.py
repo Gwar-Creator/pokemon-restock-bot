@@ -5,19 +5,25 @@ Tier A Pokemon RESTOCK events are owned by the dedicated fast/local lanes:
 - HOT owns online restocks for Coolshop, Proshop, BR, Bilka and Foetex.
 - Local Stock owns target-store restocks for BR, Bilka and Foetex.
 
-The main scanner still fetches Tier A for state, Price Watch/History and new/
-preorder discovery, but it no longer duplicates Tier A Pokemon RESTOCK alerts.
-Tier A Lorcana remains on the main lane because HOT is Pokemon-only.
-
-Pokemonportalen currently marks the entire preorder category as preorder,
-including sold-out placeholder products. Until Wave 4 owns a parser that can
-verify buyability, main-lane PREORDER alerts from Pokemonportalen are suppressed.
-This is intentionally fail-closed: ordinary restock/new events remain unchanged.
+Wave 4 product events are owned by the dedicated Tier B Wave 4 live lane:
+Vaulted, Pokedexet, Pokemonportalen, TCGBruuS and Pokemon Plaza. The main scanner
+still fetches these shops for shared state/Price data but must not duplicate
+NEW/PREORDER/RESTOCK alerts from them.
 """
 
 import restock_v2_runner as base
 
 _ORIGINAL_CHANNEL_POLICY = base.restock_v2_channel_alert_allowed
+
+WAVE4_LABELS = (
+    "VAULTED",
+    "POKEDEXET",
+    "POKEMONPORTALEN",
+    "POKEMON PORTALEN",
+    "TCGBRUUS",
+    "TCG BRUUS",
+    "POKEMON PLAZA",
+)
 
 
 def _pokemon_headline(headline):
@@ -25,9 +31,9 @@ def _pokemon_headline(headline):
     return "[POKEMON]" in upper
 
 
-def _pokemonportalen_headline(headline):
+def _wave4_headline(headline):
     upper = str(headline or "").upper().replace("É", "E")
-    return "POKEMONPORTALEN" in upper or "POKEMON PORTALEN" in upper
+    return any(label in upper for label in WAVE4_LABELS)
 
 
 def restock_lane_channel_alert_allowed(message, legacy_policy=None):
@@ -43,10 +49,10 @@ def restock_lane_channel_alert_allowed(message, legacy_policy=None):
         ):
             return False
 
-        # Pokemonportalen's preorder category contains sold-out placeholders.
-        # Do not surface PREORDER from this legacy lane until Wave 4 verifies
-        # that the product is actually buyable. This prevents false alerts.
-        if event == "PREORDER" and _pokemonportalen_headline(headline):
+        # Wave 4 has its own live transition/baseline handling. Main still scans
+        # these sources, but all product-event alert ownership is suppressed here
+        # to guarantee one Discord owner per source.
+        if event in {"NEW", "PREORDER", "RESTOCK"} and _wave4_headline(headline):
             return False
 
     return _ORIGINAL_CHANNEL_POLICY(
