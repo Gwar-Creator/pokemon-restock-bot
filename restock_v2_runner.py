@@ -79,6 +79,9 @@ PRICE_WATCH_FOCUS_COMBO_MIN_DROP_PCT = 0.05
 # compare standardized sealed formats where set + type is a safe market key.
 # Collections and tins stay out until their variant matching is trustworthy.
 PRICE_WATCH_MARKET_GAP_MIN_PCT = 0.10
+PRICE_WATCH_MARKET_GAP_MIN_DKK_BY_TYPE = {
+    "ETB": 500.0,
+}
 PRICE_WATCH_MARKET_GAP_TYPES = {
     "ETB",
     "BOOSTER BOX",
@@ -326,8 +329,15 @@ def price_watch_market_gap_signals(listings):
         next_price = float(next_best["price"])
         saving_dkk = next_price - float(best["price"])
         saving_pct = saving_dkk / next_price if next_price > 0 else 0.0
+        min_gap_dkk = PRICE_WATCH_MARKET_GAP_MIN_DKK_BY_TYPE.get(
+            best.get("type"),
+            0.0,
+        )
 
-        if saving_pct < PRICE_WATCH_MARKET_GAP_MIN_PCT:
+        if (
+            saving_pct < PRICE_WATCH_MARKET_GAP_MIN_PCT
+            or saving_dkk < min_gap_dkk
+        ):
             continue
 
         signals.append({
