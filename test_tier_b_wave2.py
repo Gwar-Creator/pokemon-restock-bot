@@ -128,8 +128,11 @@ class TierBWave2SourceTests(unittest.TestCase):
         fetcher.assert_called_once_with(sources.WAVE2_SOURCES["cardquest"])
 
 
-class TierBWave2ShadowTests(unittest.TestCase):
-    def test_shadow_run_is_state_only_and_preserves_failed_source(self):
+class TierBWave2LiveTests(unittest.TestCase):
+    def test_both_wave2_sources_are_live(self):
+        self.assertEqual(set(shadow.LIVE_SOURCES), set(sources.WAVE2_SOURCES))
+
+    def test_live_run_preserves_failed_source_and_marks_all_modes_live(self):
         with tempfile.TemporaryDirectory() as directory:
             state_path = Path(directory) / "wave2.json"
             old = {
@@ -140,7 +143,13 @@ class TierBWave2ShadowTests(unittest.TestCase):
                         "label": "CARDQUEST",
                         "mode": "shadow",
                         "health": {"status": "ok", "consecutive_failures": 0, "last_success": "old"},
-                        "products": {"old": {"name": "Pokemon Booster Box", "game": "POKÉMON", "in_stock": True}},
+                        "products": {
+                            "old": {
+                                "name": "Pokemon Booster Box",
+                                "game": "POKÉMON",
+                                "in_stock": True,
+                            }
+                        },
                     }
                 },
             }
@@ -157,19 +166,94 @@ class TierBWave2ShadowTests(unittest.TestCase):
                         "price": 1000.0,
                         "in_stock": True,
                         "preorder": False,
-                        "url": f"https://example.test/{index}",
+                        "url": f"https://example.test/{source_key}/{index}",
                     }
                     for index in range(minimum)
                 }
 
+            sent = []
             with patch.object(shadow, "STATE_FILE", state_path):
-                failures = shadow.run_scan(fetcher=fake_fetch)
+                failures = shadow.run_scan(fetcher=fake_fetch, sender=sent.append)
 
             self.assertEqual(failures, 1)
+            self.assertEqual(sent, [])
             new = json.loads(state_path.read_text(encoding="utf-8"))
-            self.assertEqual(new["sources"]["cardquest"]["products"], old["sources"]["cardquest"]["products"])
+            self.assertEqual(new["mode"], "live")
+            self.assertEqual(
+                new["sources"]["cardquest"]["products"],
+                old["sources"]["cardquest"]["products"],
+            )
             self.assertEqual(new["sources"]["cardquest"]["health"]["status"], "failed")
-            self.assertEqual(new["sources"]["hobbykniven"]["mode"], "shadow")
+            self.assertTrue(all(entry["mode"] == "live" for entry in new["sources"].values()))
+
+    def test_promotion_is_baseline_safe(self):
+        with tempfile.TemporaryDirectory() as directory:
+            state_path = Path(directory) / "wave2.json"
+
+            def fake_fetch(source_key):
+                minimum = int(sources.WAVE2_SOURCES[source_key]["minimum"])
+                return {
+                    str(index): {
+                        "name": f"Pokemon 30th Celebration Booster Bundle {index}",
+                        "game": "POKÉMON",
+                        "price": 500.0,
+                        "in_stock": True,
+                        "preorder": False,
+                        "url": f"https://example.test/{source_key}/{index}",
+                    }
+                    for index in range(minimum)
+                }
+
+            sent = []
+            with patch.object(shadow, "STATE_FILE", state_path):
+                shadow.run_scan(fetcher=fake_fetch, sender=sent.append)
+            self.assertEqual(sent, [])
+
+    def test_live_transition_uses_shared_strict_tier_b_gate(self):
+        sent = []
+        old_products = {
+            "good": {
+                "name": "Pokemon 30th Celebration Booster Bundle",
+                "game": "POKÉMON",
+                "in_stock": False,
+                "preorder": False,
+            },
+            "noise": {
+                "name": "Pokemon Checklane Blister",
+                "game": "POKÉMON",
+                "in_stock": False,
+                "preorder": False,
+            },
+        }
+        products = {
+            "good": {
+                "name": "Pokemon 30th Celebration Booster Bundle",
+                "game": "POKÉMON",
+                "price": 499.0,
+                "in_stock": True,
+                "preorder": False,
+                "url": "https://example.test/good",
+            },
+            "noise": {
+                "name": "Pokemon Checklane Blister",
+                "game": "POKÉMON",
+                "price": 49.0,
+                "in_stock": True,
+                "preorder": False,
+                "url": "https://example.test/noise",
+            },
+        }
+        count = shadow._emit_live_alerts(
+            "cardquest",
+            "CARDQUEST",
+            old_products,
+            products,
+            sender=sent.append,
+        )
+        self.assertEqual(count, 1)
+        self.assertEqual(len(sent), 1)
+        self.assertIn("30th Celebration Booster Bundle", sent[0])
+        self.assertNotIn("Checklane", sent[0])
 
 
 if __name__ == "__main__":
