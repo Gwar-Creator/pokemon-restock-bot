@@ -73,18 +73,27 @@ class TierBWave2SourceTests(unittest.TestCase):
                 "url": "https://cardquest.dk/products/phantasmal-booster-box",
             },
         }
-        with patch.object(sources, "fetch_shopify_source", return_value=normalized), patch.object(
+        with patch.object(sources, "fetch_shopify_source", return_value=normalized) as generic, patch.object(
             sources,
             "fetch_cardquest_html_stock",
             return_value={
                 "prismatic-super-premium": True,
                 "phantasmal-booster-box": False,
             },
-        ):
+        ) as rendered:
             products = sources.fetch_cardquest_source(config)
 
         self.assertTrue(products["1"]["in_stock"])
         self.assertFalse(products["2"]["in_stock"])
+        generic.assert_called_once()
+        rendered.assert_called_once_with(config)
+        discovery_config = generic.call_args.args[0]
+        self.assertEqual(discovery_config.get("html_stock_paths"), [])
+        self.assertNotIn("html_stock_path", discovery_config)
+        self.assertEqual(config["html_stock_paths"], [
+            "/collections/pokemon",
+            "/collections/disney-lorcana",
+        ])
 
     def test_hobbykniven_category_fixture_parses_stock_and_price(self):
         document = """
