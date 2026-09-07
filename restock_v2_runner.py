@@ -53,6 +53,26 @@ PRICE_WATCH_EXTRA_FOCUS_SETS = (
     ),
 )
 
+# Price Watch should be decision-grade, not a stream of tiny retailer edits.
+# Normal price-drop alerts require both a meaningful DKK saving and percentage.
+# A genuine restock + price-drop can pass at the older 25 DKK / 5% threshold.
+PRICE_WATCH_FOCUS_MIN_DROP_DKK = 50.0
+PRICE_WATCH_FOCUS_MIN_DROP_PCT = 0.10
+PRICE_WATCH_FOCUS_COMBO_MIN_DROP_DKK = 25.0
+PRICE_WATCH_FOCUS_COMBO_MIN_DROP_PCT = 0.05
+
+# "Clearly cheapest in market" is intentionally shadow-only first. We only
+# compare standardized sealed formats where set + type is a safe market key.
+# Collections and tins stay out until their variant matching is trustworthy.
+PRICE_WATCH_MARKET_GAP_MIN_PCT = 0.10
+PRICE_WATCH_MARKET_GAP_TYPES = {
+    "ETB",
+    "BOOSTER BOX",
+    "BOOSTER BUNDLE",
+    "UPC",
+    "SPC",
+}
+
 # Faraos' top-level Pokemon category currently reports many products but only
 # renders part of the catalogue in the repeated card structure used by the
 # legacy parser. Scan the stable public sealed subcategories instead. Keep the
@@ -171,6 +191,168 @@ def _install_price_watch_focus_caps(namespace):
         }
 
     namespace["collect_price_watch_focus_listings"] = capped_collector
+
+
+def price_watch_focus_drop_allowed(old_price, new_price, combo=False):
+    try:
+        old_price = float(old_price)
+        new_price = float(new_price)
+    except (TypeError, ValueError):
+        return False
+
+    if old_price <= 0 or new_price <= 0 or new_price >= old_price:
+        return False
+
+    drop_dkk = old_price - new_price
+    drop_pct = drop_dkk / old_price
+
+    if combo:
+        return (
+            drop_dkk >= PRICE_WATCH_FOCUS_COMBO_MIN_DROP_DKK
+            and drop_pct >= PRICE_WATCH_FOCUS_COMBO_MIN_DROP_PCT
+        )
+
+    return (
+        drop_dkk >= PRICE_WATCH_FOCUS_MIN_DROP_DKK
+        and drop_pct >= PRICE_WATCH_FOCUS_MIN_DROP_PCT
+    )
+
+
+def _price_watch_market_variant(listing):
+    name = str(listing.get("name") or "").lower()
+    if listing.get("type") == "ETB" and "pokemon center" in name:
+        return "pokemon-center"
+    return "standard"
+
+
+def price_watch_market_gap_signals(listings):
+    """Return shadow candidates where one shop is >=10% below the next shop.
+
+    We deliberately use only standardized formats. The result is diagnostic and
+    must not be sent to Discord until real production observations are reviewed.
+    """
+    groups = {}
+
+    for listing in (listings or {}).values():
+        if not isinstance(listing, dict) or not listing.get("in_stock"):
+            continue
+        product_type = listing.get("type")
+        if product_type not in PRICE_WATCH_MARKET_GAP_TYPES:
+            continue
+
+        try:
+            price = float(listing.get("price"))
+        except (TypeError, ValueError):
+            continue
+        if price <= 0:
+            continue
+
+        focus_set = str(listing.get("set") or "").strip()
+        shop = str(listing.get("shop") or "").strip()
+        if not focus_set or not shop:
+            continue
+
+        market_key = (
+            focus_set,
+            product_type,
+            _price_watch_market_variant(listing),
+        )
+        shops = groups.setdefault(market_key, {})
+        current = shops.get(shop)
+        if current is None or price < current["price"]:
+            row = dict(listing)
+            row["price"] = price
+            shops[shop] = row
+
+    signals = []
+    for market_key, shops in groups.items():
+        if len(shops) < 2:
+            continue
+
+        ordered = sorted(
+            shops.values(),
+            key=lambda row: (row["price"], row["shop"]),
+        )
+        best = ordered[0]
+        next_best = ordered[1]
+        next_price = float(next_best["price"])
+        saving_dkk = next_price - float(best["price"])
+        saving_pct = saving_dkk / next_price if next_price > 0 else 0.0
+
+        if saving_pct < PRICE_WATCH_MARKET_GAP_MIN_PCT:
+            continue
+
+        signals.append({
+            "market_key": market_key,
+            "best": best,
+            "next_best": next_best,
+            "saving_dkk": saving_dkk,
+            "saving_pct": saving_pct,
+            "shop_count": len(shops),
+        })
+
+    return sorted(
+        signals,
+        key=lambda row: (row["saving_pct"], row["saving_dkk"]),
+        reverse=True,
+    )
+
+
+def _install_price_watch_signal_policy(namespace):
+    legacy_alert = namespace.get("_price_watch_focus_alert")
+    legacy_process = namespace.get("process_price_watch")
+    if legacy_alert is None or legacy_process is None:
+        raise RuntimeError("Price Watch signal hook mangler legacy-funktioner")
+
+    def guarded_alert(listing, old_price, combo=False):
+        if not price_watch_focus_drop_allowed(
+            old_price,
+            listing.get("price"),
+            combo=combo,
+        ):
+            print(
+                "PRICE WATCH: lille prisændring undertrykt | "
+                f"{listing.get('shop')} | {listing.get('name')} | "
+                f"{old_price} -> {listing.get('price')} | combo={bool(combo)}"
+            )
+            return False
+        return legacy_alert(listing, old_price, combo=combo)
+
+    def process_with_market_gap_shadow(
+        old_price_watch_state,
+        current_state,
+        fresh_sources,
+        history_state=None,
+    ):
+        collector = namespace["collect_price_watch_focus_listings"]
+        listings = collector(current_state, fresh_sources=fresh_sources)
+        signals = price_watch_market_gap_signals(listings)
+
+        print(
+            "PRICE WATCH MARKET GAP SHADOW: "
+            f"{len(signals)} kandidater | threshold={PRICE_WATCH_MARKET_GAP_MIN_PCT * 100:.0f}% | "
+            "Discord=off"
+        )
+        for signal in signals[:10]:
+            best = signal["best"]
+            next_best = signal["next_best"]
+            print(
+                "PRICE WATCH MARKET GAP SHADOW CANDIDATE: "
+                f"{best.get('set')} | {best.get('type')} | "
+                f"{best.get('shop')} {best.get('price'):.2f} vs "
+                f"{next_best.get('shop')} {next_best.get('price'):.2f} | "
+                f"-{signal['saving_pct'] * 100:.1f}%"
+            )
+
+        return legacy_process(
+            old_price_watch_state,
+            current_state,
+            fresh_sources,
+            history_state=history_state,
+        )
+
+    namespace["_price_watch_focus_alert"] = guarded_alert
+    namespace["process_price_watch"] = process_with_market_gap_shadow
 
 
 def _install_faraos_parser(namespace):
@@ -348,6 +530,7 @@ def main():
     legacy_policy = namespace["restock_channel_alert_allowed"]
     _install_price_watch_focus_sets(namespace)
     _install_price_watch_focus_caps(namespace)
+    _install_price_watch_signal_policy(namespace)
     _install_faraos_parser(namespace)
     _install_kelz0r_fast_fetch(namespace)
 
