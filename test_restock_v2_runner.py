@@ -97,18 +97,27 @@ class RestockV2RunnerTests(unittest.TestCase):
         )
         self.assertFalse(runner.restock_v2_channel_alert_allowed(message))
 
-    def test_price_watch_focus_caps_premium_formats(self):
+    def test_price_watch_focus_caps_premium_formats_and_sanity_floors(self):
         namespace = {
             "collect_price_watch_focus_listings": lambda _state, fresh_sources=None: {
-                "upc-ok": {"type": "UPC", "price": 2000.0},
-                "upc-high": {"type": "UPC", "price": 2000.01},
-                "spc-ok": {"type": "SPC", "price": 1500.0},
-                "spc-high": {"type": "SPC", "price": 1500.01},
-                "collection-ok": {"type": "COLLECTION", "price": 1000.0},
-                "collection-high": {"type": "COLLECTION", "price": 1000.01},
-                "tin-ok": {"type": "TIN", "price": 500.0},
-                "tin-high": {"type": "TIN", "price": 500.01},
-                "bundle": {"type": "BOOSTER BUNDLE", "price": 749.0},
+                "upc-ok": {"set": "151", "shop": "A", "name": "151 UPC", "type": "UPC", "price": 2000.0},
+                "upc-high": {"set": "151", "shop": "A", "name": "151 UPC", "type": "UPC", "price": 2000.01},
+                "upc-low": {"set": "151", "shop": "A", "name": "151 UPC", "type": "UPC", "price": 499.99},
+                "spc-ok": {"set": "151", "shop": "A", "name": "151 SPC", "type": "SPC", "price": 1500.0},
+                "spc-high": {"set": "151", "shop": "A", "name": "151 SPC", "type": "SPC", "price": 1500.01},
+                "spc-low": {"set": "151", "shop": "A", "name": "151 SPC", "type": "SPC", "price": 399.99},
+                "collection-ok": {"set": "151", "shop": "A", "name": "151 Collection", "type": "COLLECTION", "price": 1000.0},
+                "collection-high": {"set": "151", "shop": "A", "name": "151 Collection", "type": "COLLECTION", "price": 1000.01},
+                "collection-low": {"set": "151", "shop": "A", "name": "151 Collection", "type": "COLLECTION", "price": 99.99},
+                "tin-ok": {"set": "151", "shop": "A", "name": "151 Tin", "type": "TIN", "price": 500.0},
+                "tin-high": {"set": "151", "shop": "A", "name": "151 Tin", "type": "TIN", "price": 500.01},
+                "tin-low": {"set": "151", "shop": "A", "name": "151 Tin", "type": "TIN", "price": 74.99},
+                "etb-ok": {"set": "151", "shop": "A", "name": "151 ETB", "type": "ETB", "price": 200.0},
+                "etb-low": {"set": "151", "shop": "A", "name": "151 ETB", "type": "ETB", "price": 19.0},
+                "box-ok": {"set": "Surging Sparks", "shop": "A", "name": "Surging Sparks Booster Box", "type": "BOOSTER BOX", "price": 700.0},
+                "box-low": {"set": "Surging Sparks", "shop": "A", "name": "Surging Sparks Booster Box", "type": "BOOSTER BOX", "price": 699.99},
+                "bundle-ok": {"set": "151", "shop": "A", "name": "151 Booster Bundle", "type": "BOOSTER BUNDLE", "price": 150.0},
+                "bundle-low": {"set": "151", "shop": "A", "name": "151 Booster Bundle", "type": "BOOSTER BUNDLE", "price": 149.99},
             }
         }
         runner._install_price_watch_focus_caps(namespace)
@@ -116,7 +125,15 @@ class RestockV2RunnerTests(unittest.TestCase):
 
         self.assertEqual(
             set(listings),
-            {"upc-ok", "spc-ok", "collection-ok", "tin-ok", "bundle"},
+            {
+                "upc-ok",
+                "spc-ok",
+                "collection-ok",
+                "tin-ok",
+                "etb-ok",
+                "box-ok",
+                "bundle-ok",
+            },
         )
 
     def test_price_watch_focus_sets_are_extended_without_duplicates(self):
@@ -183,6 +200,35 @@ class RestockV2RunnerTests(unittest.TestCase):
         self.assertEqual(signals[0]["best"]["shop"], "SHOP A")
         self.assertEqual(signals[0]["next_best"]["shop"], "SHOP B")
         self.assertAlmostEqual(signals[0]["saving_pct"], 0.20)
+
+    def test_price_watch_market_gap_shadow_rejects_implausible_price(self):
+        listings = {
+            "bad": {
+                "set": "151",
+                "type": "ETB",
+                "name": "Pokemon 151 Elite Trainer Box",
+                "shop": "BROKEN SHOP",
+                "price": 19.0,
+                "in_stock": True,
+            },
+            "real-a": {
+                "set": "151",
+                "type": "ETB",
+                "name": "Pokemon 151 Elite Trainer Box",
+                "shop": "SHOP A",
+                "price": 900.0,
+                "in_stock": True,
+            },
+            "real-b": {
+                "set": "151",
+                "type": "ETB",
+                "name": "Pokemon 151 Elite Trainer Box",
+                "shop": "SHOP B",
+                "price": 950.0,
+                "in_stock": True,
+            },
+        }
+        self.assertEqual(runner.price_watch_market_gap_signals(listings), [])
 
     def test_price_watch_market_gap_shadow_ignores_small_gap_and_variant_formats(self):
         listings = {
