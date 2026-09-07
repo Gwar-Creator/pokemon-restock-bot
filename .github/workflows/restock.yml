@@ -43,6 +43,8 @@ jobs:
           python -m py_compile tier_b_wave1_shadow.py
           python -m py_compile tier_b_wave2_sources.py
           python -m py_compile tier_b_wave2_shadow.py
+          python -m py_compile tier_b_wave3_sources.py
+          python -m py_compile tier_b_wave3_shadow.py
           python -m py_compile flinamania_product_probe.py
           python -m py_compile local_stock_watch.py
           python -m py_compile scanner_health_audit.py
@@ -56,6 +58,7 @@ jobs:
           python -m unittest test_tier_b_wave1.py
           python -m unittest test_tier_b_wave1_live.py
           python -m unittest test_tier_b_wave2.py
+          python -m unittest test_tier_b_wave3.py
           python -m unittest test_flinamania_product_probe.py
           python -m unittest test_matraws_single_guard.py
           python -m unittest test_state_commit_guard.py
@@ -71,7 +74,7 @@ jobs:
           DISCORD_RETENTION_HOURS: "24"
         run: python discord_cleanup.py
 
-      - name: Run Restock V2 + Local Stock + Tier B waves in parallel
+      - name: Run Restock V2 + Local Stock + Tier B waves safely
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           PRICE_WATCH_WEBHOOK_URL: ${{ secrets.PRICE_WATCH_WEBHOOK_URL }}
@@ -96,6 +99,11 @@ jobs:
           WAVE1_STATUS=$?
           wait "$WAVE2_PID"
           WAVE2_STATUS=$?
+
+          # Wave 3 is qualification-only. Run it after the established scans so
+          # six new retailers do not add request pressure while production is busy.
+          python tier_b_wave3_shadow.py
+          WAVE3_STATUS=$?
           set -e
 
           if [ "$LOCAL_STOCK_STATUS" -ne 0 ]; then
@@ -108,6 +116,10 @@ jobs:
 
           if [ "$WAVE2_STATUS" -ne 0 ]; then
             echo "::warning::Tier B Wave 2 shadow exited with status $WAVE2_STATUS; production alerts are unaffected"
+          fi
+
+          if [ "$WAVE3_STATUS" -ne 0 ]; then
+            echo "::warning::Tier B Wave 3 shadow exited with status $WAVE3_STATUS; production alerts are unaffected"
           fi
 
           if [ "$RESTOCK_STATUS" -ne 0 ]; then
@@ -134,6 +146,7 @@ jobs:
             local_stock_state_v1.json \
             tier_b_wave1_shadow_state.json \
             tier_b_wave2_shadow_state.json \
+            tier_b_wave3_shadow_state.json \
             price_matching_audit_v1.json
 
           if git diff --cached --quiet; then
