@@ -21,17 +21,27 @@ class TierBWave4ShadowTests(unittest.TestCase):
             for index in range(count)
         }
 
+    def _main_state(self):
+        state = {"shopify": {}, "woocommerce": {}}
+        for source_key, config in shadow.WAVE4_SOURCES.items():
+            state[config["state_group"]][source_key] = self._products(config["minimum"])
+        return state
+
     def test_wave4_has_expected_sources(self):
         self.assertEqual(
             set(shadow.WAVE4_SOURCES),
             {"vaulted", "pokedexet", "pokemonportalen", "tcgbruus", "pokemonplaza"},
         )
 
+    def test_wave4_sources_match_real_main_state_groups(self):
+        self.assertEqual(shadow.WAVE4_SOURCES["vaulted"]["state_group"], "shopify")
+        self.assertEqual(shadow.WAVE4_SOURCES["pokedexet"]["state_group"], "shopify")
+        self.assertEqual(shadow.WAVE4_SOURCES["pokemonportalen"]["state_group"], "woocommerce")
+        self.assertEqual(shadow.WAVE4_SOURCES["tcgbruus"]["state_group"], "woocommerce")
+        self.assertEqual(shadow.WAVE4_SOURCES["pokemonplaza"]["state_group"], "woocommerce")
+
     def test_shadow_snapshots_all_sources_without_alert_side_effects(self):
-        main_state = {
-            source_key: self._products(config["minimum"])
-            for source_key, config in shadow.WAVE4_SOURCES.items()
-        }
+        main_state = self._main_state()
 
         with tempfile.TemporaryDirectory() as directory:
             state_path = Path(directory) / "wave4.json"
@@ -48,11 +58,10 @@ class TierBWave4ShadowTests(unittest.TestCase):
     def test_low_count_preserves_previous_baseline(self):
         source_key = "vaulted"
         old_products = self._products(shadow.WAVE4_SOURCES[source_key]["minimum"])
-        main_state = {
-            key: self._products(config["minimum"])
-            for key, config in shadow.WAVE4_SOURCES.items()
+        main_state = self._main_state()
+        main_state["shopify"][source_key] = {
+            "one": {"name": "Pokemon Booster Box", "game": "POKÉMON"}
         }
-        main_state[source_key] = {"one": {"name": "Pokemon Booster Box", "game": "POKÉMON"}}
 
         old_state = {
             "version": 1,
