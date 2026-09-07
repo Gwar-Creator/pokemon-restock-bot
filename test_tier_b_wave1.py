@@ -108,7 +108,7 @@ class TierBWave1SourceTests(unittest.TestCase):
           </div>
           <div class="card-wrapper">
             <a href="/products/sold-etb">Pokemon Sold ETB</a>
-            <span>700,00 DKK</span><button>Udsolgt</button>
+            <span>700,00 DKK</span><button disabled>Udsolgt</button>
           </div>
         </div>
         """
@@ -129,13 +129,35 @@ class TierBWave1SourceTests(unittest.TestCase):
           </div>
           <div class="card-wrapper">
             <a href="/products/sold-etb">Pokemon Sold ETB</a>
-            <button>Udsolgt</button>
+            <button disabled>Udsolgt</button>
           </div>
         </div>
         """
         stock = sources.parse_shopify_html_stock(document)
         self.assertTrue(stock["live-booster-box"])
         self.assertFalse(stock["sold-etb"])
+
+    def test_enabled_cart_control_beats_hidden_sold_out_text(self):
+        document = """
+        <div class="card-wrapper">
+          <a href="/products/live-booster-box">Pokemon Live Booster Box</a>
+          <span hidden>Udsolgt</span>
+          <button name="add">Læg i kurv</button>
+        </div>
+        """
+        stock = sources.parse_shopify_html_stock(document)
+        self.assertTrue(stock["live-booster-box"])
+
+    def test_disabled_cart_control_is_not_in_stock(self):
+        document = """
+        <div class="card-wrapper">
+          <a href="/products/sold-booster-box">Pokemon Sold Booster Box</a>
+          <button name="add" disabled>Læg i kurv</button>
+          <span>Udsolgt</span>
+        </div>
+        """
+        stock = sources.parse_shopify_html_stock(document)
+        self.assertFalse(stock["sold-booster-box"])
 
     def test_shopify_html_overlay_can_correct_false_json_availability(self):
         config = {
@@ -162,6 +184,51 @@ class TierBWave1SourceTests(unittest.TestCase):
         ):
             products = sources.fetch_shopify_source(config)
         self.assertTrue(products["123"]["in_stock"])
+
+    def test_multiple_stock_collections_merge_with_positive_signal_winning(self):
+        config = {
+            "base": "https://example.test",
+            "feeds": [{"path": "/products.json", "game": "POKÉMON"}],
+            "html_stock_paths": [
+                "/collections/all",
+                "/collections/booster-box",
+                "/collections/new-products",
+            ],
+        }
+        raw = {
+            "id": 123,
+            "handle": "booster-box",
+            "title": "Pokemon Booster Box",
+            "product_type": "Sealed Pokemon",
+            "vendor": "Pokemon",
+            "tags": [],
+            "variants": [{"available": False, "price": "999.00"}],
+        }
+        overlays = {
+            "/collections/all": {"booster-box": False},
+            "/collections/booster-box": {"booster-box": True},
+            "/collections/new-products": {"booster-box": False},
+        }
+
+        def fake_stock(_base, path):
+            return overlays[path]
+
+        with (
+            patch.object(sources, "fetch_shopify_feed", return_value=[raw]),
+            patch.object(sources, "fetch_shopify_html_stock", side_effect=fake_stock),
+        ):
+            products = sources.fetch_shopify_source(config)
+
+        self.assertTrue(products["123"]["in_stock"])
+
+    def test_flina_config_covers_shop_all_and_product_type_collections(self):
+        paths = sources.WAVE1_SOURCES["flinamania"]["html_stock_paths"]
+        self.assertIn("/collections/all", paths)
+        self.assertIn("/collections/booster-pack", paths)
+        self.assertIn("/collections/booster-box", paths)
+        self.assertIn("/collections/elite-trainer-box", paths)
+        self.assertIn("/collections/collection-box", paths)
+        self.assertIn("/collections/tin", paths)
 
     def test_softgun_magento_fixture_parses_stock_and_blocks_repack_and_chn(self):
         document = """
