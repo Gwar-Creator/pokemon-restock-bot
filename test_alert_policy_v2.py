@@ -1,7 +1,12 @@
 import unittest
 from datetime import date
 
-from alert_policy import set_status, source_tier, tier_b_signal_allowed
+from alert_policy import (
+    set_status,
+    source_tier,
+    tier_a_signal_allowed,
+    tier_b_signal_allowed,
+)
 
 
 class RestockV2PolicyTests(unittest.TestCase):
@@ -40,11 +45,63 @@ class RestockV2PolicyTests(unittest.TestCase):
         self.assertTrue(tier_b_signal_allowed("Pitch Black Booster Bundle"))
         self.assertTrue(tier_b_signal_allowed("Chaos Rising Booster Box"))
 
-    def test_new_and_preorder_events_are_actionable(self):
-        self.assertTrue(tier_b_signal_allowed("Future Collection Box", event="PREORDER"))
-        self.assertTrue(tier_b_signal_allowed("Brand New Collection Box", event="NEW"))
+    def test_catalogue_new_does_not_bypass_product_filter(self):
+        self.assertTrue(
+            tier_b_signal_allowed("Journey Together Booster Box", event="NEW")
+        )
+        self.assertFalse(
+            tier_b_signal_allowed("Journey Together Collection Box", event="NEW")
+        )
+        self.assertFalse(
+            tier_b_signal_allowed("Journey Together Booster Pack", event="NEW")
+        )
+        self.assertTrue(
+            tier_b_signal_allowed("Pokemon 151 Booster Pack", event="NEW")
+        )
         # ABUNDANT remains strict even when a product is newly discovered.
-        self.assertFalse(tier_b_signal_allowed("Pitch Black Elite Trainer Box", event="NEW"))
+        self.assertFalse(
+            tier_b_signal_allowed("Pitch Black Elite Trainer Box", event="NEW")
+        )
+
+    def test_preorder_widens_normal_formats_but_not_loose_packs(self):
+        self.assertTrue(
+            tier_b_signal_allowed("Future Illustration Collection", event="PREORDER")
+        )
+        self.assertTrue(
+            tier_b_signal_allowed("Future Elite Trainer Box", event="PREORDER")
+        )
+        self.assertFalse(
+            tier_b_signal_allowed("Future Booster Pack", event="PREORDER")
+        )
+        self.assertTrue(
+            tier_b_signal_allowed("Pokemon 151 Booster Pack", event="PREORDER")
+        )
+
+    def test_release_date_can_mark_real_new_set(self):
+        self.assertTrue(
+            tier_b_signal_allowed(
+                "Some New Set Booster Pack",
+                event="RESTOCK",
+                release_date="2026-09-01",
+            )
+        )
+
+    def test_tier_a_keeps_fast_lane_but_mutes_abundant_noise(self):
+        self.assertTrue(
+            tier_a_signal_allowed("Journey Together Booster Pack", event="RESTOCK")
+        )
+        self.assertTrue(
+            tier_a_signal_allowed("Pokemon 151 Booster Pack", event="RESTOCK")
+        )
+        self.assertFalse(
+            tier_a_signal_allowed("Pitch Black Booster Pack", event="RESTOCK")
+        )
+        self.assertFalse(
+            tier_a_signal_allowed("Chaos Rising Elite Trainer Box", event="NEW")
+        )
+        self.assertTrue(
+            tier_a_signal_allowed("Pitch Black Booster Bundle", event="RESTOCK")
+        )
 
     def test_non_restock_channels_are_blocked(self):
         self.assertFalse(
@@ -52,6 +109,9 @@ class RestockV2PolicyTests(unittest.TestCase):
         )
         self.assertFalse(
             tier_b_signal_allowed("Pokemon 151 Elite Trainer Box", event="EARLY_RADAR")
+        )
+        self.assertFalse(
+            tier_a_signal_allowed("Pokemon 151 Booster Pack", event="PRICE")
         )
 
 
