@@ -18,6 +18,7 @@ on:
       - "salling_early_radar.py"
       - "salling_early_radar_runner.py"
       - "early_intel_shadow.py"
+      - "test_early_intel_shadow.py"
       - ".github/workflows/hot_restock.yml"
 
 permissions:
@@ -52,7 +53,7 @@ jobs:
       - name: Validate Tier A HOT scanner and Salling Early Radar
         run: |
           python -m py_compile alert_policy.py hot_restock.py hot_restock_v4.py salling_early_radar.py salling_early_radar_runner.py early_intel_shadow.py state_commit_guard.py
-          python -m unittest test_state_commit_guard.py test_alert_policy_v2.py test_restock_lane_ownership.py
+          python -m unittest test_state_commit_guard.py test_alert_policy_v2.py test_restock_lane_ownership.py test_early_intel_shadow.py
           python - <<'PY'
           import ast
           from pathlib import Path
@@ -79,6 +80,7 @@ jobs:
           intel_module = ast.parse(intel_source)
           assert any(isinstance(node, ast.FunctionDef) and node.name == 'fetch_salling_catalog' for node in intel_module.body)
           assert any(isinstance(node, ast.FunctionDef) and node.name == 'parse_proshop_reader' for node in intel_module.body)
+          assert any(isinstance(node, ast.FunctionDef) and node.name == 'build_cross_salling' for node in intel_module.body)
           print('Tier A HOT scanner + Early Radar + Early Intel syntax OK')
           PY
 
