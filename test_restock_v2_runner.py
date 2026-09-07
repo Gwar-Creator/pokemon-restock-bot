@@ -11,10 +11,26 @@ import restock_v2_runner as runner
 
 
 class RestockV2RunnerTests(unittest.TestCase):
-    def test_tier_a_restock_always_passes_channel_tier_gate(self):
+    def test_tier_a_restock_stays_broad_for_non_abundant_sets(self):
         message = (
             "🔥 **[POKÉMON] COOLSHOP RESTOCK**\n"
             "**Journey Together Elite Trainer Box**\n"
+            "✅ På lager online"
+        )
+        self.assertTrue(runner.restock_v2_channel_alert_allowed(message))
+
+    def test_tier_a_abundant_pack_is_muted(self):
+        message = (
+            "🔥 **[POKÉMON] BR RESTOCK**\n"
+            "**Pitch Black Booster Pack**\n"
+            "✅ På lager online"
+        )
+        self.assertFalse(runner.restock_v2_channel_alert_allowed(message))
+
+    def test_tier_a_abundant_bundle_still_passes(self):
+        message = (
+            "🔥 **[POKÉMON] FØTEX RESTOCK**\n"
+            "**Pitch Black Booster Bundle**\n"
             "✅ På lager online"
         )
         self.assertTrue(runner.restock_v2_channel_alert_allowed(message))
@@ -51,13 +67,35 @@ class RestockV2RunnerTests(unittest.TestCase):
         )
         self.assertFalse(runner.restock_v2_channel_alert_allowed(message))
 
-    def test_tier_b_preorder_passes(self):
+    def test_tier_b_preorder_collection_passes(self):
         message = (
             "🚨 **[POKÉMON] NY FORUDBESTILLING HOS HALMES HULE**\n"
             "**Future Illustration Collection**\n"
             "📅 Forudbestilling"
         )
         self.assertTrue(runner.restock_v2_channel_alert_allowed(message))
+
+    def test_tier_b_preorder_booster_pack_is_muted_unless_watch(self):
+        ordinary = (
+            "🚨 **[POKÉMON] NY FORUDBESTILLING HOS HALMES HULE**\n"
+            "**Future Booster Pack**\n"
+            "📅 Forudbestilling"
+        )
+        watch = (
+            "🚨 **[POKÉMON] NY FORUDBESTILLING HOS HALMES HULE**\n"
+            "**Pokemon 151 Booster Pack**\n"
+            "📅 Forudbestilling"
+        )
+        self.assertFalse(runner.restock_v2_channel_alert_allowed(ordinary))
+        self.assertTrue(runner.restock_v2_channel_alert_allowed(watch))
+
+    def test_tier_b_catalogue_new_booster_pack_is_muted(self):
+        message = (
+            "🆕 **[POKÉMON] NYT HOS MATRAWS**\n"
+            "**Journey Together Booster Pack**\n"
+            "✅ På lager"
+        )
+        self.assertFalse(runner.restock_v2_channel_alert_allowed(message))
 
     def test_faraos_v3_installs_granular_category_feeds(self):
         namespace = {
