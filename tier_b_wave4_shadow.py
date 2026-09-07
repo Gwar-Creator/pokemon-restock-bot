@@ -1,25 +1,30 @@
 #!/usr/bin/env python3
-"""Observe the legacy Wave 4 retailers as a dedicated Tier B shadow lane.
+"""Run Tier B Wave 4 as the live Restock owner.
 
-Wave 4 is already fetched by the main scanner. This shadow harness snapshots the
-fresh main-scan output after each run, validates minimum product counts, and
-builds an isolated baseline without sending Discord alerts or touching Price
-Watch. It is deliberately read-only with respect to retailer traffic so we can
-qualify the five sources before extracting/promoting them to their own live lane.
+The historical filename/state path is intentionally preserved so promotion reuses
+the qualified shadow baseline and never replays current inventory as NEW alerts.
+Wave 4 still reuses the freshly written main-scanner snapshots, so promotion adds
+no duplicate retailer traffic. Price Watch remains off for this lane.
 """
 
 from __future__ import annotations
 
 import json
+import os
 from datetime import datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
+import requests
+
+from alert_policy import tier_b_signal_allowed
+
 
 MAIN_STATE_FILE = Path("restock_state_v2.json")
 STATE_FILE = Path("tier_b_wave4_shadow_state.json")
-STATE_VERSION = 1
+STATE_VERSION = 2
 MAX_DROP_RATIO = 0.70
+WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL", "").strip()
 
 WAVE4_SOURCES = {
     "vaulted": {"label": "VAULTED", "minimum": 15, "state_group": "shopify"},
@@ -28,6 +33,7 @@ WAVE4_SOURCES = {
     "tcgbruus": {"label": "TCGBRUUS", "minimum": 5, "state_group": "woocommerce"},
     "pokemonplaza": {"label": "POKEMON PLAZA", "minimum": 5, "state_group": "woocommerce"},
 }
+LIVE_SOURCES = tuple(WAVE4_SOURCES)
 
 
 def _now():
@@ -45,10 +51,12 @@ def _load_json(path, default):
 
 
 def _load_state():
-    return _load_json(
+    state = _load_json(
         STATE_FILE,
-        {"version": STATE_VERSION, "mode": "shadow", "sources": {}},
+        {"version": STATE_VERSION, "mode": "live", "sources": {}},
     )
+    state.setdefault("sources", {})
+    return state
 
 
 def _main_products(main_state, source_key):
@@ -94,79 +102,191 @@ def _counts(products):
     return pokemon, lorcana, stock, preorders
 
 
-def run_scan(main_state=None):
+def _event_for_product(source_key, old_product, new_product):
+    old_stock = _product_in_stock(old_product or {})
+    new_stock = _product_in_stock(new_product)
+    new_preorder = new_product.get("preorder") is True
+    old_preorder = (old_product or {}).get("preorder") is True
+
+    # Pokemonportalen marks sold-out placeholders as preorder. Until the source
+    # exposes a trustworthy buyable flag, PREORDER is fail-closed for this shop.
+    preorder_allowed = source_key != "pokemonportalen"
+
+    if old_product is None:
+        if preorder_allowed and new_preorder:
+            return "PREORDER"
+        if new_stock:
+            return "NEW"
+        return None
+
+    if preorder_allowed and not old_preorder and new_preorder:
+        return "PREORDER"
+    if not old_stock and new_stock:
+        return "RESTOCK"
+    return None
+
+
+def _format_price(value):
+    try:
+        price = float(value)
+    except (TypeError, ValueError):
+        return None
+    if price <= 0:
+        return None
+    if price.is_integer():
+        return f"{int(price):,}".replace(",", ".") + " kr."
+    return f"{price:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".") + " kr."
+
+
+def _discord_message(label, product, event):
+    headline = {
+        "NEW": "🆕 NYT",
+        "PREORDER": "📅 FORUDBESTILLING",
+        "RESTOCK": "🚨 RESTOCK",
+    }.get(str(event or "").upper(), "🚨 RESTOCK")
+    lines = [
+        f"**{headline} — {label}**",
+        f"**{product.get('name') or 'Ukendt produkt'}**",
+    ]
+    price = _format_price(product.get("price"))
+    if price:
+        lines.append(f"Pris: {price}")
+    url = str(product.get("url") or "").strip()
+    if url:
+        lines.append(f"<{url}>")
+    return "\n".join(lines)
+
+
+def _post_discord(message):
+    if not WEBHOOK_URL:
+        raise RuntimeError("DISCORD_WEBHOOK_URL mangler til live Tier B-kilder")
+    response = requests.post(WEBHOOK_URL, json={"content": message}, timeout=15)
+    response.raise_for_status()
+
+
+def _noop_sender(_message):
+    return None
+
+
+def _emit_live_alerts(source_key, label, old_products, products, *, sender=_post_discord):
+    if source_key not in LIVE_SOURCES:
+        return 0
+
+    # Baseline-safe promotion: a missing/corrupt prior state must never turn the
+    # whole catalogue into a burst of NEW alerts.
+    if not old_products:
+        print(f"WAVE4 LIVE {label}: ingen tidligere baseline; alerts undertrykt denne kørsel")
+        return 0
+
+    sent = 0
+    for product_id, product in products.items():
+        event = _event_for_product(source_key, old_products.get(product_id), product)
+        if event is None:
+            continue
+        name = str(product.get("name") or "").strip()
+        if not tier_b_signal_allowed(name, event=event):
+            continue
+        sender(_discord_message(label, product, event))
+        sent += 1
+    return sent
+
+
+def _health_success(count, now):
+    return {
+        "status": "ok",
+        "last_attempt": now,
+        "last_success": now,
+        "consecutive_failures": 0,
+        "last_error": "",
+        "observed_count": count,
+    }
+
+
+def _health_failure(old_health, error, observed_count, now):
+    failures = int((old_health or {}).get("consecutive_failures") or 0) + 1
+    return {
+        "status": "failed",
+        "last_attempt": now,
+        "last_success": (old_health or {}).get("last_success"),
+        "consecutive_failures": failures,
+        "last_error": str(error)[:500],
+        "observed_count": observed_count,
+    }
+
+
+def run_scan(main_state=None, sender=None):
     if main_state is None:
         main_state = _load_json(MAIN_STATE_FILE, {})
     if not main_state:
         raise RuntimeError("restock_state_v2.json mangler eller er ugyldig")
+    if sender is None:
+        sender = _post_discord
 
     old_state = _load_state()
     old_sources = old_state.get("sources") or {}
     new_sources = {}
     failures = 0
+    sent_alerts = 0
 
     for source_key, config in WAVE4_SOURCES.items():
         old_entry = old_sources.get(source_key) or {}
         old_products = old_entry.get("products") or {}
         old_health = old_entry.get("health") or {}
         now = _now()
+        products = old_products
 
         try:
             products = _main_products(main_state, source_key)
             _validate_snapshot(source_key, products, old_products)
-            health = {
-                "status": "ok",
-                "last_attempt": now,
-                "last_success": now,
-                "consecutive_failures": 0,
-                "last_error": "",
-                "observed_count": len(products),
-            }
+            sent_alerts += _emit_live_alerts(
+                source_key,
+                config["label"],
+                old_products,
+                products,
+                sender=sender,
+            )
+            health = _health_success(len(products), now)
             pokemon, lorcana, stock, preorders = _counts(products)
             print(
-                f"WAVE4 SHADOW {config['label']}: {pokemon} Pokémon | {lorcana} Lorcana | "
+                f"WAVE4 LIVE {config['label']}: {pokemon} Pokémon | {lorcana} Lorcana | "
                 f"på lager {stock} | preorders {preorders} | health=ok"
             )
         except Exception as error:
             failures += 1
+            observed = len(products) if isinstance(products, dict) and products is not old_products else None
             products = old_products
-            health = {
-                "status": "failed",
-                "last_attempt": now,
-                "last_success": old_health.get("last_success"),
-                "consecutive_failures": int(old_health.get("consecutive_failures") or 0) + 1,
-                "last_error": str(error)[:500],
-                "observed_count": None,
-            }
+            health = _health_failure(old_health, error, observed, now)
             print(
-                f"WAVE4 SHADOW {config['label']} FEJL: {error} | "
+                f"WAVE4 LIVE {config['label']} FEJL: {error} | "
                 f"failures={health['consecutive_failures']} | gammel baseline bevaret"
             )
 
         new_sources[source_key] = {
             "label": config["label"],
-            "mode": "shadow",
+            "mode": "live",
+            "stock_trust": "trusted",
             "health": health,
             "products": products,
         }
 
     state = {
         "version": STATE_VERSION,
-        "mode": "shadow",
+        "mode": "live",
         "updated_at": _now(),
         "sources": new_sources,
     }
     STATE_FILE.write_text(json.dumps(state, ensure_ascii=False, indent=2), encoding="utf-8")
 
     print(
-        f"WAVE4 SHADOW: {len(WAVE4_SOURCES) - failures}/{len(WAVE4_SOURCES)} kilder ok | "
-        f"{failures} fejl | Discord=off | PriceWatch=off"
+        f"WAVE4: {len(WAVE4_SOURCES) - failures}/{len(WAVE4_SOURCES)} kilder ok | "
+        f"{failures} fejl | live={len(LIVE_SOURCES)} | Discord alerts={sent_alerts} | PriceWatch=off"
     )
     return failures
 
 
 def main():
-    # Shadow failures are diagnostic and must not block the production scanner.
+    # Individual source failures preserve the old baseline and do not block the
+    # primary scanner. A later recovery can still form a genuine transition.
     run_scan()
     return 0
 
