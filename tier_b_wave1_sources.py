@@ -53,9 +53,20 @@ WAVE1_SOURCES = {
             {"path": "/products.json", "game": None},
         ],
         # Flinamania's public products.json currently reports every variant as
-        # unavailable even while the storefront shows active Add-to-cart
-        # controls. Overlay only the stock bit from the rendered Shop All cards.
-        "html_stock_path": "/collections/all",
+        # unavailable even while the storefront exposes active cart controls.
+        # Shop All remains the broad fallback, while the product-type collections
+        # provide cleaner stock cards. A positive signal from any collection wins.
+        "html_stock_paths": [
+            "/collections/all",
+            "/collections/new-products",
+            "/collections/booster-pack",
+            "/collections/booster-box",
+            "/collections/elite-trainer-box",
+            "/collections/collection-box",
+            "/collections/tin",
+            "/collections/151",
+            "/collections/pitch-black",
+        ],
     },
     "softgunshoppen": {
         "label": "SOFTGUNSHOPPEN",
@@ -374,6 +385,54 @@ def fetch_shopify_feed(base: str, path: str):
     return list(collected.values())
 
 
+def _control_disabled(control) -> bool:
+    if control.has_attr("disabled"):
+        return True
+    return str(control.get("aria-disabled") or "").strip().lower() == "true"
+
+
+def _shopify_card_stock_signal(card):
+    """Return True/False for explicit cart controls, otherwise None.
+
+    Some Shopify themes include both sold-out and add-to-cart labels in hidden
+    template markup. Enabled cart controls are therefore stronger evidence than
+    free text anywhere in the card.
+    """
+    saw_negative_control = False
+    for control in card.select('button, input[type="submit"], [role="button"]'):
+        control_text = " ".join(
+            value
+            for value in (
+                _clean(control.get_text(" ", strip=True)),
+                _clean(control.get("value")),
+                _clean(control.get("aria-label")),
+                _clean(control.get("title")),
+            )
+            if value
+        ).lower()
+        if not control_text:
+            continue
+
+        if any(marker in control_text for marker in IN_STOCK_TEXT_MARKERS):
+            if not _control_disabled(control):
+                return True
+            saw_negative_control = True
+        if any(marker in control_text for marker in OUT_OF_STOCK_TEXT_MARKERS):
+            saw_negative_control = True
+
+    if saw_negative_control:
+        return False
+
+    text = _clean(card.get_text(" ", strip=True)).lower()
+    has_in = any(marker in text for marker in IN_STOCK_TEXT_MARKERS)
+    has_out = any(marker in text for marker in OUT_OF_STOCK_TEXT_MARKERS)
+    if has_in and not has_out:
+        return True
+    if has_out and not has_in:
+        return False
+    return None
+
+
 def _nearest_shopify_product_card(link):
     """Find the smallest rendered container that belongs to one product handle."""
     node = link
@@ -394,13 +453,9 @@ def _nearest_shopify_product_card(link):
 
         # Shopify themes often render the same product link many times inside a
         # single card (image, title, mobile controls, quick-add, etc.). Counting
-        # raw links therefore makes the old parser climb into the whole grid,
-        # where one sold-out neighbour could mark every product as unavailable.
-        # A single unique handle is the reliable boundary instead.
-        text = _clean(node.get_text(" ", strip=True)).lower()
-        if len(handles) == 1 and any(
-            marker in text for marker in IN_STOCK_TEXT_MARKERS + OUT_OF_STOCK_TEXT_MARKERS
-        ):
+        # raw links therefore makes the parser climb into the whole grid. A
+        # single unique handle plus an explicit stock control is the boundary.
+        if len(handles) == 1 and _shopify_card_stock_signal(node) is not None:
             return node
 
         # Stop before collection grids containing several different products.
@@ -418,22 +473,25 @@ def parse_shopify_html_stock(document: str):
         if not handle:
             continue
         card = _nearest_shopify_product_card(link)
-        text = _clean(card.get_text(" ", strip=True)).lower()
-
-        if any(marker in text for marker in OUT_OF_STOCK_TEXT_MARKERS):
-            value = False
-        elif any(marker in text for marker in IN_STOCK_TEXT_MARKERS):
-            value = True
-        else:
+        value = _shopify_card_stock_signal(card)
+        if value is None:
             continue
 
         # A theme can render the same product link several times. Positive and
         # negative cards must agree; if they do not, prefer buyable because the
-        # storefront currently offers an Add-to-cart path for that handle.
+        # storefront currently exposes a live Add-to-cart path for that handle.
         if handle not in stock or value is True:
             stock[handle] = value
 
     return stock
+
+
+def _merge_stock_overlay(target, incoming):
+    """Merge rendered stock observations with a buyable signal taking priority."""
+    for handle, value in incoming.items():
+        value = bool(value)
+        if handle not in target or value is True:
+            target[handle] = value
 
 
 def fetch_shopify_html_stock(base: str, path: str):
@@ -454,11 +512,19 @@ def fetch_shopify_html_stock(base: str, path: str):
             break
 
         before = len(collected)
-        collected.update(page_stock)
+        _merge_stock_overlay(collected, page_stock)
         if len(collected) == before:
             break
 
     return collected
+
+
+def _html_stock_paths(config):
+    paths = list(config.get("html_stock_paths") or [])
+    legacy_path = config.get("html_stock_path")
+    if legacy_path and legacy_path not in paths:
+        paths.append(legacy_path)
+    return paths
 
 
 def fetch_shopify_source(config):
@@ -490,13 +556,20 @@ def fetch_shopify_source(config):
             }
             handles[handle.lower()] = product_id
 
-    html_stock_path = config.get("html_stock_path")
-    if html_stock_path:
-        overlay = fetch_shopify_html_stock(config["base"], html_stock_path)
-        for handle, in_stock in overlay.items():
-            product_id = handles.get(handle)
-            if product_id and product_id in products:
-                products[product_id]["in_stock"] = bool(in_stock)
+    overlay = {}
+    for html_stock_path in _html_stock_paths(config):
+        try:
+            path_overlay = fetch_shopify_html_stock(config["base"], html_stock_path)
+        except requests.RequestException:
+            # Collection routes are secondary stock probes. A renamed/temporary
+            # route must not invalidate the complete catalog discovery.
+            continue
+        _merge_stock_overlay(overlay, path_overlay)
+
+    for handle, in_stock in overlay.items():
+        product_id = handles.get(handle)
+        if product_id and product_id in products:
+            products[product_id]["in_stock"] = bool(in_stock)
 
     return products
 
