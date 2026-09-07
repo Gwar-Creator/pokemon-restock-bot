@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import re
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlparse
 
 import requests
 from bs4 import BeautifulSoup
@@ -21,16 +21,13 @@ from tier_b_wave1_sources import (
 WAVE2_SOURCES = {
     "cardquest": {
         "label": "CARDQUEST",
-        "kind": "shopify",
+        "kind": "shopify_cardquest",
         "base": "https://cardquest.dk",
         "minimum": 5,
         "feeds": [
             {"path": "/collections/pokemon/products.json", "game": "POKÉMON"},
             {"path": "/collections/disney-lorcana/products.json", "game": "LORCANA"},
         ],
-        # The rendered collections expose clear Add-to-cart/Sold-out controls,
-        # so use them as a secondary availability check without broadening the
-        # catalogue beyond the two sealed TCG collections above.
         "html_stock_paths": [
             "/collections/pokemon",
             "/collections/disney-lorcana",
@@ -60,6 +57,26 @@ HOBBY_STOCK_NEGATIVE = (
     "ikke på lager",
     "ikke pa lager",
 )
+
+CARDQUEST_STOCK_POSITIVE = (
+    "tilføj til kurv",
+    "tilfoj til kurv",
+    "kun få tilbage",
+    "kun fa tilbage",
+    "på lager",
+    "pa lager",
+    "add to cart",
+)
+
+CARDQUEST_STOCK_NEGATIVE = (
+    "udsolgt",
+    "ikke på lager",
+    "ikke pa lager",
+    "sold out",
+    "out of stock",
+)
+
+CARDQUEST_MAX_PAGES = 10
 
 
 def _nearest_hobby_product_card(link):
@@ -137,10 +154,154 @@ def fetch_hobbykniven_source(config):
     return parse_hobbykniven_html(response.text, config["base"])
 
 
+def _cardquest_handle(url: str) -> str:
+    path = urlparse(str(url or "")).path
+    match = re.search(r"/products/([^/?#]+)", path)
+    return match.group(1).strip().lower() if match else ""
+
+
+def _cardquest_control_disabled(control) -> bool:
+    if control.has_attr("disabled"):
+        return True
+    return str(control.get("aria-disabled") or "").strip().lower() == "true"
+
+
+def _cardquest_stock_signal(card):
+    """Return CardQuest's rendered buyable state for one product card."""
+    saw_negative = False
+    for control in card.select('button, input[type="submit"], [role="button"]'):
+        control_text = " ".join(
+            value
+            for value in (
+                _clean(control.get_text(" ", strip=True)),
+                _clean(control.get("value")),
+                _clean(control.get("aria-label")),
+                _clean(control.get("title")),
+            )
+            if value
+        ).lower()
+        if not control_text:
+            continue
+
+        if any(marker in control_text for marker in CARDQUEST_STOCK_POSITIVE):
+            if not _cardquest_control_disabled(control):
+                return True
+            saw_negative = True
+        if any(marker in control_text for marker in CARDQUEST_STOCK_NEGATIVE):
+            saw_negative = True
+
+    text = _clean(card.get_text(" ", strip=True)).lower()
+    has_positive = any(marker in text for marker in CARDQUEST_STOCK_POSITIVE)
+    has_negative = any(marker in text for marker in CARDQUEST_STOCK_NEGATIVE)
+
+    if has_positive and not has_negative:
+        return True
+    if has_negative and not has_positive:
+        return False
+    if saw_negative:
+        return False
+    return None
+
+
+def _nearest_cardquest_product_card(link):
+    node = link
+    best = link
+    for _ in range(10):
+        parent = getattr(node, "parent", None)
+        if parent is None or not getattr(parent, "name", None):
+            break
+        node = parent
+        product_links = node.select('a[href*="/products/"]')
+        handles = {
+            _cardquest_handle(anchor.get("href"))
+            for anchor in product_links
+            if _cardquest_handle(anchor.get("href"))
+        }
+        if product_links:
+            best = node
+
+        if len(handles) == 1 and _cardquest_stock_signal(node) is not None:
+            return node
+        if len(handles) > 1:
+            break
+    return best
+
+
+def parse_cardquest_html_stock(document: str):
+    """Parse CardQuest collection cards where the frontend is authoritative.
+
+    Their Shopify JSON can report variants unavailable while the rendered store
+    still shows an enabled ``Tilføj til kurv`` button or ``Kun få tilbage``.
+    """
+    soup = BeautifulSoup(document or "", "html.parser")
+    stock = {}
+
+    for link in soup.select('a[href*="/products/"]'):
+        handle = _cardquest_handle(link.get("href"))
+        if not handle:
+            continue
+        card = _nearest_cardquest_product_card(link)
+        value = _cardquest_stock_signal(card)
+        if value is None:
+            continue
+        if handle not in stock or value is True:
+            stock[handle] = value
+
+    return stock
+
+
+def fetch_cardquest_html_stock(config):
+    stock = {}
+    for path in config.get("html_stock_paths") or []:
+        for page in range(1, CARDQUEST_MAX_PAGES + 1):
+            response = requests.get(
+                config["base"].rstrip("/") + path,
+                headers={
+                    **BROWSER_HEADERS,
+                    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+                },
+                params={"page": page},
+                timeout=30,
+            )
+            response.raise_for_status()
+            page_stock = parse_cardquest_html_stock(response.text)
+            if not page_stock:
+                break
+
+            before = len(stock)
+            for handle, value in page_stock.items():
+                if handle not in stock or value is True:
+                    stock[handle] = value
+            if len(stock) == before:
+                break
+    return stock
+
+
+def fetch_cardquest_source(config):
+    products = fetch_shopify_source(config)
+    try:
+        overlay = fetch_cardquest_html_stock(config)
+    except requests.RequestException:
+        return products
+
+    product_ids_by_handle = {}
+    for product_id, product in products.items():
+        handle = _cardquest_handle(product.get("url"))
+        if handle:
+            product_ids_by_handle[handle] = product_id
+
+    for handle, in_stock in overlay.items():
+        product_id = product_ids_by_handle.get(handle)
+        if product_id in products:
+            products[product_id]["in_stock"] = bool(in_stock)
+
+    return products
+
+
 def fetch_wave2_source(source_key: str):
     config = WAVE2_SOURCES[source_key]
-    if config["kind"] == "shopify":
-        return fetch_shopify_source(config)
+    if config["kind"] == "shopify_cardquest":
+        return fetch_cardquest_source(config)
     if config["kind"] == "hobbykniven_html":
         return fetch_hobbykniven_source(config)
     raise KeyError(f"Ukendt Wave 2 source kind: {config['kind']}")
