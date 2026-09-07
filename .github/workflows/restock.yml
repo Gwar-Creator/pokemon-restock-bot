@@ -52,6 +52,7 @@ jobs:
           python -m unittest test_restock_v2_runner.py
           python -m unittest test_faraos_parser_v2.py
           python -m unittest test_tier_b_wave1.py
+          python -m unittest test_tier_b_wave1_live.py
           python -m unittest test_flinamania_product_probe.py
           python -m unittest test_matraws_single_guard.py
           python -m unittest test_state_commit_guard.py
@@ -67,7 +68,7 @@ jobs:
           DISCORD_RETENTION_HOURS: "24"
         run: python discord_cleanup.py
 
-      - name: Run Restock V2 + Local Stock + Tier B Wave 1 shadow in parallel
+      - name: Run Restock V2 + Local Stock + Tier B Wave 1 in parallel
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           PRICE_WATCH_WEBHOOK_URL: ${{ secrets.PRICE_WATCH_WEBHOOK_URL }}
@@ -95,7 +96,7 @@ jobs:
           fi
 
           if [ "$WAVE1_STATUS" -ne 0 ]; then
-            echo "::warning::Tier B Wave 1 shadow exited with status $WAVE1_STATUS; production alerts are unaffected"
+            echo "::warning::Tier B Wave 1 exited with status $WAVE1_STATUS; primary production alerts are unaffected"
           fi
 
           if [ "$RESTOCK_STATUS" -ne 0 ]; then
