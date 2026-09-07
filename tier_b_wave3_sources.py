@@ -209,10 +209,10 @@ def _nearest_product_card(link, base: str, link_pattern: str):
     return best
 
 
-def _best_link_name(card, product_url: str, fallback_link) -> str:
+def _best_link_name(card, base: str, product_url: str, fallback_link) -> str:
     candidates = []
     for anchor in card.select("a[href]"):
-        url = _normalized_product_url(product_url, anchor.get("href"))
+        url = _normalized_product_url(base, anchor.get("href"))
         if url != product_url:
             continue
         text = _clean(anchor.get_text(" ", strip=True)) or _clean(anchor.get("title"))
@@ -234,7 +234,7 @@ def parse_html_catalog(document: str, base: str, game: str, link_pattern: str):
             continue
 
         card = _nearest_product_card(link, base, link_pattern)
-        name = _best_link_name(card, product_url, link)
+        name = _best_link_name(card, base, product_url, link)
         if not name:
             continue
 
