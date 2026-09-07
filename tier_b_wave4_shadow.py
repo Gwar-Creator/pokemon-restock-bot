@@ -22,11 +22,11 @@ STATE_VERSION = 1
 MAX_DROP_RATIO = 0.70
 
 WAVE4_SOURCES = {
-    "vaulted": {"label": "VAULTED", "minimum": 15},
-    "pokedexet": {"label": "POKEDEXET", "minimum": 10},
-    "pokemonportalen": {"label": "POKEMONPORTALEN", "minimum": 10},
-    "tcgbruus": {"label": "TCGBRUUS", "minimum": 5},
-    "pokemonplaza": {"label": "POKEMON PLAZA", "minimum": 5},
+    "vaulted": {"label": "VAULTED", "minimum": 15, "state_group": "shopify"},
+    "pokedexet": {"label": "POKEDEXET", "minimum": 10, "state_group": "shopify"},
+    "pokemonportalen": {"label": "POKEMONPORTALEN", "minimum": 10, "state_group": "woocommerce"},
+    "tcgbruus": {"label": "TCGBRUUS", "minimum": 5, "state_group": "woocommerce"},
+    "pokemonplaza": {"label": "POKEMON PLAZA", "minimum": 5, "state_group": "woocommerce"},
 }
 
 
@@ -52,9 +52,16 @@ def _load_state():
 
 
 def _main_products(main_state, source_key):
-    products = main_state.get(source_key)
+    config = WAVE4_SOURCES[source_key]
+    group = config.get("state_group")
+    if group:
+        products = ((main_state.get(group) or {}).get(source_key))
+    else:
+        products = main_state.get(source_key)
     if not isinstance(products, dict):
-        raise RuntimeError("kilden mangler i restock_state_v2.json")
+        raise RuntimeError(
+            f"kilden mangler i restock_state_v2.json under {group or 'top-level'}"
+        )
     return products
 
 
