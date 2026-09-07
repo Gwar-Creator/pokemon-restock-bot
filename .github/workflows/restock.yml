@@ -48,6 +48,7 @@ jobs:
           python -m py_compile tier_b_wave2_shadow.py
           python -m py_compile tier_b_wave3_sources.py
           python -m py_compile tier_b_wave3_shadow.py
+          python -m py_compile tier_b_wave4_shadow.py
           python -m py_compile flinamania_product_probe.py
           python -m py_compile local_stock_watch.py
           python -m py_compile scanner_health_audit.py
@@ -63,6 +64,7 @@ jobs:
           python -m unittest test_tier_b_wave1_live.py
           python -m unittest test_tier_b_wave2.py
           python -m unittest test_tier_b_wave3.py
+          python -m unittest test_tier_b_wave4.py
           python -m unittest test_flinamania_product_probe.py
           python -m unittest test_matraws_single_guard.py
           python -m unittest test_state_commit_guard.py
@@ -105,6 +107,13 @@ jobs:
 
           wait "$RESTOCK_PID"
           RESTOCK_STATUS=$?
+
+          # Wave 4 is still owned/fetched by the main scanner. Snapshot the
+          # freshly written main state into an isolated shadow baseline after
+          # the main scan finishes, with no extra retailer traffic or alerts.
+          python tier_b_wave4_shadow.py
+          WAVE4_STATUS=$?
+
           wait "$LOCAL_STOCK_PID"
           LOCAL_STOCK_STATUS=$?
           wait "$WAVE1_PID"
@@ -129,6 +138,10 @@ jobs:
 
           if [ "$WAVE3_STATUS" -ne 0 ]; then
             echo "::warning::Tier B Wave 3 live runner exited with status $WAVE3_STATUS; primary production alerts are unaffected"
+          fi
+
+          if [ "$WAVE4_STATUS" -ne 0 ]; then
+            echo "::warning::Tier B Wave 4 shadow exited with status $WAVE4_STATUS; production alerts are unaffected"
           fi
 
           if [ "$RESTOCK_STATUS" -ne 0 ]; then
@@ -156,6 +169,7 @@ jobs:
             tier_b_wave1_shadow_state.json \
             tier_b_wave2_shadow_state.json \
             tier_b_wave3_shadow_state.json \
+            tier_b_wave4_shadow_state.json \
             price_matching_audit_v1.json
 
           if git diff --cached --quiet; then
