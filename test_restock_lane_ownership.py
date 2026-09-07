@@ -29,6 +29,22 @@ class RestockLaneOwnershipTests(unittest.TestCase):
         )
         self.assertTrue(lane.restock_lane_channel_alert_allowed(message))
 
+    def test_main_suppresses_pokemonportalen_preorder_until_buyability_is_verified(self):
+        message = (
+            "🟡 **[POKÉMON] POKEMONPORTALEN FORUDBESTILLING**\n"
+            "**Pokemon 30th Anniversary Booster Box**\n"
+            "📦 Forudbestilling fundet"
+        )
+        self.assertFalse(lane.restock_lane_channel_alert_allowed(message))
+
+    def test_main_keeps_pokemonportalen_restock(self):
+        message = (
+            "🔥 **[POKÉMON] POKEMONPORTALEN RESTOCK**\n"
+            "**Pokemon 151 Booster Bundle**\n"
+            "✅ På lager"
+        )
+        self.assertTrue(lane.restock_lane_channel_alert_allowed(message))
+
     def test_hot_salling_is_online_only(self):
         local_only = {
             "online_count": 0,
