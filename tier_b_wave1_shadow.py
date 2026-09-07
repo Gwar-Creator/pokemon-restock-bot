@@ -8,6 +8,7 @@ from datetime import datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
+from flinamania_product_probe import apply_product_page_stock
 from tier_b_wave1_sources import WAVE1_SOURCES, fetch_wave1_source
 
 
@@ -80,6 +81,12 @@ def _counts(products):
     return pokemon, lorcana, stock, preorders
 
 
+def _source_specific_overlay(source_key, products):
+    if source_key == "flinamania":
+        return apply_product_page_stock(products)
+    return products
+
+
 def run_scan(fetcher=fetch_wave1_source):
     old_state = _load_state()
     old_sources = old_state.get("sources") or {}
@@ -95,6 +102,7 @@ def run_scan(fetcher=fetch_wave1_source):
 
         try:
             fetched_products = fetcher(source_key)
+            fetched_products = _source_specific_overlay(source_key, fetched_products)
             _validate_snapshot(source_key, fetched_products, old_products)
             products = fetched_products
             health = _health_success(old_health, len(products), now)
