@@ -10,6 +10,8 @@ on:
       - "tier_b_wave1_shadow.py"
       - "tier_b_wave2_sources.py"
       - "tier_b_wave2_shadow.py"
+      - "tier_b_wave3_sources.py"
+      - "tier_b_wave3_shadow.py"
       - "flinamania_product_probe.py"
       - "hot_restock.py"
       - "state_commit_guard.py"
@@ -20,6 +22,7 @@ on:
       - "test_tier_b_wave1.py"
       - "test_tier_b_wave1_live.py"
       - "test_tier_b_wave2.py"
+      - "test_tier_b_wave3.py"
       - "test_flinamania_product_probe.py"
       - "test_state_commit_guard.py"
       - ".github/workflows/restock.yml"
@@ -50,7 +53,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Compile changed scanner modules
-        run: python -m py_compile alert_policy.py restock_v2_runner.py faraos_parser_v2.py tier_b_wave1_sources.py tier_b_wave1_shadow.py tier_b_wave2_sources.py tier_b_wave2_shadow.py flinamania_product_probe.py hot_restock.py state_commit_guard.py
+        run: python -m py_compile alert_policy.py restock_v2_runner.py faraos_parser_v2.py tier_b_wave1_sources.py tier_b_wave1_shadow.py tier_b_wave2_sources.py tier_b_wave2_shadow.py tier_b_wave3_sources.py tier_b_wave3_shadow.py flinamania_product_probe.py hot_restock.py state_commit_guard.py
 
       - name: Test legacy alert policy compatibility
         run: timeout 60s python -m unittest test_alert_policy.py
@@ -72,6 +75,9 @@ jobs:
 
       - name: Test Tier B Wave 2 shadow
         run: timeout 60s python -m unittest test_tier_b_wave2.py
+
+      - name: Test Tier B Wave 3 shadow
+        run: timeout 60s python -m unittest test_tier_b_wave3.py
 
       - name: Test dormant Flinamania product probe
         run: timeout 60s python -m unittest test_flinamania_product_probe.py
