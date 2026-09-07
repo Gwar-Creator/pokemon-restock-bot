@@ -71,6 +71,28 @@ TIER_B_WATCH_MARKERS = TIER_B_CORE_MARKERS + (
     "sleeve booster",
 )
 
+# A preorder is meaningful enough to widen NORMAL Tier B beyond core formats,
+# but ordinary loose/sleeved packs are still too noisy unless the set itself is
+# WATCH/NEW. This deliberately separates "new in a shop catalogue" from a
+# genuinely new/desirable set.
+TIER_B_PREORDER_MARKERS = TIER_B_CORE_MARKERS + (
+    "elite trainer box",
+    " etb ",
+    "premium collection",
+    "special collection",
+    "illustration collection",
+    "illustration rare collection",
+    "binder collection",
+    "poster collection",
+    "playmat collection",
+    "collection box",
+    " ex box ",
+    " tin ",
+    "mini tin",
+    "poké ball tin",
+    "poke ball tin",
+)
+
 # Chaos Rising and Pitch Black are abundant enough that ordinary pack-level
 # products and ETBs create noise. Keep only higher-signal sealed formats.
 ABUNDANT_SET_HIGH_SIGNAL_MARKERS = (
@@ -160,6 +182,29 @@ def abundant_set_signal_allowed(name, series=None):
     return any(marker in text for marker in ABUNDANT_SET_HIGH_SIGNAL_MARKERS)
 
 
+def tier_a_signal_allowed(
+    name,
+    series=None,
+    *,
+    event="RESTOCK",
+    release_date=None,
+):
+    """Fast-lane gate: preserve Tier A breadth, but mute abundant-set noise."""
+    event = str(event or "RESTOCK").strip().upper()
+    status = set_status(name, series, release_date=release_date)
+
+    if event in {"PRICE", "HEALTH", "EARLY_RADAR"}:
+        return False
+
+    # Tier A remains deliberately broad because these are the high-value retail
+    # sources. The one exception is abundant sets where ordinary packs/ETBs are
+    # not useful enough to justify Restock-channel noise.
+    if status == "ABUNDANT":
+        return abundant_set_signal_allowed(name, series)
+
+    return True
+
+
 def tier_b_signal_allowed(
     name,
     series=None,
@@ -178,13 +223,16 @@ def tier_b_signal_allowed(
     if status == "ABUNDANT":
         return abundant_set_signal_allowed(name, series)
 
-    # The legacy scanner only emits NEW when a relevant product is already
-    # buyable. PREORDER is likewise actionable. Upstream sealed/language
-    # relevance still applies before either event reaches this Discord gate.
-    if event in {"NEW", "PREORDER", "FORUDBESTILLING"}:
-        return True
-
+    # WATCH and genuinely NEW sets may surface a wider sealed range, including
+    # ordinary/sleeved booster packs. A product merely being newly discovered
+    # in a retailer catalogue is NOT enough to grant that wider treatment.
     if status in {"WATCH", "NEW"}:
         return any(marker in text for marker in TIER_B_WATCH_MARKERS)
 
+    # NORMAL-set preorders are useful for ETBs, collections and tins as well as
+    # core formats, but loose/sleeved packs stay muted until the set is WATCH/NEW.
+    if event in {"PREORDER", "FORUDBESTILLING"}:
+        return any(marker in text for marker in TIER_B_PREORDER_MARKERS)
+
+    # NORMAL RESTOCK and catalogue-NEW events remain high-signal only.
     return any(marker in text for marker in TIER_B_CORE_MARKERS)
