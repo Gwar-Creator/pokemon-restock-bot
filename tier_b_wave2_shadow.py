@@ -48,7 +48,16 @@ def _validate_snapshot(source_key, products, old_products):
         raise RuntimeError(f"mistænkeligt produktfald: {old_count} -> {new_count}")
 
 
-def _health_success(count, now):
+def _health_success(old_health, count, now, unchanged=False):
+    if unchanged and (old_health or {}).get("status") == "ok":
+        return {
+            "status": "ok",
+            "last_attempt": old_health.get("last_attempt"),
+            "last_success": old_health.get("last_success"),
+            "consecutive_failures": 0,
+            "last_error": "",
+            "observed_count": count,
+        }
     return {
         "status": "ok",
         "last_attempt": now,
@@ -96,7 +105,12 @@ def run_scan(fetcher=fetch_wave2_source):
             fetched_products = fetcher(source_key)
             _validate_snapshot(source_key, fetched_products, old_products)
             products = fetched_products
-            health = _health_success(len(products), now)
+            health = _health_success(
+                old_health,
+                len(products),
+                now,
+                unchanged=products == old_products,
+            )
             pokemon, lorcana, stock, preorders = _counts(products)
             print(
                 f"WAVE2 SHADOW {config['label']}: {pokemon} Pokémon | {lorcana} Lorcana | "
@@ -119,10 +133,14 @@ def run_scan(fetcher=fetch_wave2_source):
             "products": products,
         }
 
+    updated_at = _now()
+    if new_sources == old_sources and old_state.get("updated_at"):
+        updated_at = old_state["updated_at"]
+
     state = {
         "version": STATE_VERSION,
         "mode": "shadow",
-        "updated_at": _now(),
+        "updated_at": updated_at,
         "sources": new_sources,
     }
     STATE_FILE.write_text(json.dumps(state, ensure_ascii=False, indent=2), encoding="utf-8")
