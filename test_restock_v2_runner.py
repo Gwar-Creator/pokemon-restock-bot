@@ -139,6 +139,141 @@ class RestockV2RunnerTests(unittest.TestCase):
         self.assertIn("30th anniversary", anniversary)
         self.assertIn("30th celebration", anniversary)
 
+    def test_price_watch_regular_drop_requires_50_dkk_and_10_percent(self):
+        self.assertTrue(runner.price_watch_focus_drop_allowed(500.0, 450.0))
+        self.assertTrue(runner.price_watch_focus_drop_allowed(1000.0, 900.0))
+        self.assertFalse(runner.price_watch_focus_drop_allowed(1000.0, 920.0))
+        self.assertFalse(runner.price_watch_focus_drop_allowed(400.0, 355.0))
+
+    def test_price_watch_restock_combo_can_pass_at_25_dkk_and_5_percent(self):
+        self.assertTrue(runner.price_watch_focus_drop_allowed(500.0, 475.0, combo=True))
+        self.assertFalse(runner.price_watch_focus_drop_allowed(500.0, 480.0, combo=True))
+        self.assertFalse(runner.price_watch_focus_drop_allowed(1000.0, 960.0, combo=True))
+
+    def test_price_watch_market_gap_shadow_finds_clear_standardized_gap(self):
+        listings = {
+            "a": {
+                "set": "151",
+                "type": "BOOSTER BUNDLE",
+                "name": "Pokemon 151 Booster Bundle",
+                "shop": "SHOP A",
+                "price": 800.0,
+                "in_stock": True,
+            },
+            "b": {
+                "set": "151",
+                "type": "BOOSTER BUNDLE",
+                "name": "Pokemon 151 Booster Bundle",
+                "shop": "SHOP B",
+                "price": 1000.0,
+                "in_stock": True,
+            },
+            "c": {
+                "set": "151",
+                "type": "BOOSTER BUNDLE",
+                "name": "Pokemon 151 Booster Bundle",
+                "shop": "SHOP C",
+                "price": 1050.0,
+                "in_stock": True,
+            },
+        }
+        signals = runner.price_watch_market_gap_signals(listings)
+
+        self.assertEqual(len(signals), 1)
+        self.assertEqual(signals[0]["best"]["shop"], "SHOP A")
+        self.assertEqual(signals[0]["next_best"]["shop"], "SHOP B")
+        self.assertAlmostEqual(signals[0]["saving_pct"], 0.20)
+
+    def test_price_watch_market_gap_shadow_ignores_small_gap_and_variant_formats(self):
+        listings = {
+            "small-a": {
+                "set": "Crown Zenith",
+                "type": "ETB",
+                "name": "Crown Zenith Elite Trainer Box",
+                "shop": "SHOP A",
+                "price": 920.0,
+                "in_stock": True,
+            },
+            "small-b": {
+                "set": "Crown Zenith",
+                "type": "ETB",
+                "name": "Crown Zenith Elite Trainer Box",
+                "shop": "SHOP B",
+                "price": 1000.0,
+                "in_stock": True,
+            },
+            "collection-a": {
+                "set": "151",
+                "type": "COLLECTION",
+                "name": "151 Poster Collection",
+                "shop": "SHOP A",
+                "price": 300.0,
+                "in_stock": True,
+            },
+            "collection-b": {
+                "set": "151",
+                "type": "COLLECTION",
+                "name": "151 Binder Collection",
+                "shop": "SHOP B",
+                "price": 600.0,
+                "in_stock": True,
+            },
+        }
+        self.assertEqual(runner.price_watch_market_gap_signals(listings), [])
+
+    def test_price_watch_market_gap_splits_pokemon_center_etb(self):
+        listings = {
+            "regular": {
+                "set": "Surging Sparks",
+                "type": "ETB",
+                "name": "Surging Sparks Elite Trainer Box",
+                "shop": "SHOP A",
+                "price": 500.0,
+                "in_stock": True,
+            },
+            "pc": {
+                "set": "Surging Sparks",
+                "type": "ETB",
+                "name": "Surging Sparks Pokemon Center Elite Trainer Box",
+                "shop": "SHOP B",
+                "price": 1000.0,
+                "in_stock": True,
+            },
+        }
+        self.assertEqual(runner.price_watch_market_gap_signals(listings), [])
+
+    def test_price_watch_signal_hook_blocks_small_drop_before_discord(self):
+        calls = []
+
+        def fake_alert(listing, old_price, combo=False):
+            calls.append((listing, old_price, combo))
+            return True
+
+        def fake_process(*_args, **_kwargs):
+            return {"ok": True}
+
+        namespace = {
+            "_price_watch_focus_alert": fake_alert,
+            "process_price_watch": fake_process,
+            "collect_price_watch_focus_listings": lambda _state, fresh_sources=None: {},
+        }
+        runner._install_price_watch_signal_policy(namespace)
+
+        small = namespace["_price_watch_focus_alert"](
+            {"shop": "TEST", "name": "151 ETB", "price": 920.0},
+            1000.0,
+            combo=False,
+        )
+        strong = namespace["_price_watch_focus_alert"](
+            {"shop": "TEST", "name": "151 ETB", "price": 900.0},
+            1000.0,
+            combo=False,
+        )
+
+        self.assertFalse(small)
+        self.assertTrue(strong)
+        self.assertEqual(len(calls), 1)
+
     def test_faraos_v3_installs_granular_category_feeds(self):
         namespace = {
             "_faraos_name": lambda _card: "Journey Together",
