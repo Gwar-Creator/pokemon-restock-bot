@@ -278,7 +278,16 @@ def fetch_cardquest_html_stock(config):
 
 
 def fetch_cardquest_source(config):
-    products = fetch_shopify_source(config)
+    # CardQuest needs its source-specific rendered-stock parser. The shared
+    # Shopify adapter also knows about ``html_stock_paths``, so passing the full
+    # config there would fetch the same collection pages twice on every scan.
+    # Use Shopify JSON only for discovery, then apply the authoritative overlay
+    # exactly once below.
+    catalog_config = dict(config)
+    catalog_config["html_stock_paths"] = []
+    catalog_config.pop("html_stock_path", None)
+    products = fetch_shopify_source(catalog_config)
+
     try:
         overlay = fetch_cardquest_html_stock(config)
     except requests.RequestException:
