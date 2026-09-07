@@ -108,9 +108,9 @@ jobs:
           wait "$RESTOCK_PID"
           RESTOCK_STATUS=$?
 
-          # Wave 4 is still owned/fetched by the main scanner. Snapshot the
-          # freshly written main state into an isolated shadow baseline after
-          # the main scan finishes, with no extra retailer traffic or alerts.
+          # Wave 4 is live but deliberately reuses the fresh main-scanner state
+          # after main finishes. Main owns the retailer fetch; Wave 4 owns its
+          # NEW/PREORDER/RESTOCK Discord transitions, so there is no duplicate traffic.
           python tier_b_wave4_shadow.py
           WAVE4_STATUS=$?
 
@@ -141,7 +141,7 @@ jobs:
           fi
 
           if [ "$WAVE4_STATUS" -ne 0 ]; then
-            echo "::warning::Tier B Wave 4 shadow exited with status $WAVE4_STATUS; production alerts are unaffected"
+            echo "::warning::Tier B Wave 4 live runner exited with status $WAVE4_STATUS; primary production alerts are unaffected"
           fi
 
           if [ "$RESTOCK_STATUS" -ne 0 ]; then
