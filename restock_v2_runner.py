@@ -29,6 +29,13 @@ TIER_A_LABELS = {
     "foetex": "FØTEX",
 }
 
+PRICE_WATCH_FOCUS_MAX_PRICE = {
+    "UPC": 2000.0,
+    "SPC": 1500.0,
+    "COLLECTION": 1000.0,
+    "TIN": 500.0,
+}
+
 # Faraos' top-level Pokemon category currently reports many products but only
 # renders part of the catalogue in the repeated card structure used by the
 # legacy parser. Scan the stable public sealed subcategories instead. Keep the
@@ -114,6 +121,25 @@ def load_scanner_parts():
         raise RuntimeError("Kunne ikke finde START-markøren i restock_bot_github.py")
     definitions, startup = source.split(START_MARKER, 1)
     return definitions, startup
+
+
+def _install_price_watch_focus_caps(namespace):
+    collector = namespace.get("collect_price_watch_focus_listings")
+    if collector is None:
+        raise RuntimeError("Price Watch focus hook mangler collect_price_watch_focus_listings")
+
+    def capped_collector(current_state, fresh_sources=None):
+        listings = collector(current_state, fresh_sources=fresh_sources)
+        return {
+            key: listing
+            for key, listing in listings.items()
+            if (
+                PRICE_WATCH_FOCUS_MAX_PRICE.get(listing.get("type")) is None
+                or float(listing.get("price") or 0) <= PRICE_WATCH_FOCUS_MAX_PRICE[listing.get("type")]
+            )
+        }
+
+    namespace["collect_price_watch_focus_listings"] = capped_collector
 
 
 def _install_faraos_parser(namespace):
@@ -289,6 +315,7 @@ def main():
 
     exec(compile(definitions, str(SCANNER_FILE), "exec"), namespace)
     legacy_policy = namespace["restock_channel_alert_allowed"]
+    _install_price_watch_focus_caps(namespace)
     _install_faraos_parser(namespace)
     _install_kelz0r_fast_fetch(namespace)
 
