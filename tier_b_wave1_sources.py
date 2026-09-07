@@ -46,11 +46,15 @@ WAVE1_SOURCES = {
         "base": "https://flinamania.dk",
         "minimum": 5,
         "feeds": [
+            # Use the complete catalog rather than one of Flinamania's
+            # Collector/Player/Grader storefront universes. Relevance filtering
+            # happens after ingestion, so useful sealed products can live in any
+            # storefront category without being missed.
             {"path": "/products.json", "game": None},
         ],
         # Flinamania's public products.json currently reports every variant as
         # unavailable even while the storefront shows active Add-to-cart
-        # controls. Overlay only the stock bit from the server-rendered cards.
+        # controls. Overlay only the stock bit from the rendered Shop All cards.
         "html_stock_path": "/collections/all",
     },
     "softgunshoppen": {
@@ -126,6 +130,21 @@ NON_ENGLISH_MARKERS = (
     "simplified chinese",
     "traditional chinese",
     "(chn)",
+    "german",
+    "tysk",
+    "french",
+    "fransk",
+    "italian",
+    "italiensk",
+    "spanish",
+    "spansk",
+    "portuguese",
+    "portugisisk",
+    "dutch",
+    "hollandsk",
+    "thai",
+    "indonesian",
+    "indonesisk",
 )
 
 SINGLE_MARKERS = (
@@ -356,30 +375,36 @@ def fetch_shopify_feed(base: str, path: str):
 
 
 def _nearest_shopify_product_card(link):
-    """Find a small rendered product container without depending on one theme."""
+    """Find the smallest rendered container that belongs to one product handle."""
     node = link
     best = link
-    for _ in range(8):
+    for _ in range(10):
         parent = getattr(node, "parent", None)
         if parent is None or not getattr(parent, "name", None):
             break
         node = parent
-        text = _clean(node.get_text(" ", strip=True))
         product_links = node.select('a[href*="/products/"]')
-        if product_links:
-            best = node
-        # Product-card controls normally appear within a compact ancestor.
-        low = text.lower()
-        if any(marker in low for marker in IN_STOCK_TEXT_MARKERS + OUT_OF_STOCK_TEXT_MARKERS):
-            if len(product_links) <= 4:
-                return node
-        # Stop before collection grids that contain many different products.
         handles = {
             _product_handle_from_url(anchor.get("href"))
             for anchor in product_links
             if _product_handle_from_url(anchor.get("href"))
         }
-        if len(handles) > 4:
+        if product_links:
+            best = node
+
+        # Shopify themes often render the same product link many times inside a
+        # single card (image, title, mobile controls, quick-add, etc.). Counting
+        # raw links therefore makes the old parser climb into the whole grid,
+        # where one sold-out neighbour could mark every product as unavailable.
+        # A single unique handle is the reliable boundary instead.
+        text = _clean(node.get_text(" ", strip=True)).lower()
+        if len(handles) == 1 and any(
+            marker in text for marker in IN_STOCK_TEXT_MARKERS + OUT_OF_STOCK_TEXT_MARKERS
+        ):
+            return node
+
+        # Stop before collection grids containing several different products.
+        if len(handles) > 1:
             break
     return best
 
