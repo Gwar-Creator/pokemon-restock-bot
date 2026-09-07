@@ -36,6 +36,20 @@ PRICE_WATCH_FOCUS_MAX_PRICE = {
     "TIN": 500.0,
 }
 
+# Sanity floors protect Price Watch from parsers picking up accessory/fee prices
+# (e.g. a 19 DKK sleeve/add-on on an ETB product card). These are deliberately
+# conservative: they should only reject prices that are implausible for a new,
+# English sealed product in the corresponding format.
+PRICE_WATCH_FOCUS_MIN_PRICE = {
+    "ETB": 200.0,
+    "BOOSTER BOX": 700.0,
+    "BOOSTER BUNDLE": 150.0,
+    "UPC": 500.0,
+    "SPC": 400.0,
+    "COLLECTION": 100.0,
+    "TIN": 75.0,
+}
+
 PRICE_WATCH_EXTRA_FOCUS_SETS = (
     ("Surging Sparks", ("surging sparks", "surging spark")),
     ("Twilight Masquerade", ("twilight masquerade",)),
@@ -174,6 +188,25 @@ def _install_price_watch_focus_sets(namespace):
     namespace["PRICE_WATCH_FOCUS_SETS"] = current + additions
 
 
+def _price_watch_focus_price_sane(listing):
+    try:
+        price = float(listing.get("price"))
+    except (TypeError, ValueError):
+        return False
+
+    product_type = listing.get("type")
+    min_price = PRICE_WATCH_FOCUS_MIN_PRICE.get(product_type)
+    max_price = PRICE_WATCH_FOCUS_MAX_PRICE.get(product_type)
+
+    if price <= 0:
+        return False
+    if min_price is not None and price < min_price:
+        return False
+    if max_price is not None and price > max_price:
+        return False
+    return True
+
+
 def _install_price_watch_focus_caps(namespace):
     collector = namespace.get("collect_price_watch_focus_listings")
     if collector is None:
@@ -181,14 +214,29 @@ def _install_price_watch_focus_caps(namespace):
 
     def capped_collector(current_state, fresh_sources=None):
         listings = collector(current_state, fresh_sources=fresh_sources)
-        return {
-            key: listing
-            for key, listing in listings.items()
-            if (
-                PRICE_WATCH_FOCUS_MAX_PRICE.get(listing.get("type")) is None
-                or float(listing.get("price") or 0) <= PRICE_WATCH_FOCUS_MAX_PRICE[listing.get("type")]
+        rejected = []
+        accepted = {}
+
+        for key, listing in listings.items():
+            if _price_watch_focus_price_sane(listing):
+                accepted[key] = listing
+            else:
+                rejected.append(listing)
+
+        if rejected:
+            print(
+                "PRICE WATCH SANITY: "
+                f"{len(rejected)} listing(s) filtreret på prisgulv/-loft"
             )
-        }
+            for listing in rejected[:10]:
+                print(
+                    "PRICE WATCH SANITY REJECT: "
+                    f"{listing.get('set')} | {listing.get('type')} | "
+                    f"{listing.get('shop')} | {listing.get('price')} | "
+                    f"{listing.get('name')}"
+                )
+
+        return accepted
 
     namespace["collect_price_watch_focus_listings"] = capped_collector
 
@@ -239,12 +287,12 @@ def price_watch_market_gap_signals(listings):
         product_type = listing.get("type")
         if product_type not in PRICE_WATCH_MARKET_GAP_TYPES:
             continue
+        if not _price_watch_focus_price_sane(listing):
+            continue
 
         try:
             price = float(listing.get("price"))
         except (TypeError, ValueError):
-            continue
-        if price <= 0:
             continue
 
         focus_set = str(listing.get("set") or "").strip()
