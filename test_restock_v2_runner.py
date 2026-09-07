@@ -97,6 +97,28 @@ class RestockV2RunnerTests(unittest.TestCase):
         )
         self.assertFalse(runner.restock_v2_channel_alert_allowed(message))
 
+    def test_price_watch_focus_caps_premium_formats(self):
+        namespace = {
+            "collect_price_watch_focus_listings": lambda _state, fresh_sources=None: {
+                "upc-ok": {"type": "UPC", "price": 2000.0},
+                "upc-high": {"type": "UPC", "price": 2000.01},
+                "spc-ok": {"type": "SPC", "price": 1500.0},
+                "spc-high": {"type": "SPC", "price": 1500.01},
+                "collection-ok": {"type": "COLLECTION", "price": 1000.0},
+                "collection-high": {"type": "COLLECTION", "price": 1000.01},
+                "tin-ok": {"type": "TIN", "price": 500.0},
+                "tin-high": {"type": "TIN", "price": 500.01},
+                "bundle": {"type": "BOOSTER BUNDLE", "price": 749.0},
+            }
+        }
+        runner._install_price_watch_focus_caps(namespace)
+        listings = namespace["collect_price_watch_focus_listings"]({})
+
+        self.assertEqual(
+            set(listings),
+            {"upc-ok", "spc-ok", "collection-ok", "tin-ok", "bundle"},
+        )
+
     def test_faraos_v3_installs_granular_category_feeds(self):
         namespace = {
             "_faraos_name": lambda _card: "Journey Together",
