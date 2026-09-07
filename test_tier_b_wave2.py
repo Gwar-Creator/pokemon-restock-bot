@@ -11,7 +11,7 @@ import tier_b_wave2_sources as sources
 class TierBWave2SourceTests(unittest.TestCase):
     def test_wave2_has_cardquest_and_hobbykniven(self):
         self.assertEqual(set(sources.WAVE2_SOURCES), {"cardquest", "hobbykniven"})
-        self.assertEqual(sources.WAVE2_SOURCES["cardquest"]["kind"], "shopify")
+        self.assertEqual(sources.WAVE2_SOURCES["cardquest"]["kind"], "shopify_cardquest")
         self.assertEqual(sources.WAVE2_SOURCES["hobbykniven"]["kind"], "hobbykniven_html")
 
     def test_cardquest_uses_dedicated_pokemon_and_lorcana_collections(self):
@@ -24,6 +24,67 @@ class TierBWave2SourceTests(unittest.TestCase):
             {"path": "/collections/disney-lorcana/products.json", "game": "LORCANA"},
             feeds,
         )
+
+    def test_cardquest_rendered_cards_distinguish_buyable_and_sold_out(self):
+        document = """
+        <div class="grid">
+          <article class="product-card">
+            <a href="/products/prismatic-super-premium">Prismatic Evolutions Super Premium Collection</a>
+            <span>2.499,00 kr</span>
+            <span>Kun få tilbage</span>
+            <button>Tilføj til kurv</button>
+          </article>
+          <article class="product-card">
+            <a href="/products/phantasmal-booster-box">Phantasmal Flames Booster Display Box</a>
+            <span>2.995,00 kr</span>
+            <span>Udsolgt</span>
+            <button disabled>Udsolgt</button>
+          </article>
+          <article class="product-card">
+            <a href="/products/surging-sparks-bundle">Surging Sparks Booster Bundle</a>
+            <span>599,00 kr</span>
+            <span>Kun få tilbage</span>
+            <button aria-label="Tilføj til kurv">+</button>
+          </article>
+        </div>
+        """
+        stock = sources.parse_cardquest_html_stock(document)
+        self.assertTrue(stock["prismatic-super-premium"])
+        self.assertFalse(stock["phantasmal-booster-box"])
+        self.assertTrue(stock["surging-sparks-bundle"])
+
+    def test_cardquest_rendered_overlay_overrides_false_shopify_availability(self):
+        config = sources.WAVE2_SOURCES["cardquest"]
+        normalized = {
+            "1": {
+                "name": "Prismatic Evolutions Super Premium Collection",
+                "game": "POKÉMON",
+                "price": 2499.0,
+                "in_stock": False,
+                "preorder": False,
+                "url": "https://cardquest.dk/products/prismatic-super-premium",
+            },
+            "2": {
+                "name": "Phantasmal Flames Booster Display Box",
+                "game": "POKÉMON",
+                "price": 2995.0,
+                "in_stock": False,
+                "preorder": False,
+                "url": "https://cardquest.dk/products/phantasmal-booster-box",
+            },
+        }
+        with patch.object(sources, "fetch_shopify_source", return_value=normalized), patch.object(
+            sources,
+            "fetch_cardquest_html_stock",
+            return_value={
+                "prismatic-super-premium": True,
+                "phantasmal-booster-box": False,
+            },
+        ):
+            products = sources.fetch_cardquest_source(config)
+
+        self.assertTrue(products["1"]["in_stock"])
+        self.assertFalse(products["2"]["in_stock"])
 
     def test_hobbykniven_category_fixture_parses_stock_and_price(self):
         document = """
@@ -50,9 +111,9 @@ class TierBWave2SourceTests(unittest.TestCase):
         self.assertFalse(rows["Pokémon Journey Together Booster Box"]["in_stock"])
         self.assertEqual(rows["Pokémon Journey Together Booster Box"]["price"], 1799.95)
 
-    def test_wave2_shopify_dispatch_reuses_shared_normalizer(self):
+    def test_wave2_cardquest_dispatch_uses_rendered_stock_adapter(self):
         fake_products = {"1": {"name": "Pokemon Booster Box"}}
-        with patch.object(sources, "fetch_shopify_source", return_value=fake_products) as fetcher:
+        with patch.object(sources, "fetch_cardquest_source", return_value=fake_products) as fetcher:
             products = sources.fetch_wave2_source("cardquest")
         self.assertEqual(products, fake_products)
         fetcher.assert_called_once_with(sources.WAVE2_SOURCES["cardquest"])
