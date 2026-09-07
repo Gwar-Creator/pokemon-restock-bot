@@ -12,7 +12,6 @@ on:
       - "tier_b_wave2_shadow.py"
       - "tier_b_wave3_sources.py"
       - "tier_b_wave3_shadow.py"
-      - "wave3_debug_probe.py"
       - "flinamania_product_probe.py"
       - "hot_restock.py"
       - "state_commit_guard.py"
@@ -54,11 +53,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Compile changed scanner modules
-        run: python -m py_compile alert_policy.py restock_v2_runner.py faraos_parser_v2.py tier_b_wave1_sources.py tier_b_wave1_shadow.py tier_b_wave2_sources.py tier_b_wave2_shadow.py tier_b_wave3_sources.py tier_b_wave3_shadow.py wave3_debug_probe.py flinamania_product_probe.py hot_restock.py state_commit_guard.py
-
-      # Temporary diagnostic step removed again before merge.
-      - name: Temporary Wave 3 storefront diagnostics
-        run: timeout 180s python wave3_debug_probe.py
+        run: python -m py_compile alert_policy.py restock_v2_runner.py faraos_parser_v2.py tier_b_wave1_sources.py tier_b_wave1_shadow.py tier_b_wave2_sources.py tier_b_wave2_shadow.py tier_b_wave3_sources.py tier_b_wave3_shadow.py flinamania_product_probe.py hot_restock.py state_commit_guard.py
 
       - name: Test legacy alert policy compatibility
         run: timeout 60s python -m unittest test_alert_policy.py
