@@ -11,7 +11,7 @@ from concurrent.futures import ThreadPoolExecutor
 import re
 from pathlib import Path
 
-from alert_policy import TIER_A_SOURCES, tier_b_signal_allowed
+from alert_policy import TIER_A_SOURCES, tier_a_signal_allowed, tier_b_signal_allowed
 from faraos_parser_v2 import faraos_name_v2
 
 SCANNER_FILE = Path(__file__).resolve().parent / "restock_bot_github.py"
@@ -82,7 +82,7 @@ def _is_tier_a_headline(headline):
 
 
 def restock_v2_channel_alert_allowed(message, legacy_policy=None):
-    """Keep Tier A fast; make Tier B Discord output deliberately strict."""
+    """Keep Tier A fast but filtered; make Tier B Discord deliberately strict."""
     lines = _clean_lines(message)
     if not lines:
         return False
@@ -95,13 +95,16 @@ def restock_v2_channel_alert_allowed(message, legacy_policy=None):
     if event is None:
         return legacy_policy(message) if legacy_policy is not None else True
 
-    if _is_tier_a_headline(headline):
-        return True
-
     if len(lines) < 2:
         return False
 
     product_name = lines[1]
+
+    # Tier A remains the fast retail lane, but even Tier A should not fill the
+    # Restock channel with ordinary Pitch Black/Chaos Rising packs and ETBs.
+    if _is_tier_a_headline(headline):
+        return tier_a_signal_allowed(product_name, event=event)
+
     return tier_b_signal_allowed(product_name, event=event)
 
 
