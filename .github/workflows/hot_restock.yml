@@ -79,14 +79,20 @@ jobs:
       - name: Run Tier A HOT lane + Salling Early Radar
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          EARLY_RADAR_SALLING_WEBHOOK_URL: ${{ secrets.EARLY_RADAR_SALLING_WEBHOOK_URL }}
           HOT_ITERATIONS: "5"
           HOT_INTERVAL_SECONDS: "55"
         run: |
+          if [ -z "$EARLY_RADAR_SALLING_WEBHOOK_URL" ]; then
+            echo "::error::EARLY_RADAR_SALLING_WEBHOOK_URL mangler"
+            exit 1
+          fi
+
           (
             for iteration in 1 2 3 4 5; do
               echo "SALLING Early Radar scan $iteration/5"
 
-              if ! python salling_early_radar_runner.py; then
+              if ! DISCORD_WEBHOOK_URL="$EARLY_RADAR_SALLING_WEBHOOK_URL" python salling_early_radar_runner.py; then
                 echo "::warning::Salling Early Radar failed transiently on iteration $iteration; HOT run continues"
               fi
 
