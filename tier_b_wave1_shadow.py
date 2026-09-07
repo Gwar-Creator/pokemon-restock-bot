@@ -8,6 +8,7 @@ from datetime import datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
+from flinamania_product_probe import apply_product_page_stock
 from tier_b_wave1_sources import WAVE1_SOURCES, fetch_wave1_source
 
 
@@ -80,7 +81,23 @@ def _counts(products):
     return pokemon, lorcana, stock, preorders
 
 
-def run_scan(fetcher=fetch_wave1_source):
+def _source_specific_overlay(source_key, products):
+    if source_key == "flinamania":
+        return apply_product_page_stock(products)
+    return products
+
+
+def _identity_overlay(_source_key, products):
+    return products
+
+
+def run_scan(fetcher=fetch_wave1_source, overlay=None):
+    # Unit tests and local fixtures commonly inject a fake fetcher. Do not let
+    # that unexpectedly cause live Flinamania HTTP requests unless an overlay is
+    # explicitly supplied.
+    if overlay is None:
+        overlay = _source_specific_overlay if fetcher is fetch_wave1_source else _identity_overlay
+
     old_state = _load_state()
     old_sources = old_state.get("sources") or {}
     new_sources = {}
@@ -95,6 +112,7 @@ def run_scan(fetcher=fetch_wave1_source):
 
         try:
             fetched_products = fetcher(source_key)
+            fetched_products = overlay(source_key, fetched_products)
             _validate_snapshot(source_key, fetched_products, old_products)
             products = fetched_products
             health = _health_success(old_health, len(products), now)

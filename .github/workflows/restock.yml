@@ -41,6 +41,7 @@ jobs:
           python -m py_compile alert_policy.py
           python -m py_compile tier_b_wave1_sources.py
           python -m py_compile tier_b_wave1_shadow.py
+          python -m py_compile flinamania_product_probe.py
           python -m py_compile local_stock_watch.py
           python -m py_compile scanner_health_audit.py
           python -m py_compile discord_cleanup.py
@@ -51,6 +52,7 @@ jobs:
           python -m unittest test_restock_v2_runner.py
           python -m unittest test_faraos_parser_v2.py
           python -m unittest test_tier_b_wave1.py
+          python -m unittest test_flinamania_product_probe.py
           python -m unittest test_matraws_single_guard.py
           python -m unittest test_state_commit_guard.py
 
