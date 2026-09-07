@@ -87,7 +87,17 @@ def _source_specific_overlay(source_key, products):
     return products
 
 
-def run_scan(fetcher=fetch_wave1_source, overlay=_source_specific_overlay):
+def _identity_overlay(_source_key, products):
+    return products
+
+
+def run_scan(fetcher=fetch_wave1_source, overlay=None):
+    # Unit tests and local fixtures commonly inject a fake fetcher. Do not let
+    # that unexpectedly cause live Flinamania HTTP requests unless an overlay is
+    # explicitly supplied.
+    if overlay is None:
+        overlay = _source_specific_overlay if fetcher is fetch_wave1_source else _identity_overlay
+
     old_state = _load_state()
     old_sources = old_state.get("sources") or {}
     new_sources = {}
