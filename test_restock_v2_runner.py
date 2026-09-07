@@ -119,6 +119,26 @@ class RestockV2RunnerTests(unittest.TestCase):
             {"upc-ok", "spc-ok", "collection-ok", "tin-ok", "bundle"},
         )
 
+    def test_price_watch_focus_sets_are_extended_without_duplicates(self):
+        namespace = {
+            "PRICE_WATCH_FOCUS_SETS": (
+                ("151", ("151",)),
+                ("Crown Zenith", ("crown zenith",)),
+            )
+        }
+        runner._install_price_watch_focus_sets(namespace)
+        runner._install_price_watch_focus_sets(namespace)
+
+        names = [name for name, _aliases in namespace["PRICE_WATCH_FOCUS_SETS"]]
+        self.assertEqual(names.count("Surging Sparks"), 1)
+        self.assertEqual(names.count("Twilight Masquerade"), 1)
+        self.assertEqual(names.count("Mega Evolution"), 1)
+        self.assertEqual(names.count("Journey Together"), 1)
+        self.assertEqual(names.count("30th Anniversary"), 1)
+        anniversary = dict(namespace["PRICE_WATCH_FOCUS_SETS"])["30th Anniversary"]
+        self.assertIn("30th anniversary", anniversary)
+        self.assertIn("30th celebration", anniversary)
+
     def test_faraos_v3_installs_granular_category_feeds(self):
         namespace = {
             "_faraos_name": lambda _card: "Journey Together",
