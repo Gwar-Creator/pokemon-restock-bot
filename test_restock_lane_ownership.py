@@ -29,17 +29,20 @@ class RestockLaneOwnershipTests(unittest.TestCase):
         )
         self.assertTrue(lane.restock_lane_channel_alert_allowed(message))
 
-    def test_main_suppresses_pokemonportalen_preorder_until_buyability_is_verified(self):
-        message = (
-            "🟡 **[POKÉMON] POKEMONPORTALEN FORUDBESTILLING**\n"
-            "**Pokemon 30th Anniversary Booster Box**\n"
-            "📦 Forudbestilling fundet"
-        )
-        self.assertFalse(lane.restock_lane_channel_alert_allowed(message))
+    def test_main_suppresses_all_wave4_product_events(self):
+        for label in ("VAULTED", "POKEDEXET", "POKEMONPORTALEN", "TCGBRUUS", "POKEMON PLAZA"):
+            for event_text in ("RESTOCK", "FORUDBESTILLING", "NYT"):
+                message = (
+                    f"🔥 **[POKÉMON] {label} {event_text}**\n"
+                    "**Pokemon 151 Booster Bundle**\n"
+                    "✅ Relevant produkt"
+                )
+                with self.subTest(label=label, event=event_text):
+                    self.assertFalse(lane.restock_lane_channel_alert_allowed(message))
 
-    def test_main_keeps_pokemonportalen_restock(self):
+    def test_main_keeps_non_wave4_tier_b_event(self):
         message = (
-            "🔥 **[POKÉMON] POKEMONPORTALEN RESTOCK**\n"
+            "🔥 **[POKÉMON] MATRAWS RESTOCK**\n"
             "**Pokemon 151 Booster Bundle**\n"
             "✅ På lager"
         )
