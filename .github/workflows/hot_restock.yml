@@ -13,6 +13,7 @@ on:
     paths:
       - "alert_policy.py"
       - "hot_restock.py"
+      - "hot_restock_v4.py"
       - "state_commit_guard.py"
       - "salling_early_radar.py"
       - "salling_early_radar_runner.py"
@@ -49,8 +50,8 @@ jobs:
 
       - name: Validate Tier A HOT scanner and Salling Early Radar
         run: |
-          python -m py_compile alert_policy.py hot_restock.py salling_early_radar.py salling_early_radar_runner.py state_commit_guard.py
-          python -m unittest test_state_commit_guard.py test_alert_policy_v2.py
+          python -m py_compile alert_policy.py hot_restock.py hot_restock_v4.py salling_early_radar.py salling_early_radar_runner.py state_commit_guard.py
+          python -m unittest test_state_commit_guard.py test_alert_policy_v2.py test_restock_lane_ownership.py
           python - <<'PY'
           import ast
           from pathlib import Path
@@ -60,6 +61,10 @@ jobs:
           assert any(isinstance(node, ast.FunctionDef) and node.name == 'filter_hot_products' for node in module.body)
           assert 'hot_product_allowed' not in source
           assert 'coolshop' in source
+
+          wrapper_source = Path('hot_restock_v4.py').read_text(encoding='utf-8')
+          wrapper_module = ast.parse(wrapper_source)
+          assert any(isinstance(node, ast.FunctionDef) and node.name == 'online_lane_product_available' for node in wrapper_module.body)
 
           radar_source = Path('salling_early_radar.py').read_text(encoding='utf-8')
           radar_module = ast.parse(radar_source)
@@ -92,7 +97,7 @@ jobs:
           ) &
           SALLING_PID=$!
 
-          python hot_restock.py
+          python hot_restock_v4.py
 
           if ! wait "$SALLING_PID"; then
             echo "::warning::Salling Early Radar background watcher exited non-zero; HOT scanner itself completed"
