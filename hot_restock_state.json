@@ -331,10 +331,10 @@
     "coolshop": {
       "backoff_level": 0,
       "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-09-08T05:24:24.556911+00:00",
-      "last_success_at": "2026-09-08T05:29:05.455303+00:00"
+      "generic_failures": 1,
+      "last_error": "HTTPSConnectionPool(host='www.coolshop.dk', port=443): Read timed out. (read timeout=20)",
+      "last_failure_at": "2026-09-08T07:09:31.524992+00:00",
+      "last_success_at": "2026-09-08T07:08:11.818615+00:00"
     },
     "proshop": {
       "backoff_level": 0,
@@ -369,6 +369,6 @@
       "last_success_at": "2026-09-04T20:59:40.632991+00:00"
     }
   },
-  "updated_at": "2026-09-08T06:09:21.360356+00:00",
+  "updated_at": "2026-09-08T07:09:48.979879+00:00",
   "proshop_discovery_version": 4
 }
