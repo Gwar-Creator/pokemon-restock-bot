@@ -130,7 +130,7 @@
         "price": 699.0,
         "online_count": 0,
         "online_stock": false,
-        "store_count": 10,
+        "store_count": 5,
         "kolding_stock": 0,
         "esbjerg_stock": 0,
         "quantity_limit": 1,
@@ -142,7 +142,7 @@
         "price": 1599.0,
         "online_count": 0,
         "online_stock": false,
-        "store_count": 6,
+        "store_count": 2,
         "kolding_stock": 0,
         "esbjerg_stock": 0,
         "quantity_limit": 1,
@@ -176,7 +176,7 @@
         "price": 49.0,
         "online_count": 0,
         "online_stock": false,
-        "store_count": 13,
+        "store_count": 12,
         "local_stocks": {
           "1662": {
             "name": "Bilka Kolding",
@@ -361,12 +361,12 @@
   },
   "source_controls": {
     "coolshop": {
-      "backoff_level": 1,
-      "next_allowed_at": 1788880871.2653282,
-      "generic_failures": 1,
-      "last_error": "503 Server Error: Service Unavailable for url: https://www.coolshop.dk/api/search",
+      "backoff_level": 0,
+      "next_allowed_at": 0.0,
+      "generic_failures": 0,
+      "last_error": null,
       "last_failure_at": "2026-09-08T15:19:11.265299+00:00",
-      "last_success_at": "2026-09-08T15:18:19.125067+00:00"
+      "last_success_at": "2026-09-08T15:24:15.585549+00:00"
     },
     "proshop": {
       "backoff_level": 0,
@@ -401,6 +401,6 @@
       "last_success_at": "2026-09-04T20:59:40.632991+00:00"
     }
   },
-  "updated_at": "2026-09-08T15:19:28.363774+00:00",
+  "updated_at": "2026-09-08T15:24:34.971478+00:00",
   "proshop_discovery_version": 4
 }
