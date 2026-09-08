@@ -94,7 +94,7 @@
         "price": 299.0,
         "online_count": 438,
         "online_stock": true,
-        "store_count": 30,
+        "store_count": 31,
         "kolding_stock": 26,
         "esbjerg_stock": 12,
         "quantity_limit": null,
@@ -258,7 +258,7 @@
         "price": 49.0,
         "online_count": 0,
         "online_stock": false,
-        "store_count": 1,
+        "store_count": 0,
         "local_stocks": {
           "1307": {
             "name": "føtex Kolding",
@@ -331,10 +331,10 @@
     "coolshop": {
       "backoff_level": 0,
       "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-09-08T03:58:26.311524+00:00",
-      "last_success_at": "2026-09-08T03:59:11.890869+00:00"
+      "generic_failures": 1,
+      "last_error": "HTTPSConnectionPool(host='www.coolshop.dk', port=443): Read timed out. (read timeout=20)",
+      "last_failure_at": "2026-09-08T05:24:24.556911+00:00",
+      "last_success_at": "2026-09-08T05:23:11.900978+00:00"
     },
     "proshop": {
       "backoff_level": 0,
@@ -369,6 +369,6 @@
       "last_success_at": "2026-09-04T20:59:40.632991+00:00"
     }
   },
-  "updated_at": "2026-09-08T05:19:35.094446+00:00",
+  "updated_at": "2026-09-08T05:24:36.546463+00:00",
   "proshop_discovery_version": 4
 }
