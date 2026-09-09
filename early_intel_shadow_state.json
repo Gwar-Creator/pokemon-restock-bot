@@ -13552,26 +13552,13 @@
       "fields": [
         "in_stock_stores_count"
       ],
-      "name": "Pokémon Chaos Rising - 3 pak",
-      "product_id": "200366280",
-      "sku": "11263283-EA",
-      "source": "br",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1788960306.5498857
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "in_stock_stores_count"
-      ],
       "name": "Pokémon TCG booster pack samlekort",
       "product_id": "200366277",
       "sku": "11263280-EA",
       "source": "foetex",
       "stage_after": "HIDDEN_STOCK",
       "stage_before": "HIDDEN_STOCK",
-      "ts": 1788960309.723634
+      "ts": 1788960037.2808948
     },
     {
       "event": "CROSS_CHANGE",
@@ -13584,7 +13571,20 @@
       "source": "cross_salling",
       "stage_after": null,
       "stage_before": null,
-      "ts": 1788960314.404305
+      "ts": 1788960043.407684
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "in_stock_stores_count"
+      ],
+      "name": "Pokémon Chaos Rising - 3 pak",
+      "product_id": "200366280",
+      "sku": "11263283-EA",
+      "source": "br",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1788960577.583456
     },
     {
       "event": "CROSS_CHANGE",
@@ -13597,7 +13597,7 @@
       "source": "cross_salling",
       "stage_after": null,
       "stage_before": null,
-      "ts": 1788960314.404316
+      "ts": 1788960609.0234826
     }
   ],
   "sources": {
@@ -27886,6 +27886,6 @@
       }
     }
   },
-  "updated_at": 1788960314.4043748,
+  "updated_at": 1788960609.0235436,
   "version": 1
 }
