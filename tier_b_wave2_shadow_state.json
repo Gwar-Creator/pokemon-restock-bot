@@ -1,7 +1,7 @@
 {
   "version": 2,
   "mode": "live",
-  "updated_at": "2026-09-10T00:10:34.527362+00:00",
+  "updated_at": "2026-09-10T00:16:06.561099+00:00",
   "sources": {
     "cardquest": {
       "label": "CARDQUEST",
@@ -9,8 +9,8 @@
       "stock_trust": "trusted",
       "health": {
         "status": "ok",
-        "last_attempt": "2026-09-10T00:10:26.793715+00:00",
-        "last_success": "2026-09-10T00:10:26.793715+00:00",
+        "last_attempt": "2026-09-10T00:15:34.307871+00:00",
+        "last_success": "2026-09-10T00:15:34.307871+00:00",
         "consecutive_failures": 0,
         "last_error": "",
         "observed_count": 10
@@ -103,12 +103,12 @@
       "mode": "live",
       "stock_trust": "trusted",
       "health": {
-        "status": "ok",
-        "last_attempt": "2026-09-10T00:10:33.942240+00:00",
+        "status": "failed",
+        "last_attempt": "2026-09-10T00:15:36.386640+00:00",
         "last_success": "2026-09-10T00:10:33.942240+00:00",
-        "consecutive_failures": 0,
-        "last_error": "",
-        "observed_count": 15
+        "consecutive_failures": 1,
+        "last_error": "HTTPSConnectionPool(host='hobbykniven.dk', port=443): Max retries exceeded with url: /katalog/kategori/pokemon-sealed (Caused by ConnectTimeoutError(<HTTPSConnection(host='hobbykniven.dk', port=443) at 0x7f4b51277b10>, 'Connection to hobbykniven.dk timed out. (connect timeout=30)'))",
+        "observed_count": null
       },
       "products": {
         "d24d7414d77d90ce9c82": {
