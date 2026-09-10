@@ -1,19 +1,19 @@
 {
   "version": 2,
   "mode": "live",
-  "updated_at": "2026-09-10T22:12:23.980762+00:00",
+  "updated_at": "2026-09-10T22:17:20.870392+00:00",
   "sources": {
     "snydepels": {
       "label": "SNYDEPELS",
       "mode": "live",
       "stock_trust": "trusted",
       "health": {
-        "status": "ok",
-        "last_attempt": "2026-09-10T22:11:48.327119+00:00",
+        "status": "failed",
+        "last_attempt": "2026-09-10T22:16:45.117733+00:00",
         "last_success": "2026-09-10T22:11:48.327119+00:00",
-        "consecutive_failures": 0,
-        "last_error": "",
-        "observed_count": 39
+        "consecutive_failures": 1,
+        "last_error": "429 Client Error: Too Many Requests for url: https://snydepels.dk/collections/tcg-ccg-pokemon/products.json?limit=250&page=1",
+        "observed_count": null
       },
       "products": {
         "8709749997656": {
@@ -336,8 +336,8 @@
       "stock_trust": "trusted",
       "health": {
         "status": "ok",
-        "last_attempt": "2026-09-10T22:11:52.762576+00:00",
-        "last_success": "2026-09-10T22:11:52.762576+00:00",
+        "last_attempt": "2026-09-10T22:16:45.261498+00:00",
+        "last_success": "2026-09-10T22:16:45.261498+00:00",
         "consecutive_failures": 0,
         "last_error": "",
         "observed_count": 8
@@ -414,12 +414,12 @@
       "mode": "live",
       "stock_trust": "trusted",
       "health": {
-        "status": "ok",
-        "last_attempt": "2026-09-10T22:11:53.892804+00:00",
+        "status": "failed",
+        "last_attempt": "2026-09-10T22:16:46.405283+00:00",
         "last_success": "2026-09-10T22:11:53.892804+00:00",
-        "consecutive_failures": 0,
-        "last_error": "",
-        "observed_count": 24
+        "consecutive_failures": 1,
+        "last_error": "429 Client Error: Too Many Requests for url: https://www.borneneskartel.dk/collections/samlekort-mapper/products.json?limit=250&page=1",
+        "observed_count": null
       },
       "products": {
         "15510998155641": {
@@ -622,8 +622,8 @@
       "stock_trust": "trusted",
       "health": {
         "status": "ok",
-        "last_attempt": "2026-09-10T22:11:54.860748+00:00",
-        "last_success": "2026-09-10T22:11:54.860748+00:00",
+        "last_attempt": "2026-09-10T22:16:46.659789+00:00",
+        "last_success": "2026-09-10T22:16:46.659789+00:00",
         "consecutive_failures": 0,
         "last_error": "",
         "observed_count": 67
@@ -1173,8 +1173,8 @@
       "stock_trust": "trusted",
       "health": {
         "status": "ok",
-        "last_attempt": "2026-09-10T22:12:11.847338+00:00",
-        "last_success": "2026-09-10T22:12:11.847338+00:00",
+        "last_attempt": "2026-09-10T22:17:05.257311+00:00",
+        "last_success": "2026-09-10T22:17:05.257311+00:00",
         "consecutive_failures": 0,
         "last_error": "",
         "observed_count": 40
@@ -1508,8 +1508,8 @@
       "stock_trust": "trusted",
       "health": {
         "status": "ok",
-        "last_attempt": "2026-09-10T22:12:23.130674+00:00",
-        "last_success": "2026-09-10T22:12:23.130674+00:00",
+        "last_attempt": "2026-09-10T22:17:19.177031+00:00",
+        "last_success": "2026-09-10T22:17:19.177031+00:00",
         "consecutive_failures": 0,
         "last_error": "",
         "observed_count": 19
