@@ -1,19 +1,19 @@
 {
   "version": 2,
   "mode": "mixed",
-  "updated_at": "2026-09-10T22:06:03.893031+00:00",
+  "updated_at": "2026-09-10T22:10:59.371264+00:00",
   "sources": {
     "cardcollective": {
       "label": "CARD COLLECTIVE",
       "mode": "live",
       "stock_trust": "trusted",
       "health": {
-        "status": "ok",
-        "last_attempt": "2026-09-07T12:00:53.462476+00:00",
+        "status": "failed",
+        "last_attempt": "2026-09-10T22:10:33.378803+00:00",
         "last_success": "2026-09-07T12:00:53.462476+00:00",
-        "consecutive_failures": 0,
-        "last_error": "",
-        "observed_count": 44
+        "consecutive_failures": 1,
+        "last_error": "503 Server Error: Service Unavailable for url: https://cardcollective.dk/collections/pokemon/products.json?limit=250&page=2",
+        "observed_count": null
       },
       "products": {
         "10531597353262": {
@@ -618,7 +618,7 @@
         "10255640396105": {
           "name": "Pokémon TCG: Scarlet & Violet: 151 Booster Bundle Display",
           "game": "POKÉMON",
-          "price": 2615.0,
+          "price": 2614.0,
           "in_stock": false,
           "preorder": false,
           "url": "https://flinamania.dk/products/pokemon-tcg-scarlet-violet-151-booster-bundle-display"
@@ -674,7 +674,7 @@
         "9889793966409": {
           "name": "Pokémon TCG: Sword & Shield: Astral Radiance Booster Box (36 Packs)",
           "game": "POKÉMON",
-          "price": 603.0,
+          "price": 602.0,
           "in_stock": false,
           "preorder": false,
           "url": "https://flinamania.dk/products/pokemon-astral-radiance-booster-box"
@@ -866,7 +866,7 @@
         "9675444846921": {
           "name": "Pokémon TCG: Scarlet & Violet: Journey Together Pokémon Center Elite Trainer Box",
           "game": "POKÉMON",
-          "price": 302.0,
+          "price": 301.0,
           "in_stock": false,
           "preorder": false,
           "url": "https://flinamania.dk/products/journey-together-pokemon-center-elite-trainer-box"
@@ -898,7 +898,7 @@
         "9651819446601": {
           "name": "Pokémon TCG: Scarlet & Violet: Surging Sparks Pokémon Center Elite Trainer Box",
           "game": "POKÉMON",
-          "price": 302.0,
+          "price": 301.0,
           "in_stock": false,
           "preorder": false,
           "url": "https://flinamania.dk/products/surging-sparks-pokemon-center-elite-trainer-box"
@@ -1050,7 +1050,7 @@
         "9631867437385": {
           "name": "Pokémon TCG: Scarlet & Violet: Prismatic Evolutions Sealed Mini Tin Display - 8 Mini Tins",
           "game": "POKÉMON",
-          "price": 302.0,
+          "price": 301.0,
           "in_stock": false,
           "preorder": false,
           "url": "https://flinamania.dk/products/pokemon-scarlet-violet-prismatic-evolutions-sealed-mini-tin-display-8-mini-tins"
@@ -2125,9 +2125,9 @@
       "stock_trust": "trusted",
       "health": {
         "status": "failed",
-        "last_attempt": "2026-09-10T22:06:00.391045+00:00",
+        "last_attempt": "2026-09-10T22:10:55.450022+00:00",
         "last_success": "2026-09-06T21:10:58.635416+00:00",
-        "consecutive_failures": 300,
+        "consecutive_failures": 301,
         "last_error": "mistænkeligt lavt produktantal: 3 < 5",
         "observed_count": 3
       },
