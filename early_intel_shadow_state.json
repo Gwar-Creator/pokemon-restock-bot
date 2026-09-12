@@ -1611,7 +1611,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 437,
+          "stock_online": 436,
           "stock_stores": 19
         },
         "br": {
@@ -1622,7 +1622,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 437,
+          "stock_online": 436,
           "stock_stores": 31
         },
         "foetex": {
@@ -1633,7 +1633,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 437,
+          "stock_online": 436,
           "stock_stores": 2
         }
       }
@@ -15443,6 +15443,60 @@
       "stage_after": null,
       "stage_before": null,
       "ts": 1789233875.6502504
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon Battle Academy 2024",
+      "product_id": "200279925",
+      "sku": "10791068-EA",
+      "source": "br",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1789244964.6136446
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon Battle Academy 2024",
+      "product_id": "200279925",
+      "sku": "10791068-EA",
+      "source": "bilka",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1789244965.829146
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon Battle Academy 2024",
+      "product_id": "200279925",
+      "sku": "10791068-EA",
+      "source": "foetex",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1789244967.0485284
+    },
+    {
+      "event": "CROSS_CHANGE",
+      "fields": [
+        "bilka",
+        "br",
+        "foetex"
+      ],
+      "name": "Pokémon Battle Academy 2024",
+      "product_id": "10791068-EA",
+      "sku": "10791068-EA",
+      "source": "cross_salling",
+      "stage_after": null,
+      "stage_before": null,
+      "ts": 1789244974.796301
     }
   ],
   "sources": {
@@ -16681,7 +16735,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 437,
+        "stock_count_online": 436,
         "url": "https://www.bilka.dk/produkter/pokemon-battle-academy-2024/200279925/"
       },
       "200285707": {
@@ -21425,7 +21479,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 437,
+        "stock_count_online": 436,
         "url": "https://www.br.dk/produkter/pokemon-battle-academy-2024/200279925/"
       },
       "200285707": {
@@ -26164,7 +26218,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 437,
+        "stock_count_online": 436,
         "url": "https://www.foetex.dk/produkter/pokemon-battle-academy-2024/200279925/"
       },
       "200285707": {
@@ -29730,6 +29784,6 @@
       }
     }
   },
-  "updated_at": 1789244678.977202,
+  "updated_at": 1789244974.7964714,
   "version": 1
 }
