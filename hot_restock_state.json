@@ -59,13 +59,6 @@
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
         "fetch_via": "jina_reader+direct_frontend_search"
       },
-      "3478498": {
-        "name": "Pokemon TCG First Partner Illustration Collection Box Series 2",
-        "price": null,
-        "stock": "BESTILLINGSVARE",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-First-Partner-Illustration-Collection-Box-Series-2/3478498",
-        "fetch_via": "jina_reader+direct_frontend_search"
-      },
       "3417744": {
         "name": "Pokemon TCG Mega Charizard X ex Ultra Premium Collection",
         "price": null,
@@ -73,11 +66,11 @@
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
         "fetch_via": "jina_reader+direct_frontend_search"
       },
-      "3478496": {
-        "name": "Pokemon TCG Mega Greninja ex Premium Collection",
+      "3478498": {
+        "name": "Pokemon TCG First Partner Illustration Collection Box Series 2",
         "price": null,
         "stock": "BESTILLINGSVARE",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-First-Partner-Illustration-Collection-Box-Series-2/3478498",
         "fetch_via": "jina_reader+direct_frontend_search"
       },
       "3447592": {
@@ -85,6 +78,13 @@
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-EvolutionChaos-Rising-Booster-box-with-36-boosters/3447592",
+        "fetch_via": "jina_reader+direct_frontend_search"
+      },
+      "3478496": {
+        "name": "Pokemon TCG Mega Greninja ex Premium Collection",
+        "price": null,
+        "stock": "BESTILLINGSVARE",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
         "fetch_via": "jina_reader+direct_frontend_search"
       }
     },
@@ -281,12 +281,12 @@
   },
   "source_controls": {
     "coolshop": {
-      "backoff_level": 1,
-      "next_allowed_at": 1789335266.021698,
-      "generic_failures": 2,
-      "last_error": "503 Server Error: Service Unavailable for url: https://www.coolshop.dk/api/search",
+      "backoff_level": 0,
+      "next_allowed_at": 0.0,
+      "generic_failures": 0,
+      "last_error": null,
       "last_failure_at": "2026-09-13T21:32:26.021666+00:00",
-      "last_success_at": "2026-09-13T21:30:38.934666+00:00"
+      "last_success_at": "2026-09-13T21:39:03.579635+00:00"
     },
     "proshop": {
       "backoff_level": 0,
@@ -321,6 +321,6 @@
       "last_success_at": "2026-09-04T20:59:40.632991+00:00"
     }
   },
-  "updated_at": "2026-09-13T21:34:28.278954+00:00",
+  "updated_at": "2026-09-13T21:39:14.199225+00:00",
   "proshop_discovery_version": 4
 }
