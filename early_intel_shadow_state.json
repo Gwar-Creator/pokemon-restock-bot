@@ -597,7 +597,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 431,
+          "stock_online": 430,
           "stock_stores": 19
         },
         "br": {
@@ -608,7 +608,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 431,
+          "stock_online": 430,
           "stock_stores": 31
         },
         "foetex": {
@@ -619,7 +619,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 431,
+          "stock_online": 430,
           "stock_stores": 70
         }
       }
@@ -15549,6 +15549,60 @@
       "stage_after": null,
       "stage_before": null,
       "ts": 1789291620.2880983
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon Battle Deck EX samlekort",
+      "product_id": "200215319",
+      "sku": "10564347-EA",
+      "source": "br",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1789297160.041722
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon Battle Deck EX samlekort",
+      "product_id": "200215319",
+      "sku": "10564347-EA",
+      "source": "bilka",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1789297161.396154
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon Battle Deck EX samlekort",
+      "product_id": "200215319",
+      "sku": "10564347-EA",
+      "source": "foetex",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1789297162.776101
+    },
+    {
+      "event": "CROSS_CHANGE",
+      "fields": [
+        "bilka",
+        "br",
+        "foetex"
+      ],
+      "name": "Pokémon Battle Deck EX samlekort",
+      "product_id": "10564347-EA",
+      "sku": "10564347-EA",
+      "source": "cross_salling",
+      "stage_after": null,
+      "stage_before": null,
+      "ts": 1789297166.7485023
     }
   ],
   "sources": {
@@ -16045,7 +16099,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 431,
+        "stock_count_online": 430,
         "url": "https://www.bilka.dk/produkter/pokemon-battle-deck-ex-samlekort/200215319/"
       },
       "200223003": {
@@ -20742,7 +20796,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 431,
+        "stock_count_online": 430,
         "url": "https://www.br.dk/produkter/pokemon-battle-deck-ex-samlekort/200215319/"
       },
       "200223003": {
@@ -25520,7 +25574,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 431,
+        "stock_count_online": 430,
         "url": "https://www.foetex.dk/produkter/pokemon-battle-deck-ex-samlekort/200215319/"
       },
       "200223003": {
@@ -29836,6 +29890,6 @@
       }
     }
   },
-  "updated_at": 1789296866.5930007,
+  "updated_at": 1789297166.74867,
   "version": 1
 }
