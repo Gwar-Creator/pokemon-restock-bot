@@ -16139,26 +16139,10 @@
       "name": "Pokémon TCG Chaos Rising booster bundle - samlekort",
       "product_id": "200366278",
       "sku": "11263281-EA",
-      "source": "br",
-      "stage_after": "EXPOSED_NO_STOCK",
-      "stage_before": "EXPOSED_NO_STOCK",
-      "ts": 1789372534.8350065
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "f_stock_availability",
-        "online_to",
-        "sold_in_stores",
-        "sold_online"
-      ],
-      "name": "Pokémon TCG Chaos Rising booster bundle - samlekort",
-      "product_id": "200366278",
-      "sku": "11263281-EA",
       "source": "bilka",
       "stage_after": "DATED_PREP",
       "stage_before": "DATED_PREP",
-      "ts": 1789372536.3296492
+      "ts": 1789372267.457537
     },
     {
       "event": "CHANGE",
@@ -16174,13 +16158,12 @@
       "source": "foetex",
       "stage_after": "DATED_PREP",
       "stage_before": "DATED_PREP",
-      "ts": 1789372537.4566998
+      "ts": 1789372268.8339987
     },
     {
       "event": "CROSS_CHANGE",
       "fields": [
         "bilka",
-        "br",
         "foetex"
       ],
       "name": "Pokémon TCG Chaos Rising booster bundle - samlekort",
@@ -16189,7 +16172,36 @@
       "source": "cross_salling",
       "stage_after": null,
       "stage_before": null,
-      "ts": 1789372541.0362253
+      "ts": 1789372273.632295
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "f_stock_availability",
+        "online_to",
+        "sold_in_stores",
+        "sold_online"
+      ],
+      "name": "Pokémon TCG Chaos Rising booster bundle - samlekort",
+      "product_id": "200366278",
+      "sku": "11263281-EA",
+      "source": "br",
+      "stage_after": "EXPOSED_NO_STOCK",
+      "stage_before": "EXPOSED_NO_STOCK",
+      "ts": 1789372801.3876228
+    },
+    {
+      "event": "CROSS_CHANGE",
+      "fields": [
+        "br"
+      ],
+      "name": "Pokémon TCG Chaos Rising booster bundle - samlekort",
+      "product_id": "11263281-EA",
+      "sku": "11263281-EA",
+      "source": "cross_salling",
+      "stage_after": null,
+      "stage_before": null,
+      "ts": 1789372809.726597
     }
   ],
   "sources": {
@@ -30469,6 +30481,6 @@
       }
     }
   },
-  "updated_at": 1789372541.0362775,
+  "updated_at": 1789372809.7266598,
   "version": 1
 }
