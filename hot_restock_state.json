@@ -283,10 +283,10 @@
     "coolshop": {
       "backoff_level": 0,
       "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-09-14T15:10:50.146089+00:00",
-      "last_success_at": "2026-09-14T15:14:13.603767+00:00"
+      "generic_failures": 1,
+      "last_error": "500 Server Error: Internal Server Error for url: https://www.coolshop.dk/api/search",
+      "last_failure_at": "2026-09-14T16:14:24.469503+00:00",
+      "last_success_at": "2026-09-14T16:13:16.807352+00:00"
     },
     "proshop": {
       "backoff_level": 0,
@@ -321,6 +321,6 @@
       "last_success_at": "2026-09-04T20:59:40.632991+00:00"
     }
   },
-  "updated_at": "2026-09-14T15:49:21.395848+00:00",
+  "updated_at": "2026-09-14T16:14:39.124819+00:00",
   "proshop_discovery_version": 4
 }
