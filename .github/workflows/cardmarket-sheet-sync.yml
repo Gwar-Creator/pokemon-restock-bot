@@ -1,0 +1,36 @@
+name: Cardmarket Portfolio Sync
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "15 7 * * *"
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Validate Cardmarket sheet sync
+        run: python -m py_compile cardmarket_sheet_sync.py
+
+      - name: Sync Cardmarket prices to Google Sheet
+        env:
+          GOOGLE_SHEETS_CREDENTIALS: ${{ secrets.GOOGLE_SHEETS_CREDENTIALS }}
+          POKEMON_SHEET_ID: ${{ secrets.POKEMON_SHEET_ID }}
+        run: python cardmarket_sheet_sync.py
