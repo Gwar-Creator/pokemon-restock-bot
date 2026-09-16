@@ -5978,8 +5978,8 @@
           "price": 249.0,
           "sold_in_stores": true,
           "sold_online": true,
-          "stage": "DATED_PREP",
-          "stock_online": 0,
+          "stage": "HIDDEN_STOCK",
+          "stock_online": 1,
           "stock_stores": 0
         },
         "br": {
@@ -5989,8 +5989,8 @@
           "price": 249.0,
           "sold_in_stores": true,
           "sold_online": true,
-          "stage": "DATED_PREP",
-          "stock_online": 0,
+          "stage": "HIDDEN_STOCK",
+          "stock_online": 1,
           "stock_stores": 0
         },
         "foetex": {
@@ -6000,8 +6000,8 @@
           "price": 249.0,
           "sold_in_stores": true,
           "sold_online": true,
-          "stage": "DATED_PREP",
-          "stock_online": 0,
+          "stage": "HIDDEN_STOCK",
+          "stock_online": 1,
           "stock_stores": 0
         }
       }
@@ -18984,6 +18984,63 @@
       "stage_after": "EXPOSED_NO_STOCK",
       "stage_before": "EXPOSED_NO_STOCK",
       "ts": 1789539867.9617615
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stage",
+        "stock_count_online"
+      ],
+      "name": "Pokémon First Partner Collection Box 2 samlekort",
+      "product_id": "200371886",
+      "sku": "11274529-EA",
+      "source": "br",
+      "stage_after": "HIDDEN_STOCK",
+      "stage_before": "DATED_PREP",
+      "ts": 1789541960.0974102
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stage",
+        "stock_count_online"
+      ],
+      "name": "Pokémon First Partner Collection Box 2 samlekort",
+      "product_id": "200371886",
+      "sku": "11274529-EA",
+      "source": "bilka",
+      "stage_after": "HIDDEN_STOCK",
+      "stage_before": "DATED_PREP",
+      "ts": 1789541961.2864451
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stage",
+        "stock_count_online"
+      ],
+      "name": "Pokémon First Partner Collection Box 2 samlekort",
+      "product_id": "200371886",
+      "sku": "11274529-EA",
+      "source": "foetex",
+      "stage_after": "HIDDEN_STOCK",
+      "stage_before": "DATED_PREP",
+      "ts": 1789541962.411812
+    },
+    {
+      "event": "CROSS_CHANGE",
+      "fields": [
+        "bilka",
+        "br",
+        "foetex"
+      ],
+      "name": "Pokémon First Partner Collection Box 2 samlekort",
+      "product_id": "11274529-EA",
+      "sku": "11274529-EA",
+      "source": "cross_salling",
+      "stage_after": null,
+      "stage_before": null,
+      "ts": 1789541966.2741978
     }
   ],
   "sources": {
@@ -23423,8 +23480,8 @@
         "sku": "11274529-EA",
         "sold_in_stores": true,
         "sold_online": true,
-        "stage": "DATED_PREP",
-        "stock_count_online": 0,
+        "stage": "HIDDEN_STOCK",
+        "stock_count_online": 1,
         "url": "https://www.bilka.dk/produkter/pokemon-first-partner-collection-box-2-samlekort/200371886/"
       },
       "200380908": {
@@ -28291,8 +28348,8 @@
         "sku": "11274529-EA",
         "sold_in_stores": true,
         "sold_online": true,
-        "stage": "DATED_PREP",
-        "stock_count_online": 0,
+        "stage": "HIDDEN_STOCK",
+        "stock_count_online": 1,
         "url": "https://www.br.dk/produkter/pokemon-first-partner-collection-box-2-samlekort/200371886/"
       },
       "200380908": {
@@ -33100,8 +33157,8 @@
         "sku": "11274529-EA",
         "sold_in_stores": true,
         "sold_online": true,
-        "stage": "DATED_PREP",
-        "stock_count_online": 0,
+        "stage": "HIDDEN_STOCK",
+        "stock_count_online": 1,
         "url": "https://www.foetex.dk/produkter/pokemon-first-partner-collection-box-2-samlekort/200371886/"
       },
       "200380908": {
@@ -33550,6 +33607,6 @@
       }
     }
   },
-  "updated_at": 1789541669.692203,
+  "updated_at": 1789541966.2742481,
   "version": 1
 }
