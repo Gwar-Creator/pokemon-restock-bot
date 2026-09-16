@@ -49,6 +49,7 @@ jobs:
           python -m py_compile tier_b_wave3_sources.py
           python -m py_compile tier_b_wave3_shadow.py
           python -m py_compile tier_b_wave4_shadow.py
+          python -m py_compile indeks_retail_shadow.py
           python -m py_compile flinamania_product_probe.py
           python -m py_compile local_stock_watch.py
           python -m py_compile scanner_health_audit.py
@@ -65,6 +66,7 @@ jobs:
           python -m unittest test_tier_b_wave2.py
           python -m unittest test_tier_b_wave3.py
           python -m unittest test_tier_b_wave4.py
+          python -m unittest test_indeks_retail_shadow.py
           python -m unittest test_flinamania_product_probe.py
           python -m unittest test_matraws_single_guard.py
           python -m unittest test_state_commit_guard.py
@@ -96,6 +98,8 @@ jobs:
           WAVE1_PID=$!
           python tier_b_wave2_shadow.py &
           WAVE2_PID=$!
+          python indeks_retail_shadow.py &
+          INDEKS_PID=$!
 
           # Wave 3 is qualified/live. Stagger its start so it does not join
           # the initial request burst, but let it overlap the slower legacy tail.
@@ -122,6 +126,8 @@ jobs:
           WAVE2_STATUS=$?
           wait "$WAVE3_PID"
           WAVE3_STATUS=$?
+          wait "$INDEKS_PID"
+          INDEKS_STATUS=$?
           set -e
 
           if [ "$LOCAL_STOCK_STATUS" -ne 0 ]; then
@@ -142,6 +148,10 @@ jobs:
 
           if [ "$WAVE4_STATUS" -ne 0 ]; then
             echo "::warning::Tier B Wave 4 live runner exited with status $WAVE4_STATUS; primary production alerts are unaffected"
+          fi
+
+          if [ "$INDEKS_STATUS" -ne 0 ]; then
+            echo "::warning::Indeks Retail shadow scanner exited with status $INDEKS_STATUS; primary production alerts are unaffected"
           fi
 
           if [ "$RESTOCK_STATUS" -ne 0 ]; then
@@ -170,6 +180,7 @@ jobs:
             tier_b_wave2_shadow_state.json \
             tier_b_wave3_shadow_state.json \
             tier_b_wave4_shadow_state.json \
+            indeks_retail_shadow_state.json \
             price_matching_audit_v1.json
 
           if git diff --cached --quiet; then
