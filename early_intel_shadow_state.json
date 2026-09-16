@@ -6368,8 +6368,8 @@
           "price": 349.0,
           "sold_in_stores": true,
           "sold_online": true,
-          "stage": "EXPOSED_NO_STOCK",
-          "stock_online": 0,
+          "stage": "LIVE_STOCK",
+          "stock_online": 138,
           "stock_stores": 0
         },
         "br": {
@@ -6379,8 +6379,8 @@
           "price": 349.0,
           "sold_in_stores": true,
           "sold_online": true,
-          "stage": "EXPOSED_NO_STOCK",
-          "stock_online": 0,
+          "stage": "LIVE_STOCK",
+          "stock_online": 146,
           "stock_stores": 0
         },
         "foetex": {
@@ -6390,8 +6390,8 @@
           "price": 349.0,
           "sold_in_stores": true,
           "sold_online": true,
-          "stage": "EXPOSED_NO_STOCK",
-          "stock_online": 0,
+          "stage": "LIVE_STOCK",
+          "stock_online": 137,
           "stock_stores": 0
         }
       }
@@ -6407,8 +6407,8 @@
           "price": 299.0,
           "sold_in_stores": true,
           "sold_online": true,
-          "stage": "EXPOSED_NO_STOCK",
-          "stock_online": 0,
+          "stage": "LIVE_STOCK",
+          "stock_online": 52,
           "stock_stores": 0
         },
         "br": {
@@ -6418,8 +6418,8 @@
           "price": 299.0,
           "sold_in_stores": true,
           "sold_online": true,
-          "stage": "EXPOSED_NO_STOCK",
-          "stock_online": 0,
+          "stage": "LIVE_STOCK",
+          "stock_online": 58,
           "stock_stores": 0
         },
         "foetex": {
@@ -6429,8 +6429,8 @@
           "price": 299.0,
           "sold_in_stores": true,
           "sold_online": true,
-          "stage": "EXPOSED_NO_STOCK",
-          "stock_online": 0,
+          "stage": "LIVE_STOCK",
+          "stock_online": 50,
           "stock_stores": 0
         }
       }
@@ -18296,6 +18296,159 @@
       "stage_after": null,
       "stage_before": null,
       "ts": 1789529078.9407392
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon Tech Sticker Collection 30th",
+      "product_id": "200392203",
+      "sku": "11379491-EA",
+      "source": "br",
+      "stage_after": "EXPOSED_NO_STOCK",
+      "stage_before": "EXPOSED_NO_STOCK",
+      "ts": 1789530270.4905782
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stage",
+        "stock_count_online"
+      ],
+      "name": "Pokémon Ex Box 30th samlekort",
+      "product_id": "200392206",
+      "sku": "11379494-EA",
+      "source": "br",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "EXPOSED_NO_STOCK",
+      "ts": 1789530270.4905896
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stage",
+        "stock_count_online"
+      ],
+      "name": "Pokémon Tin Ex 30th",
+      "product_id": "200392215",
+      "sku": "11379496-EA",
+      "source": "br",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "EXPOSED_NO_STOCK",
+      "ts": 1789530270.4905996
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon Tech Sticker Collection 30th",
+      "product_id": "200392203",
+      "sku": "11379491-EA",
+      "source": "bilka",
+      "stage_after": "EXPOSED_NO_STOCK",
+      "stage_before": "EXPOSED_NO_STOCK",
+      "ts": 1789530271.659459
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stage",
+        "stock_count_online"
+      ],
+      "name": "Pokémon Ex Box 30th samlekort",
+      "product_id": "200392206",
+      "sku": "11379494-EA",
+      "source": "bilka",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "EXPOSED_NO_STOCK",
+      "ts": 1789530271.65947
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stage",
+        "stock_count_online"
+      ],
+      "name": "Pokémon Tin Ex 30th",
+      "product_id": "200392215",
+      "sku": "11379496-EA",
+      "source": "bilka",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "EXPOSED_NO_STOCK",
+      "ts": 1789530271.659478
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon Tech Sticker Collection 30th",
+      "product_id": "200392203",
+      "sku": "11379491-EA",
+      "source": "foetex",
+      "stage_after": "EXPOSED_NO_STOCK",
+      "stage_before": "EXPOSED_NO_STOCK",
+      "ts": 1789530272.8532753
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stage",
+        "stock_count_online"
+      ],
+      "name": "Pokémon Ex Box 30th samlekort",
+      "product_id": "200392206",
+      "sku": "11379494-EA",
+      "source": "foetex",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "EXPOSED_NO_STOCK",
+      "ts": 1789530272.853286
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stage",
+        "stock_count_online"
+      ],
+      "name": "Pokémon Tin Ex 30th",
+      "product_id": "200392215",
+      "sku": "11379496-EA",
+      "source": "foetex",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "EXPOSED_NO_STOCK",
+      "ts": 1789530272.8532944
+    },
+    {
+      "event": "CROSS_CHANGE",
+      "fields": [
+        "bilka",
+        "br",
+        "foetex"
+      ],
+      "name": "Pokémon Ex Box 30th samlekort",
+      "product_id": "11379494-EA",
+      "sku": "11379494-EA",
+      "source": "cross_salling",
+      "stage_after": null,
+      "stage_before": null,
+      "ts": 1789530276.418459
+    },
+    {
+      "event": "CROSS_CHANGE",
+      "fields": [
+        "bilka",
+        "br",
+        "foetex"
+      ],
+      "name": "Pokémon Tin Ex 30th",
+      "product_id": "11379496-EA",
+      "sku": "11379496-EA",
+      "source": "cross_salling",
+      "stage_after": null,
+      "stage_before": null,
+      "ts": 1789530276.4184666
     }
   ],
   "sources": {
@@ -23011,7 +23164,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "EXPOSED_NO_STOCK",
-        "stock_count_online": null,
+        "stock_count_online": 0,
         "url": "https://www.bilka.dk/produkter/pokemon-tech-sticker-collection-30th/200392203/"
       },
       "200392206": {
@@ -23042,8 +23195,8 @@
         "sku": "11379494-EA",
         "sold_in_stores": true,
         "sold_online": true,
-        "stage": "EXPOSED_NO_STOCK",
-        "stock_count_online": null,
+        "stage": "LIVE_STOCK",
+        "stock_count_online": 138,
         "url": "https://www.bilka.dk/produkter/pokemon-ex-box-30th-samlekort/200392206/"
       },
       "200392215": {
@@ -23074,8 +23227,8 @@
         "sku": "11379496-EA",
         "sold_in_stores": true,
         "sold_online": true,
-        "stage": "EXPOSED_NO_STOCK",
-        "stock_count_online": null,
+        "stage": "LIVE_STOCK",
+        "stock_count_online": 52,
         "url": "https://www.bilka.dk/produkter/pokemon-tin-ex-30th/200392215/"
       }
     },
@@ -27886,7 +28039,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "EXPOSED_NO_STOCK",
-        "stock_count_online": null,
+        "stock_count_online": 0,
         "url": "https://www.br.dk/produkter/pokemon-tech-sticker-collection-30th/200392203/"
       },
       "200392206": {
@@ -27917,8 +28070,8 @@
         "sku": "11379494-EA",
         "sold_in_stores": true,
         "sold_online": true,
-        "stage": "EXPOSED_NO_STOCK",
-        "stock_count_online": null,
+        "stage": "LIVE_STOCK",
+        "stock_count_online": 146,
         "url": "https://www.br.dk/produkter/pokemon-ex-box-30th-samlekort/200392206/"
       },
       "200392215": {
@@ -27949,8 +28102,8 @@
         "sku": "11379496-EA",
         "sold_in_stores": true,
         "sold_online": true,
-        "stage": "EXPOSED_NO_STOCK",
-        "stock_count_online": null,
+        "stage": "LIVE_STOCK",
+        "stock_count_online": 58,
         "url": "https://www.br.dk/produkter/pokemon-tin-ex-30th/200392215/"
       }
     },
@@ -32693,7 +32846,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "EXPOSED_NO_STOCK",
-        "stock_count_online": null,
+        "stock_count_online": 0,
         "url": "https://www.foetex.dk/produkter/pokemon-tech-sticker-collection-30th/200392203/"
       },
       "200392206": {
@@ -32724,8 +32877,8 @@
         "sku": "11379494-EA",
         "sold_in_stores": true,
         "sold_online": true,
-        "stage": "EXPOSED_NO_STOCK",
-        "stock_count_online": null,
+        "stage": "LIVE_STOCK",
+        "stock_count_online": 137,
         "url": "https://www.foetex.dk/produkter/pokemon-ex-box-30th-samlekort/200392206/"
       },
       "200392215": {
@@ -32756,8 +32909,8 @@
         "sku": "11379496-EA",
         "sold_in_stores": true,
         "sold_online": true,
-        "stage": "EXPOSED_NO_STOCK",
-        "stock_count_online": null,
+        "stage": "LIVE_STOCK",
+        "stock_count_online": 50,
         "url": "https://www.foetex.dk/produkter/pokemon-tin-ex-30th/200392215/"
       }
     },
@@ -32856,6 +33009,6 @@
       }
     }
   },
-  "updated_at": 1789529960.8360507,
+  "updated_at": 1789530276.4185028,
   "version": 1
 }
