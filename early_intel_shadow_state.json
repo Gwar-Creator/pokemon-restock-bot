@@ -6369,7 +6369,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 138,
+          "stock_online": 17,
           "stock_stores": 0
         },
         "br": {
@@ -6379,8 +6379,8 @@
           "price": 349.0,
           "sold_in_stores": true,
           "sold_online": true,
-          "stage": "LIVE_STOCK",
-          "stock_online": 146,
+          "stage": "EXPOSED_NO_STOCK",
+          "stock_online": 0,
           "stock_stores": 0
         },
         "foetex": {
@@ -6390,8 +6390,8 @@
           "price": 349.0,
           "sold_in_stores": true,
           "sold_online": true,
-          "stage": "LIVE_STOCK",
-          "stock_online": 137,
+          "stage": "EXPOSED_NO_STOCK",
+          "stock_online": 0,
           "stock_stores": 0
         }
       }
@@ -6407,8 +6407,8 @@
           "price": 299.0,
           "sold_in_stores": true,
           "sold_online": true,
-          "stage": "LIVE_STOCK",
-          "stock_online": 52,
+          "stage": "EXPOSED_NO_STOCK",
+          "stock_online": 0,
           "stock_stores": 0
         },
         "br": {
@@ -6418,8 +6418,8 @@
           "price": 299.0,
           "sold_in_stores": true,
           "sold_online": true,
-          "stage": "LIVE_STOCK",
-          "stock_online": 58,
+          "stage": "EXPOSED_NO_STOCK",
+          "stock_online": 0,
           "stock_stores": 0
         },
         "foetex": {
@@ -6429,8 +6429,8 @@
           "price": 299.0,
           "sold_in_stores": true,
           "sold_online": true,
-          "stage": "LIVE_STOCK",
-          "stock_online": 50,
+          "stage": "EXPOSED_NO_STOCK",
+          "stock_online": 0,
           "stock_stores": 0
         }
       }
@@ -18449,12 +18449,126 @@
       "stage_after": null,
       "stage_before": null,
       "ts": 1789530276.4184666
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stage",
+        "stock_count_online"
+      ],
+      "name": "Pokémon Ex Box 30th samlekort",
+      "product_id": "200392206",
+      "sku": "11379494-EA",
+      "source": "br",
+      "stage_after": "EXPOSED_NO_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1789530561.9593608
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stage",
+        "stock_count_online"
+      ],
+      "name": "Pokémon Tin Ex 30th",
+      "product_id": "200392215",
+      "sku": "11379496-EA",
+      "source": "br",
+      "stage_after": "EXPOSED_NO_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1789530561.9593732
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon Ex Box 30th samlekort",
+      "product_id": "200392206",
+      "sku": "11379494-EA",
+      "source": "bilka",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1789530562.8120801
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "f_stock_availability",
+        "stage",
+        "stock_count_online"
+      ],
+      "name": "Pokémon Tin Ex 30th",
+      "product_id": "200392215",
+      "sku": "11379496-EA",
+      "source": "bilka",
+      "stage_after": "EXPOSED_NO_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1789530562.8120906
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stage",
+        "stock_count_online"
+      ],
+      "name": "Pokémon Ex Box 30th samlekort",
+      "product_id": "200392206",
+      "sku": "11379494-EA",
+      "source": "foetex",
+      "stage_after": "EXPOSED_NO_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1789530563.6781008
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stage",
+        "stock_count_online"
+      ],
+      "name": "Pokémon Tin Ex 30th",
+      "product_id": "200392215",
+      "sku": "11379496-EA",
+      "source": "foetex",
+      "stage_after": "EXPOSED_NO_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1789530563.6781113
+    },
+    {
+      "event": "CROSS_CHANGE",
+      "fields": [
+        "bilka",
+        "br",
+        "foetex"
+      ],
+      "name": "Pokémon Ex Box 30th samlekort",
+      "product_id": "11379494-EA",
+      "sku": "11379494-EA",
+      "source": "cross_salling",
+      "stage_after": null,
+      "stage_before": null,
+      "ts": 1789530567.63311
+    },
+    {
+      "event": "CROSS_CHANGE",
+      "fields": [
+        "bilka",
+        "br",
+        "foetex"
+      ],
+      "name": "Pokémon Tin Ex 30th",
+      "product_id": "11379496-EA",
+      "sku": "11379496-EA",
+      "source": "cross_salling",
+      "stage_after": null,
+      "stage_before": null,
+      "ts": 1789530567.6331184
     }
   ],
   "sources": {
     "bilka": {
       "100559056": {
-        "epoch_updated_at": 1789529582,
+        "epoch_updated_at": 1789530483,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -19091,7 +19205,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-tcg-oinkologne-ex-box/200245189/"
       },
       "200245190": {
-        "epoch_updated_at": 1789529582,
+        "epoch_updated_at": 1789530483,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -20064,7 +20178,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-booster-surging-sparks-pakke-flere-varianter-assorteret/200296069/"
       },
       "200296070": {
-        "epoch_updated_at": 1789529582,
+        "epoch_updated_at": 1789530483,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -20294,7 +20408,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-prismatic-tech-klistermaerkekollektion-flere-varianter-assorteret/200308045/"
       },
       "200308076": {
-        "epoch_updated_at": 1789529582,
+        "epoch_updated_at": 1789530484,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -20914,7 +21028,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-destined-rivals-elite-trainer-box/200322371/"
       },
       "200322372": {
-        "epoch_updated_at": 1789529582,
+        "epoch_updated_at": 1789530483,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -21692,7 +21806,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-mega-kangaskhan-ex-box-pokemonkort/200340781/"
       },
       "200340782": {
-        "epoch_updated_at": 1789529582,
+        "epoch_updated_at": 1789530484,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -22458,7 +22572,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-tcg-chaos-rising-booster-bundle-samlekort/200366278/"
       },
       "200366279": {
-        "epoch_updated_at": 1789529583,
+        "epoch_updated_at": 1789530484,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -22547,7 +22661,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-chaos-rising-booster-pack-samlekort/200366281/"
       },
       "200366282": {
-        "epoch_updated_at": 1789529582,
+        "epoch_updated_at": 1789530484,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -22695,7 +22809,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-mini-tin-med-samlekort-salamence-litleo/200371874/"
       },
       "200371875": {
-        "epoch_updated_at": 1789529582,
+        "epoch_updated_at": 1789530484,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -22779,7 +22893,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-mini-tin-med-samlekort-feraligatr-budew/200371877/"
       },
       "200371882": {
-        "epoch_updated_at": 1789529582,
+        "epoch_updated_at": 1789530484,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -22807,7 +22921,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-mini-tin-med-samlekort-gallade-goomy/200371882/"
       },
       "200371884": {
-        "epoch_updated_at": 1789529582,
+        "epoch_updated_at": 1789530484,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -22835,7 +22949,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-tin-summer-ex-med-samlekort-mega-gengar/200371884/"
       },
       "200371885": {
-        "epoch_updated_at": 1789529582,
+        "epoch_updated_at": 1789530484,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -22954,7 +23068,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-pitch-black-1-pak-flere-varianter-assorteret/200380909/"
       },
       "200380910": {
-        "epoch_updated_at": 1789529582,
+        "epoch_updated_at": 1789530484,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -23138,7 +23252,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-first-partner-collection-box-3-samlekort/200385295/"
       },
       "200392203": {
-        "epoch_updated_at": 1789529582,
+        "epoch_updated_at": 1789530484,
         "expected_available_from": null,
         "f_campaign_name": [
           "Nyhed"
@@ -23168,7 +23282,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-tech-sticker-collection-30th/200392203/"
       },
       "200392206": {
-        "epoch_updated_at": 1789529582,
+        "epoch_updated_at": 1789530484,
         "expected_available_from": null,
         "f_campaign_name": [
           "Nyhed"
@@ -23196,18 +23310,16 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 138,
+        "stock_count_online": 17,
         "url": "https://www.bilka.dk/produkter/pokemon-ex-box-30th-samlekort/200392206/"
       },
       "200392215": {
-        "epoch_updated_at": 1789529582,
+        "epoch_updated_at": 1789530484,
         "expected_available_from": null,
         "f_campaign_name": [
           "Nyhed"
         ],
-        "f_stock_availability": [
-          "På lager online"
-        ],
+        "f_stock_availability": [],
         "has_image": true,
         "id": "200392215",
         "image_primary": "https://digitalassets.sallinggroup.com/image/upload/e_trim/b_white,c_pad,e_sharpen:80,f_auto,q_auto,w_464,h_464/a8ad79e209b2cae1ad101a8b4c11d4bc",
@@ -23227,8 +23339,8 @@
         "sku": "11379496-EA",
         "sold_in_stores": true,
         "sold_online": true,
-        "stage": "LIVE_STOCK",
-        "stock_count_online": 52,
+        "stage": "EXPOSED_NO_STOCK",
+        "stock_count_online": 0,
         "url": "https://www.bilka.dk/produkter/pokemon-tin-ex-30th/200392215/"
       }
     },
@@ -28070,8 +28182,8 @@
         "sku": "11379494-EA",
         "sold_in_stores": true,
         "sold_online": true,
-        "stage": "LIVE_STOCK",
-        "stock_count_online": 146,
+        "stage": "EXPOSED_NO_STOCK",
+        "stock_count_online": 0,
         "url": "https://www.br.dk/produkter/pokemon-ex-box-30th-samlekort/200392206/"
       },
       "200392215": {
@@ -28102,8 +28214,8 @@
         "sku": "11379496-EA",
         "sold_in_stores": true,
         "sold_online": true,
-        "stage": "LIVE_STOCK",
-        "stock_count_online": 58,
+        "stage": "EXPOSED_NO_STOCK",
+        "stock_count_online": 0,
         "url": "https://www.br.dk/produkter/pokemon-tin-ex-30th/200392215/"
       }
     },
@@ -32877,8 +32989,8 @@
         "sku": "11379494-EA",
         "sold_in_stores": true,
         "sold_online": true,
-        "stage": "LIVE_STOCK",
-        "stock_count_online": 137,
+        "stage": "EXPOSED_NO_STOCK",
+        "stock_count_online": 0,
         "url": "https://www.foetex.dk/produkter/pokemon-ex-box-30th-samlekort/200392206/"
       },
       "200392215": {
@@ -32909,8 +33021,8 @@
         "sku": "11379496-EA",
         "sold_in_stores": true,
         "sold_online": true,
-        "stage": "LIVE_STOCK",
-        "stock_count_online": 50,
+        "stage": "EXPOSED_NO_STOCK",
+        "stock_count_online": 0,
         "url": "https://www.foetex.dk/produkter/pokemon-tin-ex-30th/200392215/"
       }
     },
@@ -33009,6 +33121,6 @@
       }
     }
   },
-  "updated_at": 1789530276.4185028,
+  "updated_at": 1789530567.6331854,
   "version": 1
 }
