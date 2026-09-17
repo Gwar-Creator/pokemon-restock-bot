@@ -5,6 +5,7 @@ import time
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 from pathlib import Path
+from urllib.parse import urlsplit, urlunsplit
 
 import requests
 
@@ -45,6 +46,21 @@ SOURCE_LABELS = {
     "br": "BR",
     "bilka": "BILKA",
     "foetex": "FØTEX",
+}
+
+SOURCE_HOME_URLS = {
+    "coolshop": "https://www.coolshop.dk/",
+    "proshop": "https://www.proshop.dk/",
+    "br": "https://www.br.dk/",
+    "bilka": "https://www.bilka.dk/",
+    "foetex": "https://www.foetex.dk/",
+}
+
+SALLING_HOSTS = {
+    "bilka.dk",
+    "www.bilka.dk",
+    "foetex.dk",
+    "www.foetex.dk",
 }
 
 if tuple(SOURCE_LABELS) != tuple(TIER_A_SOURCES):
@@ -240,14 +256,48 @@ def format_price(value):
     return f"{price:,.2f} kr.".replace(",", "X").replace(".", ",").replace("X", ".")
 
 
-def send_hot_alert(source_key, product, event):
+def resolve_product_url(source_key, product_id, product):
+    """Return an exact URL for the alert and keep Salling hosts source-correct."""
+    url = str((product or {}).get("url") or "").strip()
+
+    # Coolshop stores the canonical product URL as the dictionary key.
+    if not url and source_key == "coolshop":
+        candidate = str(product_id or "").strip()
+        if candidate.startswith(("http://", "https://")):
+            url = candidate
+
+    if source_key in ("bilka", "foetex"):
+        home = SOURCE_HOME_URLS[source_key]
+        if url.startswith("/"):
+            url = home.rstrip("/") + "/" + url.lstrip("/")
+        elif url.startswith(("http://", "https://")):
+            parts = urlsplit(url)
+            host = parts.netloc.lower()
+            if host in SALLING_HOSTS:
+                expected_host = "www.bilka.dk" if source_key == "bilka" else "www.foetex.dk"
+                if host != expected_host:
+                    url = urlunsplit(
+                        (
+                            parts.scheme or "https",
+                            expected_host,
+                            parts.path,
+                            parts.query,
+                            parts.fragment,
+                        )
+                    )
+
+    return url or SOURCE_HOME_URLS.get(source_key, "")
+
+
+def send_hot_alert(source_key, product_id, product, event):
     label = SOURCE_LABELS[source_key]
+    product_url = resolve_product_url(source_key, product_id, product)
     message = (
         f"🚨 **HOT {event} · {label}**\n"
         f"**{product.get('name') or 'Ukendt produkt'}**\n"
         f"💰 {format_price(product.get('price'))}\n"
         f"📦 {availability_text(source_key, product)}\n"
-        f"🔗 {product.get('url') or ''}"
+        f"🔗 {product_url}"
     )
 
     if HOT_DRY_RUN:
@@ -484,11 +534,11 @@ def run_scan(shared, state):
 
                 old = old_products.get(product_id)
                 if old is None:
-                    send_hot_alert(source_key, product, "NYT")
+                    send_hot_alert(source_key, product_id, product, "NYT")
                     continue
 
                 if not product_available(source_key, old):
-                    send_hot_alert(source_key, product, "RESTOCK")
+                    send_hot_alert(source_key, product_id, product, "RESTOCK")
 
         source_state[source_key] = current
         if source_key == "proshop":
