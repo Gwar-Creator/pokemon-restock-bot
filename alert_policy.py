@@ -1,8 +1,11 @@
 import re
 from datetime import date, datetime
 
-# Restock V2 source tiers. Tier A is the fast lane; every other active source
-# defaults to Tier B unless it is explicitly retired/data-only.
+# Restock source classes.
+# Tier A = broad retail fast lane.
+# Tier B = broad backup retail; currently only Indeks Retail (Bog & ide/Legekaeden).
+# SPECIALTY = specialist stores that remain useful for scan/state/price data but
+# do not emit product-event Discord alerts.
 TIER_A_SOURCES = (
     "coolshop",
     "proshop",
@@ -11,14 +14,16 @@ TIER_A_SOURCES = (
     "foetex",
 )
 
+BACKUP_RETAIL_SOURCES = (
+    "indeks_retail",
+)
+
 RETIRED_SOURCES = (
     "elgiganten",
     "cardstorecph",
     "zzgames",
 )
 
-# Set/product status is deliberately small and easy to tune. NEW is derived
-# from release dates when a source exposes one. WATCH and ABUNDANT are explicit.
 WATCH_TERMS = (
     "151",
     "prismatic evolutions",
@@ -35,7 +40,9 @@ ABUNDANT_SETS = (
 
 NEW_SET_WINDOW_DAYS = 90
 
-# High-signal products that are useful even from broad Tier B coverage.
+# Backup retail stays stricter than Tier A. Normal sets only surface the most
+# decision-useful sealed formats; WATCH/NEW sets can surface the wider sealed
+# range below.
 TIER_B_CORE_MARKERS = (
     "booster bundle",
     "booster box",
@@ -49,7 +56,6 @@ TIER_B_CORE_MARKERS = (
     " spc ",
 )
 
-# WATCH/NEW sets may surface a wider selection of official sealed products.
 TIER_B_WATCH_MARKERS = TIER_B_CORE_MARKERS + (
     "elite trainer box",
     " etb ",
@@ -71,10 +77,6 @@ TIER_B_WATCH_MARKERS = TIER_B_CORE_MARKERS + (
     "sleeve booster",
 )
 
-# A preorder is meaningful enough to widen NORMAL Tier B beyond core formats,
-# but ordinary loose/sleeved packs are still too noisy unless the set itself is
-# WATCH/NEW. This deliberately separates "new in a shop catalogue" from a
-# genuinely new/desirable set.
 TIER_B_PREORDER_MARKERS = TIER_B_CORE_MARKERS + (
     "elite trainer box",
     " etb ",
@@ -93,8 +95,6 @@ TIER_B_PREORDER_MARKERS = TIER_B_CORE_MARKERS + (
     "poke ball tin",
 )
 
-# Chaos Rising and Pitch Black are abundant enough that ordinary pack-level
-# products and ETBs create noise. Keep only higher-signal sealed formats.
 ABUNDANT_SET_HIGH_SIGNAL_MARKERS = (
     "booster bundle",
     "booster box",
@@ -127,12 +127,20 @@ def _normalize(value):
 
 
 def source_tier(source_key):
+    """Return the alert class for one source key.
+
+    Unknown active sources deliberately default to SPECIALTY, not Tier B. This
+    makes new specialist sources fail closed for Discord until they are
+    explicitly promoted to broad retail.
+    """
     key = str(source_key or "").strip().lower()
     if key in RETIRED_SOURCES:
         return "RETIRED"
     if key in TIER_A_SOURCES:
         return "A"
-    return "B"
+    if key in BACKUP_RETAIL_SOURCES:
+        return "B"
+    return "SPECIALTY"
 
 
 def _parse_release_date(value):
@@ -167,7 +175,6 @@ def set_status(name, series=None, release_date=None, today=None):
         if isinstance(current, datetime):
             current = current.date()
         age_days = (current - released).days
-        # Pre-release and first 90 days count as NEW.
         if age_days <= NEW_SET_WINDOW_DAYS:
             return "NEW"
 
@@ -175,7 +182,6 @@ def set_status(name, series=None, release_date=None, today=None):
 
 
 def abundant_set_signal_allowed(name, series=None):
-    """Return False for low-signal Chaos Rising/Pitch Black products."""
     text = _normalize(f"{name or ''} {series or ''}")
     if set_status(name, series) != "ABUNDANT":
         return True
@@ -189,30 +195,27 @@ def tier_a_signal_allowed(
     event="RESTOCK",
     release_date=None,
 ):
-    """Fast-lane gate: preserve Tier A breadth, but mute abundant-set noise."""
+    """Fast-lane gate for the five broad Tier A retailers."""
     event = str(event or "RESTOCK").strip().upper()
     status = set_status(name, series, release_date=release_date)
 
     if event in {"PRICE", "HEALTH", "EARLY_RADAR"}:
         return False
 
-    # Tier A remains deliberately broad because these are the high-value retail
-    # sources. The one exception is abundant sets where ordinary packs/ETBs are
-    # not useful enough to justify Restock-channel noise.
     if status == "ABUNDANT":
         return abundant_set_signal_allowed(name, series)
 
     return True
 
 
-def tier_b_signal_allowed(
+def backup_retail_signal_allowed(
     name,
     series=None,
     *,
     event="RESTOCK",
     release_date=None,
 ):
-    """Strict Discord gate for broad Tier B coverage."""
+    """Strict product gate for the broad Tier B backup-retail lane."""
     event = str(event or "RESTOCK").strip().upper()
     text = _normalize(f"{name or ''} {series or ''}")
     status = set_status(name, series, release_date=release_date)
@@ -223,16 +226,26 @@ def tier_b_signal_allowed(
     if status == "ABUNDANT":
         return abundant_set_signal_allowed(name, series)
 
-    # WATCH and genuinely NEW sets may surface a wider sealed range, including
-    # ordinary/sleeved booster packs. A product merely being newly discovered
-    # in a retailer catalogue is NOT enough to grant that wider treatment.
     if status in {"WATCH", "NEW"}:
         return any(marker in text for marker in TIER_B_WATCH_MARKERS)
 
-    # NORMAL-set preorders are useful for ETBs, collections and tins as well as
-    # core formats, but loose/sleeved packs stay muted until the set is WATCH/NEW.
     if event in {"PREORDER", "FORUDBESTILLING"}:
         return any(marker in text for marker in TIER_B_PREORDER_MARKERS)
 
-    # NORMAL RESTOCK and catalogue-NEW events remain high-signal only.
     return any(marker in text for marker in TIER_B_CORE_MARKERS)
+
+
+def tier_b_signal_allowed(
+    name,
+    series=None,
+    *,
+    event="RESTOCK",
+    release_date=None,
+):
+    """Legacy specialist gate: specialist stores are data-only for Discord.
+
+    Existing Wave 1-4 and legacy main-scanner callers still use this function.
+    Returning False centrally mutes NEW/PREORDER/RESTOCK from specialist stores
+    without disabling their scanning, source health, state or price data.
+    """
+    return False
