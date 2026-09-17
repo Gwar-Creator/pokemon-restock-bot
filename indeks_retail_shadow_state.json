@@ -7,13 +7,117 @@
     "shared_skus_or_barcodes": 3,
     "stock_disagreements": []
   },
+  "logical_sources": {
+    "indeks_retail": {
+      "label": "INDEKS RETAIL (Bog & idé / LegeKæden)",
+      "mode": "shadow",
+      "products": {
+        "sku:139436": {
+          "barcodes": [],
+          "game": "POKÉMON",
+          "handles": [
+            "9-pocket-pages-silver-blue-100-stk-139436"
+          ],
+          "in_stock": false,
+          "name": "9-Pocket Pages Silver Blue 100 stk",
+          "preorder": false,
+          "price": 219.95,
+          "retailers": {
+            "bogide": {
+              "in_stock": false,
+              "label": "BOG & IDÉ",
+              "preorder": false,
+              "price": 219.95,
+              "url": "https://www.bog-ide.dk/products/9-pocket-pages-silver-blue-100-stk-139436"
+            },
+            "legekaeden": {
+              "in_stock": false,
+              "label": "LEGEKÆDEN",
+              "preorder": false,
+              "price": 219.95,
+              "url": "https://www.legekaeden.dk/products/9-pocket-pages-silver-blue-100-stk-139436"
+            }
+          },
+          "skus": [
+            "139436"
+          ],
+          "source_count": 2,
+          "url": "https://www.legekaeden.dk/products/9-pocket-pages-silver-blue-100-stk-139436"
+        },
+        "sku:3407252": {
+          "barcodes": [],
+          "game": "POKÉMON",
+          "handles": [
+            "pokemon-trainer-toolkit-25-3407252"
+          ],
+          "in_stock": true,
+          "name": "Pokemon Trainer Toolkit 25",
+          "preorder": false,
+          "price": 399.95,
+          "retailers": {
+            "bogide": {
+              "in_stock": true,
+              "label": "BOG & IDÉ",
+              "preorder": false,
+              "price": 399.95,
+              "url": "https://www.bog-ide.dk/products/pokemon-trainer-toolkit-25-3407252"
+            },
+            "legekaeden": {
+              "in_stock": true,
+              "label": "LEGEKÆDEN",
+              "preorder": false,
+              "price": 399.95,
+              "url": "https://www.legekaeden.dk/products/pokemon-trainer-toolkit-25-3407252"
+            }
+          },
+          "skus": [
+            "3407252"
+          ],
+          "source_count": 2,
+          "url": "https://www.legekaeden.dk/products/pokemon-trainer-toolkit-25-3407252"
+        },
+        "sku:3441197": {
+          "barcodes": [],
+          "game": "POKÉMON",
+          "handles": [
+            "pokemon-mega-evolution-3-premium-checklane-perfekt-order-ass-3441197"
+          ],
+          "in_stock": false,
+          "name": "Pokémon Mega Evolution 3 Premium Checklane, Perfekt order ass",
+          "preorder": false,
+          "price": 129.95,
+          "retailers": {
+            "bogide": {
+              "in_stock": false,
+              "label": "BOG & IDÉ",
+              "preorder": false,
+              "price": 129.95,
+              "url": "https://www.bog-ide.dk/products/pokemon-mega-evolution-3-premium-checklane-perfekt-order-ass-3441197"
+            },
+            "legekaeden": {
+              "in_stock": false,
+              "label": "LEGEKÆDEN",
+              "preorder": false,
+              "price": 129.95,
+              "url": "https://www.legekaeden.dk/products/pokemon-mega-evolution-3-premium-checklane-perfekt-order-ass-3441197"
+            }
+          },
+          "skus": [
+            "3441197"
+          ],
+          "source_count": 2,
+          "url": "https://www.legekaeden.dk/products/pokemon-mega-evolution-3-premium-checklane-perfekt-order-ass-3441197"
+        }
+      }
+    }
+  },
   "mode": "shadow",
   "sources": {
     "bogide": {
       "health": {
         "consecutive_failures": 0,
         "last_error": "",
-        "last_success": "2026-09-17T02:55:23.900789+00:00",
+        "last_success": "2026-09-17T03:00:56.913455+00:00",
         "observed_count": 3,
         "status": "ok"
       },
@@ -33,7 +137,7 @@
           "skus": [
             "139436"
           ],
-          "updated_at": "2026-09-17T04:55:24+02:00",
+          "updated_at": "2026-09-17T05:00:57+02:00",
           "url": "https://www.bog-ide.dk/products/9-pocket-pages-silver-blue-100-stk-139436",
           "variant_id": "47815866679434"
         },
@@ -50,7 +154,7 @@
           "skus": [
             "3441197"
           ],
-          "updated_at": "2026-09-17T04:55:24+02:00",
+          "updated_at": "2026-09-17T05:00:57+02:00",
           "url": "https://www.bog-ide.dk/products/pokemon-mega-evolution-3-premium-checklane-perfekt-order-ass-3441197",
           "variant_id": "47911628734602"
         },
@@ -67,7 +171,7 @@
           "skus": [
             "3407252"
           ],
-          "updated_at": "2026-09-17T04:55:24+02:00",
+          "updated_at": "2026-09-17T05:00:57+02:00",
           "url": "https://www.bog-ide.dk/products/pokemon-trainer-toolkit-25-3407252",
           "variant_id": "47824323575946"
         }
@@ -75,11 +179,12 @@
     },
     "legekaeden": {
       "health": {
-        "consecutive_failures": 0,
-        "last_error": "",
+        "consecutive_failures": 1,
+        "last_error": "503 Server Error: Service Unavailable for url: https://www.legekaeden.dk/collections/pokemon-tcg/products.json?limit=250&page=1",
+        "last_failure": "2026-09-17T03:00:56.913455+00:00",
         "last_success": "2026-09-17T02:55:23.900789+00:00",
         "observed_count": 3,
-        "status": "ok"
+        "status": "failed"
       },
       "label": "LEGEKÆDEN",
       "mode": "shadow",
@@ -138,6 +243,6 @@
       }
     }
   },
-  "updated_at": "2026-09-17T02:55:23.900789+00:00",
-  "version": 1
+  "updated_at": "2026-09-17T03:00:56.913455+00:00",
+  "version": 2
 }
