@@ -1,7 +1,7 @@
 {
   "version": 2,
   "mode": "live",
-  "updated_at": "2026-09-17T13:32:26.867411+00:00",
+  "updated_at": "2026-09-17T13:37:31.126059+00:00",
   "sources": {
     "snydepels": {
       "label": "SNYDEPELS",
@@ -9,8 +9,8 @@
       "stock_trust": "trusted",
       "health": {
         "status": "ok",
-        "last_attempt": "2026-09-17T13:32:04.829784+00:00",
-        "last_success": "2026-09-17T13:32:04.829784+00:00",
+        "last_attempt": "2026-09-17T13:36:42.979327+00:00",
+        "last_success": "2026-09-17T13:36:42.979327+00:00",
         "consecutive_failures": 0,
         "last_error": "",
         "observed_count": 38
@@ -328,8 +328,8 @@
       "stock_trust": "trusted",
       "health": {
         "status": "ok",
-        "last_attempt": "2026-09-17T13:32:06.837744+00:00",
-        "last_success": "2026-09-17T13:32:06.837744+00:00",
+        "last_attempt": "2026-09-17T13:36:45.183204+00:00",
+        "last_success": "2026-09-17T13:36:45.183204+00:00",
         "consecutive_failures": 0,
         "last_error": "",
         "observed_count": 7
@@ -399,8 +399,8 @@
       "stock_trust": "trusted",
       "health": {
         "status": "ok",
-        "last_attempt": "2026-09-17T13:32:07.917710+00:00",
-        "last_success": "2026-09-17T13:32:07.917710+00:00",
+        "last_attempt": "2026-09-17T13:36:46.088687+00:00",
+        "last_success": "2026-09-17T13:36:46.088687+00:00",
         "consecutive_failures": 0,
         "last_error": "",
         "observed_count": 24
@@ -605,12 +605,12 @@
       "mode": "live",
       "stock_trust": "trusted",
       "health": {
-        "status": "ok",
-        "last_attempt": "2026-09-17T13:32:09.617495+00:00",
+        "status": "failed",
+        "last_attempt": "2026-09-17T13:36:48.339820+00:00",
         "last_success": "2026-09-17T13:32:09.617495+00:00",
-        "consecutive_failures": 0,
-        "last_error": "",
-        "observed_count": 66
+        "consecutive_failures": 1,
+        "last_error": "mistænkeligt lavt produktantal: 0 < 5",
+        "observed_count": 0
       },
       "products": {
         "3651b6adf24b3361971d": {
@@ -1149,8 +1149,8 @@
       "stock_trust": "trusted",
       "health": {
         "status": "ok",
-        "last_attempt": "2026-09-17T13:32:14.690786+00:00",
-        "last_success": "2026-09-17T13:32:14.690786+00:00",
+        "last_attempt": "2026-09-17T13:36:49.816522+00:00",
+        "last_success": "2026-09-17T13:36:49.816522+00:00",
         "consecutive_failures": 0,
         "last_error": "",
         "observed_count": 39
@@ -1475,12 +1475,12 @@
       "mode": "live",
       "stock_trust": "trusted",
       "health": {
-        "status": "ok",
-        "last_attempt": "2026-09-17T13:32:26.105052+00:00",
+        "status": "failed",
+        "last_attempt": "2026-09-17T13:37:00.880347+00:00",
         "last_success": "2026-09-17T13:32:26.105052+00:00",
-        "consecutive_failures": 0,
-        "last_error": "",
-        "observed_count": 6
+        "consecutive_failures": 1,
+        "last_error": "HTTPSConnectionPool(host='www.superheltenlegetoej.dk', port=443): Max retries exceeded with url: /da/pokemon-kort-booster-pakker--tin-boxes (Caused by NewConnectionError(\"HTTPSConnection(host='www.superheltenlegetoej.dk', port=443): Failed to establish a new connection: [Errno 101] Network is unreachable\"))",
+        "observed_count": null
       },
       "products": {
         "aadf49a1420fc57485a3": {
