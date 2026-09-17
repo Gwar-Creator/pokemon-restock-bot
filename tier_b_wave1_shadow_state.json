@@ -1,7 +1,7 @@
 {
   "version": 2,
   "mode": "mixed",
-  "updated_at": "2026-09-17T02:31:06.610499+00:00",
+  "updated_at": "2026-09-17T02:35:39.065103+00:00",
   "sources": {
     "cardcollective": {
       "label": "CARD COLLECTIVE",
@@ -1381,12 +1381,12 @@
       "mode": "live",
       "stock_trust": "trusted",
       "health": {
-        "status": "ok",
-        "last_attempt": "2026-09-13T19:30:55.088504+00:00",
+        "status": "failed",
+        "last_attempt": "2026-09-17T02:35:37.201258+00:00",
         "last_success": "2026-09-13T19:30:55.088504+00:00",
-        "consecutive_failures": 0,
-        "last_error": "",
-        "observed_count": 93
+        "consecutive_failures": 1,
+        "last_error": "503 Server Error: Service Unavailable for url: https://pockomonsters.dk/products.json?limit=250&page=2",
+        "observed_count": null
       },
       "products": {
         "16135299006789": {
@@ -2141,11 +2141,11 @@
       "stock_trust": "trusted",
       "health": {
         "status": "failed",
-        "last_attempt": "2026-09-17T02:31:03.276804+00:00",
+        "last_attempt": "2026-09-17T02:35:37.647010+00:00",
         "last_success": "2026-09-06T21:10:58.635416+00:00",
-        "consecutive_failures": 2072,
-        "last_error": "mistænkeligt lavt produktantal: 3 < 5",
-        "observed_count": 3
+        "consecutive_failures": 2073,
+        "last_error": "503 Server Error: Service Unavailable for url: https://orbitalkickz.dk/products.json?limit=250&page=1",
+        "observed_count": null
       },
       "products": {
         "12128147079432": {
@@ -2554,12 +2554,12 @@
       "mode": "live",
       "stock_trust": "trusted",
       "health": {
-        "status": "ok",
-        "last_attempt": "2026-09-11T11:10:48.087382+00:00",
+        "status": "failed",
+        "last_attempt": "2026-09-17T02:35:38.237755+00:00",
         "last_success": "2026-09-11T11:10:48.087382+00:00",
-        "consecutive_failures": 0,
-        "last_error": "",
-        "observed_count": 12
+        "consecutive_failures": 1,
+        "last_error": "503 Server Error: Service Unavailable for url: https://andishop.dk/collections/engelsk/products.json?limit=250&page=1",
+        "observed_count": null
       },
       "products": {
         "15457355104604": {
