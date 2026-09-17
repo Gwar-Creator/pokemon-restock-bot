@@ -597,7 +597,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 430,
+          "stock_online": 429,
           "stock_stores": 19
         },
         "br": {
@@ -608,7 +608,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 430,
+          "stock_online": 429,
           "stock_stores": 31
         },
         "foetex": {
@@ -619,7 +619,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 430,
+          "stock_online": 429,
           "stock_stores": 69
         }
       }
@@ -6788,64 +6788,6 @@
     }
   },
   "events": [
-    {
-      "event": "CHANGE",
-      "fields": [
-        "online_to"
-      ],
-      "name": "Pokémon Destined Rivals elite trainer box",
-      "product_id": "200322371",
-      "sku": "11018995-EA",
-      "source": "foetex",
-      "stage_after": "EXPOSED_NO_STOCK",
-      "stage_before": "EXPOSED_NO_STOCK",
-      "ts": 1788943164.7069511
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "is_exposed",
-        "online_to",
-        "stage"
-      ],
-      "name": "Pokémon Scarlet & Violet-Prismatic Evolutions SV8.5 Super Premium Eevee sæt",
-      "product_id": "200322365",
-      "sku": "11018989-EA",
-      "source": "br",
-      "stage_after": "PREPARED",
-      "stage_before": "EXPOSED_NO_STOCK",
-      "ts": 1788945265.2637796
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "f_stock_availability",
-        "in_stock_stores_count",
-        "is_click_and_collectible",
-        "online_to",
-        "stage"
-      ],
-      "name": "Pokémon Destined Rivals elite trainer box",
-      "product_id": "200322371",
-      "sku": "11018995-EA",
-      "source": "br",
-      "stage_after": "EXPOSED_NO_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1788945265.2638166
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "online_to"
-      ],
-      "name": "Pokémon Scarlet & Violet-Prismatic Evolutions SV8.5 Super Premium Eevee sæt",
-      "product_id": "200322365",
-      "sku": "11018989-EA",
-      "source": "bilka",
-      "stage_after": "CATALOG_RECORD",
-      "stage_before": "CATALOG_RECORD",
-      "ts": 1788945266.2500696
-    },
     {
       "event": "CHANGE",
       "fields": [
@@ -22607,6 +22549,60 @@
       "stage_after": "EXPOSED_NO_STOCK",
       "stage_before": "EXPOSED_NO_STOCK",
       "ts": 1789634074.875914
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon Battle Deck EX samlekort",
+      "product_id": "200215319",
+      "sku": "10564347-EA",
+      "source": "br",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1789636464.5209572
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon Battle Deck EX samlekort",
+      "product_id": "200215319",
+      "sku": "10564347-EA",
+      "source": "bilka",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1789636465.8258686
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon Battle Deck EX samlekort",
+      "product_id": "200215319",
+      "sku": "10564347-EA",
+      "source": "foetex",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1789636467.0706646
+    },
+    {
+      "event": "CROSS_CHANGE",
+      "fields": [
+        "bilka",
+        "br",
+        "foetex"
+      ],
+      "name": "Pokémon Battle Deck EX samlekort",
+      "product_id": "10564347-EA",
+      "sku": "10564347-EA",
+      "source": "cross_salling",
+      "stage_after": null,
+      "stage_before": null,
+      "ts": 1789636470.6446295
     }
   ],
   "sources": {
@@ -23103,7 +23099,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 430,
+        "stock_count_online": 429,
         "url": "https://www.bilka.dk/produkter/pokemon-battle-deck-ex-samlekort/200215319/"
       },
       "200223003": {
@@ -28134,7 +28130,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 430,
+        "stock_count_online": 429,
         "url": "https://www.br.dk/produkter/pokemon-battle-deck-ex-samlekort/200215319/"
       },
       "200223003": {
@@ -33243,7 +33239,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 430,
+        "stock_count_online": 429,
         "url": "https://www.foetex.dk/produkter/pokemon-battle-deck-ex-samlekort/200215319/"
       },
       "200223003": {
@@ -37805,7 +37801,7 @@
         "name": "Pokemon TCG Elite Trainer Box Scarlet Violet Destined Rivals",
         "new_badge": false,
         "price": null,
-        "raw_status_excerpt": " Bestillingsvare, leveringstiden kan ikke oplyses * [![Image 33: Pokemon - Pokemon TCG: Scarlet & Violet 8.5 Prismatic Evolution - POK10106](https://www.proshop.dk/Images/174x116/3371257_87f1d93776c0.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-Scarlet-Violet-85-Prismatic-Evolution/3371257 \"Pokemon TCG: Scarlet & Violet 8.5 Prismatic Evolution - POK10106\")![Image 34: LinkedIn](https://www.proshop.dk/pokemon-kort) Produktdatablad ## ",
+        "raw_status_excerpt": " Bestillingsvare, leveringstiden kan ikke oplyses * [![Image 31: Pokemon - Pokemon TCG: Scarlet & Violet 8.5 Prismatic Evolution - POK10106](https://www.proshop.dk/Images/174x116/3371257_87f1d93776c0.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-Scarlet-Violet-85-Prismatic-Evolution/3371257 \"Pokemon TCG: Scarlet & Violet 8.5 Prismatic Evolution - POK10106\")![Image 32: LinkedIn](https://www.proshop.dk/pokemon-kort) Produktdatablad ## ",
         "stage": "INBOUND_UNDATED",
         "status": "BESTILLINGSVARE",
         "surface_statuses": {
@@ -37823,7 +37819,7 @@
         "name": "Pokemon TCG Mega Charizard X ex Ultra Premium Collection",
         "new_badge": false,
         "price": null,
-        "raw_status_excerpt": " Bestillingsvare, leveringstiden kan ikke oplyses * [![Image 43: Pokemon - Pokemon TCG 2-pack Booster - POK10412-101](https://www.proshop.dk/Images/174x116/3478497_4ba6ac470992.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-2-pack-Booster/3478497 \"Pokemon TCG 2-pack Booster - POK10412-101\")![Image 44: LinkedIn](https://www.proshop.dk/pokemon-kort) Produktdatablad ## ",
+        "raw_status_excerpt": " Bestillingsvare, leveringstiden kan ikke oplyses * [![Image 39: Pokemon - Pokemon TCG 2-pack Booster - POK10412-101](https://www.proshop.dk/Images/174x116/3478497_4ba6ac470992.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-2-pack-Booster/3478497 \"Pokemon TCG 2-pack Booster - POK10412-101\")![Image 40: LinkedIn](https://www.proshop.dk/pokemon-kort) Produktdatablad ## ",
         "stage": "INBOUND_UNDATED",
         "status": "BESTILLINGSVARE",
         "surface_statuses": {
@@ -37841,7 +37837,7 @@
         "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
         "new_badge": false,
         "price": 529.0,
-        "raw_status_excerpt": " På lager – Levering i morgen (bestil inden kl. 22) 529,00 kr.(423,20 kr.) Køb 3447589 * [![Image 7: Pokemon - Pokemon TCG Portfolio 9-P Mega Charizard X & Mega Lopunny - ULT16088](https://www.proshop.dk/Images/174x116/3447426_2681c18713e5.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-Portfolio-9-P-Mega-Charizard-X-Mega-Lopunny/3447426 \"Pokemon TCG Portfolio 9-P Mega Charizard X & Mega Lopunny - ULT16088\")![Image 8: LinkedIn](https://www.proshop.dk/pokemon-kort) Produktdatablad ## ",
+        "raw_status_excerpt": " På lager – Levering i morgen (bestil inden kl. 22) 529,00 kr.(423,20 kr.) Køb 3447589 * [![Image 5: Pokemon - Pokemon TCG Portfolio 9-P Mega Charizard X & Mega Lopunny - ULT16088](https://www.proshop.dk/Images/174x116/3447426_2681c18713e5.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-Portfolio-9-P-Mega-Charizard-X-Mega-Lopunny/3447426 \"Pokemon TCG Portfolio 9-P Mega Charizard X & Mega Lopunny - ULT16088\")![Image 6: LinkedIn](https://www.proshop.dk/pokemon-kort) Produktdatablad ## ",
         "stage": "LIVE_STOCK",
         "status": "PÅ LAGER",
         "surface_statuses": {
@@ -37861,7 +37857,7 @@
         "name": "Pokemon TCG Mega EvolutionChaos Rising Booster box with 36 boosters",
         "new_badge": false,
         "price": null,
-        "raw_status_excerpt": " Bestillingsvare, leveringstiden kan ikke oplyses * [![Image 53: Pokemon - Pokemon TCG Portfolio 4-P Mega Charizard X/Y - ULT16736](https://www.proshop.dk/Images/174x116/3484910_5544b6fba871.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-Portfolio-4-P-Mega-Charizard-XY/3484910 \"Pokemon TCG Portfolio 4-P Mega Charizard X/Y - ULT16736\")![Image 54: LinkedIn](https://www.proshop.dk/pokemon-kort) Produktdatablad ## ",
+        "raw_status_excerpt": " Bestillingsvare, leveringstiden kan ikke oplyses * [![Image 49: Pokemon - Pokemon 2-Pack Blister 30th Celebration - POK10666-102](https://www.proshop.dk/Images/174x116/3502024_b732ac7b4d7e.jpg)](https://www.proshop.dk/Pokemon/Pokemon-2-Pack-Blister-30th-Celebration/3502024 \"Pokemon 2-Pack Blister 30th Celebration - POK10666-102\")![Image 50: LinkedIn](https://www.proshop.dk/pokemon-kort) Produktdatablad NYHED ## ",
         "stage": "INBOUND_UNDATED",
         "status": "BESTILLINGSVARE",
         "surface_statuses": {
@@ -37879,7 +37875,7 @@
         "name": "Pokemon TCG Mega Greninja ex Premium Collection",
         "new_badge": false,
         "price": null,
-        "raw_status_excerpt": " Bestillingsvare, leveringstiden kan ikke oplyses * [![Image 51: Pokemon - Pokemon TCG Mega Evolution—Chaos Rising Booster (box with 36 boosters) - POK10407-101](https://www.proshop.dk/Images/174x116/3447592_bf6f55217e66.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-EvolutionChaos-Rising-Booster-box-with-36-boosters/3447592 \"Pokemon TCG Mega Evolution—Chaos Rising Booster (box with 36 boosters) - POK10407-101\")![Image 52: LinkedIn](https://www.proshop.dk/pokemon-kort) Produktdatablad ## ",
+        "raw_status_excerpt": " Bestillingsvare, leveringstiden kan ikke oplyses * [![Image 47: Pokemon - Pokemon TCG Mega Evolution—Chaos Rising Booster (box with 36 boosters) - POK10407-101](https://www.proshop.dk/Images/174x116/3447592_bf6f55217e66.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-EvolutionChaos-Rising-Booster-box-with-36-boosters/3447592 \"Pokemon TCG Mega Evolution—Chaos Rising Booster (box with 36 boosters) - POK10407-101\")![Image 48: LinkedIn](https://www.proshop.dk/pokemon-kort) Produktdatablad ## ",
         "stage": "INBOUND_UNDATED",
         "status": "BESTILLINGSVARE",
         "surface_statuses": {
@@ -37897,7 +37893,7 @@
         "name": "Pokemon TCG First Partner Illustration Collection Box Series 2",
         "new_badge": false,
         "price": null,
-        "raw_status_excerpt": " Bestillingsvare, leveringstiden kan ikke oplyses * [![Image 47: Pokemon - Pokemon Tin ex 30th Celebration - assorted - POK10466-101](https://www.proshop.dk/Images/174x116/3502025_ca425a22a720.jpg)](https://www.proshop.dk/Pokemon/Pokemon-Tin-ex-30th-Celebration-assorted/3502025 \"Pokemon Tin ex 30th Celebration - assorted - POK10466-101\")![Image 48: LinkedIn](https://www.proshop.dk/pokemon-kort) Produktdatablad NYHED ## ",
+        "raw_status_excerpt": " Bestillingsvare, leveringstiden kan ikke oplyses * [![Image 43: Pokemon - Pokemon Tin ex 30th Celebration - assorted - POK10466-101](https://www.proshop.dk/Images/174x116/3502025_ca425a22a720.jpg)](https://www.proshop.dk/Pokemon/Pokemon-Tin-ex-30th-Celebration-assorted/3502025 \"Pokemon Tin ex 30th Celebration - assorted - POK10466-101\")![Image 44: LinkedIn](https://www.proshop.dk/pokemon-kort) Produktdatablad NYHED ## ",
         "stage": "INBOUND_UNDATED",
         "status": "BESTILLINGSVARE",
         "surface_statuses": {
@@ -37910,6 +37906,6 @@
       }
     }
   },
-  "updated_at": 1789636181.4693213,
+  "updated_at": 1789636470.6447546,
   "version": 1
 }
