@@ -13,6 +13,7 @@ on:
       - "tier_b_wave2_shadow.py"
       - "tier_b_wave3_sources.py"
       - "tier_b_wave3_shadow.py"
+      - "tier_b_wave4_shadow.py"
       - "indeks_retail_shadow.py"
       - "flinamania_product_probe.py"
       - "hot_restock.py"
@@ -27,6 +28,7 @@ on:
       - "test_tier_b_wave1_live.py"
       - "test_tier_b_wave2.py"
       - "test_tier_b_wave3.py"
+      - "test_tier_b_wave4.py"
       - "test_indeks_retail_shadow.py"
       - "test_flinamania_product_probe.py"
       - "test_state_commit_guard.py"
@@ -58,7 +60,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Compile changed scanner modules
-        run: python -m py_compile alert_policy.py restock_v2_runner.py restock_lane_runner.py faraos_parser_v2.py tier_b_wave1_sources.py tier_b_wave1_shadow.py tier_b_wave2_sources.py tier_b_wave2_shadow.py tier_b_wave3_sources.py tier_b_wave3_shadow.py indeks_retail_shadow.py flinamania_product_probe.py hot_restock.py hot_restock_v4.py state_commit_guard.py
+        run: python -m py_compile alert_policy.py restock_v2_runner.py restock_lane_runner.py faraos_parser_v2.py tier_b_wave1_sources.py tier_b_wave1_shadow.py tier_b_wave2_sources.py tier_b_wave2_shadow.py tier_b_wave3_sources.py tier_b_wave3_shadow.py tier_b_wave4_shadow.py indeks_retail_shadow.py flinamania_product_probe.py hot_restock.py hot_restock_v4.py state_commit_guard.py
 
       - name: Test legacy alert policy compatibility
         run: timeout 60s python -m unittest test_alert_policy.py
@@ -78,16 +80,19 @@ jobs:
       - name: Test Tier B Wave 1 source health
         run: timeout 60s python -m unittest test_tier_b_wave1.py
 
-      - name: Test Tier B Wave 1 live routing
+      - name: Test Wave 1 specialty routing
         run: timeout 60s python -m unittest test_tier_b_wave1_live.py
 
-      - name: Test Tier B Wave 2 shadow
+      - name: Test Wave 2 specialty scanner
         run: timeout 60s python -m unittest test_tier_b_wave2.py
 
-      - name: Test Tier B Wave 3 shadow
+      - name: Test Wave 3 specialty scanner
         run: timeout 60s python -m unittest test_tier_b_wave3.py
 
-      - name: Test Indeks Retail shadow scanner
+      - name: Test Wave 4 specialty routing
+        run: timeout 60s python -m unittest test_tier_b_wave4.py
+
+      - name: Test Indeks Retail backup scanner
         run: timeout 60s python -m unittest test_indeks_retail_shadow.py
 
       - name: Test dormant Flinamania product probe
