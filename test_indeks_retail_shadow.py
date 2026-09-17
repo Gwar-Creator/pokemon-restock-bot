@@ -75,7 +75,64 @@ class IndeksRetailShadowTests(unittest.TestCase):
         self.assertGreaterEqual(result["shared_skus_or_barcodes"], 1)
         self.assertEqual(result["stock_disagreements"], [SAMPLE["handle"]])
 
-    def test_first_scan_is_shadow_and_writes_baseline_without_webhook(self):
+    def test_logical_catalogue_merges_same_product_across_storefronts(self):
+        left = mod._normalise_product("legekaeden", SAMPLE)[1]
+        right = dict(mod._normalise_product("bogide", SAMPLE)[1])
+        right["price"] = 529.95
+        sources = {
+            "legekaeden": {"products": {SAMPLE["handle"]: left}},
+            "bogide": {"products": {SAMPLE["handle"]: right}},
+        }
+
+        merged = mod._merge_logical_catalogue(sources)
+
+        self.assertEqual(len(merged), 1)
+        product = next(iter(merged.values()))
+        self.assertEqual(product["source_count"], 2)
+        self.assertEqual(set(product["retailers"]), {"legekaeden", "bogide"})
+        self.assertTrue(product["in_stock"])
+        self.assertEqual(product["price"], 529.95)
+        self.assertEqual(product["url"], right["url"])
+
+    def test_logical_catalogue_prefers_in_stock_offer_over_cheaper_sold_out_offer(self):
+        left = mod._normalise_product("legekaeden", SAMPLE)[1]
+        right = dict(mod._normalise_product("bogide", SAMPLE)[1])
+        left["price"] = 549.95
+        left["in_stock"] = True
+        right["price"] = 499.95
+        right["in_stock"] = False
+        sources = {
+            "legekaeden": {"products": {SAMPLE["handle"]: left}},
+            "bogide": {"products": {SAMPLE["handle"]: right}},
+        }
+
+        merged = mod._merge_logical_catalogue(sources)
+        product = next(iter(merged.values()))
+
+        self.assertEqual(product["price"], 549.95)
+        self.assertEqual(product["url"], left["url"])
+
+    def test_logical_catalogue_keeps_store_specific_product(self):
+        unique = dict(SAMPLE)
+        unique["id"] = 999
+        unique["title"] = "Pokémon TCG: Unique Collection Box"
+        unique["handle"] = "pokemon-unique-collection-box"
+        unique["variants"] = [
+            {"id": 9, "available": True, "price": "299.95", "sku": "UNIQUE", "barcode": "999"}
+        ]
+        left = mod._normalise_product("legekaeden", SAMPLE)[1]
+        right = mod._normalise_product("bogide", unique)[1]
+        sources = {
+            "legekaeden": {"products": {SAMPLE["handle"]: left}},
+            "bogide": {"products": {unique["handle"]: right}},
+        }
+
+        merged = mod._merge_logical_catalogue(sources)
+
+        self.assertEqual(len(merged), 2)
+        self.assertEqual(sorted(product["source_count"] for product in merged.values()), [1, 1])
+
+    def test_first_scan_is_shadow_and_writes_logical_baseline_without_webhook(self):
         with tempfile.TemporaryDirectory() as tmp:
             state_file = Path(tmp) / "state.json"
 
@@ -89,8 +146,12 @@ class IndeksRetailShadowTests(unittest.TestCase):
 
             self.assertEqual(status, 0)
             self.assertEqual(state["mode"], "shadow")
+            self.assertEqual(state["version"], 2)
             self.assertEqual(set(state["sources"]), {"legekaeden", "bogide"})
             self.assertEqual(state["comparison"]["shared_handles"], 1)
+            logical = state["logical_sources"]["indeks_retail"]
+            self.assertEqual(len(logical["products"]), 1)
+            self.assertEqual(next(iter(logical["products"].values()))["source_count"], 2)
 
     def test_failed_source_preserves_old_baseline(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -121,6 +182,8 @@ class IndeksRetailShadowTests(unittest.TestCase):
 
             self.assertIn(SAMPLE["handle"], state["sources"]["legekaeden"]["products"])
             self.assertEqual(state["sources"]["legekaeden"]["health"]["status"], "failed")
+            logical = state["logical_sources"]["indeks_retail"]["products"]
+            self.assertEqual(len(logical), 1)
 
 
 if __name__ == "__main__":

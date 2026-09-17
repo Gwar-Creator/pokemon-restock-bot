@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Shadow scanner for Indeks Retail's Pokémon TCG catalogues.
 
-Bog & idé and Legekæden are intentionally data-only while we qualify the new
-Shopify feeds and determine whether the two storefronts share the same online
-inventory. No Discord webhook is read or called from this module.
+Bog & idé and Legekæden are fetched separately for source health, but exposed as
+one logical Indeks Retail catalogue so future alerting can never duplicate the
+same product across the two storefronts. No Discord webhook is read or called
+from this module.
 """
 
 from __future__ import annotations
@@ -17,7 +18,7 @@ import requests
 
 
 STATE_FILE = Path("indeks_retail_shadow_state.json")
-STATE_VERSION = 1
+STATE_VERSION = 2
 MAX_PAGES = 5
 PAGE_SIZE = 250
 TIMEOUT_SECONDS = 20
@@ -35,6 +36,8 @@ SOURCES = {
     },
 }
 
+LOGICAL_SOURCE_KEY = "indeks_retail"
+LOGICAL_SOURCE_LABEL = "INDEKS RETAIL (Bog & idé / LegeKæden)"
 PREORDER_MARKERS = ("forudbestilling", "preorder", "pre-order")
 
 
@@ -42,14 +45,27 @@ def _now() -> str:
     return datetime.now(ZoneInfo("UTC")).isoformat()
 
 
+def _empty_state() -> dict:
+    return {
+        "version": STATE_VERSION,
+        "mode": "shadow",
+        "sources": {},
+        "logical_sources": {},
+    }
+
+
 def _load_state() -> dict:
     if not STATE_FILE.exists():
-        return {"version": STATE_VERSION, "mode": "shadow", "sources": {}}
+        return _empty_state()
     try:
         value = json.loads(STATE_FILE.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
-        return {"version": STATE_VERSION, "mode": "shadow", "sources": {}}
-    return value if isinstance(value, dict) else {"version": STATE_VERSION, "mode": "shadow", "sources": {}}
+        return _empty_state()
+    if not isinstance(value, dict):
+        return _empty_state()
+    value.setdefault("sources", {})
+    value.setdefault("logical_sources", {})
+    return value
 
 
 def _price(value):
@@ -70,17 +86,49 @@ def _normalise_product(source_key: str, raw: dict) -> tuple[str, dict] | None:
     if not isinstance(variants, list):
         variants = []
 
-    available_variants = [variant for variant in variants if isinstance(variant, dict) and variant.get("available") is True]
-    priced_available = [(_price(variant.get("price")), variant) for variant in available_variants]
-    priced_available = [(price, variant) for price, variant in priced_available if price is not None]
-    priced_all = [(_price(variant.get("price")), variant) for variant in variants if isinstance(variant, dict)]
-    priced_all = [(price, variant) for price, variant in priced_all if price is not None]
+    available_variants = [
+        variant
+        for variant in variants
+        if isinstance(variant, dict) and variant.get("available") is True
+    ]
+    priced_available = [
+        (_price(variant.get("price")), variant) for variant in available_variants
+    ]
+    priced_available = [
+        (price, variant) for price, variant in priced_available if price is not None
+    ]
+    priced_all = [
+        (_price(variant.get("price")), variant)
+        for variant in variants
+        if isinstance(variant, dict)
+    ]
+    priced_all = [
+        (price, variant) for price, variant in priced_all if price is not None
+    ]
 
-    chosen = min(priced_available or priced_all, key=lambda item: item[0], default=(None, {}))
+    chosen = min(
+        priced_available or priced_all,
+        key=lambda item: item[0],
+        default=(None, {}),
+    )
     chosen_price, chosen_variant = chosen
 
-    skus = sorted({str(variant.get("sku") or "").strip() for variant in variants if isinstance(variant, dict)} - {""})
-    barcodes = sorted({str(variant.get("barcode") or "").strip() for variant in variants if isinstance(variant, dict)} - {""})
+    skus = sorted(
+        {
+            str(variant.get("sku") or "").strip()
+            for variant in variants
+            if isinstance(variant, dict)
+        }
+        - {""}
+    )
+    barcodes = sorted(
+        {
+            str(variant.get("barcode") or "").strip()
+            for variant in variants
+            if isinstance(variant, dict)
+        }
+        - {""}
+    )
 
     source = SOURCES[source_key]
     searchable = " ".join([title, str(raw.get("tags") or "")]).lower()
@@ -110,7 +158,10 @@ def fetch_source(source_key: str, session=None) -> dict:
     products = {}
     headers = {
         "Accept": "application/json",
-        "User-Agent": "Mozilla/5.0 (compatible; PokemonRestockBot/1.0; +https://github.com/Gwar-Creator/pokemon-restock-bot)",
+        "User-Agent": (
+            "Mozilla/5.0 (compatible; PokemonRestockBot/1.0; "
+            "+https://github.com/Gwar-Creator/pokemon-restock-bot)"
+        ),
     }
 
     for page in range(1, MAX_PAGES + 1):
@@ -185,6 +236,100 @@ def _comparison(sources: dict) -> dict:
     }
 
 
+def _product_markers(handle: str, product: dict) -> list[str]:
+    markers = []
+    for sku in product.get("skus") or []:
+        if sku:
+            markers.append(f"sku:{sku}")
+    for barcode in product.get("barcodes") or []:
+        if barcode:
+            markers.append(f"barcode:{barcode}")
+    if handle:
+        markers.append(f"handle:{handle}")
+    return markers
+
+
+def _new_logical_product(source_key: str, handle: str, product: dict) -> dict:
+    return {
+        "name": product.get("name"),
+        "game": "POKÉMON",
+        "price": product.get("price"),
+        "in_stock": bool(product.get("in_stock")),
+        "preorder": bool(product.get("preorder")),
+        "url": product.get("url"),
+        "skus": sorted(set(product.get("skus") or [])),
+        "barcodes": sorted(set(product.get("barcodes") or [])),
+        "handles": [handle] if handle else [],
+        "retailers": {
+            source_key: {
+                "label": SOURCES[source_key]["label"],
+                "price": product.get("price"),
+                "in_stock": bool(product.get("in_stock")),
+                "preorder": bool(product.get("preorder")),
+                "url": product.get("url"),
+            }
+        },
+    }
+
+
+def _refresh_logical_summary(entry: dict) -> None:
+    retailers = entry.get("retailers") or {}
+    offers = [value for value in retailers.values() if isinstance(value, dict)]
+    in_stock_offers = [offer for offer in offers if offer.get("in_stock") is True]
+    priced_stock = [offer for offer in in_stock_offers if _price(offer.get("price")) is not None]
+    priced_all = [offer for offer in offers if _price(offer.get("price")) is not None]
+    best = min(
+        priced_stock or priced_all,
+        key=lambda offer: float(offer["price"]),
+        default=None,
+    )
+
+    entry["in_stock"] = bool(in_stock_offers)
+    entry["preorder"] = any(offer.get("preorder") is True for offer in offers)
+    entry["price"] = _price(best.get("price")) if best else None
+    entry["url"] = best.get("url") if best else next(
+        (offer.get("url") for offer in offers if offer.get("url")),
+        None,
+    )
+    entry["source_count"] = len(retailers)
+
+
+def _merge_logical_catalogue(sources: dict) -> dict:
+    merged = {}
+    marker_to_key = {}
+
+    for source_key in SOURCES:
+        products = ((sources.get(source_key) or {}).get("products") or {})
+        for handle, product in products.items():
+            markers = _product_markers(handle, product)
+            existing_keys = [marker_to_key[marker] for marker in markers if marker in marker_to_key]
+            logical_key = existing_keys[0] if existing_keys else (markers[0] if markers else f"handle:{handle}")
+
+            entry = merged.get(logical_key)
+            if entry is None:
+                entry = _new_logical_product(source_key, handle, product)
+                merged[logical_key] = entry
+            else:
+                entry.setdefault("retailers", {})[source_key] = {
+                    "label": SOURCES[source_key]["label"],
+                    "price": product.get("price"),
+                    "in_stock": bool(product.get("in_stock")),
+                    "preorder": bool(product.get("preorder")),
+                    "url": product.get("url"),
+                }
+                entry["skus"] = sorted(set(entry.get("skus") or []) | set(product.get("skus") or []))
+                entry["barcodes"] = sorted(set(entry.get("barcodes") or []) | set(product.get("barcodes") or []))
+                if handle and handle not in entry.setdefault("handles", []):
+                    entry["handles"].append(handle)
+                    entry["handles"].sort()
+
+            for marker in markers:
+                marker_to_key.setdefault(marker, logical_key)
+            _refresh_logical_summary(entry)
+
+    return merged
+
+
 def _success_health(old_health: dict, count: int, now: str, changed: bool) -> dict:
     if (
         not changed
@@ -233,11 +378,17 @@ def run_scan(fetcher=fetch_source) -> int:
             successful += 1
             changed = changed or source_changed or health != old_health
             stock = sum(1 for product in products.values() if product.get("in_stock") is True)
-            print(f"INDEKS SHADOW {config['label']}: {len(products)} produkter | på lager {stock} | health=ok")
+            print(
+                f"INDEKS SHADOW {config['label']}: {len(products)} produkter | "
+                f"på lager {stock} | health=ok"
+            )
         except Exception as error:
             health = _failure_health(old_health, error, now)
             changed = True
-            print(f"INDEKS SHADOW {config['label']} FEJL: {error} | gammel baseline bevaret")
+            print(
+                f"INDEKS SHADOW {config['label']} FEJL: {error} | "
+                "gammel baseline bevaret"
+            )
 
         new_sources[source_key] = {
             "label": config["label"],
@@ -250,21 +401,45 @@ def run_scan(fetcher=fetch_source) -> int:
     old_comparison = old_state.get("comparison") or {}
     changed = changed or comparison != old_comparison
 
+    merged_products = _merge_logical_catalogue(new_sources)
+    logical_sources = {
+        LOGICAL_SOURCE_KEY: {
+            "label": LOGICAL_SOURCE_LABEL,
+            "mode": "shadow",
+            "products": merged_products,
+        }
+    }
+    old_logical_sources = old_state.get("logical_sources") or {}
+    changed = changed or logical_sources != old_logical_sources
+
     state = {
         "version": STATE_VERSION,
         "mode": "shadow",
-        "updated_at": now if changed or not old_state.get("updated_at") else old_state.get("updated_at"),
+        "updated_at": (
+            now if changed or not old_state.get("updated_at") else old_state.get("updated_at")
+        ),
         "sources": new_sources,
+        "logical_sources": logical_sources,
         "comparison": comparison,
     }
-    STATE_FILE.write_text(json.dumps(state, ensure_ascii=False, indent=2, sort_keys=True), encoding="utf-8")
+    STATE_FILE.write_text(
+        json.dumps(state, ensure_ascii=False, indent=2, sort_keys=True),
+        encoding="utf-8",
+    )
 
+    logical_stock = sum(
+        1 for product in merged_products.values() if product.get("in_stock") is True
+    )
     print(
         "INDEKS SHADOW overlap: "
         f"handles={comparison['shared_handles']} | "
         f"sku/barcode={comparison['shared_skus_or_barcodes']} | "
         f"stock-forskelle={len(comparison['stock_disagreements'])} | "
         f"prisforskelle={len(comparison['price_disagreements'])}"
+    )
+    print(
+        f"INDEKS LOGICAL: {len(merged_products)} unikke produkter | "
+        f"på lager {logical_stock} | dublet-alerts=umulige i denne kilde"
     )
     print(f"INDEKS SHADOW: {successful}/{len(SOURCES)} kilder ok | Discord=off")
     return 0 if successful else 1
