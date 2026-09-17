@@ -6642,7 +6642,7 @@
           "sold_in_stores": false,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 205,
+          "stock_online": 200,
           "stock_stores": 0
         },
         "br": {
@@ -6653,7 +6653,7 @@
           "sold_in_stores": false,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 205,
+          "stock_online": 200,
           "stock_stores": 0
         },
         "foetex": {
@@ -6664,7 +6664,7 @@
           "sold_in_stores": false,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 205,
+          "stock_online": 200,
           "stock_stores": 0
         }
       }
@@ -6788,59 +6788,6 @@
     }
   },
   "events": [
-    {
-      "event": "CHANGE",
-      "fields": [
-        "is_click_and_collectible",
-        "is_reservable"
-      ],
-      "name": "Pokémon Destined Rivals elite trainer box",
-      "product_id": "200322371",
-      "sku": "11018995-EA",
-      "source": "foetex",
-      "stage_after": "EXPOSED_NO_STOCK",
-      "stage_before": "EXPOSED_NO_STOCK",
-      "ts": 1788870287.1885455
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "sold_online"
-      ],
-      "name": "Pokémon Scarlet & Violet-Prismatic Evolutions SV8.5 Super Premium Eevee sæt",
-      "product_id": "200322365",
-      "sku": "11018989-EA",
-      "source": "bilka",
-      "stage_after": "EXPOSED_NO_STOCK",
-      "stage_before": "EXPOSED_NO_STOCK",
-      "ts": 1788870890.9044034
-    },
-    {
-      "event": "CROSS_CHANGE",
-      "fields": [
-        "bilka"
-      ],
-      "name": "Pokémon Scarlet & Violet-Prismatic Evolutions SV8.5 Super Premium Eevee sæt",
-      "product_id": "11018989-EA",
-      "sku": "11018989-EA",
-      "source": "cross_salling",
-      "stage_after": null,
-      "stage_before": null,
-      "ts": 1788870904.6065266
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "sold_online"
-      ],
-      "name": "Pokémon Scarlet & Violet-Prismatic Evolutions SV8.5 Super Premium Eevee sæt",
-      "product_id": "200322365",
-      "sku": "11018989-EA",
-      "source": "foetex",
-      "stage_after": "EXPOSED_NO_STOCK",
-      "stage_before": "EXPOSED_NO_STOCK",
-      "ts": 1788871161.2910633
-    },
     {
       "event": "CROSS_CHANGE",
       "fields": [
@@ -22570,6 +22517,60 @@
       "stage_after": null,
       "stage_before": null,
       "ts": 1789628079.1093392
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokemon Greninja EX samlekort box",
+      "product_id": "200392807",
+      "sku": "11381820-EA",
+      "source": "br",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1789628361.5981915
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokemon Greninja EX samlekort box",
+      "product_id": "200392807",
+      "sku": "11381820-EA",
+      "source": "bilka",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1789628362.7010462
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokemon Greninja EX samlekort box",
+      "product_id": "200392807",
+      "sku": "11381820-EA",
+      "source": "foetex",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1789628363.6676173
+    },
+    {
+      "event": "CROSS_CHANGE",
+      "fields": [
+        "bilka",
+        "br",
+        "foetex"
+      ],
+      "name": "Pokemon Greninja EX samlekort box",
+      "product_id": "11381820-EA",
+      "sku": "11381820-EA",
+      "source": "cross_salling",
+      "stage_after": null,
+      "stage_before": null,
+      "ts": 1789628367.5227008
     }
   ],
   "sources": {
@@ -27535,7 +27536,7 @@
         "sold_in_stores": false,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 205,
+        "stock_count_online": 200,
         "url": "https://www.bilka.dk/produkter/pokemon-greninja-ex-samlekort-box/200392807/"
       },
       "200392808": {
@@ -32653,7 +32654,7 @@
         "sold_in_stores": false,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 205,
+        "stock_count_online": 200,
         "url": "https://www.br.dk/produkter/pokemon-greninja-ex-samlekort-box/200392807/"
       },
       "200392808": {
@@ -37704,7 +37705,7 @@
         "sold_in_stores": false,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 205,
+        "stock_count_online": 200,
         "url": "https://www.foetex.dk/produkter/pokemon-greninja-ex-samlekort-box/200392807/"
       },
       "200392808": {
@@ -37776,7 +37777,7 @@
         "name": "Pokemon TCG Mega Charizard X ex Ultra Premium Collection",
         "new_badge": false,
         "price": null,
-        "raw_status_excerpt": " Bestillingsvare, leveringstiden kan ikke oplyses * [![Image 59: Pokemon - Pokemon TCG 2-pack Booster - POK10412-101](https://www.proshop.dk/Images/174x116/3478497_4ba6ac470992.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-2-pack-Booster/3478497 \"Pokemon TCG 2-pack Booster - POK10412-101\")![Image 60: LinkedIn](https://www.proshop.dk/pokemon-kort) Produktdatablad ## ",
+        "raw_status_excerpt": " Bestillingsvare, leveringstiden kan ikke oplyses * [![Image 57: Pokemon - Pokemon TCG 2-pack Booster - POK10412-101](https://www.proshop.dk/Images/174x116/3478497_4ba6ac470992.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-2-pack-Booster/3478497 \"Pokemon TCG 2-pack Booster - POK10412-101\")![Image 58: LinkedIn](https://www.proshop.dk/pokemon-kort) Produktdatablad ## ",
         "stage": "INBOUND_UNDATED",
         "status": "BESTILLINGSVARE",
         "surface_statuses": {
@@ -37850,7 +37851,7 @@
         "name": "Pokemon TCG First Partner Illustration Collection Box Series 2",
         "new_badge": false,
         "price": null,
-        "raw_status_excerpt": " Bestillingsvare, leveringstiden kan ikke oplyses * [![Image 63: Pokemon - Pokemon TCG Mega Greninja ex Premium Collection - POK10413-101](https://www.proshop.dk/Images/174x116/3478496_3c2192ce2a6e.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496 \"Pokemon TCG Mega Greninja ex Premium Collection - POK10413-101\")![Image 64: LinkedIn](https://www.proshop.dk/pokemon-kort) Produktdatablad ## ",
+        "raw_status_excerpt": " Bestillingsvare, leveringstiden kan ikke oplyses * [![Image 61: Pokemon - Pokemon Binder Collection 30th Celebration - POK10450-101](https://www.proshop.dk/Images/174x116/3502019_b199e33d6487.jpg)](https://www.proshop.dk/Pokemon/Pokemon-Binder-Collection-30th-Celebration/3502019 \"Pokemon Binder Collection 30th Celebration - POK10450-101\")![Image 62: LinkedIn](https://www.proshop.dk/pokemon-kort) Produktdatablad NYHED ## ",
         "stage": "INBOUND_UNDATED",
         "status": "BESTILLINGSVARE",
         "surface_statuses": {
@@ -37863,6 +37864,6 @@
       }
     }
   },
-  "updated_at": 1789628079.109377,
+  "updated_at": 1789628367.5227413,
   "version": 1
 }
