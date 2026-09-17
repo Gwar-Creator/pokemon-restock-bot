@@ -6789,19 +6789,6 @@
   },
   "events": [
     {
-      "event": "CHANGE",
-      "fields": [
-        "in_stock_stores_count"
-      ],
-      "name": "Pokémon Battle Deck EX samlekort",
-      "product_id": "200215319",
-      "sku": "10564347-EA",
-      "source": "foetex",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1789139678.5193615
-    },
-    {
       "event": "CROSS_CHANGE",
       "fields": [
         "foetex"
@@ -22473,6 +22460,19 @@
       "stage_after": null,
       "stage_before": null,
       "ts": 1789665581.4543786
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
+      "product_id": "3447589",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1789667070.9362705
     }
   ],
   "sources": {
@@ -37674,7 +37674,7 @@
         "name": "Pokemon TCG Mega Charizard X ex Ultra Premium Collection",
         "new_badge": false,
         "price": null,
-        "raw_status_excerpt": " Bestillingsvare, leveringstiden kan ikke oplyses * [![Image 17: Pokemon - Pokemon TCG 2-pack Booster - POK10412-101](https://www.proshop.dk/Images/174x116/3478497_4ba6ac470992.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-2-pack-Booster/3478497 \"Pokemon TCG 2-pack Booster - POK10412-101\") ## ",
+        "raw_status_excerpt": " Bestillingsvare, leveringstiden kan ikke oplyses * [![Image 18: Pokemon - Pokemon TCG Mega Greninja ex Premium Collection - POK10413-101](https://www.proshop.dk/Images/174x116/3478496_3c2192ce2a6e.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496 \"Pokemon TCG Mega Greninja ex Premium Collection - POK10413-101\") ## ",
         "stage": "INBOUND_UNDATED",
         "status": "BESTILLINGSVARE",
         "surface_statuses": {
@@ -37696,11 +37696,9 @@
         "stage": "LIVE_STOCK",
         "status": "PÅ LAGER",
         "surface_statuses": {
-          "pokemon-brand": "PÅ LAGER",
           "pokemon-kort": "PÅ LAGER"
         },
         "surfaces": [
-          "pokemon-brand",
           "pokemon-kort"
         ],
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Zygarde-ex-Premium-Collection/3447589"
@@ -37748,7 +37746,7 @@
         "name": "Pokemon TCG First Partner Illustration Collection Box Series 2",
         "new_badge": false,
         "price": null,
-        "raw_status_excerpt": " Bestillingsvare, leveringstiden kan ikke oplyses * [![Image 16: Pokemon - Pokemon TCG Mega Charizard X ex Ultra-Premium Collection - POK10065-101](https://www.proshop.dk/Images/174x116/3417744_c6b845fea196.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744 \"Pokemon TCG Mega Charizard X ex Ultra-Premium Collection - POK10065-101\") ## ",
+        "raw_status_excerpt": " Bestillingsvare, leveringstiden kan ikke oplyses * [![Image 17: Pokemon - Pokemon TCG Mega Charizard X ex Ultra-Premium Collection - POK10065-101](https://www.proshop.dk/Images/174x116/3417744_c6b845fea196.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744 \"Pokemon TCG Mega Charizard X ex Ultra-Premium Collection - POK10065-101\") ## ",
         "stage": "INBOUND_UNDATED",
         "status": "BESTILLINGSVARE",
         "surface_statuses": {
@@ -37761,6 +37759,6 @@
       }
     }
   },
-  "updated_at": 1789666769.3627362,
+  "updated_at": 1789667070.937457,
   "version": 1
 }
