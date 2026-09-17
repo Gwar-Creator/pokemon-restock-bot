@@ -35,7 +35,7 @@ class RestockV2RunnerTests(unittest.TestCase):
         )
         self.assertTrue(runner.restock_v2_channel_alert_allowed(message))
 
-    def test_tier_b_normal_etb_is_muted(self):
+    def test_specialty_normal_etb_is_muted(self):
         message = (
             "🔥 **[POKÉMON] MATRAWS RESTOCK**\n"
             "**Journey Together Elite Trainer Box**\n"
@@ -43,23 +43,23 @@ class RestockV2RunnerTests(unittest.TestCase):
         )
         self.assertFalse(runner.restock_v2_channel_alert_allowed(message))
 
-    def test_tier_b_booster_box_passes(self):
+    def test_specialty_booster_box_is_muted(self):
         message = (
             "🔥 **[POKÉMON] MATRAWS RESTOCK**\n"
             "**Journey Together Booster Box**\n"
             "📦 Udsolgt → På lager"
         )
-        self.assertTrue(runner.restock_v2_channel_alert_allowed(message))
+        self.assertFalse(runner.restock_v2_channel_alert_allowed(message))
 
-    def test_tier_b_watch_etb_passes(self):
+    def test_specialty_watch_etb_is_muted(self):
         message = (
             "🔥 **[POKÉMON] POKEHULEN RESTOCK**\n"
             "**Pokemon 151 Elite Trainer Box**\n"
             "📦 Udsolgt → På lager"
         )
-        self.assertTrue(runner.restock_v2_channel_alert_allowed(message))
+        self.assertFalse(runner.restock_v2_channel_alert_allowed(message))
 
-    def test_tier_b_abundant_etb_is_muted(self):
+    def test_specialty_abundant_etb_is_muted(self):
         message = (
             "🔥 **[POKÉMON] CARDX RESTOCK**\n"
             "**Pitch Black Elite Trainer Box**\n"
@@ -67,15 +67,15 @@ class RestockV2RunnerTests(unittest.TestCase):
         )
         self.assertFalse(runner.restock_v2_channel_alert_allowed(message))
 
-    def test_tier_b_preorder_collection_passes(self):
+    def test_specialty_preorder_collection_is_muted(self):
         message = (
             "🚨 **[POKÉMON] NY FORUDBESTILLING HOS HALMES HULE**\n"
             "**Future Illustration Collection**\n"
             "📅 Forudbestilling"
         )
-        self.assertTrue(runner.restock_v2_channel_alert_allowed(message))
+        self.assertFalse(runner.restock_v2_channel_alert_allowed(message))
 
-    def test_tier_b_preorder_booster_pack_is_muted_unless_watch(self):
+    def test_specialty_preorder_booster_packs_are_muted(self):
         ordinary = (
             "🚨 **[POKÉMON] NY FORUDBESTILLING HOS HALMES HULE**\n"
             "**Future Booster Pack**\n"
@@ -87,9 +87,9 @@ class RestockV2RunnerTests(unittest.TestCase):
             "📅 Forudbestilling"
         )
         self.assertFalse(runner.restock_v2_channel_alert_allowed(ordinary))
-        self.assertTrue(runner.restock_v2_channel_alert_allowed(watch))
+        self.assertFalse(runner.restock_v2_channel_alert_allowed(watch))
 
-    def test_tier_b_catalogue_new_booster_pack_is_muted(self):
+    def test_specialty_catalogue_new_booster_pack_is_muted(self):
         message = (
             "🆕 **[POKÉMON] NYT HOS MATRAWS**\n"
             "**Journey Together Booster Pack**\n"

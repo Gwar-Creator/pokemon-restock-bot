@@ -132,7 +132,7 @@ class IndeksRetailShadowTests(unittest.TestCase):
         self.assertEqual(len(merged), 2)
         self.assertEqual(sorted(product["source_count"] for product in merged.values()), [1, 1])
 
-    def test_first_scan_is_shadow_and_writes_logical_baseline_without_webhook(self):
+    def test_first_scan_writes_shadow_sources_and_live_logical_baseline_without_webhook(self):
         with tempfile.TemporaryDirectory() as tmp:
             state_file = Path(tmp) / "state.json"
 
@@ -145,20 +145,47 @@ class IndeksRetailShadowTests(unittest.TestCase):
                 state = json.loads(state_file.read_text(encoding="utf-8"))
 
             self.assertEqual(status, 0)
-            self.assertEqual(state["mode"], "shadow")
-            self.assertEqual(state["version"], 2)
+            self.assertEqual(state["mode"], "mixed")
+            self.assertEqual(state["version"], 3)
             self.assertEqual(set(state["sources"]), {"legekaeden", "bogide"})
+            self.assertTrue(all(row["mode"] == "shadow" for row in state["sources"].values()))
             self.assertEqual(state["comparison"]["shared_handles"], 1)
             logical = state["logical_sources"]["indeks_retail"]
+            self.assertEqual(logical["mode"], "live")
             self.assertEqual(len(logical["products"]), 1)
             self.assertEqual(next(iter(logical["products"].values()))["source_count"], 2)
+
+    def test_logical_restock_emits_one_deduplicated_backup_retail_alert(self):
+        old_product = {
+            "name": "Pokemon 151 Booster Bundle",
+            "game": "POKÉMON",
+            "price": 549.95,
+            "in_stock": False,
+            "preorder": False,
+            "url": "https://www.legekaeden.dk/products/pokemon-151-booster-bundle",
+            "source_count": 2,
+        }
+        new_product = dict(old_product, in_stock=True)
+        sent = []
+
+        count = mod._emit_backup_alerts(
+            {"sku:151": old_product},
+            {"sku:151": new_product},
+            sender=sent.append,
+        )
+
+        self.assertEqual(count, 1)
+        self.assertEqual(len(sent), 1)
+        self.assertIn("INDEKS RETAIL", sent[0])
+        self.assertIn("RESTOCK", sent[0])
+        self.assertIn("Pokemon 151 Booster Bundle", sent[0])
 
     def test_failed_source_preserves_old_baseline(self):
         with tempfile.TemporaryDirectory() as tmp:
             state_file = Path(tmp) / "state.json"
             old_product = mod._normalise_product("legekaeden", SAMPLE)[1]
             state_file.write_text(json.dumps({
-                "version": 1,
+                "version": 2,
                 "mode": "shadow",
                 "sources": {
                     "legekaeden": {

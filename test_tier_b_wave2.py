@@ -209,7 +209,7 @@ class TierBWave2LiveTests(unittest.TestCase):
                 shadow.run_scan(fetcher=fake_fetch, sender=sent.append)
             self.assertEqual(sent, [])
 
-    def test_live_transition_uses_shared_strict_tier_b_gate(self):
+    def test_live_specialty_transition_is_data_only(self):
         sent = []
         old_products = {
             "good": {
@@ -250,10 +250,8 @@ class TierBWave2LiveTests(unittest.TestCase):
             products,
             sender=sent.append,
         )
-        self.assertEqual(count, 1)
-        self.assertEqual(len(sent), 1)
-        self.assertIn("30th Celebration Booster Bundle", sent[0])
-        self.assertNotIn("Checklane", sent[0])
+        self.assertEqual(count, 0)
+        self.assertEqual(sent, [])
 
 
 if __name__ == "__main__":

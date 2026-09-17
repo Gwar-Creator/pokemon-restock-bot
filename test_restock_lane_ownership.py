@@ -40,13 +40,13 @@ class RestockLaneOwnershipTests(unittest.TestCase):
                 with self.subTest(label=label, event=event_text):
                     self.assertFalse(lane.restock_lane_channel_alert_allowed(message))
 
-    def test_main_keeps_non_wave4_tier_b_event(self):
+    def test_main_mutes_non_wave4_specialty_event(self):
         message = (
             "🔥 **[POKÉMON] MATRAWS RESTOCK**\n"
             "**Pokemon 151 Booster Bundle**\n"
             "✅ På lager"
         )
-        self.assertTrue(lane.restock_lane_channel_alert_allowed(message))
+        self.assertFalse(lane.restock_lane_channel_alert_allowed(message))
 
     def test_hot_salling_is_online_only(self):
         local_only = {

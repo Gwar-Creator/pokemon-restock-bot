@@ -1,27 +1,31 @@
 #!/usr/bin/env python3
-"""Shadow scanner for Indeks Retail's Pokémon TCG catalogues.
+"""Indeks Retail backup-retail scanner.
 
-Bog & idé and Legekæden are fetched separately for source health, but exposed as
-one logical Indeks Retail catalogue so future alerting can never duplicate the
-same product across the two storefronts. No Discord webhook is read or called
-from this module.
+Bog & ide and Legekaeden are fetched separately for source health, then merged
+into one logical Indeks Retail catalogue. The two storefronts can therefore
+never produce duplicate Discord product alerts. Physical feeds remain diagnostic;
+the deduplicated logical source is the only live Tier B/backup-retail source.
 """
 
 from __future__ import annotations
 
 import json
+import os
 from datetime import datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
 import requests
 
+from alert_policy import backup_retail_signal_allowed
+
 
 STATE_FILE = Path("indeks_retail_shadow_state.json")
-STATE_VERSION = 2
+STATE_VERSION = 3
 MAX_PAGES = 5
 PAGE_SIZE = 250
 TIMEOUT_SECONDS = 20
+WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL", "").strip()
 
 SOURCES = {
     "legekaeden": {
@@ -48,7 +52,7 @@ def _now() -> str:
 def _empty_state() -> dict:
     return {
         "version": STATE_VERSION,
-        "mode": "shadow",
+        "mode": "mixed",
         "sources": {},
         "logical_sources": {},
     }
@@ -106,12 +110,11 @@ def _normalise_product(source_key: str, raw: dict) -> tuple[str, dict] | None:
         (price, variant) for price, variant in priced_all if price is not None
     ]
 
-    chosen = min(
+    chosen_price, chosen_variant = min(
         priced_available or priced_all,
         key=lambda item: item[0],
         default=(None, {}),
     )
-    chosen_price, chosen_variant = chosen
 
     skus = sorted(
         {
@@ -211,7 +214,6 @@ def _comparison(sources: dict) -> dict:
     left_handles = set(left)
     right_handles = set(right)
     shared_handles = sorted(left_handles & right_handles)
-
     left_skus = _sku_index(left)
     right_skus = _sku_index(right)
     shared_skus = sorted(set(left_skus) & set(right_skus))
@@ -276,7 +278,9 @@ def _refresh_logical_summary(entry: dict) -> None:
     retailers = entry.get("retailers") or {}
     offers = [value for value in retailers.values() if isinstance(value, dict)]
     in_stock_offers = [offer for offer in offers if offer.get("in_stock") is True]
-    priced_stock = [offer for offer in in_stock_offers if _price(offer.get("price")) is not None]
+    priced_stock = [
+        offer for offer in in_stock_offers if _price(offer.get("price")) is not None
+    ]
     priced_all = [offer for offer in offers if _price(offer.get("price")) is not None]
     best = min(
         priced_stock or priced_all,
@@ -302,8 +306,12 @@ def _merge_logical_catalogue(sources: dict) -> dict:
         products = ((sources.get(source_key) or {}).get("products") or {})
         for handle, product in products.items():
             markers = _product_markers(handle, product)
-            existing_keys = [marker_to_key[marker] for marker in markers if marker in marker_to_key]
-            logical_key = existing_keys[0] if existing_keys else (markers[0] if markers else f"handle:{handle}")
+            existing_keys = [
+                marker_to_key[marker] for marker in markers if marker in marker_to_key
+            ]
+            logical_key = existing_keys[0] if existing_keys else (
+                markers[0] if markers else f"handle:{handle}"
+            )
 
             entry = merged.get(logical_key)
             if entry is None:
@@ -317,8 +325,12 @@ def _merge_logical_catalogue(sources: dict) -> dict:
                     "preorder": bool(product.get("preorder")),
                     "url": product.get("url"),
                 }
-                entry["skus"] = sorted(set(entry.get("skus") or []) | set(product.get("skus") or []))
-                entry["barcodes"] = sorted(set(entry.get("barcodes") or []) | set(product.get("barcodes") or []))
+                entry["skus"] = sorted(
+                    set(entry.get("skus") or []) | set(product.get("skus") or [])
+                )
+                entry["barcodes"] = sorted(
+                    set(entry.get("barcodes") or []) | set(product.get("barcodes") or [])
+                )
                 if handle and handle not in entry.setdefault("handles", []):
                     entry["handles"].append(handle)
                     entry["handles"].sort()
@@ -328,6 +340,81 @@ def _merge_logical_catalogue(sources: dict) -> dict:
             _refresh_logical_summary(entry)
 
     return merged
+
+
+def _event_for_product(old_product, new_product):
+    if old_product is None:
+        if new_product.get("preorder") is True:
+            return "PREORDER"
+        if new_product.get("in_stock") is True:
+            return "NEW"
+        return None
+    if old_product.get("preorder") is not True and new_product.get("preorder") is True:
+        return "PREORDER"
+    if old_product.get("in_stock") is not True and new_product.get("in_stock") is True:
+        return "RESTOCK"
+    return None
+
+
+def _format_price(value):
+    try:
+        price = float(value)
+    except (TypeError, ValueError):
+        return None
+    if price <= 0:
+        return None
+    if price.is_integer():
+        return f"{int(price):,}".replace(",", ".") + " kr."
+    return f"{price:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".") + " kr."
+
+
+def _discord_message(product, event):
+    headline = {
+        "NEW": "🆕 NYT",
+        "PREORDER": "📅 FORUDBESTILLING",
+        "RESTOCK": "🚨 RESTOCK",
+    }.get(str(event or "").upper(), "🚨 RESTOCK")
+    lines = [
+        f"**{headline} — {LOGICAL_SOURCE_LABEL}**",
+        f"**{product.get('name') or 'Ukendt produkt'}**",
+    ]
+    price = _format_price(product.get("price"))
+    if price:
+        lines.append(f"Pris: {price}")
+    url = str(product.get("url") or "").strip()
+    if url:
+        lines.append(f"<{url}>")
+    return "\n".join(lines)
+
+
+def _post_discord(message):
+    if not WEBHOOK_URL:
+        raise RuntimeError("DISCORD_WEBHOOK_URL mangler til Indeks Retail")
+    response = requests.post(WEBHOOK_URL, json={"content": message}, timeout=15)
+    response.raise_for_status()
+
+
+def _noop_sender(_message):
+    return None
+
+
+def _emit_backup_alerts(old_products, products, *, sender=_post_discord):
+    # A missing logical baseline must never replay the current catalogue.
+    if not old_products:
+        print("INDEKS LIVE: ingen tidligere logisk baseline; alerts undertrykt denne kørsel")
+        return 0
+
+    sent = 0
+    for product_id, product in products.items():
+        event = _event_for_product(old_products.get(product_id), product)
+        if event is None:
+            continue
+        name = str(product.get("name") or "").strip()
+        if not backup_retail_signal_allowed(name, event=event):
+            continue
+        sender(_discord_message(product, event))
+        sent += 1
+    return sent
 
 
 def _success_health(old_health: dict, count: int, now: str, changed: bool) -> dict:
@@ -357,9 +444,19 @@ def _failure_health(old_health: dict, error: Exception, now: str) -> dict:
     }
 
 
-def run_scan(fetcher=fetch_source) -> int:
+def run_scan(fetcher=fetch_source, sender=None) -> int:
+    # Deterministic tests inject a fetcher; keep them offline unless a sender is
+    # explicitly provided. Production uses the shared Restock webhook.
+    if sender is None:
+        sender = _post_discord if fetcher is fetch_source else _noop_sender
+
     old_state = _load_state()
     old_sources = old_state.get("sources") or {}
+    old_logical = (
+        ((old_state.get("logical_sources") or {}).get(LOGICAL_SOURCE_KEY) or {})
+        .get("products")
+        or {}
+    )
     new_sources = {}
     successful = 0
     changed = False
@@ -379,14 +476,14 @@ def run_scan(fetcher=fetch_source) -> int:
             changed = changed or source_changed or health != old_health
             stock = sum(1 for product in products.values() if product.get("in_stock") is True)
             print(
-                f"INDEKS SHADOW {config['label']}: {len(products)} produkter | "
+                f"INDEKS SOURCE {config['label']}: {len(products)} produkter | "
                 f"på lager {stock} | health=ok"
             )
         except Exception as error:
             health = _failure_health(old_health, error, now)
             changed = True
             print(
-                f"INDEKS SHADOW {config['label']} FEJL: {error} | "
+                f"INDEKS SOURCE {config['label']} FEJL: {error} | "
                 "gammel baseline bevaret"
             )
 
@@ -398,26 +495,23 @@ def run_scan(fetcher=fetch_source) -> int:
         }
 
     comparison = _comparison(new_sources)
-    old_comparison = old_state.get("comparison") or {}
-    changed = changed or comparison != old_comparison
+    changed = changed or comparison != (old_state.get("comparison") or {})
 
     merged_products = _merge_logical_catalogue(new_sources)
+    sent_alerts = _emit_backup_alerts(old_logical, merged_products, sender=sender)
     logical_sources = {
         LOGICAL_SOURCE_KEY: {
             "label": LOGICAL_SOURCE_LABEL,
-            "mode": "shadow",
+            "mode": "live",
             "products": merged_products,
         }
     }
-    old_logical_sources = old_state.get("logical_sources") or {}
-    changed = changed or logical_sources != old_logical_sources
+    changed = changed or logical_sources != (old_state.get("logical_sources") or {})
 
     state = {
         "version": STATE_VERSION,
-        "mode": "shadow",
-        "updated_at": (
-            now if changed or not old_state.get("updated_at") else old_state.get("updated_at")
-        ),
+        "mode": "mixed",
+        "updated_at": now if changed or not old_state.get("updated_at") else old_state.get("updated_at"),
         "sources": new_sources,
         "logical_sources": logical_sources,
         "comparison": comparison,
@@ -431,17 +525,16 @@ def run_scan(fetcher=fetch_source) -> int:
         1 for product in merged_products.values() if product.get("in_stock") is True
     )
     print(
-        "INDEKS SHADOW overlap: "
+        "INDEKS overlap: "
         f"handles={comparison['shared_handles']} | "
         f"sku/barcode={comparison['shared_skus_or_barcodes']} | "
         f"stock-forskelle={len(comparison['stock_disagreements'])} | "
         f"prisforskelle={len(comparison['price_disagreements'])}"
     )
     print(
-        f"INDEKS LOGICAL: {len(merged_products)} unikke produkter | "
-        f"på lager {logical_stock} | dublet-alerts=umulige i denne kilde"
+        f"INDEKS LOGICAL LIVE: {len(merged_products)} unikke produkter | "
+        f"på lager {logical_stock} | Discord alerts={sent_alerts}"
     )
-    print(f"INDEKS SHADOW: {successful}/{len(SOURCES)} kilder ok | Discord=off")
     return 0 if successful else 1
 
 
