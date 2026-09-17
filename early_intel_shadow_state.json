@@ -6602,8 +6602,8 @@
           "price": 349.0,
           "sold_in_stores": false,
           "sold_online": true,
-          "stage": "LIVE_STOCK",
-          "stock_online": 2,
+          "stage": "EXPOSED_NO_STOCK",
+          "stock_online": 0,
           "stock_stores": 0
         },
         "br": {
@@ -6613,8 +6613,8 @@
           "price": 349.0,
           "sold_in_stores": false,
           "sold_online": true,
-          "stage": "LIVE_STOCK",
-          "stock_online": 2,
+          "stage": "EXPOSED_NO_STOCK",
+          "stock_online": 0,
           "stock_stores": 0
         },
         "foetex": {
@@ -6624,8 +6624,8 @@
           "price": 349.0,
           "sold_in_stores": false,
           "sold_online": true,
-          "stage": "LIVE_STOCK",
-          "stock_online": 2,
+          "stage": "EXPOSED_NO_STOCK",
+          "stock_online": 0,
           "stock_stores": 0
         }
       }
@@ -6642,7 +6642,7 @@
           "sold_in_stores": false,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 236,
+          "stock_online": 222,
           "stock_stores": 0
         },
         "br": {
@@ -6653,7 +6653,7 @@
           "sold_in_stores": false,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 236,
+          "stock_online": 225,
           "stock_stores": 0
         },
         "foetex": {
@@ -6664,7 +6664,7 @@
           "sold_in_stores": false,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 236,
+          "stock_online": 222,
           "stock_stores": 0
         }
       }
@@ -6788,112 +6788,6 @@
     }
   },
   "events": [
-    {
-      "event": "CHANGE",
-      "fields": [
-        "in_stock_stores_count"
-      ],
-      "name": "Pokémon TCG booster pack samlekort",
-      "product_id": "200366277",
-      "sku": "11263280-EA",
-      "source": "br",
-      "stage_after": "HIDDEN_STOCK",
-      "stage_before": "HIDDEN_STOCK",
-      "ts": 1788859469.8124545
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "in_stock_stores_count"
-      ],
-      "name": "Pokémon Pitch Black 1-pak – flere varianter – assorteret",
-      "product_id": "200380909",
-      "sku": "11320906-EA",
-      "source": "br",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1788859469.8125656
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "in_stock_stores_count"
-      ],
-      "name": "Pokémon Battle Deck EX samlekort",
-      "product_id": "200215319",
-      "sku": "10564347-EA",
-      "source": "foetex",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1788859472.084329
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "in_stock_stores_count"
-      ],
-      "name": "Pokémon TCG booster pack samlekort",
-      "product_id": "200366277",
-      "sku": "11263280-EA",
-      "source": "foetex",
-      "stage_after": "HIDDEN_STOCK",
-      "stage_before": "HIDDEN_STOCK",
-      "ts": 1788859472.0851123
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "in_stock_stores_count"
-      ],
-      "name": "Pokémon Pitch Black 1-pak – flere varianter – assorteret",
-      "product_id": "200380909",
-      "sku": "11320906-EA",
-      "source": "foetex",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1788859472.085228
-    },
-    {
-      "event": "CROSS_CHANGE",
-      "fields": [
-        "foetex"
-      ],
-      "name": "Pokémon Battle Deck EX samlekort",
-      "product_id": "10564347-EA",
-      "sku": "10564347-EA",
-      "source": "cross_salling",
-      "stage_after": null,
-      "stage_before": null,
-      "ts": 1788859476.2105489
-    },
-    {
-      "event": "CROSS_CHANGE",
-      "fields": [
-        "br",
-        "foetex"
-      ],
-      "name": "Pokémon TCG booster pack samlekort",
-      "product_id": "11263280-EA",
-      "sku": "11263280-EA",
-      "source": "cross_salling",
-      "stage_after": null,
-      "stage_before": null,
-      "ts": 1788859476.2107189
-    },
-    {
-      "event": "CROSS_CHANGE",
-      "fields": [
-        "br",
-        "foetex"
-      ],
-      "name": "Pokémon Pitch Black 1-pak – flere varianter – assorteret",
-      "product_id": "11320906-EA",
-      "sku": "11320906-EA",
-      "source": "cross_salling",
-      "stage_after": null,
-      "stage_before": null,
-      "ts": 1788859476.2107456
-    },
     {
       "event": "CHANGE",
       "fields": [
@@ -22555,6 +22449,117 @@
       "stage_after": null,
       "stage_before": null,
       "ts": 1789627175.7579007
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stage",
+        "stock_count_online"
+      ],
+      "name": "Pokémon Sylveon ex Box 30th",
+      "product_id": "200392806",
+      "sku": "11381817-EA",
+      "source": "br",
+      "stage_after": "EXPOSED_NO_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1789627471.007857
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokemon Greninja EX samlekort box",
+      "product_id": "200392807",
+      "sku": "11381820-EA",
+      "source": "br",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1789627471.007869
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stage",
+        "stock_count_online"
+      ],
+      "name": "Pokémon Sylveon ex Box 30th",
+      "product_id": "200392806",
+      "sku": "11381817-EA",
+      "source": "bilka",
+      "stage_after": "EXPOSED_NO_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1789627472.3465247
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokemon Greninja EX samlekort box",
+      "product_id": "200392807",
+      "sku": "11381820-EA",
+      "source": "bilka",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1789627472.3465357
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stage",
+        "stock_count_online"
+      ],
+      "name": "Pokémon Sylveon ex Box 30th",
+      "product_id": "200392806",
+      "sku": "11381817-EA",
+      "source": "foetex",
+      "stage_after": "EXPOSED_NO_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1789627473.5671391
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokemon Greninja EX samlekort box",
+      "product_id": "200392807",
+      "sku": "11381820-EA",
+      "source": "foetex",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1789627473.5671499
+    },
+    {
+      "event": "CROSS_CHANGE",
+      "fields": [
+        "bilka",
+        "br",
+        "foetex"
+      ],
+      "name": "Pokémon Sylveon ex Box 30th",
+      "product_id": "11381817-EA",
+      "sku": "11381817-EA",
+      "source": "cross_salling",
+      "stage_after": null,
+      "stage_before": null,
+      "ts": 1789627477.1365476
+    },
+    {
+      "event": "CROSS_CHANGE",
+      "fields": [
+        "bilka",
+        "br",
+        "foetex"
+      ],
+      "name": "Pokemon Greninja EX samlekort box",
+      "product_id": "11381820-EA",
+      "sku": "11381820-EA",
+      "source": "cross_salling",
+      "stage_after": null,
+      "stage_before": null,
+      "ts": 1789627477.1365561
     }
   ],
   "sources": {
@@ -27487,8 +27492,8 @@
         "sku": "11381817-EA",
         "sold_in_stores": false,
         "sold_online": true,
-        "stage": "LIVE_STOCK",
-        "stock_count_online": 2,
+        "stage": "EXPOSED_NO_STOCK",
+        "stock_count_online": 0,
         "url": "https://www.bilka.dk/produkter/pokemon-sylveon-ex-box-30th/200392806/"
       },
       "200392807": {
@@ -27520,7 +27525,7 @@
         "sold_in_stores": false,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 236,
+        "stock_count_online": 222,
         "url": "https://www.bilka.dk/produkter/pokemon-greninja-ex-samlekort-box/200392807/"
       },
       "200392808": {
@@ -32607,8 +32612,8 @@
         "sku": "11381817-EA",
         "sold_in_stores": false,
         "sold_online": true,
-        "stage": "LIVE_STOCK",
-        "stock_count_online": 2,
+        "stage": "EXPOSED_NO_STOCK",
+        "stock_count_online": 0,
         "url": "https://www.br.dk/produkter/pokemon-sylveon-ex-box-30th/200392806/"
       },
       "200392807": {
@@ -32640,7 +32645,7 @@
         "sold_in_stores": false,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 236,
+        "stock_count_online": 225,
         "url": "https://www.br.dk/produkter/pokemon-greninja-ex-samlekort-box/200392807/"
       },
       "200392808": {
@@ -37660,8 +37665,8 @@
         "sku": "11381817-EA",
         "sold_in_stores": false,
         "sold_online": true,
-        "stage": "LIVE_STOCK",
-        "stock_count_online": 2,
+        "stage": "EXPOSED_NO_STOCK",
+        "stock_count_online": 0,
         "url": "https://www.foetex.dk/produkter/pokemon-sylveon-ex-box-30th/200392806/"
       },
       "200392807": {
@@ -37693,7 +37698,7 @@
         "sold_in_stores": false,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 236,
+        "stock_count_online": 222,
         "url": "https://www.foetex.dk/produkter/pokemon-greninja-ex-samlekort-box/200392807/"
       },
       "200392808": {
@@ -37852,6 +37857,6 @@
       }
     }
   },
-  "updated_at": 1789627175.75794,
+  "updated_at": 1789627477.136598,
   "version": 1
 }
