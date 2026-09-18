@@ -1,19 +1,19 @@
 {
   "version": 2,
   "mode": "mixed",
-  "updated_at": "2026-09-18T11:15:59.970688+00:00",
+  "updated_at": "2026-09-18T11:20:58.982195+00:00",
   "sources": {
     "cardcollective": {
       "label": "CARD COLLECTIVE",
       "mode": "live",
       "stock_trust": "trusted",
       "health": {
-        "status": "ok",
-        "last_attempt": "2026-09-16T08:30:46.880018+00:00",
+        "status": "failed",
+        "last_attempt": "2026-09-18T11:20:30.167440+00:00",
         "last_success": "2026-09-16T08:30:46.880018+00:00",
-        "consecutive_failures": 0,
-        "last_error": "",
-        "observed_count": 43
+        "consecutive_failures": 1,
+        "last_error": "503 Server Error: Service Unavailable for url: https://cardcollective.dk/collections/pokemon/products.json?limit=250&page=2",
+        "observed_count": null
       },
       "products": {
         "10531597353262": {
@@ -2141,9 +2141,9 @@
       "stock_trust": "trusted",
       "health": {
         "status": "failed",
-        "last_attempt": "2026-09-18T11:15:55.883204+00:00",
+        "last_attempt": "2026-09-18T11:20:53.549398+00:00",
         "last_success": "2026-09-06T21:10:58.635416+00:00",
-        "consecutive_failures": 2457,
+        "consecutive_failures": 2458,
         "last_error": "mistænkeligt lavt produktantal: 3 < 5",
         "observed_count": 3
       },
