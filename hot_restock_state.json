@@ -14,6 +14,12 @@
         "price": 1199.0,
         "online_stock": true
       },
+      "https://www.coolshop.dk/produkt/pokemon-30th-celebration-2-pack-blister-pok10666-102/23Y9X4/": {
+        "name": "Pokémon - 30th Celebration - 2 pack Blister (POK10666-102)",
+        "game": "POKÉMON",
+        "price": 159.95,
+        "online_stock": false
+      },
       "https://www.coolshop.dk/produkt/pokemon-pokeball-tin-pok10273-104/23XH6F/": {
         "name": "Pokémon - Pokeball Tin (POK10273-104)",
         "game": "POKÉMON",
@@ -30,12 +36,6 @@
         "name": "Pokémon - First Partner Illustration Collection: Series 2 (POK10395-101)",
         "game": "POKÉMON",
         "price": 349.0,
-        "online_stock": false
-      },
-      "https://www.coolshop.dk/produkt/pokemon-30th-celebration-2-pack-blister-pok10666-102/23Y9X4/": {
-        "name": "Pokémon - 30th Celebration - 2 pack Blister (POK10666-102)",
-        "game": "POKÉMON",
-        "price": 159.95,
         "online_stock": false
       },
       "https://www.coolshop.dk/produkt/pokemon-30th-celebrations-tin-box-pok10466-101/23Y9X5/": {
@@ -63,35 +63,35 @@
         "price": 329.0,
         "stock": "PÅ LAGER",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
-        "fetch_via": "jina_reader"
+        "fetch_via": "jina_reader+direct_frontend_search"
       },
       "3417744": {
         "name": "Pokemon TCG Mega Charizard X ex Ultra Premium Collection",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
-        "fetch_via": "jina_reader"
+        "fetch_via": "jina_reader+direct_frontend_search"
       },
       "3478498": {
         "name": "Pokemon TCG First Partner Illustration Collection Box Series 2",
         "price": null,
-        "stock": "PÅ LAGER",
+        "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-First-Partner-Illustration-Collection-Box-Series-2/3478498",
-        "fetch_via": "jina_reader"
+        "fetch_via": "jina_reader+direct_frontend_search"
       },
       "3478496": {
         "name": "Pokemon TCG Mega Greninja ex Premium Collection",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
-        "fetch_via": "jina_reader"
+        "fetch_via": "jina_reader+direct_frontend_search"
       },
       "3447592": {
         "name": "Pokemon TCG Mega EvolutionChaos Rising Booster box with 36 boosters",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-EvolutionChaos-Rising-Booster-box-with-36-boosters/3447592",
-        "fetch_via": "jina_reader"
+        "fetch_via": "jina_reader+direct_frontend_search"
       },
       "3502024": {
         "name": "Pokemon 2 Pack Blister 30th Celebration",
@@ -738,12 +738,12 @@
       "last_success_at": "2026-09-18T14:14:10.054947+00:00"
     },
     "proshop": {
-      "backoff_level": 1,
-      "next_allowed_at": 1789754356.847018,
-      "generic_failures": 1,
-      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "backoff_level": 0,
+      "next_allowed_at": 0.0,
+      "generic_failures": 0,
+      "last_error": null,
       "last_failure_at": "2026-09-18T17:57:16.846987+00:00",
-      "last_success_at": "2026-09-18T17:56:23.033024+00:00"
+      "last_success_at": "2026-09-18T18:04:42.326973+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -770,6 +770,6 @@
       "last_success_at": "2026-09-04T20:59:40.632991+00:00"
     }
   },
-  "updated_at": "2026-09-18T17:59:17.074564+00:00",
+  "updated_at": "2026-09-18T18:04:55.496484+00:00",
   "proshop_discovery_version": 4
 }
