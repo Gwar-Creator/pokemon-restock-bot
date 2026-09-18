@@ -92,18 +92,18 @@
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
         "fetch_via": "jina_reader"
       },
-      "3447592": {
-        "name": "Pokemon TCG Mega EvolutionChaos Rising Booster box with 36 boosters",
-        "price": null,
-        "stock": "BESTILLINGSVARE",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-EvolutionChaos-Rising-Booster-box-with-36-boosters/3447592",
-        "fetch_via": "jina_reader"
-      },
       "3502024": {
         "name": "Pokemon 2 Pack Blister 30th Celebration",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-2-Pack-Blister-30th-Celebration/3502024",
+        "fetch_via": "jina_reader"
+      },
+      "3447592": {
+        "name": "Pokemon TCG Mega EvolutionChaos Rising Booster box with 36 boosters",
+        "price": null,
+        "stock": "BESTILLINGSVARE",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-EvolutionChaos-Rising-Booster-box-with-36-boosters/3447592",
         "fetch_via": "jina_reader"
       }
     },
@@ -744,12 +744,12 @@
       "last_success_at": "2026-09-16T22:39:04.724321+00:00"
     },
     "proshop": {
-      "backoff_level": 1,
-      "next_allowed_at": 1789731861.2914047,
-      "generic_failures": 1,
-      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "backoff_level": 0,
+      "next_allowed_at": 0.0,
+      "generic_failures": 0,
+      "last_error": null,
       "last_failure_at": "2026-09-18T11:42:21.291372+00:00",
-      "last_success_at": "2026-09-18T11:41:25.917078+00:00"
+      "last_success_at": "2026-09-18T11:49:12.715436+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -776,6 +776,6 @@
       "last_success_at": "2026-09-04T20:59:40.632991+00:00"
     }
   },
-  "updated_at": "2026-09-18T11:44:21.626494+00:00",
+  "updated_at": "2026-09-18T11:49:24.394558+00:00",
   "proshop_discovery_version": 4
 }
