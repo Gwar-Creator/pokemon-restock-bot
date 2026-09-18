@@ -597,7 +597,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 429,
+          "stock_online": 428,
           "stock_stores": 19
         },
         "br": {
@@ -608,7 +608,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 429,
+          "stock_online": 428,
           "stock_stores": 29
         },
         "foetex": {
@@ -619,7 +619,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 429,
+          "stock_online": 428,
           "stock_stores": 69
         }
       }
@@ -6788,62 +6788,6 @@
     }
   },
   "events": [
-    {
-      "event": "CHANGE",
-      "fields": [
-        "stock_count_online"
-      ],
-      "name": "Pokémon Tech Sticker Collection 30th",
-      "product_id": "200392203",
-      "sku": "11379491-EA",
-      "source": "foetex",
-      "stage_after": "EXPOSED_NO_STOCK",
-      "stage_before": "EXPOSED_NO_STOCK",
-      "ts": 1789530272.8532753
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "stage",
-        "stock_count_online"
-      ],
-      "name": "Pokémon Ex Box 30th samlekort",
-      "product_id": "200392206",
-      "sku": "11379494-EA",
-      "source": "foetex",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "EXPOSED_NO_STOCK",
-      "ts": 1789530272.853286
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "stage",
-        "stock_count_online"
-      ],
-      "name": "Pokémon Tin Ex 30th",
-      "product_id": "200392215",
-      "sku": "11379496-EA",
-      "source": "foetex",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "EXPOSED_NO_STOCK",
-      "ts": 1789530272.8532944
-    },
-    {
-      "event": "CROSS_CHANGE",
-      "fields": [
-        "bilka",
-        "br",
-        "foetex"
-      ],
-      "name": "Pokémon Ex Box 30th samlekort",
-      "product_id": "11379494-EA",
-      "sku": "11379494-EA",
-      "source": "cross_salling",
-      "stage_after": null,
-      "stage_before": null,
-      "ts": 1789530276.418459
-    },
     {
       "event": "CROSS_CHANGE",
       "fields": [
@@ -22442,6 +22386,60 @@
       "stage_after": "INBOUND_UNDATED",
       "stage_before": "LIVE_STOCK",
       "ts": 1789757671.541946
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon Battle Deck EX samlekort",
+      "product_id": "200215319",
+      "sku": "10564347-EA",
+      "source": "br",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1789762473.5295506
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon Battle Deck EX samlekort",
+      "product_id": "200215319",
+      "sku": "10564347-EA",
+      "source": "bilka",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1789762475.006929
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon Battle Deck EX samlekort",
+      "product_id": "200215319",
+      "sku": "10564347-EA",
+      "source": "foetex",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1789762476.1490593
+    },
+    {
+      "event": "CROSS_CHANGE",
+      "fields": [
+        "bilka",
+        "br",
+        "foetex"
+      ],
+      "name": "Pokémon Battle Deck EX samlekort",
+      "product_id": "10564347-EA",
+      "sku": "10564347-EA",
+      "source": "cross_salling",
+      "stage_after": null,
+      "stage_before": null,
+      "ts": 1789762483.958445
     }
   ],
   "sources": {
@@ -22938,7 +22936,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 429,
+        "stock_count_online": 428,
         "url": "https://www.bilka.dk/produkter/pokemon-battle-deck-ex-samlekort/200215319/"
       },
       "200223003": {
@@ -27963,7 +27961,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 429,
+        "stock_count_online": 428,
         "url": "https://www.br.dk/produkter/pokemon-battle-deck-ex-samlekort/200215319/"
       },
       "200223003": {
@@ -33071,7 +33069,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 429,
+        "stock_count_online": 428,
         "url": "https://www.foetex.dk/produkter/pokemon-battle-deck-ex-samlekort/200215319/"
       },
       "200223003": {
@@ -37627,7 +37625,7 @@
         "name": "Pokemon TCG Mega Charizard X ex Ultra Premium Collection",
         "new_badge": false,
         "price": null,
-        "raw_status_excerpt": " Bestillingsvare, leveringstiden kan ikke oplyses * [![Image 18: Pokemon - Pokemon TCG First Partner Illustration Collection Box Series 2 - POK10395-101](https://www.proshop.dk/Images/174x116/3478498_90a682585222.png)](https://www.proshop.dk/Pokemon/Pokemon-TCG-First-Partner-Illustration-Collection-Box-Series-2/3478498 \"Pokemon TCG First Partner Illustration Collection Box Series 2 - POK10395-101\") ## ",
+        "raw_status_excerpt": " Bestillingsvare, leveringstiden kan ikke oplyses * [![Image 17: Pokemon - Pokemon TCG 2-pack Booster - POK10412-101](https://www.proshop.dk/Images/174x116/3478497_4ba6ac470992.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-2-pack-Booster/3478497 \"Pokemon TCG 2-pack Booster - POK10412-101\") ## ",
         "stage": "INBOUND_UNDATED",
         "status": "BESTILLINGSVARE",
         "surface_statuses": {
@@ -37714,6 +37712,6 @@
       }
     }
   },
-  "updated_at": 1789762173.621696,
+  "updated_at": 1789762483.958658,
   "version": 1
 }
