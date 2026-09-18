@@ -6794,20 +6794,6 @@
         "stage",
         "stock_count_online"
       ],
-      "name": "Pokémon Ex Box 30th samlekort",
-      "product_id": "200392206",
-      "sku": "11379494-EA",
-      "source": "br",
-      "stage_after": "EXPOSED_NO_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1789530561.9593608
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "stage",
-        "stock_count_online"
-      ],
       "name": "Pokémon Tin Ex 30th",
       "product_id": "200392215",
       "sku": "11379496-EA",
@@ -22438,6 +22424,19 @@
       "stage_after": "LIVE_STOCK",
       "stage_before": "LIVE_STOCK",
       "ts": 1789763067.5472436
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
+      "product_id": "3447589",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1789763372.5932891
     }
   ],
   "sources": {
@@ -37645,9 +37644,11 @@
         "stage": "LIVE_STOCK",
         "status": "PÅ LAGER",
         "surface_statuses": {
+          "pokemon-brand": "PÅ LAGER",
           "pokemon-kort": "PÅ LAGER"
         },
         "surfaces": [
+          "pokemon-brand",
           "pokemon-kort"
         ],
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Zygarde-ex-Premium-Collection/3447589"
@@ -37708,6 +37709,6 @@
       }
     }
   },
-  "updated_at": 1789763067.5485437,
+  "updated_at": 1789763372.5947735,
   "version": 1
 }
