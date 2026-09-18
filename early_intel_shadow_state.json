@@ -830,7 +830,7 @@
           "price": 399.0,
           "sold_in_stores": false,
           "sold_online": false,
-          "stage": "PREPARED",
+          "stage": "CATALOG_RECORD",
           "stock_online": 0,
           "stock_stores": 0
         },
@@ -852,7 +852,7 @@
           "price": 399.0,
           "sold_in_stores": false,
           "sold_online": false,
-          "stage": "PREPARED",
+          "stage": "CATALOG_RECORD",
           "stock_online": 0,
           "stock_stores": 0
         }
@@ -2390,7 +2390,7 @@
           "price": 299.0,
           "sold_in_stores": false,
           "sold_online": false,
-          "stage": "PREPARED",
+          "stage": "CATALOG_RECORD",
           "stock_online": 0,
           "stock_stores": 0
         },
@@ -2412,7 +2412,7 @@
           "price": 299.0,
           "sold_in_stores": false,
           "sold_online": false,
-          "stage": "PREPARED",
+          "stage": "CATALOG_RECORD",
           "stock_online": 0,
           "stock_stores": 0
         }
@@ -6788,147 +6788,6 @@
     }
   },
   "events": [
-    {
-      "event": "CROSS_CHANGE",
-      "fields": [
-        "bilka",
-        "foetex"
-      ],
-      "name": "Pokémon Battle Academy 2024",
-      "product_id": "10791068-EA",
-      "sku": "10791068-EA",
-      "source": "cross_salling",
-      "stage_after": null,
-      "stage_before": null,
-      "ts": 1789481674.2147737
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "stock_count_online"
-      ],
-      "name": "Pokémon Battle Academy 2024",
-      "product_id": "200279925",
-      "sku": "10791068-EA",
-      "source": "br",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1789481980.3619134
-    },
-    {
-      "event": "CROSS_CHANGE",
-      "fields": [
-        "br"
-      ],
-      "name": "Pokémon Battle Academy 2024",
-      "product_id": "10791068-EA",
-      "sku": "10791068-EA",
-      "source": "cross_salling",
-      "stage_after": null,
-      "stage_before": null,
-      "ts": 1789481986.5584311
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "in_stock_stores_count"
-      ],
-      "name": "Pokémon Chaos Rising Elite Trainer Box",
-      "product_id": "200366283",
-      "sku": "11263286-EA",
-      "source": "br",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1789485888.6736374
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "f_stock_availability",
-        "in_stock_stores_count",
-        "is_click_and_collectible",
-        "stage"
-      ],
-      "name": "Pokemon First Partner collection box 3 samlekort",
-      "product_id": "200385295",
-      "sku": "11350615-EA",
-      "source": "foetex",
-      "stage_after": "EXPOSED_NO_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1789485891.3934457
-    },
-    {
-      "event": "CROSS_CHANGE",
-      "fields": [
-        "br"
-      ],
-      "name": "Pokémon Chaos Rising Elite Trainer Box",
-      "product_id": "11263286-EA",
-      "sku": "11263286-EA",
-      "source": "cross_salling",
-      "stage_after": null,
-      "stage_before": null,
-      "ts": 1789485895.3090253
-    },
-    {
-      "event": "CROSS_CHANGE",
-      "fields": [
-        "foetex"
-      ],
-      "name": "Pokemon First Partner collection box 3 samlekort",
-      "product_id": "11350615-EA",
-      "sku": "11350615-EA",
-      "source": "cross_salling",
-      "stage_after": null,
-      "stage_before": null,
-      "ts": 1789485895.309046
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "surface_statuses"
-      ],
-      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
-      "product_id": "3447589",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1789488300.3746717
-    },
-    {
-      "event": "REMOVED",
-      "fields": [],
-      "name": "Pokemon TCG Mega Charizard X ex Ultra Premium Collection",
-      "product_id": "3417744",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "INBOUND_UNDATED",
-      "stage_before": null,
-      "ts": 1789488300.3746843
-    },
-    {
-      "event": "REMOVED",
-      "fields": [],
-      "name": "Pokemon TCG Mega EvolutionChaos Rising Booster box with 36 boosters",
-      "product_id": "3447592",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "INBOUND_UNDATED",
-      "stage_before": null,
-      "ts": 1789488300.3746881
-    },
-    {
-      "event": "REMOVED",
-      "fields": [],
-      "name": "Pokemon TCG Mega Greninja ex Premium Collection",
-      "product_id": "3478496",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "INBOUND_UNDATED",
-      "stage_before": null,
-      "ts": 1789488300.374691
-    },
     {
       "event": "REMOVED",
       "fields": [],
@@ -22393,6 +22252,159 @@
       "stage_after": null,
       "stage_before": null,
       "ts": 1789733382.5980082
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "online_to"
+      ],
+      "name": "Pokémon TCG Darkrai VSTAR Premium Collection samlekort",
+      "product_id": "200245190",
+      "sku": "10655063-EA",
+      "source": "br",
+      "stage_after": "CATALOG_RECORD",
+      "stage_before": "CATALOG_RECORD",
+      "ts": 1789733664.878061
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "online_to"
+      ],
+      "name": "Pokémon TCG collector's chest pikachu",
+      "product_id": "200307649",
+      "sku": "10910095-EA",
+      "source": "br",
+      "stage_after": "CATALOG_RECORD",
+      "stage_before": "CATALOG_RECORD",
+      "ts": 1789733664.8782506
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "online_to"
+      ],
+      "name": "Pokémon Mega Evolution booster pakke – flere varianter – assorteret",
+      "product_id": "200334974",
+      "sku": "11100634-EA",
+      "source": "br",
+      "stage_after": "DATED_PREP",
+      "stage_before": "DATED_PREP",
+      "ts": 1789733664.878458
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "is_reservable",
+        "online_to",
+        "stage"
+      ],
+      "name": "Pokémon TCG Darkrai VSTAR Premium Collection samlekort",
+      "product_id": "200245190",
+      "sku": "10655063-EA",
+      "source": "bilka",
+      "stage_after": "CATALOG_RECORD",
+      "stage_before": "PREPARED",
+      "ts": 1789733666.1841574
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "is_reservable",
+        "online_to",
+        "stage"
+      ],
+      "name": "Pokémon TCG collector's chest pikachu",
+      "product_id": "200307649",
+      "sku": "10910095-EA",
+      "source": "bilka",
+      "stage_after": "CATALOG_RECORD",
+      "stage_before": "PREPARED",
+      "ts": 1789733666.1843581
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "online_to"
+      ],
+      "name": "Pokémon Mega Evolution booster pakke – flere varianter – assorteret",
+      "product_id": "200334974",
+      "sku": "11100634-EA",
+      "source": "bilka",
+      "stage_after": "DATED_PREP",
+      "stage_before": "DATED_PREP",
+      "ts": 1789733666.1845446
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "is_reservable",
+        "online_to",
+        "stage"
+      ],
+      "name": "Pokémon TCG Darkrai VSTAR Premium Collection samlekort",
+      "product_id": "200245190",
+      "sku": "10655063-EA",
+      "source": "foetex",
+      "stage_after": "CATALOG_RECORD",
+      "stage_before": "PREPARED",
+      "ts": 1789733667.5200024
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "is_reservable",
+        "online_to",
+        "stage"
+      ],
+      "name": "Pokémon TCG collector's chest pikachu",
+      "product_id": "200307649",
+      "sku": "10910095-EA",
+      "source": "foetex",
+      "stage_after": "CATALOG_RECORD",
+      "stage_before": "PREPARED",
+      "ts": 1789733667.5201945
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "online_to"
+      ],
+      "name": "Pokémon Mega Evolution booster pakke – flere varianter – assorteret",
+      "product_id": "200334974",
+      "sku": "11100634-EA",
+      "source": "foetex",
+      "stage_after": "DATED_PREP",
+      "stage_before": "DATED_PREP",
+      "ts": 1789733667.5203986
+    },
+    {
+      "event": "CROSS_CHANGE",
+      "fields": [
+        "bilka",
+        "foetex"
+      ],
+      "name": "Pokémon TCG Darkrai VSTAR Premium Collection samlekort",
+      "product_id": "10655063-EA",
+      "sku": "10655063-EA",
+      "source": "cross_salling",
+      "stage_after": null,
+      "stage_before": null,
+      "ts": 1789733674.6135254
+    },
+    {
+      "event": "CROSS_CHANGE",
+      "fields": [
+        "bilka",
+        "foetex"
+      ],
+      "name": "Pokémon TCG collector's chest pikachu",
+      "product_id": "10910095-EA",
+      "sku": "10910095-EA",
+      "source": "cross_salling",
+      "stage_after": null,
+      "stage_before": null,
+      "ts": 1789733674.6135788
     }
   ],
   "sources": {
@@ -23035,7 +23047,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-tcg-oinkologne-ex-box/200245189/"
       },
       "200245190": {
-        "epoch_updated_at": 1789732948,
+        "epoch_updated_at": 1789733604,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -23045,12 +23057,12 @@
         "in_stock_stores_count": 0,
         "is_click_and_collectible": false,
         "is_exposed": false,
-        "is_reservable": true,
+        "is_reservable": false,
         "name": "Pokémon TCG Darkrai VSTAR Premium Collection samlekort",
         "not_reservable_from": null,
         "not_reservable_to": null,
         "online_from": "2023-11-09 00:00:00+00",
-        "online_to": "2026-09-17 22:00:00+00",
+        "online_to": "2026-09-18 00:00:00+00",
         "promotion_end_date": null,
         "promotion_start_date": null,
         "quantity_restriction": null,
@@ -23058,7 +23070,7 @@
         "sku": "10655063-EA",
         "sold_in_stores": false,
         "sold_online": false,
-        "stage": "PREPARED",
+        "stage": "CATALOG_RECORD",
         "stock_count_online": 0,
         "url": "https://www.bilka.dk/produkter/pokemon-tcg-darkrai-vstar-premium-collection-samlekort/200245190/"
       },
@@ -24178,7 +24190,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-tcg-greninja-ex-ultra-premium-collection-samlekort/200296965/"
       },
       "200307649": {
-        "epoch_updated_at": 1789732948,
+        "epoch_updated_at": 1789733611,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -24188,12 +24200,12 @@
         "in_stock_stores_count": 0,
         "is_click_and_collectible": false,
         "is_exposed": false,
-        "is_reservable": true,
+        "is_reservable": false,
         "name": "Pokémon TCG collector's chest pikachu",
         "not_reservable_from": null,
         "not_reservable_to": null,
         "online_from": "2024-11-15 00:00:00+00",
-        "online_to": "2026-09-17 22:00:00+00",
+        "online_to": "2026-09-18 00:00:00+00",
         "promotion_end_date": null,
         "promotion_start_date": null,
         "quantity_restriction": null,
@@ -24201,7 +24213,7 @@
         "sku": "10910095-EA",
         "sold_in_stores": false,
         "sold_online": false,
-        "stage": "PREPARED",
+        "stage": "CATALOG_RECORD",
         "stock_count_online": 0,
         "url": "https://www.bilka.dk/produkter/pokemon-tcg-collector-s-chest-pikachu/200307649/"
       },
@@ -25340,7 +25352,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-premium-figurboks-espeon-og-umbreon/200334599/"
       },
       "200334974": {
-        "epoch_updated_at": 1789732948,
+        "epoch_updated_at": 1789733615,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -25355,7 +25367,7 @@
         "not_reservable_from": "2025-09-30 22:00:00+00",
         "not_reservable_to": "9999-12-30 23:00:00+00",
         "online_from": "2025-10-10 00:00:00+00",
-        "online_to": "2026-09-17 22:00:00+00",
+        "online_to": "2026-09-18 00:00:00+00",
         "promotion_end_date": null,
         "promotion_start_date": null,
         "quantity_restriction": null,
@@ -28066,7 +28078,7 @@
         "url": "https://www.br.dk/produkter/pokemon-tcg-oinkologne-ex-box/200245189/"
       },
       "200245190": {
-        "epoch_updated_at": 1789733185,
+        "epoch_updated_at": 1789733604,
         "expected_available_from": null,
         "f_campaign_name": [
           "Samlekort Favoritter"
@@ -28083,7 +28095,7 @@
         "not_reservable_from": null,
         "not_reservable_to": null,
         "online_from": "2023-11-09 00:00:00+00",
-        "online_to": "2026-09-17 22:00:00+00",
+        "online_to": "2026-09-18 00:00:00+00",
         "promotion_end_date": null,
         "promotion_start_date": null,
         "quantity_restriction": null,
@@ -29273,7 +29285,7 @@
         "url": "https://www.br.dk/produkter/pokemon-tcg-greninja-ex-ultra-premium-collection-samlekort/200296965/"
       },
       "200307649": {
-        "epoch_updated_at": 1789733185,
+        "epoch_updated_at": 1789733611,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -29288,7 +29300,7 @@
         "not_reservable_from": null,
         "not_reservable_to": null,
         "online_from": "2024-11-15 00:00:00+00",
-        "online_to": "2026-09-17 22:00:00+00",
+        "online_to": "2026-09-18 00:00:00+00",
         "promotion_end_date": null,
         "promotion_start_date": null,
         "quantity_restriction": null,
@@ -30439,7 +30451,7 @@
         "url": "https://www.br.dk/produkter/pokemon-premium-figurboks-espeon-og-umbreon/200334599/"
       },
       "200334974": {
-        "epoch_updated_at": 1789733185,
+        "epoch_updated_at": 1789733615,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -30454,7 +30466,7 @@
         "not_reservable_from": "2025-09-30 22:00:00+00",
         "not_reservable_to": "9999-12-30 23:00:00+00",
         "online_from": "2025-10-10 00:00:00+00",
-        "online_to": "2026-09-17 22:00:00+00",
+        "online_to": "2026-09-18 00:00:00+00",
         "promotion_end_date": null,
         "promotion_start_date": null,
         "quantity_restriction": null,
@@ -33168,7 +33180,7 @@
         "url": "https://www.foetex.dk/produkter/pokemon-tcg-oinkologne-ex-box/200245189/"
       },
       "200245190": {
-        "epoch_updated_at": 1789733079,
+        "epoch_updated_at": 1789733604,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -33178,12 +33190,12 @@
         "in_stock_stores_count": 0,
         "is_click_and_collectible": false,
         "is_exposed": false,
-        "is_reservable": true,
+        "is_reservable": false,
         "name": "Pokémon TCG Darkrai VSTAR Premium Collection samlekort",
         "not_reservable_from": null,
         "not_reservable_to": null,
         "online_from": "2023-11-09 00:00:00+00",
-        "online_to": "2026-09-17 22:00:00+00",
+        "online_to": "2026-09-18 00:00:00+00",
         "promotion_end_date": null,
         "promotion_start_date": null,
         "quantity_restriction": null,
@@ -33191,7 +33203,7 @@
         "sku": "10655063-EA",
         "sold_in_stores": false,
         "sold_online": false,
-        "stage": "PREPARED",
+        "stage": "CATALOG_RECORD",
         "stock_count_online": 0,
         "url": "https://www.foetex.dk/produkter/pokemon-tcg-darkrai-vstar-premium-collection-samlekort/200245190/"
       },
@@ -34317,7 +34329,7 @@
         "url": "https://www.foetex.dk/produkter/pokemon-tcg-greninja-ex-ultra-premium-collection-samlekort/200296965/"
       },
       "200307649": {
-        "epoch_updated_at": 1789733078,
+        "epoch_updated_at": 1789733611,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -34327,12 +34339,12 @@
         "in_stock_stores_count": 0,
         "is_click_and_collectible": false,
         "is_exposed": false,
-        "is_reservable": true,
+        "is_reservable": false,
         "name": "Pokémon TCG collector's chest pikachu",
         "not_reservable_from": null,
         "not_reservable_to": null,
         "online_from": "2024-11-15 00:00:00+00",
-        "online_to": "2026-09-17 22:00:00+00",
+        "online_to": "2026-09-18 00:00:00+00",
         "promotion_end_date": null,
         "promotion_start_date": null,
         "quantity_restriction": null,
@@ -34340,7 +34352,7 @@
         "sku": "10910095-EA",
         "sold_in_stores": false,
         "sold_online": false,
-        "stage": "PREPARED",
+        "stage": "CATALOG_RECORD",
         "stock_count_online": 0,
         "url": "https://www.foetex.dk/produkter/pokemon-tcg-collector-s-chest-pikachu/200307649/"
       },
@@ -35479,7 +35491,7 @@
         "url": "https://www.foetex.dk/produkter/pokemon-premium-figurboks-espeon-og-umbreon/200334599/"
       },
       "200334974": {
-        "epoch_updated_at": 1789733080,
+        "epoch_updated_at": 1789733615,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -35494,7 +35506,7 @@
         "not_reservable_from": "2025-09-30 22:00:00+00",
         "not_reservable_to": "9999-12-30 23:00:00+00",
         "online_from": "2025-10-10 00:00:00+00",
-        "online_to": "2026-09-17 22:00:00+00",
+        "online_to": "2026-09-18 00:00:00+00",
         "promotion_end_date": null,
         "promotion_start_date": null,
         "quantity_restriction": null,
@@ -37576,7 +37588,7 @@
         "name": "Pokemon TCG Mega Charizard X ex Ultra Premium Collection",
         "new_badge": false,
         "price": null,
-        "raw_status_excerpt": " Bestillingsvare, leveringstiden kan ikke oplyses * [![Image 18: Pokemon - Pokemon TCG First Partner Illustration Collection Box Series 2 - POK10395-101](https://www.proshop.dk/Images/174x116/3478498_90a682585222.png)](https://www.proshop.dk/Pokemon/Pokemon-TCG-First-Partner-Illustration-Collection-Box-Series-2/3478498 \"Pokemon TCG First Partner Illustration Collection Box Series 2 - POK10395-101\") ## ",
+        "raw_status_excerpt": " Bestillingsvare, leveringstiden kan ikke oplyses * [![Image 17: Pokemon - Pokemon TCG 2-pack Booster - POK10412-101](https://www.proshop.dk/Images/174x116/3478497_4ba6ac470992.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-2-pack-Booster/3478497 \"Pokemon TCG 2-pack Booster - POK10412-101\") ## ",
         "stage": "INBOUND_UNDATED",
         "status": "BESTILLINGSVARE",
         "surface_statuses": {
@@ -37663,6 +37675,6 @@
       }
     }
   },
-  "updated_at": 1789733382.5981758,
+  "updated_at": 1789733674.6137402,
   "version": 1
 }
