@@ -1,7 +1,7 @@
 {
   "version": 2,
   "mode": "live",
-  "updated_at": "2026-09-18T18:28:17.789102+00:00",
+  "updated_at": "2026-09-18T18:33:40.991901+00:00",
   "sources": {
     "vaulted": {
       "label": "VAULTED",
@@ -9,8 +9,8 @@
       "stock_trust": "trusted",
       "health": {
         "status": "ok",
-        "last_attempt": "2026-09-18T18:28:17.788542+00:00",
-        "last_success": "2026-09-18T18:28:17.788542+00:00",
+        "last_attempt": "2026-09-18T18:33:40.991325+00:00",
+        "last_success": "2026-09-18T18:33:40.991325+00:00",
         "consecutive_failures": 0,
         "last_error": "",
         "observed_count": 125
@@ -1024,8 +1024,8 @@
       "stock_trust": "trusted",
       "health": {
         "status": "ok",
-        "last_attempt": "2026-09-18T18:28:17.788711+00:00",
-        "last_success": "2026-09-18T18:28:17.788711+00:00",
+        "last_attempt": "2026-09-18T18:33:40.991489+00:00",
+        "last_success": "2026-09-18T18:33:40.991489+00:00",
         "consecutive_failures": 0,
         "last_error": "",
         "observed_count": 163
@@ -2343,29 +2343,13 @@
       "stock_trust": "trusted",
       "health": {
         "status": "ok",
-        "last_attempt": "2026-09-18T18:28:17.788865+00:00",
-        "last_success": "2026-09-18T18:28:17.788865+00:00",
+        "last_attempt": "2026-09-18T18:33:40.991670+00:00",
+        "last_success": "2026-09-18T18:33:40.991670+00:00",
         "consecutive_failures": 0,
         "last_error": "",
-        "observed_count": 173
+        "observed_count": 172
       },
       "products": {
-        "108104": {
-          "name": "Pitch Black Booster",
-          "game": "POKÉMON",
-          "price": 69.0,
-          "in_stock": false,
-          "preorder": true,
-          "url": "https://pokemonportalen.dk/product/pitch-black-booster/"
-        },
-        "42093": {
-          "name": "Chaos Rising Booster",
-          "game": "POKÉMON",
-          "price": 69.0,
-          "in_stock": false,
-          "preorder": true,
-          "url": "https://pokemonportalen.dk/product/chaos-rising-booster/"
-        },
         "34103": {
           "name": "Perfect Order: Booster Pakke",
           "game": "POKÉMON",
@@ -2406,6 +2390,14 @@
           "preorder": true,
           "url": "https://pokemonportalen.dk/product/30th-celebration-booster/"
         },
+        "108104": {
+          "name": "Pitch Black Booster",
+          "game": "POKÉMON",
+          "price": 69.0,
+          "in_stock": false,
+          "preorder": false,
+          "url": "https://pokemonportalen.dk/product/pitch-black-booster/"
+        },
         "108102": {
           "name": "Pitch Black Sleeved Booster / 0",
           "game": "POKÉMON",
@@ -2421,6 +2413,14 @@
           "in_stock": false,
           "preorder": false,
           "url": "https://pokemonportalen.dk/product/chaos-rising-sleeved-booster/"
+        },
+        "42093": {
+          "name": "Chaos Rising Booster",
+          "game": "POKÉMON",
+          "price": 69.0,
+          "in_stock": false,
+          "preorder": false,
+          "url": "https://pokemonportalen.dk/product/chaos-rising-booster/"
         },
         "34891": {
           "name": "Ascended Heroes: Booster Pakke",
@@ -2550,38 +2550,6 @@
           "preorder": false,
           "url": "https://pokemonportalen.dk/product/paradox-rift-booster/"
         },
-        "34535": {
-          "name": "Prismatic Evolutions Poster Collection",
-          "game": "POKÉMON",
-          "price": 299.0,
-          "in_stock": false,
-          "preorder": true,
-          "url": "https://pokemonportalen.dk/product/prismatic-evolutions-poster-collection/"
-        },
-        "28855": {
-          "name": "Mega Latias ex Box *LIVESTREAM*",
-          "game": "POKÉMON",
-          "price": 250.0,
-          "in_stock": false,
-          "preorder": true,
-          "url": "https://pokemonportalen.dk/product/mega-latias-ex-box-livestream/"
-        },
-        "108096": {
-          "name": "Pitch Black Booster Bundle",
-          "game": "POKÉMON",
-          "price": 399.0,
-          "in_stock": true,
-          "preorder": false,
-          "url": "https://pokemonportalen.dk/product/pitch-black-booster-bundle/"
-        },
-        "42087": {
-          "name": "Chaos Rising Booster Bundle",
-          "game": "POKÉMON",
-          "price": 449.0,
-          "in_stock": true,
-          "preorder": false,
-          "url": "https://pokemonportalen.dk/product/chaos-rising-booster-bundle/"
-        },
         "24890": {
           "name": "Destined Rivals Booster Bundle",
           "game": "POKÉMON",
@@ -2621,6 +2589,22 @@
           "in_stock": false,
           "preorder": true,
           "url": "https://pokemonportalen.dk/product/30th-celebration-booster-bundle/"
+        },
+        "108096": {
+          "name": "Pitch Black Booster Bundle",
+          "game": "POKÉMON",
+          "price": 399.0,
+          "in_stock": false,
+          "preorder": false,
+          "url": "https://pokemonportalen.dk/product/pitch-black-booster-bundle/"
+        },
+        "42087": {
+          "name": "Chaos Rising Booster Bundle",
+          "game": "POKÉMON",
+          "price": 449.0,
+          "in_stock": false,
+          "preorder": false,
+          "url": "https://pokemonportalen.dk/product/chaos-rising-booster-bundle/"
         },
         "41224": {
           "name": "Ascended Heroes Booster Bundle Display / 217",
@@ -2718,22 +2702,6 @@
           "preorder": false,
           "url": "https://pokemonportalen.dk/product/151-booster-bundle-2025/"
         },
-        "108098": {
-          "name": "Pitch Black Elite Trainer Box",
-          "game": "POKÉMON",
-          "price": 799.0,
-          "in_stock": true,
-          "preorder": false,
-          "url": "https://pokemonportalen.dk/product/pitch-black-elite-trainer-box/"
-        },
-        "42091": {
-          "name": "Chaos Rising Elite Trainer Box",
-          "game": "POKÉMON",
-          "price": 749.0,
-          "in_stock": true,
-          "preorder": false,
-          "url": "https://pokemonportalen.dk/product/chaos-rising-elite-trainer-box/"
-        },
         "34105": {
           "name": "Perfect Order: Elite Trainer Box",
           "game": "POKÉMON",
@@ -2805,6 +2773,22 @@
           "in_stock": false,
           "preorder": true,
           "url": "https://pokemonportalen.dk/product/30th-celebration-elite-trainer-box/"
+        },
+        "108098": {
+          "name": "Pitch Black Elite Trainer Box",
+          "game": "POKÉMON",
+          "price": 799.0,
+          "in_stock": false,
+          "preorder": false,
+          "url": "https://pokemonportalen.dk/product/pitch-black-elite-trainer-box/"
+        },
+        "42091": {
+          "name": "Chaos Rising Elite Trainer Box",
+          "game": "POKÉMON",
+          "price": 749.0,
+          "in_stock": false,
+          "preorder": false,
+          "url": "https://pokemonportalen.dk/product/chaos-rising-elite-trainer-box/"
         },
         "27693": {
           "name": "Ascended Heroes Elite Trainer Box",
@@ -3102,30 +3086,6 @@
           "preorder": true,
           "url": "https://pokemonportalen.dk/product/first-partner-illustration-collection-series-3/"
         },
-        "109761": {
-          "name": "30th Celebration Binder Collection",
-          "game": "POKÉMON",
-          "price": 559.0,
-          "in_stock": false,
-          "preorder": true,
-          "url": "https://pokemonportalen.dk/product/30th-celebration-binder-collection/"
-        },
-        "108184": {
-          "name": "30th Celebration: Sylveon ex Box",
-          "game": "POKÉMON",
-          "price": 499.0,
-          "in_stock": false,
-          "preorder": true,
-          "url": "https://pokemonportalen.dk/product/30th-celebration-sylveon-ex-box/"
-        },
-        "108182": {
-          "name": "30th Celebration Poster Collection",
-          "game": "POKÉMON",
-          "price": 449.0,
-          "in_stock": false,
-          "preorder": true,
-          "url": "https://pokemonportalen.dk/product/30th-celebration-poster-collection/"
-        },
         "108081": {
           "name": "First Partner Illustration Collection Series 2",
           "game": "POKÉMON",
@@ -3141,6 +3101,14 @@
           "in_stock": true,
           "preorder": false,
           "url": "https://pokemonportalen.dk/product/first-partner-illustration-collection-series-1/"
+        },
+        "109761": {
+          "name": "30th Celebration Binder Collection",
+          "game": "POKÉMON",
+          "price": 559.0,
+          "in_stock": false,
+          "preorder": true,
+          "url": "https://pokemonportalen.dk/product/30th-celebration-binder-collection/"
         },
         "108200": {
           "name": "30th Celebration: Umbreon Ultra-Premium Collection",
@@ -3198,6 +3166,22 @@
           "preorder": true,
           "url": "https://pokemonportalen.dk/product/30th-celebration-greninja-ex-box/"
         },
+        "108184": {
+          "name": "30th Celebration: Sylveon ex Box",
+          "game": "POKÉMON",
+          "price": 499.0,
+          "in_stock": false,
+          "preorder": true,
+          "url": "https://pokemonportalen.dk/product/30th-celebration-sylveon-ex-box/"
+        },
+        "108182": {
+          "name": "30th Celebration Poster Collection",
+          "game": "POKÉMON",
+          "price": 449.0,
+          "in_stock": false,
+          "preorder": true,
+          "url": "https://pokemonportalen.dk/product/30th-celebration-poster-collection/"
+        },
         "39899": {
           "name": "Pakketilbud: Premium Poster Collection + First Partner",
           "game": "POKÉMON",
@@ -3221,6 +3205,14 @@
           "in_stock": false,
           "preorder": false,
           "url": "https://pokemonportalen.dk/product/black-bolt-white-flare-unova-poster-collection/"
+        },
+        "34535": {
+          "name": "Prismatic Evolutions Poster Collection",
+          "game": "POKÉMON",
+          "price": 299.0,
+          "in_stock": false,
+          "preorder": false,
+          "url": "https://pokemonportalen.dk/product/prismatic-evolutions-poster-collection/"
         },
         "34406": {
           "name": "Pokemon Day 2026 Collection Blister *FORUDBESTILLING*",
@@ -3366,62 +3358,6 @@
           "preorder": false,
           "url": "https://pokemonportalen.dk/product/team-rockets-mewtwo-ex-box/"
         },
-        "108150": {
-          "name": "30th Celebration: Eevee 2-Pack Blister",
-          "game": "POKÉMON",
-          "price": 249.0,
-          "in_stock": false,
-          "preorder": true,
-          "url": "https://pokemonportalen.dk/product/30th-celebration-eevee-2-pack-blister/"
-        },
-        "108148": {
-          "name": "30th Celebration: Lucario Tech Sticker Collection",
-          "game": "POKÉMON",
-          "price": 349.0,
-          "in_stock": false,
-          "preorder": true,
-          "url": "https://pokemonportalen.dk/product/30th-celebration-lucario-tech-sticker-collection/"
-        },
-        "108146": {
-          "name": "30th Celebration: Alolan Exeggutor Tech Sticker Collection",
-          "game": "POKÉMON",
-          "price": 349.0,
-          "in_stock": false,
-          "preorder": true,
-          "url": "https://pokemonportalen.dk/product/30th-celebration-alolan-exeggutor-tech-sticker-collection/"
-        },
-        "108086": {
-          "name": "Pitch Black: Slowpoke 1-Pack Blister / 0",
-          "game": "POKÉMON",
-          "price": 79.0,
-          "in_stock": false,
-          "preorder": true,
-          "url": "https://pokemonportalen.dk/product/pitch-black-slowpoke-1-pack-blister/"
-        },
-        "108084": {
-          "name": "Pitch Black: Binacle 3-Pack Blister",
-          "game": "POKÉMON",
-          "price": 299.0,
-          "in_stock": false,
-          "preorder": true,
-          "url": "https://pokemonportalen.dk/product/pitch-black-binacle-3-pack-blister/"
-        },
-        "42105": {
-          "name": "Chaos Rising: Toxel 1-Pack Blister",
-          "game": "POKÉMON",
-          "price": 89.0,
-          "in_stock": true,
-          "preorder": false,
-          "url": "https://pokemonportalen.dk/product/chaos-rising-toxel-1-pack-blister/"
-        },
-        "42095": {
-          "name": "Chaos Rising: Charmeleon 3-Pack Blister",
-          "game": "POKÉMON",
-          "price": 299.0,
-          "in_stock": true,
-          "preorder": false,
-          "url": "https://pokemonportalen.dk/product/chaos-rising-charmeleon-3-pack-blister/"
-        },
         "34099": {
           "name": "Perfect Order: Meganium Premium Checklane Blister",
           "game": "POKÉMON",
@@ -3494,6 +3430,30 @@
           "preorder": true,
           "url": "https://pokemonportalen.dk/product/30th-celebration-espeon-ex-battle-deck/"
         },
+        "108150": {
+          "name": "30th Celebration: Eevee 2-Pack Blister",
+          "game": "POKÉMON",
+          "price": 249.0,
+          "in_stock": false,
+          "preorder": true,
+          "url": "https://pokemonportalen.dk/product/30th-celebration-eevee-2-pack-blister/"
+        },
+        "108148": {
+          "name": "30th Celebration: Lucario Tech Sticker Collection",
+          "game": "POKÉMON",
+          "price": 349.0,
+          "in_stock": false,
+          "preorder": true,
+          "url": "https://pokemonportalen.dk/product/30th-celebration-lucario-tech-sticker-collection/"
+        },
+        "108146": {
+          "name": "30th Celebration: Alolan Exeggutor Tech Sticker Collection",
+          "game": "POKÉMON",
+          "price": 349.0,
+          "in_stock": false,
+          "preorder": true,
+          "url": "https://pokemonportalen.dk/product/30th-celebration-alolan-exeggutor-tech-sticker-collection/"
+        },
         "108094": {
           "name": "Pitch Black: Aurorus Premium Checklane Blister / 0",
           "game": "POKÉMON",
@@ -3526,6 +3486,30 @@
           "preorder": false,
           "url": "https://pokemonportalen.dk/product/pitch-black-gengar-premium-checklane-blister/"
         },
+        "108086": {
+          "name": "Pitch Black: Slowpoke 1-Pack Blister / 0",
+          "game": "POKÉMON",
+          "price": 79.0,
+          "in_stock": false,
+          "preorder": false,
+          "url": "https://pokemonportalen.dk/product/pitch-black-slowpoke-1-pack-blister/"
+        },
+        "108084": {
+          "name": "Pitch Black: Binacle 3-Pack Blister",
+          "game": "POKÉMON",
+          "price": 299.0,
+          "in_stock": false,
+          "preorder": false,
+          "url": "https://pokemonportalen.dk/product/pitch-black-binacle-3-pack-blister/"
+        },
+        "42105": {
+          "name": "Chaos Rising: Toxel 1-Pack Blister",
+          "game": "POKÉMON",
+          "price": 89.0,
+          "in_stock": false,
+          "preorder": false,
+          "url": "https://pokemonportalen.dk/product/chaos-rising-toxel-1-pack-blister/"
+        },
         "42103": {
           "name": "Chaos Rising: Flygon Premium Checklane Blister",
           "game": "POKÉMON",
@@ -3557,6 +3541,14 @@
           "in_stock": false,
           "preorder": false,
           "url": "https://pokemonportalen.dk/product/chaos-rising-reshiram-premium-checklane-blister/"
+        },
+        "42095": {
+          "name": "Chaos Rising: Charmeleon 3-Pack Blister",
+          "game": "POKÉMON",
+          "price": 299.0,
+          "in_stock": false,
+          "preorder": false,
+          "url": "https://pokemonportalen.dk/product/chaos-rising-charmeleon-3-pack-blister/"
         },
         "34097": {
           "name": "Perfect Order Steelix Stage 1 Blister",
@@ -3742,8 +3734,8 @@
       "stock_trust": "trusted",
       "health": {
         "status": "ok",
-        "last_attempt": "2026-09-18T18:28:17.789025+00:00",
-        "last_success": "2026-09-18T18:28:17.789025+00:00",
+        "last_attempt": "2026-09-18T18:33:40.991831+00:00",
+        "last_success": "2026-09-18T18:33:40.991831+00:00",
         "consecutive_failures": 0,
         "last_error": "",
         "observed_count": 20
@@ -3917,8 +3909,8 @@
       "stock_trust": "trusted",
       "health": {
         "status": "ok",
-        "last_attempt": "2026-09-18T18:28:17.789047+00:00",
-        "last_success": "2026-09-18T18:28:17.789047+00:00",
+        "last_attempt": "2026-09-18T18:33:40.991852+00:00",
+        "last_success": "2026-09-18T18:33:40.991852+00:00",
         "consecutive_failures": 0,
         "last_error": "",
         "observed_count": 45
