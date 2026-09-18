@@ -1611,7 +1611,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 432,
+          "stock_online": 426,
           "stock_stores": 19
         },
         "br": {
@@ -1622,7 +1622,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 432,
+          "stock_online": 426,
           "stock_stores": 31
         },
         "foetex": {
@@ -1633,7 +1633,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 432,
+          "stock_online": 426,
           "stock_stores": 1
         }
       }
@@ -6788,58 +6788,6 @@
     }
   },
   "events": [
-    {
-      "event": "CROSS_CHANGE",
-      "fields": [
-        "br"
-      ],
-      "name": "Pokémon Pitch Black 1-pak – flere varianter – assorteret",
-      "product_id": "11320906-EA",
-      "sku": "11320906-EA",
-      "source": "cross_salling",
-      "stage_after": null,
-      "stage_before": null,
-      "ts": 1789313071.859875
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "in_stock_stores_count"
-      ],
-      "name": "Pokémon TCG booster pack samlekort",
-      "product_id": "200366277",
-      "sku": "11263280-EA",
-      "source": "foetex",
-      "stage_after": "HIDDEN_STOCK",
-      "stage_before": "HIDDEN_STOCK",
-      "ts": 1789334663.4386587
-    },
-    {
-      "event": "CROSS_CHANGE",
-      "fields": [
-        "foetex"
-      ],
-      "name": "Pokémon TCG booster pack samlekort",
-      "product_id": "11263280-EA",
-      "sku": "11263280-EA",
-      "source": "cross_salling",
-      "stage_after": null,
-      "stage_before": null,
-      "ts": 1789334669.2094352
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "in_stock_stores_count"
-      ],
-      "name": "Pokémon Pitch Black 1-pak – flere varianter – assorteret",
-      "product_id": "200380909",
-      "sku": "11320906-EA",
-      "source": "br",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1789363461.6081848
-    },
     {
       "event": "CROSS_CHANGE",
       "fields": [
@@ -22311,7 +22259,7 @@
       "source": "br",
       "stage_after": "LIVE_STOCK",
       "stage_before": "LIVE_STOCK",
-      "ts": 1789724283.2624793
+      "ts": 1789723601.5959923
     },
     {
       "event": "CHANGE",
@@ -22324,7 +22272,7 @@
       "source": "br",
       "stage_after": "LIVE_STOCK",
       "stage_before": "LIVE_STOCK",
-      "ts": 1789724283.2624938
+      "ts": 1789723601.5960088
     },
     {
       "event": "CHANGE",
@@ -22337,7 +22285,7 @@
       "source": "br",
       "stage_after": "LIVE_STOCK",
       "stage_before": "LIVE_STOCK",
-      "ts": 1789724283.2625003
+      "ts": 1789723601.5960164
     },
     {
       "event": "CHANGE",
@@ -22351,7 +22299,7 @@
       "source": "bilka",
       "stage_after": "LIVE_STOCK",
       "stage_before": "EXPOSED_NO_STOCK",
-      "ts": 1789724284.8310964
+      "ts": 1789723603.1998768
     },
     {
       "event": "CHANGE",
@@ -22364,7 +22312,7 @@
       "source": "foetex",
       "stage_after": "LIVE_STOCK",
       "stage_before": "LIVE_STOCK",
-      "ts": 1789724286.2515714
+      "ts": 1789723605.0056348
     },
     {
       "event": "CROSS_CHANGE",
@@ -22377,7 +22325,7 @@
       "source": "cross_salling",
       "stage_after": null,
       "stage_before": null,
-      "ts": 1789724292.59566
+      "ts": 1789723608.978918
     },
     {
       "event": "CROSS_CHANGE",
@@ -22391,7 +22339,7 @@
       "source": "cross_salling",
       "stage_after": null,
       "stage_before": null,
-      "ts": 1789724292.5956683
+      "ts": 1789723608.9789274
     },
     {
       "event": "CROSS_CHANGE",
@@ -22405,7 +22353,61 @@
       "source": "cross_salling",
       "stage_after": null,
       "stage_before": null,
-      "ts": 1789724292.595672
+      "ts": 1789723608.9789324
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon Battle Academy 2024",
+      "product_id": "200279925",
+      "sku": "10791068-EA",
+      "source": "br",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1789725711.4098039
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon Battle Academy 2024",
+      "product_id": "200279925",
+      "sku": "10791068-EA",
+      "source": "bilka",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1789725712.707615
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon Battle Academy 2024",
+      "product_id": "200279925",
+      "sku": "10791068-EA",
+      "source": "foetex",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1789725713.8914123
+    },
+    {
+      "event": "CROSS_CHANGE",
+      "fields": [
+        "bilka",
+        "br",
+        "foetex"
+      ],
+      "name": "Pokémon Battle Academy 2024",
+      "product_id": "10791068-EA",
+      "sku": "10791068-EA",
+      "source": "cross_salling",
+      "stage_after": null,
+      "stage_before": null,
+      "ts": 1789725718.8113472
     }
   ],
   "sources": {
@@ -23644,7 +23646,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 432,
+        "stock_count_online": 426,
         "url": "https://www.bilka.dk/produkter/pokemon-battle-academy-2024/200279925/"
       },
       "200285707": {
@@ -28722,7 +28724,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 432,
+        "stock_count_online": 426,
         "url": "https://www.br.dk/produkter/pokemon-battle-academy-2024/200279925/"
       },
       "200285707": {
@@ -33795,7 +33797,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 432,
+        "stock_count_online": 426,
         "url": "https://www.foetex.dk/produkter/pokemon-battle-academy-2024/200279925/"
       },
       "200285707": {
@@ -37694,6 +37696,6 @@
       }
     }
   },
-  "updated_at": 1789725425.8505514,
+  "updated_at": 1789725718.8115358,
   "version": 1
 }
