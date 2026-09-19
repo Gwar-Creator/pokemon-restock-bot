@@ -6794,20 +6794,6 @@
         "online_from",
         "online_to"
       ],
-      "name": "Pokémon Ex Box 30th samlekort",
-      "product_id": "200392206",
-      "sku": "11379494-EA",
-      "source": "br",
-      "stage_after": "EXPOSED_NO_STOCK",
-      "stage_before": "EXPOSED_NO_STOCK",
-      "ts": 1789543465.8390732
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "online_from",
-        "online_to"
-      ],
       "name": "Pokémon Tin Ex 30th",
       "product_id": "200392215",
       "sku": "11379496-EA",
@@ -22352,6 +22338,19 @@
       "stage_after": "INBOUND_UNDATED",
       "stage_before": null,
       "ts": 1789785278.8794343
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
+      "product_id": "3447589",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1789785869.0147028
     }
   ],
   "sources": {
@@ -37558,9 +37557,11 @@
         "stage": "LIVE_STOCK",
         "status": "PÅ LAGER",
         "surface_statuses": {
+          "pokemon-brand": "PÅ LAGER",
           "pokemon-kort": "PÅ LAGER"
         },
         "surfaces": [
+          "pokemon-brand",
           "pokemon-kort"
         ],
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Zygarde-ex-Premium-Collection/3447589"
@@ -37572,7 +37573,7 @@
         "name": "Pokemon TCG Mega EvolutionChaos Rising Booster box with 36 boosters",
         "new_badge": false,
         "price": null,
-        "raw_status_excerpt": " Bestillingsvare, leveringstiden kan ikke oplyses ",
+        "raw_status_excerpt": " Bestillingsvare, leveringstiden kan ikke oplyses * [![Image 21: Pokemon - Pokemon 2-Pack Blister 30th Celebration - POK10666-102](https://www.proshop.dk/Images/174x116/3502024_b732ac7b4d7e.jpg)](https://www.proshop.dk/Pokemon/Pokemon-2-Pack-Blister-30th-Celebration/3502024 \"Pokemon 2-Pack Blister 30th Celebration - POK10666-102\") NYHED ## ",
         "stage": "INBOUND_UNDATED",
         "status": "BESTILLINGSVARE",
         "surface_statuses": {
@@ -37590,7 +37591,7 @@
         "name": "Pokemon TCG Mega Greninja ex Premium Collection",
         "new_badge": false,
         "price": null,
-        "raw_status_excerpt": " Bestillingsvare, leveringstiden kan ikke oplyses * [![Image 20: Pokemon - Pokemon 2-Pack Blister 30th Celebration - POK10666-102](https://www.proshop.dk/Images/174x116/3502024_b732ac7b4d7e.jpg)](https://www.proshop.dk/Pokemon/Pokemon-2-Pack-Blister-30th-Celebration/3502024 \"Pokemon 2-Pack Blister 30th Celebration - POK10666-102\") NYHED ## ",
+        "raw_status_excerpt": " Bestillingsvare, leveringstiden kan ikke oplyses * [![Image 20: Pokemon - Pokemon TCG Mega Evolution—Chaos Rising Booster (box with 36 boosters) - POK10407-101](https://www.proshop.dk/Images/174x116/3447592_bf6f55217e66.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-EvolutionChaos-Rising-Booster-box-with-36-boosters/3447592 \"Pokemon TCG Mega Evolution—Chaos Rising Booster (box with 36 boosters) - POK10407-101\") ## ",
         "stage": "INBOUND_UNDATED",
         "status": "BESTILLINGSVARE",
         "surface_statuses": {
@@ -37621,6 +37622,6 @@
       }
     }
   },
-  "updated_at": 1789785567.2173784,
+  "updated_at": 1789785869.0160148,
   "version": 1
 }
