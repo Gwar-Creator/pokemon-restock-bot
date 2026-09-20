@@ -6793,19 +6793,6 @@
       "fields": [
         "f_stock_availability"
       ],
-      "name": "Pokémon Elite Trainer Box 30th samlekort",
-      "product_id": "200392202",
-      "sku": "11379490-EA",
-      "source": "bilka",
-      "stage_after": "EXPOSED_NO_STOCK",
-      "stage_before": "EXPOSED_NO_STOCK",
-      "ts": 1789617894.6369693
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "f_stock_availability"
-      ],
       "name": "Pokémon 30th samlekort",
       "product_id": "200392214",
       "sku": "11379495-EA",
@@ -22123,12 +22110,25 @@
       "stage_after": "LIVE_STOCK",
       "stage_before": "LIVE_STOCK",
       "ts": 1789885772.6281106
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
+      "product_id": "3447589",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1789886078.7519553
     }
   ],
   "sources": {
     "bilka": {
       "100559056": {
-        "epoch_updated_at": 1789885066,
+        "epoch_updated_at": 1789885966,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -22242,7 +22242,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-tcg-hisuian-zoroark-vstar-premium-collection/200147841/"
       },
       "200147881": {
-        "epoch_updated_at": 1789885066,
+        "epoch_updated_at": 1789885966,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -22272,7 +22272,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-tcg-go-tin-assorted/200147881/"
       },
       "200156133": {
-        "epoch_updated_at": 1789885066,
+        "epoch_updated_at": 1789885966,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -22358,7 +22358,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-tcg-ex-battle-deck/200191442/"
       },
       "200202871": {
-        "epoch_updated_at": 1789885066,
+        "epoch_updated_at": 1789885966,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -22472,7 +22472,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-tcg-my-first-battle-samlekortsaet/200209927/"
       },
       "200209928": {
-        "epoch_updated_at": 1789885066,
+        "epoch_updated_at": 1789885966,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -22531,7 +22531,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-scarlet-violet-booster-kort/200209963/"
       },
       "200210635": {
-        "epoch_updated_at": 1789885066,
+        "epoch_updated_at": 1789885966,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -22561,7 +22561,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-tcg-origin-forme-palkia-vstar-league-battle-deck/200210635/"
       },
       "200215292": {
-        "epoch_updated_at": 1789885066,
+        "epoch_updated_at": 1789885966,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -22591,7 +22591,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-tcg-scarlet-violet151-mini-tin/200215292/"
       },
       "200215319": {
-        "epoch_updated_at": 1789885066,
+        "epoch_updated_at": 1789885966,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -22623,7 +22623,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-battle-deck-ex-samlekort/200215319/"
       },
       "200223003": {
-        "epoch_updated_at": 1789885066,
+        "epoch_updated_at": 1789885966,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -22849,7 +22849,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-tcg-generic-samlekort-boosterpakke-2-pak/200245192/"
       },
       "200248867": {
-        "epoch_updated_at": 1789885066,
+        "epoch_updated_at": 1789885966,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -22935,7 +22935,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-tcg-scarlet-violetpaldean-fates-tin/200248869/"
       },
       "200255087": {
-        "epoch_updated_at": 1789885066,
+        "epoch_updated_at": 1789885966,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -23105,7 +23105,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-box-ex-premium-collection/200258185/"
       },
       "200265477": {
-        "epoch_updated_at": 1789885066,
+        "epoch_updated_at": 1789885966,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -23447,7 +23447,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-booster-bundle/200285709/"
       },
       "200285712": {
-        "epoch_updated_at": 1789885066,
+        "epoch_updated_at": 1789885966,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -37326,9 +37326,11 @@
         "stage": "LIVE_STOCK",
         "status": "PÅ LAGER",
         "surface_statuses": {
+          "pokemon-brand": "PÅ LAGER",
           "pokemon-kort": "PÅ LAGER"
         },
         "surfaces": [
+          "pokemon-brand",
           "pokemon-kort"
         ],
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Zygarde-ex-Premium-Collection/3447589"
@@ -37389,6 +37391,6 @@
       }
     }
   },
-  "updated_at": 1789885772.6290812,
+  "updated_at": 1789886078.7529302,
   "version": 1
 }
