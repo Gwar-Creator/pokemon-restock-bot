@@ -597,7 +597,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 428,
+          "stock_online": 427,
           "stock_stores": 19
         },
         "br": {
@@ -608,7 +608,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 428,
+          "stock_online": 427,
           "stock_stores": 29
         },
         "foetex": {
@@ -619,7 +619,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 428,
+          "stock_online": 427,
           "stock_stores": 68
         }
       }
@@ -6788,64 +6788,6 @@
     }
   },
   "events": [
-    {
-      "event": "CROSS_CHANGE",
-      "fields": [
-        "bilka",
-        "br",
-        "foetex"
-      ],
-      "name": "Pokemon Greninja EX samlekort box",
-      "product_id": "11381820-EA",
-      "sku": "11381820-EA",
-      "source": "cross_salling",
-      "stage_after": null,
-      "stage_before": null,
-      "ts": 1789618775.2142677
-    },
-    {
-      "event": "CROSS_CHANGE",
-      "fields": [
-        "bilka",
-        "br",
-        "foetex"
-      ],
-      "name": "Pokemon Sylveon EX tin samlekort",
-      "product_id": "11381823-EA",
-      "sku": "11381823-EA",
-      "source": "cross_salling",
-      "stage_after": null,
-      "stage_before": null,
-      "ts": 1789618775.2142713
-    },
-    {
-      "event": "CROSS_CHANGE",
-      "fields": [
-        "bilka",
-        "br",
-        "foetex"
-      ],
-      "name": "Pokemon Greninja EX tin samlekort",
-      "product_id": "11381826-EA",
-      "sku": "11381826-EA",
-      "source": "cross_salling",
-      "stage_after": null,
-      "stage_before": null,
-      "ts": 1789618775.214275
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "f_stock_availability"
-      ],
-      "name": "Pokémon Binder Collection 30th",
-      "product_id": "200392204",
-      "sku": "11379492-EA",
-      "source": "br",
-      "stage_after": "EXPOSED_NO_STOCK",
-      "stage_before": "EXPOSED_NO_STOCK",
-      "ts": 1789619061.2703774
-    },
     {
       "event": "CHANGE",
       "fields": [
@@ -22039,6 +21981,60 @@
       "stage_after": "INBOUND_UNDATED",
       "stage_before": null,
       "ts": 1789904371.706504
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon Battle Deck EX samlekort",
+      "product_id": "200215319",
+      "sku": "10564347-EA",
+      "source": "br",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1789904669.1785161
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon Battle Deck EX samlekort",
+      "product_id": "200215319",
+      "sku": "10564347-EA",
+      "source": "bilka",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1789904670.3845494
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon Battle Deck EX samlekort",
+      "product_id": "200215319",
+      "sku": "10564347-EA",
+      "source": "foetex",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1789904671.5822365
+    },
+    {
+      "event": "CROSS_CHANGE",
+      "fields": [
+        "bilka",
+        "br",
+        "foetex"
+      ],
+      "name": "Pokémon Battle Deck EX samlekort",
+      "product_id": "10564347-EA",
+      "sku": "10564347-EA",
+      "source": "cross_salling",
+      "stage_after": null,
+      "stage_before": null,
+      "ts": 1789904675.8725066
     }
   ],
   "sources": {
@@ -22535,7 +22531,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 428,
+        "stock_count_online": 427,
         "url": "https://www.bilka.dk/produkter/pokemon-battle-deck-ex-samlekort/200215319/"
       },
       "200223003": {
@@ -27560,7 +27556,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 428,
+        "stock_count_online": 427,
         "url": "https://www.br.dk/produkter/pokemon-battle-deck-ex-samlekort/200215319/"
       },
       "200223003": {
@@ -32665,7 +32661,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 428,
+        "stock_count_online": 427,
         "url": "https://www.foetex.dk/produkter/pokemon-battle-deck-ex-samlekort/200215319/"
       },
       "200223003": {
@@ -37308,6 +37304,6 @@
       }
     }
   },
-  "updated_at": 1789904371.7076373,
+  "updated_at": 1789904675.8727195,
   "version": 1
 }
