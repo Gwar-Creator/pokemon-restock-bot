@@ -6793,19 +6793,6 @@
       "fields": [
         "stock_count_online"
       ],
-      "name": "Pokemon Sylveon EX tin samlekort",
-      "product_id": "200392808",
-      "sku": "11381823-EA",
-      "source": "bilka",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1789618155.6525283
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "stock_count_online"
-      ],
       "name": "Pokemon Greninja EX tin samlekort",
       "product_id": "200392809",
       "sku": "11381826-EA",
@@ -22101,6 +22088,19 @@
       "stage_after": "LIVE_STOCK",
       "stage_before": "LIVE_STOCK",
       "ts": 1789899274.9778013
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
+      "product_id": "3447589",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1789899574.713287
     }
   ],
   "sources": {
@@ -22601,7 +22601,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-battle-deck-ex-samlekort/200215319/"
       },
       "200223003": {
-        "epoch_updated_at": 1789898566,
+        "epoch_updated_at": 1789899471,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -26539,7 +26539,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-first-partner-collection-box-2-samlekort/200371886/"
       },
       "200380908": {
-        "epoch_updated_at": 1789898566,
+        "epoch_updated_at": 1789899471,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -26600,7 +26600,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-pitch-black-1-pak-flere-varianter-assorteret/200380909/"
       },
       "200380910": {
-        "epoch_updated_at": 1789898566,
+        "epoch_updated_at": 1789899471,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -26631,7 +26631,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-me05-pitch-black-samlekort/200380910/"
       },
       "200380911": {
-        "epoch_updated_at": 1789898566,
+        "epoch_updated_at": 1789899471,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -26784,7 +26784,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-first-partner-collection-box-3-samlekort/200385295/"
       },
       "200392202": {
-        "epoch_updated_at": 1789898567,
+        "epoch_updated_at": 1789899471,
         "expected_available_from": null,
         "f_campaign_name": [
           "Nyhed"
@@ -37304,9 +37304,11 @@
         "stage": "LIVE_STOCK",
         "status": "PÅ LAGER",
         "surface_statuses": {
+          "pokemon-brand": "PÅ LAGER",
           "pokemon-kort": "PÅ LAGER"
         },
         "surfaces": [
+          "pokemon-brand",
           "pokemon-kort"
         ],
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Zygarde-ex-Premium-Collection/3447589"
@@ -37367,6 +37369,6 @@
       }
     }
   },
-  "updated_at": 1789899274.978795,
+  "updated_at": 1789899574.7144492,
   "version": 1
 }
