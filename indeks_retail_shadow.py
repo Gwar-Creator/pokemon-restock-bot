@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 from datetime import datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
@@ -21,7 +22,7 @@ from alert_policy import backup_retail_signal_allowed
 
 
 STATE_FILE = Path("indeks_retail_shadow_state.json")
-STATE_VERSION = 3
+STATE_VERSION = 4
 MAX_PAGES = 5
 PAGE_SIZE = 250
 TIMEOUT_SECONDS = 20
@@ -42,6 +43,17 @@ SOURCES = {
 
 LOGICAL_SOURCE_KEY = "indeks_retail"
 LOGICAL_SOURCE_LABEL = "INDEKS RETAIL (Bog & idé / LegeKæden)"
+LOCAL_SOURCE_KEY = "legekaeden_vejen"
+LOCAL_SOURCE_LABEL = "LEGEKÆDEN VEJEN"
+LEGEKAEDEN_VEJEN_STORE_ID = "13280"
+LEGEKAEDEN_VEJEN_LOCATION_ID = "gid://shopify/Location/89871876349"
+STOREFRONT_API_VERSION = "2025-07"
+STOREFRONT_SEARCH_TERMS = ("Pokemon", "Pokémon")
+STOREFRONT_MAX_PAGES = 3
+STOREFRONT_PAGE_SIZE = 100
+STOREFRONT_BOOTSTRAP_URL = (
+    "https://www.legekaeden.dk/products/bogbind-selvklaebende-50cmx3m-531054"
+)
 PREORDER_MARKERS = ("forudbestilling", "preorder", "pre-order")
 
 
@@ -55,6 +67,7 @@ def _empty_state() -> dict:
         "mode": "mixed",
         "sources": {},
         "logical_sources": {},
+        "local_sources": {},
     }
 
 
@@ -69,6 +82,7 @@ def _load_state() -> dict:
         return _empty_state()
     value.setdefault("sources", {})
     value.setdefault("logical_sources", {})
+    value.setdefault("local_sources", {})
     return value
 
 
@@ -78,6 +92,267 @@ def _price(value):
     except (TypeError, ValueError):
         return None
     return parsed if parsed > 0 else None
+
+
+def _extract_storefront_credentials(document: str) -> tuple[str, str] | None:
+    """Read the public Storefront API credentials used by pickup availability."""
+    text = str(document or "")
+    domain_match = re.search(r'data-shop-domain=["\\']([^"\\']+)["\\']', text, re.IGNORECASE)
+    token_match = re.search(
+        r'data-storefront-token=["\\']([^"\\']+)["\\']',
+        text,
+        re.IGNORECASE,
+    )
+    if not domain_match or not token_match:
+        return None
+    return domain_match.group(1).strip(), token_match.group(1).strip()
+
+
+def _storefront_credentials(session, bootstrap_products=None) -> tuple[str, str]:
+    headers = {
+        "User-Agent": (
+            "Mozilla/5.0 (compatible; PokemonRestockBot/1.0; "
+            "+https://github.com/Gwar-Creator/pokemon-restock-bot)"
+        ),
+        "Accept": "text/html,application/xhtml+xml",
+        "Accept-Language": "da-DK,da;q=0.9,en;q=0.8",
+    }
+    urls = []
+    for product in (bootstrap_products or {}).values():
+        url = str((product or {}).get("url") or "").strip()
+        if url and url not in urls:
+            urls.append(url)
+        if len(urls) >= 5:
+            break
+    if STOREFRONT_BOOTSTRAP_URL not in urls:
+        urls.append(STOREFRONT_BOOTSTRAP_URL)
+
+    last_error = None
+    for url in urls:
+        try:
+            response = session.get(url, headers=headers, timeout=TIMEOUT_SECONDS)
+            response.raise_for_status()
+            credentials = _extract_storefront_credentials(response.text)
+            if credentials:
+                return credentials
+        except Exception as error:
+            last_error = error
+
+    suffix = f": {last_error}" if last_error else ""
+    raise RuntimeError(f"kunne ikke finde LegeKædens Storefront API credentials{suffix}")
+
+
+def _location_store_id(location: dict) -> str:
+    for metafield in (location or {}).get("metafields") or []:
+        if not isinstance(metafield, dict):
+            continue
+        if str(metafield.get("key") or "").strip() == "store_id":
+            return str(metafield.get("value") or "").strip()
+    return ""
+
+
+def _is_vejen_location(location: dict) -> bool:
+    location = location or {}
+    if str(location.get("id") or "").strip() == LEGEKAEDEN_VEJEN_LOCATION_ID:
+        return True
+    if _location_store_id(location) == LEGEKAEDEN_VEJEN_STORE_ID:
+        return True
+    address = location.get("address") or {}
+    name = str(location.get("name") or "").lower()
+    city = str(address.get("city") or "").lower()
+    return "legekæden vejen" in name or "legekaeden vejen" in name or city == "vejen"
+
+
+def _storefront_variant_price(variant: dict):
+    value = (variant or {}).get("price")
+    if isinstance(value, dict):
+        value = value.get("amount")
+    return _price(value)
+
+
+def _normalise_local_storefront_product(raw: dict) -> tuple[str, dict] | None:
+    title = str((raw or {}).get("title") or "").strip()
+    handle = str((raw or {}).get("handle") or "").strip()
+    if not title or not handle:
+        return None
+
+    variants = ((raw.get("variants") or {}).get("nodes") or [])
+    if not isinstance(variants, list):
+        variants = []
+
+    quantity = 0
+    saw_vejen_location = False
+    prices = []
+    skus = set()
+    barcodes = set()
+    variant_ids = []
+
+    for variant in variants:
+        if not isinstance(variant, dict):
+            continue
+        variant_id = str(variant.get("id") or "").strip()
+        if variant_id:
+            variant_ids.append(variant_id)
+        sku = str(variant.get("sku") or "").strip()
+        barcode = str(variant.get("barcode") or "").strip()
+        if sku:
+            skus.add(sku)
+        if barcode:
+            barcodes.add(barcode)
+        price = _storefront_variant_price(variant)
+        if price is not None:
+            prices.append(price)
+
+        availability = ((variant.get("storeAvailability") or {}).get("nodes") or [])
+        for stock in availability:
+            if not isinstance(stock, dict):
+                continue
+            location = stock.get("location") or {}
+            if not _is_vejen_location(location):
+                continue
+            saw_vejen_location = True
+            try:
+                local_quantity = int(stock.get("quantityAvailable") or 0)
+            except (TypeError, ValueError):
+                local_quantity = 0
+            quantity += max(0, local_quantity)
+
+    product = {
+        "name": title,
+        "handle": handle,
+        "shopify_product_id": str(raw.get("id") or ""),
+        "game": "POKÉMON",
+        "price": min(prices) if prices else None,
+        # Shopify available can be true when central stock can be ordered to
+        # the store. Physical Vejen stock is quantityAvailable > 0.
+        "in_stock": quantity > 0,
+        "local_quantity": quantity,
+        "local_store": LOCAL_SOURCE_LABEL,
+        "local_store_id": LEGEKAEDEN_VEJEN_STORE_ID,
+        "local_location_id": LEGEKAEDEN_VEJEN_LOCATION_ID,
+        "local_location_seen": saw_vejen_location,
+        "url": f"{SOURCES['legekaeden']['base']}/products/{handle}",
+        "skus": sorted(skus),
+        "barcodes": sorted(barcodes),
+        "variant_ids": sorted(set(variant_ids)),
+        "updated_at": raw.get("updatedAt"),
+    }
+    return handle, product
+
+
+STOREFRONT_PRODUCTS_QUERY = """
+query SearchProducts($query: String!, $after: String, $first: Int!) {
+  products(first: $first, after: $after, query: $query, sortKey: UPDATED_AT, reverse: true) {
+    pageInfo { hasNextPage endCursor }
+    nodes {
+      id
+      title
+      handle
+      updatedAt
+      variants(first: 20) {
+        nodes {
+          id
+          title
+          sku
+          barcode
+          availableForSale
+          price { amount currencyCode }
+          storeAvailability(first: 250) {
+            nodes {
+              available
+              quantityAvailable
+              pickUpTime
+              location {
+                id
+                name
+                address { address1 city zip country }
+                metafields(identifiers: [
+                  { namespace: "store", key: "page_url" },
+                  { namespace: "store", key: "store_id" }
+                ]) { key value }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+"""
+
+
+def fetch_legekaeden_vejen_stock(bootstrap_products=None, session=None) -> dict:
+    """Fetch physical LegeKæden Vejen inventory exposed by the public storefront.
+
+    This is independent of online availability. Only products published to
+    LegeKæden's Storefront API can be discovered; truly store-only unpublished
+    products remain invisible until Indeks publishes them to the storefront.
+    """
+    session = session or requests.Session()
+    shop_domain, token = _storefront_credentials(session, bootstrap_products)
+    endpoint = f"https://{shop_domain}/api/{STOREFRONT_API_VERSION}/graphql.json"
+    headers = {
+        "Content-Type": "application/json",
+        "X-Shopify-Storefront-Access-Token": token,
+        "User-Agent": "PokemonRestockBot/1.0",
+    }
+
+    raw_products = {}
+    for search_term in STOREFRONT_SEARCH_TERMS:
+        after = None
+        for _page in range(STOREFRONT_MAX_PAGES):
+            response = session.post(
+                endpoint,
+                headers=headers,
+                json={
+                    "query": STOREFRONT_PRODUCTS_QUERY,
+                    "variables": {
+                        "query": search_term,
+                        "after": after,
+                        "first": STOREFRONT_PAGE_SIZE,
+                    },
+                },
+                timeout=TIMEOUT_SECONDS,
+            )
+            response.raise_for_status()
+            payload = response.json()
+            if payload.get("errors"):
+                messages = "; ".join(
+                    str(error.get("message") or error)
+                    for error in payload.get("errors") or []
+                )
+                raise RuntimeError(f"Storefront API fejl: {messages}")
+
+            data = ((payload.get("data") or {}).get("products") or {})
+            nodes = data.get("nodes") or []
+            if not isinstance(nodes, list):
+                raise RuntimeError("Storefront API mangler products.nodes")
+
+            for raw in nodes:
+                if not isinstance(raw, dict):
+                    continue
+                key = str(raw.get("id") or raw.get("handle") or "").strip()
+                if key:
+                    raw_products[key] = raw
+
+            page_info = data.get("pageInfo") or {}
+            if not page_info.get("hasNextPage"):
+                break
+            after = page_info.get("endCursor")
+            if not after:
+                break
+
+    products = {}
+    for raw in raw_products.values():
+        normalised = _normalise_local_storefront_product(raw)
+        if normalised is None:
+            continue
+        handle, product = normalised
+        products[handle] = product
+
+    if not products:
+        raise RuntimeError("LegeKæden Storefront API gav 0 Pokémon-produkter")
+    return products
 
 
 def _normalise_product(source_key: str, raw: dict) -> tuple[str, dict] | None:
@@ -356,6 +631,50 @@ def _event_for_product(old_product, new_product):
     return None
 
 
+def _local_event_for_product(old_product, new_product):
+    if old_product is None:
+        return "NEW" if (new_product or {}).get("in_stock") is True else None
+    if old_product.get("in_stock") is not True and new_product.get("in_stock") is True:
+        return "RESTOCK"
+    return None
+
+
+def _local_discord_message(product, event):
+    headline = "🆕 LOKALT NYT" if str(event or "").upper() == "NEW" else "🚨 LOKALT RESTOCK"
+    lines = [
+        f"**{headline} — {LOCAL_SOURCE_LABEL}**",
+        f"**{product.get('name') or 'Ukendt produkt'}**",
+        f"🏪 Vejen: **{int(product.get('local_quantity') or 0)} stk.**",
+    ]
+    price = _format_price(product.get("price"))
+    if price:
+        lines.append(f"Pris: {price}")
+    url = str(product.get("url") or "").strip()
+    if url:
+        lines.append(f"<{url}>")
+    return "\n".join(lines)
+
+
+def _emit_local_alerts(old_products, products, *, sender=_post_discord):
+    # First deployment establishes a silent local baseline to avoid replaying
+    # every currently stocked item as NEW.
+    if not old_products:
+        print("INDEKS LOCAL VEJEN: ingen tidligere baseline; alerts undertrykt denne kørsel")
+        return 0
+
+    sent = 0
+    for product_id, product in products.items():
+        event = _local_event_for_product(old_products.get(product_id), product)
+        if event is None:
+            continue
+        name = str(product.get("name") or "").strip()
+        if not backup_retail_signal_allowed(name, event=event):
+            continue
+        sender(_local_discord_message(product, event))
+        sent += 1
+    return sent
+
+
 def _format_price(value):
     try:
         price = float(value)
@@ -444,11 +763,13 @@ def _failure_health(old_health: dict, error: Exception, now: str) -> dict:
     }
 
 
-def run_scan(fetcher=fetch_source, sender=None) -> int:
+def run_scan(fetcher=fetch_source, sender=None, local_fetcher=None) -> int:
     # Deterministic tests inject a fetcher; keep them offline unless a sender is
     # explicitly provided. Production uses the shared Restock webhook.
     if sender is None:
         sender = _post_discord if fetcher is fetch_source else _noop_sender
+    if local_fetcher is None and fetcher is fetch_source:
+        local_fetcher = fetch_legekaeden_vejen_stock
 
     old_state = _load_state()
     old_sources = old_state.get("sources") or {}
@@ -457,6 +778,10 @@ def run_scan(fetcher=fetch_source, sender=None) -> int:
         .get("products")
         or {}
     )
+    old_local_sources = old_state.get("local_sources") or {}
+    old_local_entry = old_local_sources.get(LOCAL_SOURCE_KEY) or {}
+    old_local_products = old_local_entry.get("products") or {}
+    old_local_health = old_local_entry.get("health") or {}
     new_sources = {}
     successful = 0
     changed = False
@@ -494,6 +819,54 @@ def run_scan(fetcher=fetch_source, sender=None) -> int:
             "products": products,
         }
 
+    local_sources = dict(old_local_sources)
+    local_alerts = 0
+    if local_fetcher is not None:
+        local_products = old_local_products
+        local_health = old_local_health
+        try:
+            legekaeden_products = (
+                (new_sources.get("legekaeden") or {}).get("products") or {}
+            )
+            local_products = local_fetcher(legekaeden_products)
+            local_changed = local_products != old_local_products
+            local_health = _success_health(
+                old_local_health,
+                len(local_products),
+                now,
+                local_changed,
+            )
+            local_alerts = _emit_local_alerts(
+                old_local_products,
+                local_products,
+                sender=sender,
+            )
+            changed = changed or local_changed or local_health != old_local_health
+            local_in_stock = sum(
+                1
+                for product in local_products.values()
+                if product.get("in_stock") is True
+            )
+            print(
+                f"INDEKS LOCAL {LOCAL_SOURCE_LABEL}: {len(local_products)} Pokémon | "
+                f"fysisk på lager {local_in_stock} | alerts={local_alerts} | health=ok"
+            )
+        except Exception as error:
+            local_products = old_local_products
+            local_health = _failure_health(old_local_health, error, now)
+            changed = True
+            print(
+                f"INDEKS LOCAL {LOCAL_SOURCE_LABEL} FEJL: {error} | "
+                "gammel lokal baseline bevaret"
+            )
+
+        local_sources[LOCAL_SOURCE_KEY] = {
+            "label": LOCAL_SOURCE_LABEL,
+            "mode": "live",
+            "health": local_health,
+            "products": local_products,
+        }
+
     comparison = _comparison(new_sources)
     changed = changed or comparison != (old_state.get("comparison") or {})
 
@@ -514,6 +887,7 @@ def run_scan(fetcher=fetch_source, sender=None) -> int:
         "updated_at": now if changed or not old_state.get("updated_at") else old_state.get("updated_at"),
         "sources": new_sources,
         "logical_sources": logical_sources,
+        "local_sources": local_sources,
         "comparison": comparison,
     }
     STATE_FILE.write_text(
@@ -533,7 +907,8 @@ def run_scan(fetcher=fetch_source, sender=None) -> int:
     )
     print(
         f"INDEKS LOGICAL LIVE: {len(merged_products)} unikke produkter | "
-        f"på lager {logical_stock} | Discord alerts={sent_alerts}"
+        f"på lager {logical_stock} | Discord alerts={sent_alerts} | "
+        f"lokale Vejen-alerts={local_alerts}"
     )
     return 0 if successful else 1
 
