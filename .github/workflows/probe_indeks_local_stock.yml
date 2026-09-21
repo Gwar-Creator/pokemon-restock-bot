@@ -1,0 +1,81 @@
+name: Probe Indeks local stock
+
+on:
+  push:
+    branches:
+      - probe-indeks-local-stock
+    paths:
+      - ".github/workflows/probe_indeks_local_stock.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Probe public storefront
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, re, requests
+          from bs4 import BeautifulSoup
+          from urllib.parse import urljoin
+
+          sites = {
+              "legekaeden": "https://www.legekaeden.dk/products/bogbind-selvklaebende-50cmx3m-531054",
+              "bogide": "https://www.bog-ide.dk/products/batman-the-dark-knight-returns-30th-anniversary-edition-frank-miller-paperback-2494473",
+          }
+          headers = {"User-Agent": "Mozilla/5.0", "Accept-Language":"da-DK,da;q=0.9,en;q=0.8"}
+
+          for key, url in sites.items():
+              print("\n###", key, url)
+              r=requests.get(url,headers=headers,timeout=30)
+              print("status",r.status_code,"final",r.url,"bytes",len(r.text))
+              text=r.text
+              low=text.lower()
+              for term in ["pickup","click","collect","store","lager","butik","inventory","location"]:
+                  print("term",term,"count",low.count(term))
+              soup=BeautifulSoup(text,"html.parser")
+              variant=None
+              for script in soup.find_all("script"):
+                  s=script.get_text(" ",strip=True)
+                  m=re.search(r'"variantId"\s*:\s*"?([0-9]+)',s,re.I)
+                  if not m:
+                      m=re.search(r'"variant_id"\s*:\s*"?([0-9]+)',s,re.I)
+                  if m:
+                      variant=m.group(1); break
+              if not variant:
+                  inp=soup.select_one('input[name="id"]')
+                  if inp:
+                      variant=inp.get("value")
+              print("variant",variant)
+              print("pickup-elements",len(soup.select("pickup-availability, [data-pickup-availability], .pickup-availability")))
+              for tag in soup.find_all(["script","link"]):
+                  src=tag.get("src") or tag.get("href")
+                  if src and any(t in src.lower() for t in ["pickup","store","location","stock","inventory","theme"]):
+                      print("asset",urljoin(r.url,src))
+              patterns=set()
+              for pat in [
+                  r'https?://[^"\'<> ]+',
+                  r'/(?:apps|api|a|local|stores|store|pickup|locations|inventory)[^"\'<> ]*',
+              ]:
+                  for m in re.findall(pat,text,re.I):
+                      if any(t in m.lower() for t in ["pickup","store","location","inventory","lager","butik"]):
+                          patterns.add(m[:500])
+              for x in sorted(patterns)[:80]:
+                  print("candidate",x)
+
+              if variant:
+                  probes=[
+                      f"/variants/{variant}/?section_id=pickup-availability",
+                      f"/variants/{variant}?section_id=pickup-availability",
+                      f"/products/{url.rstrip('/').split('/')[-1]}?variant={variant}&section_id=pickup-availability",
+                  ]
+                  for path in probes:
+                      u=urljoin(r.url,path)
+                      q=requests.get(u,headers=headers,timeout=30)
+                      print("probe",q.status_code,u,"bytes",len(q.text),"sample",re.sub(r"\s+"," ",q.text[:800]))
+          PY
