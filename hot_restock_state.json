@@ -710,10 +710,10 @@
     "coolshop": {
       "backoff_level": 0,
       "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-09-21T14:24:31.534048+00:00",
-      "last_success_at": "2026-09-21T14:29:09.478905+00:00"
+      "generic_failures": 1,
+      "last_error": "('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))",
+      "last_failure_at": "2026-09-21T16:39:03.872094+00:00",
+      "last_success_at": "2026-09-21T16:38:11.896195+00:00"
     },
     "proshop": {
       "backoff_level": 0,
@@ -748,6 +748,6 @@
       "last_success_at": "2026-09-20T14:04:48.129896+00:00"
     }
   },
-  "updated_at": "2026-09-21T16:19:55.954075+00:00",
+  "updated_at": "2026-09-21T16:39:18.970697+00:00",
   "proshop_discovery_version": 4
 }
