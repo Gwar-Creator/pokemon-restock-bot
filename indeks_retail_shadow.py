@@ -97,9 +97,9 @@ def _price(value):
 def _extract_storefront_credentials(document: str) -> tuple[str, str] | None:
     """Read the public Storefront API credentials used by pickup availability."""
     text = str(document or "")
-    domain_match = re.search(r'data-shop-domain=["\\']([^"\\']+)["\\']', text, re.IGNORECASE)
+    domain_match = re.search(r'data-shop-domain="([^"]+)"', text, re.IGNORECASE)
     token_match = re.search(
-        r'data-storefront-token=["\\']([^"\\']+)["\\']',
+        r'data-storefront-token="([^"]+)"',
         text,
         re.IGNORECASE,
     )
@@ -655,9 +655,11 @@ def _local_discord_message(product, event):
     return "\n".join(lines)
 
 
-def _emit_local_alerts(old_products, products, *, sender=_post_discord):
+def _emit_local_alerts(old_products, products, *, sender=None):
     # First deployment establishes a silent local baseline to avoid replaying
     # every currently stocked item as NEW.
+    if sender is None:
+        sender = _post_discord
     if not old_products:
         print("INDEKS LOCAL VEJEN: ingen tidligere baseline; alerts undertrykt denne kørsel")
         return 0
