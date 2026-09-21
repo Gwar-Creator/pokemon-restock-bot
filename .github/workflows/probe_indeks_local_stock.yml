@@ -223,6 +223,77 @@ jobs:
                       if vejen or any(m in low for m in ("tcg","booster","elite trainer","trainer box","binder","poster"," tin","tin ","collection","30th","celebr","anniversary","jubil")):
                           print("recent-product",json.dumps({"title":product.get("title"),"handle":product.get("handle"),"updatedAt":product.get("updatedAt"),"vejen":vejen},ensure_ascii=False))
 
+                  price_scan_query = """
+                  query RecentPriceScan($after: String) {
+                    products(first: 250, after: $after, sortKey: UPDATED_AT, reverse: true) {
+                      pageInfo { hasNextPage endCursor }
+                      nodes {
+                        id
+                        title
+                        handle
+                        productType
+                        tags
+                        updatedAt
+                        variants(first: 20) {
+                          nodes {
+                            id
+                            title
+                            sku
+                            barcode
+                            price { amount currencyCode }
+                            storeAvailability(first: 250) {
+                              nodes {
+                                available
+                                quantityAvailable
+                                location {
+                                  id
+                                  name
+                                  address { city zip }
+                                  metafields(identifiers: [{ namespace: "store", key: "store_id" }]) { key value }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                  """
+                  target_prices={899.95,499.95,319.95,399.95,379.95}
+                  after=None
+                  print("PRICE-SCAN-START")
+                  for page_no in range(1,9):
+                      pr=requests.post(endpoint,headers=gql_headers,json={"query":price_scan_query,"variables":{"after":after}},timeout=30)
+                      pj=pr.json()
+                      pdata=((pj.get("data") or {}).get("products") or {})
+                      if pj.get("errors"):
+                          print("price-scan-errors",json.dumps(pj["errors"],ensure_ascii=False))
+                          break
+                      for product in pdata.get("nodes") or []:
+                          matches=[]
+                          for var in ((product.get("variants") or {}).get("nodes") or []):
+                              try:
+                                  price=float(((var.get("price") or {}).get("amount")))
+                              except (TypeError,ValueError):
+                                  continue
+                              if not any(abs(price-p)<0.001 for p in target_prices):
+                                  continue
+                              vejen=[]
+                              for stock in ((var.get("storeAvailability") or {}).get("nodes") or []):
+                                  loc=stock.get("location") or {}
+                                  store_ids=[m.get("value") for m in (loc.get("metafields") or []) if isinstance(m,dict) and m.get("key")=="store_id"]
+                                  addr=loc.get("address") or {}
+                                  if "13280" in store_ids or "vejen" in (loc.get("name") or "").lower() or (addr.get("city") or "").lower()=="vejen":
+                                      vejen.append({"quantity":stock.get("quantityAvailable"),"available":stock.get("available"),"location":loc})
+                              matches.append({"price":price,"variant":var.get("title"),"sku":var.get("sku"),"barcode":var.get("barcode"),"vejen":vejen})
+                          if matches:
+                              print("price-match",json.dumps({"title":product.get("title"),"handle":product.get("handle"),"productType":product.get("productType"),"tags":product.get("tags"),"updatedAt":product.get("updatedAt"),"matches":matches},ensure_ascii=False))
+                      pi=pdata.get("pageInfo") or {}
+                      if not pi.get("hasNextPage"):
+                          break
+                      after=pi.get("endCursor")
+                  print("PRICE-SCAN-DONE")
+
                   for search_query in ["30th", "Celebration", "Pokemon", "Pokémon"]:
                       print("SEARCH",search_query)
                       after=None
