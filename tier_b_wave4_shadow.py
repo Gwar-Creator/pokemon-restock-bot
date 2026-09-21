@@ -184,7 +184,7 @@ def _emit_live_alerts(source_key, label, old_products, products, *, sender=_post
         if event is None:
             continue
         name = str(product.get("name") or "").strip()
-        if not tier_b_signal_allowed(name, event=event):
+        if not tier_b_signal_allowed(name, event=event, source_key=source_key):
             continue
         sender(_discord_message(label, product, event))
         sent += 1
