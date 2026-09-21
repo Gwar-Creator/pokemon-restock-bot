@@ -4,8 +4,8 @@ from datetime import date, datetime
 # Restock source classes.
 # Tier A = broad retail fast lane.
 # Tier B = broad backup retail; currently only Indeks Retail (Bog & ide/Legekaeden).
-# SPECIALTY = specialist stores that remain useful for scan/state/price data but
-# do not emit product-event Discord alerts.
+# SPECIALTY = specialist stores. Product-event alerts use the same strict
+# product gate as backup retail unless the source is explicitly muted.
 TIER_A_SOURCES = (
     "coolshop",
     "proshop",
@@ -16,6 +16,14 @@ TIER_A_SOURCES = (
 
 BACKUP_RETAIL_SOURCES = (
     "indeks_retail",
+)
+
+# Start-open specialist policy: specialist stores can emit filtered Restock
+# product events by default. Keep only explicitly noisy sources muted.
+MUTED_SPECIALTY_SOURCES = (
+    "matraws",
+    "kelz0r",
+    "rogerz",
 )
 
 RETIRED_SOURCES = (
@@ -241,11 +249,21 @@ def tier_b_signal_allowed(
     *,
     event="RESTOCK",
     release_date=None,
+    source_key=None,
 ):
-    """Legacy specialist gate: specialist stores are data-only for Discord.
+    """Filtered specialist gate used by legacy main scanner and Waves 1-4.
 
-    Existing Wave 1-4 and legacy main-scanner callers still use this function.
-    Returning False centrally mutes NEW/PREORDER/RESTOCK from specialist stores
-    without disabling their scanning, source health, state or price data.
+    Specialist stores are open by default, but use the strict backup-retail
+    product filter so ordinary low-signal sealed does not flood Discord.
+    Explicitly muted sources remain data-only.
     """
-    return False
+    key = str(source_key or "").strip().lower()
+    if key in MUTED_SPECIALTY_SOURCES:
+        return False
+
+    return backup_retail_signal_allowed(
+        name,
+        series,
+        event=event,
+        release_date=release_date,
+    )
