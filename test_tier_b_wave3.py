@@ -9,7 +9,7 @@ import tier_b_wave3_sources as sources
 
 
 class TierBWave3SourceTests(unittest.TestCase):
-    def test_wave3_has_six_sources(self):
+    def test_wave3_has_eight_sources(self):
         self.assertEqual(
             set(sources.WAVE3_SOURCES),
             {
@@ -19,6 +19,8 @@ class TierBWave3SourceTests(unittest.TestCase):
                 "ergames",
                 "mugglealley",
                 "superhelten",
+                "bakkeleg",
+                "maxgaming",
             },
         )
 
@@ -175,6 +177,58 @@ class TierBWave3SourceTests(unittest.TestCase):
         self.assertTrue(rows["Pokémon TCG 30th Celebration Mini Tin"]["in_stock"])
         self.assertFalse(rows["Pokémon Old Elite Trainer Box"]["in_stock"])
 
+    def test_bakkeleg_generic_parser_keeps_sealed_and_filters_non_english(self):
+        document = """
+        <article class="product-miniature">
+          <a href="/pokemon-/123393-pokemon-tcg-elite-trainer-box-196214159891.html">
+            Pokémon TCG Elite Trainer Box
+          </a>
+          <span>999,95 kr.</span><span>Få stk.på lager</span>
+        </article>
+        <article class="product-miniature">
+          <a href="/pokemon-/999999-korean-booster-box.html">
+            Pokemon Booster Box Koreansk
+          </a>
+          <span>249,95 kr.</span><span>Få stk.på lager</span>
+        </article>
+        """
+        products = sources.parse_html_catalog(
+            document,
+            "https://bakkeleg.dk",
+            "POKÉMON",
+            r"/pokemon-/\d+-[^?#]+\.html$",
+        )
+        rows = {product["name"]: product for product in products.values()}
+        self.assertIn("Pokémon TCG Elite Trainer Box", rows)
+        self.assertTrue(rows["Pokémon TCG Elite Trainer Box"]["in_stock"])
+        self.assertNotIn("Pokemon Booster Box Koreansk", rows)
+
+    def test_maxgaming_generic_parser_reads_stock_and_preorder(self):
+        document = """
+        <article class="product-card">
+          <a href="/dk/pokemon/pokemon-30th-celebration-elite-trainer-box">
+            Pokémon 30th Celebration - Elite Trainer Box
+          </a>
+          <span>639 kr</span><span>Kommer snart</span>
+        </article>
+        <article class="product-card">
+          <a href="/dk/pokemon/pokemon-ascended-heroes-booster-bundle">
+            Pokémon Ascended Heroes Booster Bundle
+          </a>
+          <span>419 kr</span><span>På lager</span>
+        </article>
+        """
+        products = sources.parse_html_catalog(
+            document,
+            "https://www.maxgaming.dk",
+            "POKÉMON",
+            r"/dk/pokemon/pokemon-[^/?#]+/?$",
+        )
+        rows = {product["name"]: product for product in products.values()}
+        self.assertTrue(rows["Pokémon 30th Celebration - Elite Trainer Box"]["preorder"])
+        self.assertFalse(rows["Pokémon 30th Celebration - Elite Trainer Box"]["in_stock"])
+        self.assertTrue(rows["Pokémon Ascended Heroes Booster Bundle"]["in_stock"])
+
     def test_muggle_detail_stock_uses_buy_control_and_sold_out_text(self):
         buyable = """
         <h1>Pokemon Pitch Black Booster Box</h1>
@@ -207,9 +261,19 @@ class TierBWave3SourceTests(unittest.TestCase):
         self.assertEqual(products, fake_products)
         muggle.assert_called_once_with(sources.WAVE3_SOURCES["mugglealley"])
 
+        with patch.object(sources, "fetch_paged_html_catalog_source", return_value=fake_products) as paged:
+            products = sources.fetch_wave3_source("bakkeleg")
+        self.assertEqual(products, fake_products)
+        paged.assert_called_once_with(sources.WAVE3_SOURCES["bakkeleg"])
+
+        with patch.object(sources, "fetch_paged_html_catalog_source", return_value=fake_products) as paged:
+            products = sources.fetch_wave3_source("maxgaming")
+        self.assertEqual(products, fake_products)
+        paged.assert_called_once_with(sources.WAVE3_SOURCES["maxgaming"])
+
 
 class TierBWave3LiveTests(unittest.TestCase):
-    def test_all_six_wave3_sources_are_live(self):
+    def test_all_eight_wave3_sources_are_live(self):
         self.assertEqual(set(shadow.LIVE_SOURCES), set(sources.WAVE3_SOURCES))
 
     def test_live_run_preserves_failed_source_and_marks_all_modes_live(self):
