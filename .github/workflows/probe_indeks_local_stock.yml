@@ -92,4 +92,126 @@ jobs:
                       u=urljoin(r.url,path)
                       q=requests.get(u,headers=headers,timeout=30)
                       print("probe",q.status_code,u,"bytes",len(q.text),"sample",re.sub(r"\s+"," ",q.text[:800]))
+
+              data_el=soup.select_one(".pickup-availability__storefront-data")
+              if data_el and data_el.get("data-storefront-token") and data_el.get("data-shop-domain"):
+                  token=data_el.get("data-storefront-token")
+                  domain=data_el.get("data-shop-domain")
+                  endpoint=f"https://{domain}/api/2025-07/graphql.json"
+                  gql_headers={"Content-Type":"application/json","X-Shopify-Storefront-Access-Token":token}
+
+                  availability_query = """
+                  query VariantAvailability($variantId: ID!) {
+                    node(id: $variantId) {
+                      ... on ProductVariant {
+                        id
+                        title
+                        storeAvailability(first: 250) {
+                          nodes {
+                            available
+                            quantityAvailable
+                            pickUpTime
+                            location {
+                              id
+                              name
+                              address { address1 city zip country }
+                              metafields(identifiers: [
+                                { namespace: "store", key: "page_url" },
+                                { namespace: "store", key: "store_id" }
+                              ]) { key value }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                  """
+                  vr=requests.post(endpoint,headers=gql_headers,json={"query":availability_query,"variables":{"variantId":f"gid://shopify/ProductVariant/{variant}"}},timeout=30)
+                  print("graphql-variant",vr.status_code)
+                  vj=vr.json()
+                  nodes=((vj.get("data") or {}).get("node") or {}).get("storeAvailability",{}).get("nodes") or []
+                  print("store-count",len(nodes))
+                  for node in nodes:
+                      loc=node.get("location") or {}
+                      addr=loc.get("address") or {}
+                      if node.get("quantityAvailable",0)>0 or "vejen" in (loc.get("name") or "").lower() or "vejen" in (addr.get("city") or "").lower():
+                          print("store",json.dumps(node,ensure_ascii=False))
+
+                  product_query = """
+                  query SearchProducts($query: String!, $after: String) {
+                    products(first: 100, after: $after, query: $query, sortKey: UPDATED_AT, reverse: true) {
+                      pageInfo { hasNextPage endCursor }
+                      nodes {
+                        id
+                        title
+                        handle
+                        updatedAt
+                        variants(first: 20) {
+                          nodes {
+                            id
+                            title
+                            sku
+                            barcode
+                            availableForSale
+                            price { amount currencyCode }
+                            storeAvailability(first: 250) {
+                              nodes {
+                                available
+                                quantityAvailable
+                                location {
+                                  id
+                                  name
+                                  address { address1 city zip country }
+                                  metafields(identifiers: [
+                                    { namespace: "store", key: "page_url" },
+                                    { namespace: "store", key: "store_id" }
+                                  ]) { key value }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                  """
+                  for search_query in ["30th", "Celebration", "Pokemon", "Pokémon"]:
+                      print("SEARCH",search_query)
+                      after=None
+                      seen=0
+                      for page_no in range(1,6):
+                          sr=requests.post(endpoint,headers=gql_headers,json={"query":product_query,"variables":{"query":search_query,"after":after}},timeout=30)
+                          print("graphql-search",search_query,page_no,sr.status_code)
+                          sj=sr.json()
+                          pdata=((sj.get("data") or {}).get("products") or {})
+                          if sj.get("errors"):
+                              print("graphql-errors",json.dumps(sj["errors"],ensure_ascii=False))
+                              break
+                          for product in pdata.get("nodes") or []:
+                              title=(product.get("title") or "")
+                              low_title=title.lower()
+                              vejen=[]
+                              for var in ((product.get("variants") or {}).get("nodes") or []):
+                                  for stock in ((var.get("storeAvailability") or {}).get("nodes") or []):
+                                      loc=stock.get("location") or {}
+                                      addr=loc.get("address") or {}
+                                      if "vejen" in (loc.get("name") or "").lower() or "vejen" in (addr.get("city") or "").lower():
+                                          vejen.append({
+                                              "variant": var.get("title"),
+                                              "variant_id": var.get("id"),
+                                              "sku": var.get("sku"),
+                                              "barcode": var.get("barcode"),
+                                              "availableForSale": var.get("availableForSale"),
+                                              "quantity": stock.get("quantityAvailable"),
+                                              "available": stock.get("available"),
+                                              "location": loc,
+                                          })
+                              if any(x in low_title for x in ["30", "pokemon", "pokémon", "celebr"]):
+                                  print("product",json.dumps({"title":title,"handle":product.get("handle"),"updatedAt":product.get("updatedAt"),"vejen":vejen},ensure_ascii=False))
+                              seen += 1
+                          pi=pdata.get("pageInfo") or {}
+                          if not pi.get("hasNextPage"):
+                              break
+                          after=pi.get("endCursor")
+                      print("SEARCH-DONE",search_query,"seen",seen)
           PY
