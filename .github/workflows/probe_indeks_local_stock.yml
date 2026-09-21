@@ -175,6 +175,54 @@ jobs:
                     }
                   }
                   """
+                  recent_query = """
+                  query RecentProducts($after: String) {
+                    products(first: 250, after: $after, sortKey: UPDATED_AT, reverse: true) {
+                      pageInfo { hasNextPage endCursor }
+                      nodes {
+                        id
+                        title
+                        handle
+                        updatedAt
+                        variants(first: 20) { nodes { id title sku barcode availableForSale } }
+                      }
+                    }
+                  }
+                  """
+                  recent_candidates=[]
+                  after=None
+                  markers=("pokemon","pokémon","tcg","booster","elite trainer","trainer box","binder","poster"," tin","tin ","collection"," ex ","ex box","30th","30 ","celebr","anniversary","jubil")
+                  for page_no in range(1,7):
+                      rr=requests.post(endpoint,headers=gql_headers,json={"query":recent_query,"variables":{"after":after}},timeout=30)
+                      rj=rr.json()
+                      pdata=((rj.get("data") or {}).get("products") or {})
+                      if rj.get("errors"):
+                          print("recent-errors",json.dumps(rj["errors"],ensure_ascii=False))
+                          break
+                      for product in pdata.get("nodes") or []:
+                          low=(product.get("title") or "").lower()
+                          if any(m in low for m in markers):
+                              recent_candidates.append(product)
+                      pi=pdata.get("pageInfo") or {}
+                      if not pi.get("hasNextPage"):
+                          break
+                      after=pi.get("endCursor")
+                  print("RECENT-CANDIDATES",len(recent_candidates))
+                  for product in recent_candidates:
+                      vejen=[]
+                      for var in ((product.get("variants") or {}).get("nodes") or []):
+                          ar=requests.post(endpoint,headers=gql_headers,json={"query":availability_query,"variables":{"variantId":var.get("id")}},timeout=30)
+                          aj=ar.json()
+                          stocks=((aj.get("data") or {}).get("node") or {}).get("storeAvailability",{}).get("nodes") or []
+                          for stock in stocks:
+                              loc=stock.get("location") or {}
+                              addr=loc.get("address") or {}
+                              if "vejen" in (loc.get("name") or "").lower() or "vejen" in (addr.get("city") or "").lower():
+                                  vejen.append({"variant":var,"stock":stock})
+                      low=(product.get("title") or "").lower()
+                      if vejen or any(m in low for m in ("tcg","booster","elite trainer","trainer box","binder","poster"," tin","tin ","collection","30th","celebr","anniversary","jubil")):
+                          print("recent-product",json.dumps({"title":product.get("title"),"handle":product.get("handle"),"updatedAt":product.get("updatedAt"),"vejen":vejen},ensure_ascii=False))
+
                   for search_query in ["30th", "Celebration", "Pokemon", "Pokémon"]:
                       print("SEARCH",search_query)
                       after=None
