@@ -16,6 +16,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
+      - name: Install probe dependencies
+        run: pip install requests beautifulsoup4
+
       - name: Probe public storefront
         shell: bash
         run: |
