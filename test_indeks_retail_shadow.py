@@ -52,6 +52,49 @@ LOCAL_SAMPLE = {
     "variants": {
         "nodes": [
             {
+                "id": "gid://shopify/ProductVariant/123",
+                "title": "Default Title",
+                "sku": "30ETB",
+                "barcode": "0196214100000",
+                "availableForSale": False,
+                "price": {"amount": "899.95", "currencyCode": "DKK"},
+                "storeAvailability": {
+                    "nodes": [
+                        {
+                            "available": True,
+                            "quantityAvailable": 4,
+                            "pickUpTime": "Usually ready in 2-4 days",
+                            "location": {
+                                "id": mod.LEGEKAEDEN_VEJEN_LOCATION_ID,
+                                "name": "Legekæden Vejen",
+                                "address": {
+                                    "address1": "Rådhusstien 3 - 5",
+                                    "city": "Vejen",
+                                    "zip": "6600",
+                                    "country": "Denmark",
+                                },
+                                "metafields": [
+                                    None,
+                                    {"key": "store_id", "value": mod.LEGEKAEDEN_VEJEN_STORE_ID},
+                                ],
+                            },
+                        }
+                    ]
+                },
+            }
+        ]
+    },
+}
+
+
+LOCAL_SAMPLE = {
+    "id": "gid://shopify/Product/999",
+    "title": "Pokemon 30th Anniversary Elite Trainer Box",
+    "handle": "pokemon-30th-anniversary-elite-trainer-box",
+    "updatedAt": "2026-09-21T10:00:00Z",
+    "variants": {
+        "nodes": [
+            {
                 "id": "gid://shopify/ProductVariant/9991",
                 "title": "Default Title",
                 "sku": "30-ETB",
@@ -97,6 +140,66 @@ LOCAL_SAMPLE = {
 
 
 class IndeksRetailShadowTests(unittest.TestCase):
+    def test_extract_storefront_credentials_from_pickup_markup(self):
+        markup = (
+            '<div class="pickup-availability__storefront-data" '
+            'data-shop-domain="legekaeden.myshopify.com" '
+            'data-storefront-token="public-token"></div>'
+        )
+        self.assertEqual(
+            mod._extract_storefront_credentials(markup),
+            ("legekaeden.myshopify.com", "public-token"),
+        )
+
+    def test_local_storefront_product_uses_physical_vejen_quantity(self):
+        handle, product = mod._normalise_local_storefront_product(LOCAL_SAMPLE)
+        self.assertEqual(handle, LOCAL_SAMPLE["handle"])
+        self.assertTrue(product["in_stock"])
+        self.assertEqual(product["local_quantity"], 4)
+        self.assertEqual(product["price"], 899.95)
+        self.assertEqual(product["local_store_id"], mod.LEGEKAEDEN_VEJEN_STORE_ID)
+
+    def test_local_storefront_does_not_treat_available_flag_as_physical_stock(self):
+        sample = json.loads(json.dumps(LOCAL_SAMPLE))
+        node = sample["variants"]["nodes"][0]["storeAvailability"]["nodes"][0]
+        node["available"] = True
+        node["quantityAvailable"] = 0
+        _, product = mod._normalise_local_storefront_product(sample)
+        self.assertFalse(product["in_stock"])
+        self.assertEqual(product["local_quantity"], 0)
+
+    def test_local_watch_alerts_on_zero_to_positive_for_watch_product(self):
+        old = mod._normalise_local_storefront_product(
+            json.loads(json.dumps(LOCAL_SAMPLE))
+        )[1]
+        old["in_stock"] = False
+        old["local_quantity"] = 0
+        new = dict(old, in_stock=True, local_quantity=3)
+        sent = []
+
+        count = mod._emit_local_alerts(
+            {LOCAL_SAMPLE["handle"]: old},
+            {LOCAL_SAMPLE["handle"]: new},
+            sender=sent.append,
+        )
+
+        self.assertEqual(count, 1)
+        self.assertEqual(len(sent), 1)
+        self.assertIn("LEGEKÆDEN VEJEN", sent[0])
+        self.assertIn("3 stk.", sent[0])
+        self.assertIn("30th Anniversary Elite Trainer Box", sent[0])
+
+    def test_local_first_scan_is_silent_baseline(self):
+        product = mod._normalise_local_storefront_product(LOCAL_SAMPLE)[1]
+        sent = []
+        count = mod._emit_local_alerts(
+            {},
+            {LOCAL_SAMPLE["handle"]: product},
+            sender=sent.append,
+        )
+        self.assertEqual(count, 0)
+        self.assertEqual(sent, [])
+
     def test_extract_storefront_credentials_from_pickup_widget(self):
         html = (
             '<div class="pickup-availability__storefront-data" '
