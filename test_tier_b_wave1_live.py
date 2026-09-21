@@ -44,7 +44,7 @@ class TierBWave1LiveTests(unittest.TestCase):
         self.assertEqual(sent, 0)
         self.assertEqual(messages, [])
 
-    def test_specialty_transition_is_data_only_even_for_booster_box(self):
+    def test_specialty_transition_sends_only_filtered_high_signal_product(self):
         old = {
             "box": {"in_stock": False, "preorder": False},
             "ordinary": {"in_stock": False, "preorder": False},
@@ -75,8 +75,10 @@ class TierBWave1LiveTests(unittest.TestCase):
             new,
             sender=messages.append,
         )
-        self.assertEqual(sent, 0)
-        self.assertEqual(messages, [])
+        self.assertEqual(sent, 1)
+        self.assertEqual(len(messages), 1)
+        self.assertIn("Journey Together Booster Box", messages[0])
+        self.assertNotIn("Collection Box", messages[0])
 
     def test_shadow_source_never_sends_even_with_actionable_transition(self):
         old = {"1": {"in_stock": False, "preorder": False}}
