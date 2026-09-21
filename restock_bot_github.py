@@ -4566,7 +4566,8 @@ def get_coolshop_feed(feed):
                 "name": name,
                 "game": feed["game"],
                 "price": price,
-                "online_stock": online_stock
+                "online_stock": online_stock,
+                "url": url
             }
 
         offset += size
