@@ -116,6 +116,26 @@ WAVE3_SOURCES = {
             },
         ],
     },
+    "bakkeleg": {
+        "label": "BAKKELEG",
+        "kind": "paged_html_catalog",
+        "base": "https://bakkeleg.dk",
+        "minimum": 3,
+        "url": "https://bakkeleg.dk/415-pokemon-",
+        "game": "POKÉMON",
+        "link_pattern": r"/pokemon-/\d+-[^?#]+\.html$",
+        "max_pages": 6,
+    },
+    "maxgaming": {
+        "label": "MAXGAMING",
+        "kind": "paged_html_catalog",
+        "base": "https://www.maxgaming.dk",
+        "minimum": 10,
+        "url": "https://www.maxgaming.dk/dk/pokemon",
+        "game": "POKÉMON",
+        "link_pattern": r"/dk/pokemon/pokemon-[^/?#]+/?$",
+        "max_pages": 8,
+    },
 }
 
 
@@ -472,6 +492,47 @@ def fetch_html_catalog_source(config):
     return products
 
 
+def _query_page_url(url: str, page_number: int) -> str:
+    if page_number <= 1:
+        return url
+    separator = "&" if "?" in url else "?"
+    return f"{url}{separator}page={page_number}"
+
+
+def fetch_paged_html_catalog_source(config):
+    """Fetch a category that paginates with ?page=N and parse sealed cards."""
+    products = {}
+    max_pages = int(config.get("max_pages") or 1)
+
+    for page_number in range(1, max_pages + 1):
+        response = requests.get(
+            _query_page_url(config["url"], page_number),
+            headers={
+                **BROWSER_HEADERS,
+                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+            },
+            timeout=30,
+        )
+        if page_number > 1 and response.status_code == 404:
+            break
+        response.raise_for_status()
+
+        parsed = parse_html_catalog(
+            response.text,
+            config["base"],
+            config["game"],
+            config["link_pattern"],
+        )
+        before = len(products)
+        products.update(parsed)
+
+        # Stop when pagination has ended or a storefront repeats the last page.
+        if page_number > 1 and (not parsed or len(products) == before):
+            break
+
+    return products
+
+
 def _muggle_detail_stock(document: str):
     soup = BeautifulSoup(document or "", "html.parser")
     text = _clean(soup.get_text(" ", strip=True)).lower()
@@ -550,6 +611,8 @@ def fetch_wave3_source(source_key: str):
         return fetch_selector_catalog_source(config)
     if config["kind"] == "html_catalog":
         return fetch_html_catalog_source(config)
+    if config["kind"] == "paged_html_catalog":
+        return fetch_paged_html_catalog_source(config)
     if config["kind"] == "mugglealley":
         return fetch_mugglealley_source(config)
     raise KeyError(f"Ukendt Wave 3 source kind: {config['kind']}")
