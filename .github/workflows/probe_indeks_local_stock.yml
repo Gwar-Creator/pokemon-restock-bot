@@ -55,11 +55,22 @@ jobs:
                   if inp:
                       variant=inp.get("value")
               print("variant",variant)
-              print("pickup-elements",len(soup.select("pickup-availability, [data-pickup-availability], .pickup-availability")))
+              pickup_nodes=soup.select("pickup-availability, [data-pickup-availability], .pickup-availability")
+              print("pickup-elements",len(pickup_nodes))
+              for node in pickup_nodes[:3]:
+                  print("pickup-node",re.sub(r"\s+"," ",str(node))[:3000])
+              interesting_assets=[]
               for tag in soup.find_all(["script","link"]):
                   src=tag.get("src") or tag.get("href")
                   if src and any(t in src.lower() for t in ["pickup","store","location","stock","inventory","theme"]):
-                      print("asset",urljoin(r.url,src))
+                      asset_url=urljoin(r.url,src)
+                      print("asset",asset_url)
+                      interesting_assets.append(asset_url)
+              for asset_url in interesting_assets:
+                  if "pickup-availability.js" in asset_url:
+                      a=requests.get(asset_url,headers=headers,timeout=30)
+                      print("pickup-js",a.status_code,"bytes",len(a.text))
+                      print(a.text[:12000])
               patterns=set()
               for pat in [
                   r'https?://[^"\'<> ]+',
