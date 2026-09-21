@@ -32,13 +32,34 @@ class RestockV2PolicyTests(unittest.TestCase):
         )
         self.assertEqual(set_status("Journey Together Elite Trainer Box"), "NORMAL")
 
-    def test_specialty_gate_is_data_only(self):
+    def test_specialty_gate_is_filtered_open_by_default(self):
         for event in ("NEW", "PREORDER", "RESTOCK"):
-            self.assertFalse(
+            self.assertTrue(
                 tier_b_signal_allowed("Pokemon 151 Booster Bundle", event=event)
             )
-            self.assertFalse(
+            self.assertTrue(
                 tier_b_signal_allowed("Journey Together Booster Box", event=event)
+            )
+
+        self.assertFalse(
+            tier_b_signal_allowed("Journey Together Elite Trainer Box", event="RESTOCK")
+        )
+
+    def test_explicitly_muted_specialty_sources_stay_data_only(self):
+        for source_key in ("matraws", "kelz0r", "rogerz"):
+            self.assertFalse(
+                tier_b_signal_allowed(
+                    "Pokemon 151 Booster Bundle",
+                    event="RESTOCK",
+                    source_key=source_key,
+                )
+            )
+            self.assertFalse(
+                tier_b_signal_allowed(
+                    "Journey Together Booster Box",
+                    event="RESTOCK",
+                    source_key=source_key,
+                )
             )
 
     def test_backup_retail_normal_is_strict(self):
