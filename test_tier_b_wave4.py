@@ -70,7 +70,7 @@ class TierBWave4LiveTests(unittest.TestCase):
             self.assertTrue(all(row["mode"] == "live" for row in state["sources"].values()))
             self.assertTrue(all(row["health"]["status"] == "ok" for row in state["sources"].values()))
 
-    def test_restock_transition_is_data_only(self):
+    def test_restock_transition_uses_filtered_open_policy(self):
         source_key = "vaulted"
         count = wave4.WAVE4_SOURCES[source_key]["minimum"]
         old_products = self._products(count, in_stock=False)
@@ -85,8 +85,9 @@ class TierBWave4LiveTests(unittest.TestCase):
             new_products,
             sender=sent.append,
         )
-        self.assertEqual(sent_count, 0)
-        self.assertEqual(sent, [])
+        self.assertEqual(sent_count, 1)
+        self.assertEqual(len(sent), 1)
+        self.assertIn("Pokemon Booster Box 0", sent[0])
 
     def test_pokemonportalen_preorder_is_fail_closed(self):
         old_product = {

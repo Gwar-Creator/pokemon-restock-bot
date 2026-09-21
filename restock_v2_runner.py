@@ -11,7 +11,12 @@ from concurrent.futures import ThreadPoolExecutor
 import re
 from pathlib import Path
 
-from alert_policy import TIER_A_SOURCES, tier_a_signal_allowed, tier_b_signal_allowed
+from alert_policy import (
+    MUTED_SPECIALTY_SOURCES,
+    TIER_A_SOURCES,
+    tier_a_signal_allowed,
+    tier_b_signal_allowed,
+)
 from faraos_parser_v2 import faraos_name_v2
 
 SCANNER_FILE = Path(__file__).resolve().parent / "restock_bot_github.py"
@@ -28,6 +33,14 @@ TIER_A_LABELS = {
     "bilka": "BILKA",
     "foetex": "FØTEX",
 }
+
+SPECIALTY_LABELS = {
+    "matraws": "MATRAWS",
+    "kelz0r": "KELZ0R",
+    "rogerz": "ROGERZ",
+}
+if set(SPECIALTY_LABELS) != set(MUTED_SPECIALTY_SOURCES):
+    raise RuntimeError("Restock runner er ikke synkron med MUTED_SPECIALTY_SOURCES")
 
 PRICE_WATCH_FOCUS_MAX_PRICE = {
     "UPC": 2000.0,
@@ -142,6 +155,14 @@ def _is_tier_a_headline(headline):
     )
 
 
+def _specialty_source_key_from_headline(headline):
+    upper = str(headline or "").upper()
+    for source_key, label in SPECIALTY_LABELS.items():
+        if re.search(rf"\b{re.escape(label)}\b", upper):
+            return source_key
+    return None
+
+
 def restock_v2_channel_alert_allowed(message, legacy_policy=None):
     """Keep Tier A fast but filtered; make Tier B Discord deliberately strict."""
     lines = _clean_lines(message)
@@ -166,7 +187,11 @@ def restock_v2_channel_alert_allowed(message, legacy_policy=None):
     if _is_tier_a_headline(headline):
         return tier_a_signal_allowed(product_name, event=event)
 
-    return tier_b_signal_allowed(product_name, event=event)
+    return tier_b_signal_allowed(
+        product_name,
+        event=event,
+        source_key=_specialty_source_key_from_headline(headline),
+    )
 
 
 def load_scanner_parts():

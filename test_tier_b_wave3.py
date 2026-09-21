@@ -289,7 +289,7 @@ class TierBWave3LiveTests(unittest.TestCase):
                 shadow.run_scan(fetcher=fake_fetch, sender=sent.append)
             self.assertEqual(sent, [])
 
-    def test_live_specialty_transition_is_data_only(self):
+    def test_live_specialty_transition_uses_filtered_open_policy(self):
         sent = []
         old_products = {
             "good": {
@@ -330,8 +330,10 @@ class TierBWave3LiveTests(unittest.TestCase):
             products,
             sender=sent.append,
         )
-        self.assertEqual(count, 0)
-        self.assertEqual(sent, [])
+        self.assertEqual(count, 1)
+        self.assertEqual(len(sent), 1)
+        self.assertIn("30th Celebration Booster Bundle", sent[0])
+        self.assertNotIn("Checklane Blister", sent[0])
 
 
 if __name__ == "__main__":
