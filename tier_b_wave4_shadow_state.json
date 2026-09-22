@@ -1,7 +1,7 @@
 {
   "version": 2,
   "mode": "live",
-  "updated_at": "2026-09-22T08:49:20.072528+00:00",
+  "updated_at": "2026-09-22T08:54:10.135250+00:00",
   "sources": {
     "vaulted": {
       "label": "VAULTED",
@@ -9,8 +9,8 @@
       "stock_trust": "trusted",
       "health": {
         "status": "ok",
-        "last_attempt": "2026-09-22T08:49:19.716295+00:00",
-        "last_success": "2026-09-22T08:49:19.716295+00:00",
+        "last_attempt": "2026-09-22T08:54:09.668898+00:00",
+        "last_success": "2026-09-22T08:54:09.668898+00:00",
         "consecutive_failures": 0,
         "last_error": "",
         "observed_count": 125
@@ -1024,8 +1024,8 @@
       "stock_trust": "trusted",
       "health": {
         "status": "ok",
-        "last_attempt": "2026-09-22T08:49:19.716462+00:00",
-        "last_success": "2026-09-22T08:49:19.716462+00:00",
+        "last_attempt": "2026-09-22T08:54:09.669063+00:00",
+        "last_success": "2026-09-22T08:54:09.669063+00:00",
         "consecutive_failures": 0,
         "last_error": "",
         "observed_count": 164
@@ -2351,11 +2351,11 @@
       "stock_trust": "trusted",
       "health": {
         "status": "ok",
-        "last_attempt": "2026-09-22T08:49:19.716617+00:00",
-        "last_success": "2026-09-22T08:49:19.716617+00:00",
+        "last_attempt": "2026-09-22T08:54:09.669224+00:00",
+        "last_success": "2026-09-22T08:54:09.669224+00:00",
         "consecutive_failures": 0,
         "last_error": "",
-        "observed_count": 172
+        "observed_count": 174
       },
       "products": {
         "34103": {
@@ -2395,7 +2395,7 @@
           "game": "POKÉMON",
           "price": 9999.0,
           "in_stock": false,
-          "preorder": true,
+          "preorder": false,
           "url": "https://pokemonportalen.dk/product/30th-celebration-booster/"
         },
         "108104": {
@@ -2558,13 +2558,53 @@
           "preorder": false,
           "url": "https://pokemonportalen.dk/product/paradox-rift-booster/"
         },
-        "108096": {
-          "name": "Pitch Black Booster Bundle",
+        "34535": {
+          "name": "Prismatic Evolutions Poster Collection",
           "game": "POKÉMON",
-          "price": 399.0,
+          "price": 299.0,
+          "in_stock": false,
+          "preorder": false,
+          "url": "https://pokemonportalen.dk/product/prismatic-evolutions-poster-collection/"
+        },
+        "28855": {
+          "name": "Mega Latias ex Box *LIVESTREAM*",
+          "game": "POKÉMON",
+          "price": 250.0,
+          "in_stock": false,
+          "preorder": false,
+          "url": "https://pokemonportalen.dk/product/mega-latias-ex-box-livestream/"
+        },
+        "34107": {
+          "name": "Perfect Order: Booster Box",
+          "game": "POKÉMON",
+          "price": 1799.0,
           "in_stock": true,
           "preorder": false,
-          "url": "https://pokemonportalen.dk/product/pitch-black-booster-bundle/"
+          "url": "https://pokemonportalen.dk/product/perfect-order-booster-box/"
+        },
+        "24878": {
+          "name": "Destined Rivals Booster Box",
+          "game": "POKÉMON",
+          "price": 3999.0,
+          "in_stock": true,
+          "preorder": false,
+          "url": "https://pokemonportalen.dk/product/destined-rivals-booster-box/"
+        },
+        "113875": {
+          "name": "Delta Reign Booster Box",
+          "game": "POKÉMON",
+          "price": 2499.0,
+          "in_stock": false,
+          "preorder": true,
+          "url": "https://pokemonportalen.dk/product/delta-reign-booster-box/"
+        },
+        "113446": {
+          "name": "Delta Reign 6 Booster Box Case",
+          "game": "POKÉMON",
+          "price": 15999.0,
+          "in_stock": false,
+          "preorder": true,
+          "url": "https://pokemonportalen.dk/product/delta-reign-6-booster-box-case/"
         },
         "24890": {
           "name": "Destined Rivals Booster Bundle",
@@ -2603,8 +2643,16 @@
           "game": "POKÉMON",
           "price": 599.0,
           "in_stock": false,
-          "preorder": true,
+          "preorder": false,
           "url": "https://pokemonportalen.dk/product/30th-celebration-booster-bundle/"
+        },
+        "108096": {
+          "name": "Pitch Black Booster Bundle",
+          "game": "POKÉMON",
+          "price": 399.0,
+          "in_stock": false,
+          "preorder": false,
+          "url": "https://pokemonportalen.dk/product/pitch-black-booster-bundle/"
         },
         "42087": {
           "name": "Chaos Rising Booster Bundle",
@@ -2718,14 +2766,6 @@
           "preorder": true,
           "url": "https://pokemonportalen.dk/product/30th-celebration-elite-trainer-box/"
         },
-        "108098": {
-          "name": "Pitch Black Elite Trainer Box",
-          "game": "POKÉMON",
-          "price": 799.0,
-          "in_stock": true,
-          "preorder": false,
-          "url": "https://pokemonportalen.dk/product/pitch-black-elite-trainer-box/"
-        },
         "34105": {
           "name": "Perfect Order: Elite Trainer Box",
           "game": "POKÉMON",
@@ -2782,6 +2822,14 @@
           "preorder": true,
           "url": "https://pokemonportalen.dk/product/30th-celebration-pokemon-center-elite-trainer-box/"
         },
+        "108098": {
+          "name": "Pitch Black Elite Trainer Box",
+          "game": "POKÉMON",
+          "price": 799.0,
+          "in_stock": false,
+          "preorder": false,
+          "url": "https://pokemonportalen.dk/product/pitch-black-elite-trainer-box/"
+        },
         "42091": {
           "name": "Chaos Rising Elite Trainer Box",
           "game": "POKÉMON",
@@ -2811,7 +2859,7 @@
           "game": "POKÉMON",
           "price": 1499.0,
           "in_stock": false,
-          "preorder": true,
+          "preorder": false,
           "url": "https://pokemonportalen.dk/product/prismatic-evolutions-elite-trainer-box/"
         },
         "24874": {
@@ -2979,7 +3027,7 @@
           "game": "POKÉMON",
           "price": 9999.0,
           "in_stock": false,
-          "preorder": true,
+          "preorder": false,
           "url": "https://pokemonportalen.dk/product/30th-celebration-lapras-drifloon-mini-tin/"
         },
         "108160": {
@@ -2987,7 +3035,7 @@
           "game": "POKÉMON",
           "price": 9999.0,
           "in_stock": false,
-          "preorder": true,
+          "preorder": false,
           "url": "https://pokemonportalen.dk/product/30th-celebration-greninja-volbeat-mini-tin/"
         },
         "108158": {
@@ -2995,7 +3043,7 @@
           "game": "POKÉMON",
           "price": 9999.0,
           "in_stock": false,
-          "preorder": true,
+          "preorder": false,
           "url": "https://pokemonportalen.dk/product/30th-celebration-mew-alolan-exeggutor-mini-tin/"
         },
         "108156": {
@@ -3003,7 +3051,7 @@
           "game": "POKÉMON",
           "price": 9999.0,
           "in_stock": false,
-          "preorder": true,
+          "preorder": false,
           "url": "https://pokemonportalen.dk/product/30th-celebration-espeon-meowth-mini-tin/"
         },
         "40977": {
@@ -3073,7 +3121,7 @@
         "114016": {
           "name": "Prismatic Evolutions Super-Premium Collection",
           "game": "POKÉMON",
-          "price": 2699.0,
+          "price": 2499.0,
           "in_stock": false,
           "preorder": true,
           "url": "https://pokemonportalen.dk/product/prismatic-evolutions-super-premium-collection/"
@@ -3089,10 +3137,42 @@
         "109799": {
           "name": "First Partner Illustration Collection Series 3",
           "game": "POKÉMON",
-          "price": 375.0,
+          "price": 349.0,
           "in_stock": false,
           "preorder": true,
           "url": "https://pokemonportalen.dk/product/first-partner-illustration-collection-series-3/"
+        },
+        "109761": {
+          "name": "30th Celebration Binder Collection",
+          "game": "POKÉMON",
+          "price": 599.0,
+          "in_stock": false,
+          "preorder": true,
+          "url": "https://pokemonportalen.dk/product/30th-celebration-binder-collection/"
+        },
+        "108186": {
+          "name": "30th Celebration: Greninja ex Box",
+          "game": "POKÉMON",
+          "price": 599.0,
+          "in_stock": false,
+          "preorder": true,
+          "url": "https://pokemonportalen.dk/product/30th-celebration-greninja-ex-box/"
+        },
+        "108184": {
+          "name": "30th Celebration: Sylveon ex Box",
+          "game": "POKÉMON",
+          "price": 599.0,
+          "in_stock": false,
+          "preorder": true,
+          "url": "https://pokemonportalen.dk/product/30th-celebration-sylveon-ex-box/"
+        },
+        "108182": {
+          "name": "30th Celebration Poster Collection",
+          "game": "POKÉMON",
+          "price": 549.0,
+          "in_stock": false,
+          "preorder": true,
+          "url": "https://pokemonportalen.dk/product/30th-celebration-poster-collection/"
         },
         "108081": {
           "name": "First Partner Illustration Collection Series 2",
@@ -3109,14 +3189,6 @@
           "in_stock": true,
           "preorder": false,
           "url": "https://pokemonportalen.dk/product/first-partner-illustration-collection-series-1/"
-        },
-        "109761": {
-          "name": "30th Celebration Binder Collection",
-          "game": "POKÉMON",
-          "price": 559.0,
-          "in_stock": false,
-          "preorder": true,
-          "url": "https://pokemonportalen.dk/product/30th-celebration-binder-collection/"
         },
         "108200": {
           "name": "30th Celebration: Umbreon Ultra-Premium Collection",
@@ -3166,30 +3238,6 @@
           "preorder": true,
           "url": "https://pokemonportalen.dk/product/30th-celebration-knock-out-collection/"
         },
-        "108186": {
-          "name": "30th Celebration: Greninja ex Box",
-          "game": "POKÉMON",
-          "price": 599.0,
-          "in_stock": false,
-          "preorder": true,
-          "url": "https://pokemonportalen.dk/product/30th-celebration-greninja-ex-box/"
-        },
-        "108184": {
-          "name": "30th Celebration: Sylveon ex Box",
-          "game": "POKÉMON",
-          "price": 599.0,
-          "in_stock": false,
-          "preorder": true,
-          "url": "https://pokemonportalen.dk/product/30th-celebration-sylveon-ex-box/"
-        },
-        "108182": {
-          "name": "30th Celebration Poster Collection",
-          "game": "POKÉMON",
-          "price": 549.0,
-          "in_stock": false,
-          "preorder": true,
-          "url": "https://pokemonportalen.dk/product/30th-celebration-poster-collection/"
-        },
         "39899": {
           "name": "Pakketilbud: Premium Poster Collection + First Partner",
           "game": "POKÉMON",
@@ -3213,14 +3261,6 @@
           "in_stock": false,
           "preorder": false,
           "url": "https://pokemonportalen.dk/product/black-bolt-white-flare-unova-poster-collection/"
-        },
-        "34535": {
-          "name": "Prismatic Evolutions Poster Collection",
-          "game": "POKÉMON",
-          "price": 299.0,
-          "in_stock": false,
-          "preorder": false,
-          "url": "https://pokemonportalen.dk/product/prismatic-evolutions-poster-collection/"
         },
         "34406": {
           "name": "Pokemon Day 2026 Collection Blister *FORUDBESTILLING*",
@@ -3366,14 +3406,6 @@
           "preorder": false,
           "url": "https://pokemonportalen.dk/product/team-rockets-mewtwo-ex-box/"
         },
-        "108148": {
-          "name": "30th Celebration: Lucario Tech Sticker Collection",
-          "game": "POKÉMON",
-          "price": 349.0,
-          "in_stock": false,
-          "preorder": true,
-          "url": "https://pokemonportalen.dk/product/30th-celebration-lucario-tech-sticker-collection/"
-        },
         "34099": {
           "name": "Perfect Order: Meganium Premium Checklane Blister",
           "game": "POKÉMON",
@@ -3443,7 +3475,7 @@
           "game": "POKÉMON",
           "price": 9999.0,
           "in_stock": false,
-          "preorder": true,
+          "preorder": false,
           "url": "https://pokemonportalen.dk/product/30th-celebration-espeon-ex-battle-deck/"
         },
         "108150": {
@@ -3451,15 +3483,23 @@
           "game": "POKÉMON",
           "price": 249.0,
           "in_stock": false,
-          "preorder": true,
+          "preorder": false,
           "url": "https://pokemonportalen.dk/product/30th-celebration-eevee-2-pack-blister/"
+        },
+        "108148": {
+          "name": "30th Celebration: Lucario Tech Sticker Collection",
+          "game": "POKÉMON",
+          "price": 349.0,
+          "in_stock": false,
+          "preorder": false,
+          "url": "https://pokemonportalen.dk/product/30th-celebration-lucario-tech-sticker-collection/"
         },
         "108146": {
           "name": "30th Celebration: Alolan Exeggutor Tech Sticker Collection",
           "game": "POKÉMON",
           "price": 349.0,
           "in_stock": false,
-          "preorder": true,
+          "preorder": false,
           "url": "https://pokemonportalen.dk/product/30th-celebration-alolan-exeggutor-tech-sticker-collection/"
         },
         "108094": {
@@ -3709,30 +3749,6 @@
           "in_stock": false,
           "preorder": false,
           "url": "https://pokemonportalen.dk/product/white-flare-gothitelle-tech-sticker-collection/"
-        },
-        "113875": {
-          "name": "Delta Reign Booster Box",
-          "game": "POKÉMON",
-          "price": 2499.0,
-          "in_stock": false,
-          "preorder": true,
-          "url": "https://pokemonportalen.dk/product/delta-reign-booster-box/"
-        },
-        "113446": {
-          "name": "Delta Reign 6 Booster Box Case",
-          "game": "POKÉMON",
-          "price": 15999.0,
-          "in_stock": false,
-          "preorder": true,
-          "url": "https://pokemonportalen.dk/product/delta-reign-6-booster-box-case/"
-        },
-        "108154": {
-          "name": "30th Celebration: Umbreon ex Battle Deck",
-          "game": "POKÉMON",
-          "price": 9999.0,
-          "in_stock": false,
-          "preorder": true,
-          "url": "https://pokemonportalen.dk/product/30th-celebration-umbreon-ex-battle-deck/"
         }
       }
     },
@@ -3742,8 +3758,8 @@
       "stock_trust": "trusted",
       "health": {
         "status": "ok",
-        "last_attempt": "2026-09-22T08:49:20.072425+00:00",
-        "last_success": "2026-09-22T08:49:20.072425+00:00",
+        "last_attempt": "2026-09-22T08:54:10.135153+00:00",
+        "last_success": "2026-09-22T08:54:10.135153+00:00",
         "consecutive_failures": 0,
         "last_error": "",
         "observed_count": 20
@@ -3917,8 +3933,8 @@
       "stock_trust": "trusted",
       "health": {
         "status": "ok",
-        "last_attempt": "2026-09-22T08:49:20.072468+00:00",
-        "last_success": "2026-09-22T08:49:20.072468+00:00",
+        "last_attempt": "2026-09-22T08:54:10.135194+00:00",
+        "last_success": "2026-09-22T08:54:10.135194+00:00",
         "consecutive_failures": 0,
         "last_error": "",
         "observed_count": 45
