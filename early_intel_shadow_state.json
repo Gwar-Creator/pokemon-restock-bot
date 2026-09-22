@@ -6791,17 +6791,6 @@
     {
       "event": "REMOVED",
       "fields": [],
-      "name": "Pokemon TCG Elite Trainer Box Scarlet Violet Destined Rivals",
-      "product_id": "3358098",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "INBOUND_UNDATED",
-      "stage_before": null,
-      "ts": 1789637006.33532
-    },
-    {
-      "event": "REMOVED",
-      "fields": [],
       "name": "Pokemon TCG Mega Charizard X ex Ultra Premium Collection",
       "product_id": "3417744",
       "sku": "",
@@ -21470,6 +21459,19 @@
       "stage_after": "LIVE_STOCK",
       "stage_before": "LIVE_STOCK",
       "ts": 1790105081.6655307
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
+      "product_id": "3447589",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1790105388.1415467
     }
   ],
   "sources": {
@@ -36638,9 +36640,11 @@
         "stage": "LIVE_STOCK",
         "status": "PÅ LAGER",
         "surface_statuses": {
+          "pokemon-brand": "PÅ LAGER",
           "pokemon-kort": "PÅ LAGER"
         },
         "surfaces": [
+          "pokemon-brand",
           "pokemon-kort"
         ],
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Zygarde-ex-Premium-Collection/3447589"
@@ -36701,6 +36705,6 @@
       }
     }
   },
-  "updated_at": 1790105081.6667156,
+  "updated_at": 1790105388.1426048,
   "version": 1
 }
