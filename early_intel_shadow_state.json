@@ -6791,6 +6791,19 @@
     {
       "event": "CHANGE",
       "fields": [
+        "f_stock_availability"
+      ],
+      "name": "Pokemon Greninja EX samlekort box",
+      "product_id": "200392807",
+      "sku": "11381820-EA",
+      "source": "bilka",
+      "stage_after": "EXPOSED_NO_STOCK",
+      "stage_before": "EXPOSED_NO_STOCK",
+      "ts": 1789634074.875914
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
         "stock_count_online"
       ],
       "name": "Pokémon Battle Deck EX samlekort",
@@ -21437,7 +21450,7 @@
       "source": "br",
       "stage_after": "LIVE_STOCK",
       "stage_before": "LIVE_STOCK",
-      "ts": 1790089241.7821987
+      "ts": 1790089510.8949502
     },
     {
       "event": "CHANGE",
@@ -21450,7 +21463,7 @@
       "source": "bilka",
       "stage_after": "LIVE_STOCK",
       "stage_before": "LIVE_STOCK",
-      "ts": 1790089242.9731057
+      "ts": 1790089511.7636213
     },
     {
       "event": "CHANGE",
@@ -21463,20 +21476,7 @@
       "source": "foetex",
       "stage_after": "LIVE_STOCK",
       "stage_before": "LIVE_STOCK",
-      "ts": 1790089244.1977468
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "surface_statuses"
-      ],
-      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
-      "product_id": "3447589",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1790089249.9262457
+      "ts": 1790089512.67717
     },
     {
       "event": "CROSS_CHANGE",
@@ -21491,7 +21491,7 @@
       "source": "cross_salling",
       "stage_after": null,
       "stage_before": null,
-      "ts": 1790089249.9272022
+      "ts": 1790089516.9893017
     }
   ],
   "sources": {
@@ -26381,7 +26381,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-tin-ex-30th/200392215/"
       },
       "200392806": {
-        "epoch_updated_at": 1790086656,
+        "epoch_updated_at": 1790083947,
         "expected_available_from": null,
         "f_campaign_name": [
           "Nyhed"
@@ -28091,7 +28091,7 @@
         "url": "https://www.br.dk/produkter/pokemon-tcg-houndstone-ex-box/200291391/"
       },
       "200291392": {
-        "epoch_updated_at": 1790086888,
+        "epoch_updated_at": 1790083285,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -29806,7 +29806,7 @@
         "url": "https://www.br.dk/produkter/pokemon-mega-kangaskhan-ex-box-pokemonkort/200340781/"
       },
       "200340782": {
-        "epoch_updated_at": 1790087784,
+        "epoch_updated_at": 1790088685,
         "expected_available_from": null,
         "f_campaign_name": [
           "Eid gaver"
@@ -31170,7 +31170,7 @@
         "url": "https://www.br.dk/produkter/pokemon-pitch-black-premium-checklane-flere-varianter-assorteret/200380917/"
       },
       "200380918": {
-        "epoch_updated_at": 1790087784,
+        "epoch_updated_at": 1790088685,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -36660,9 +36660,11 @@
         "stage": "LIVE_STOCK",
         "status": "PÅ LAGER",
         "surface_statuses": {
+          "pokemon-brand": "PÅ LAGER",
           "pokemon-kort": "PÅ LAGER"
         },
         "surfaces": [
+          "pokemon-brand",
           "pokemon-kort"
         ],
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Zygarde-ex-Premium-Collection/3447589"
@@ -36723,6 +36725,6 @@
       }
     }
   },
-  "updated_at": 1790089249.927413,
+  "updated_at": 1790089516.9895265,
   "version": 1
 }
