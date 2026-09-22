@@ -6789,21 +6789,6 @@
   },
   "events": [
     {
-      "event": "CROSS_CHANGE",
-      "fields": [
-        "bilka",
-        "br",
-        "foetex"
-      ],
-      "name": "Pokemon Greninja EX samlekort box",
-      "product_id": "11381820-EA",
-      "sku": "11381820-EA",
-      "source": "cross_salling",
-      "stage_after": null,
-      "stage_before": null,
-      "ts": 1789631078.2179449
-    },
-    {
       "event": "CHANGE",
       "fields": [
         "stock_count_online"
@@ -21516,6 +21501,19 @@
       "stage_after": "LIVE_STOCK",
       "stage_before": "LIVE_STOCK",
       "ts": 1790060074.3287911
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
+      "product_id": "3447589",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1790060365.5392785
     }
   ],
   "sources": {
@@ -36684,9 +36682,11 @@
         "stage": "LIVE_STOCK",
         "status": "PÅ LAGER",
         "surface_statuses": {
+          "pokemon-brand": "PÅ LAGER",
           "pokemon-kort": "PÅ LAGER"
         },
         "surfaces": [
+          "pokemon-brand",
           "pokemon-kort"
         ],
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Zygarde-ex-Premium-Collection/3447589"
@@ -36747,6 +36747,6 @@
       }
     }
   },
-  "updated_at": 1790060074.32999,
+  "updated_at": 1790060365.5404968,
   "version": 1
 }
