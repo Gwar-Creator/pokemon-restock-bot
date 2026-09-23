@@ -6869,84 +6869,6 @@
     {
       "event": "CROSS_CHANGE",
       "fields": [
-        "bilka"
-      ],
-      "name": "Pokémon 30th samlekort",
-      "product_id": "11379495-EA",
-      "sku": "11379495-EA",
-      "source": "cross_salling",
-      "stage_after": null,
-      "stage_before": null,
-      "ts": 1789679984.6641576
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "in_stock_stores_count"
-      ],
-      "name": "Pokémon Elite Trainer Box 30th samlekort",
-      "product_id": "200392202",
-      "sku": "11379490-EA",
-      "source": "br",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1789680270.0654376
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "in_stock_stores_count"
-      ],
-      "name": "Pokémon Binder Collection 30th",
-      "product_id": "200392204",
-      "sku": "11379492-EA",
-      "source": "br",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1789680270.0654557
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "in_stock_stores_count"
-      ],
-      "name": "Pokémon Poster Collection 30th",
-      "product_id": "200392205",
-      "sku": "11379493-EA",
-      "source": "br",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1789680270.0654657
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "in_stock_stores_count"
-      ],
-      "name": "Pokémon Pitch Black 1-pak – flere varianter – assorteret",
-      "product_id": "200380909",
-      "sku": "11320906-EA",
-      "source": "foetex",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1789680273.226551
-    },
-    {
-      "event": "CROSS_CHANGE",
-      "fields": [
-        "foetex"
-      ],
-      "name": "Pokémon Pitch Black 1-pak – flere varianter – assorteret",
-      "product_id": "11320906-EA",
-      "sku": "11320906-EA",
-      "source": "cross_salling",
-      "stage_after": null,
-      "stage_before": null,
-      "ts": 1789680277.500556
-    },
-    {
-      "event": "CROSS_CHANGE",
-      "fields": [
         "br"
       ],
       "name": "Pokémon Elite Trainer Box 30th samlekort",
@@ -21493,6 +21415,84 @@
       "stage_after": null,
       "stage_before": null,
       "ts": 1790155468.9418917
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon 30th Exeggutor sticker",
+      "product_id": "200392804",
+      "sku": "11381812-EA",
+      "source": "br",
+      "stage_after": "EXPOSED_NO_STOCK",
+      "stage_before": "EXPOSED_NO_STOCK",
+      "ts": 1790156674.6411843
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon 30th Lucario sticker ",
+      "product_id": "200392805",
+      "sku": "11381814-EA",
+      "source": "br",
+      "stage_after": "EXPOSED_NO_STOCK",
+      "stage_before": "EXPOSED_NO_STOCK",
+      "ts": 1790156674.6411965
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon 30th Exeggutor sticker",
+      "product_id": "200392804",
+      "sku": "11381812-EA",
+      "source": "bilka",
+      "stage_after": "EXPOSED_NO_STOCK",
+      "stage_before": "EXPOSED_NO_STOCK",
+      "ts": 1790156675.8178015
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon 30th Lucario sticker ",
+      "product_id": "200392805",
+      "sku": "11381814-EA",
+      "source": "bilka",
+      "stage_after": "EXPOSED_NO_STOCK",
+      "stage_before": "EXPOSED_NO_STOCK",
+      "ts": 1790156675.817812
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon 30th Exeggutor sticker",
+      "product_id": "200392804",
+      "sku": "11381812-EA",
+      "source": "foetex",
+      "stage_after": "EXPOSED_NO_STOCK",
+      "stage_before": "EXPOSED_NO_STOCK",
+      "ts": 1790156676.9985023
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon 30th Lucario sticker ",
+      "product_id": "200392805",
+      "sku": "11381814-EA",
+      "source": "foetex",
+      "stage_after": "EXPOSED_NO_STOCK",
+      "stage_before": "EXPOSED_NO_STOCK",
+      "ts": 1790156676.9985127
     }
   ],
   "sources": {
@@ -26406,7 +26406,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "EXPOSED_NO_STOCK",
-        "stock_count_online": null,
+        "stock_count_online": 0,
         "url": "https://www.bilka.dk/produkter/pokemon-30th-exeggutor-sticker/200392804/"
       },
       "200392805": {
@@ -26434,7 +26434,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "EXPOSED_NO_STOCK",
-        "stock_count_online": null,
+        "stock_count_online": 0,
         "url": "https://www.bilka.dk/produkter/pokemon-30th-lucario-sticker/200392805/"
       },
       "200392806": {
@@ -31560,7 +31560,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "EXPOSED_NO_STOCK",
-        "stock_count_online": null,
+        "stock_count_online": 0,
         "url": "https://www.br.dk/produkter/pokemon-30th-exeggutor-sticker/200392804/"
       },
       "200392805": {
@@ -31588,7 +31588,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "EXPOSED_NO_STOCK",
-        "stock_count_online": null,
+        "stock_count_online": 0,
         "url": "https://www.br.dk/produkter/pokemon-30th-lucario-sticker/200392805/"
       },
       "200392806": {
@@ -36645,7 +36645,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "EXPOSED_NO_STOCK",
-        "stock_count_online": null,
+        "stock_count_online": 0,
         "url": "https://www.foetex.dk/produkter/pokemon-30th-exeggutor-sticker/200392804/"
       },
       "200392805": {
@@ -36673,7 +36673,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "EXPOSED_NO_STOCK",
-        "stock_count_online": null,
+        "stock_count_online": 0,
         "url": "https://www.foetex.dk/produkter/pokemon-30th-lucario-sticker/200392805/"
       },
       "200392806": {
@@ -36892,6 +36892,6 @@
       }
     }
   },
-  "updated_at": 1790156382.7197146,
+  "updated_at": 1790156680.884608,
   "version": 1
 }
