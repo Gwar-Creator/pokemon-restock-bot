@@ -6871,19 +6871,6 @@
       "fields": [
         "online_to"
       ],
-      "name": "Pokémon booster surging sparks pakke – flere varianter – assorteret",
-      "product_id": "200296069",
-      "sku": "10859205-EA",
-      "source": "bilka",
-      "stage_after": "PREPARED",
-      "stage_before": "PREPARED",
-      "ts": 1789730368.7417896
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "online_to"
-      ],
       "name": "Pokémon surging sparks pakke – flere varianter – assorteret",
       "product_id": "200296070",
       "sku": "10859206-EA",
@@ -21558,12 +21545,25 @@
       "stage_after": "LIVE_STOCK",
       "stage_before": "LIVE_STOCK",
       "ts": 1790198071.8111167
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
+      "product_id": "3447589",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1790198382.5742433
     }
   ],
   "sources": {
     "bilka": {
       "100559056": {
-        "epoch_updated_at": 1790197359,
+        "epoch_updated_at": 1790198267,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -22022,7 +22022,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-tcg-scarlet-violet151-mini-tin/200215292/"
       },
       "200215319": {
-        "epoch_updated_at": 1790197360,
+        "epoch_updated_at": 1790198267,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -25493,7 +25493,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-first-partner-collection-box/200356089/"
       },
       "200366277": {
-        "epoch_updated_at": 1790197361,
+        "epoch_updated_at": 1790198267,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -26016,7 +26016,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-pitch-black-booster-bundle-samlekort/200380908/"
       },
       "200380909": {
-        "epoch_updated_at": 1790197361,
+        "epoch_updated_at": 1790198267,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -36892,9 +36892,11 @@
         "stage": "LIVE_STOCK",
         "status": "PÅ LAGER",
         "surface_statuses": {
+          "pokemon-brand": "PÅ LAGER",
           "pokemon-kort": "PÅ LAGER"
         },
         "surfaces": [
+          "pokemon-brand",
           "pokemon-kort"
         ],
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Zygarde-ex-Premium-Collection/3447589"
@@ -36955,6 +36957,6 @@
       }
     }
   },
-  "updated_at": 1790198071.812245,
+  "updated_at": 1790198382.5755413,
   "version": 1
 }
