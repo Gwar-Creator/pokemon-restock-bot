@@ -74,18 +74,18 @@
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
         "fetch_via": "jina_reader"
       },
-      "3478498": {
-        "name": "Pokemon TCG First Partner Illustration Collection Box Series 2",
-        "price": null,
-        "stock": "BESTILLINGSVARE",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-First-Partner-Illustration-Collection-Box-Series-2/3478498",
-        "fetch_via": "jina_reader"
-      },
       "3417744": {
         "name": "Pokemon TCG Mega Charizard X ex Ultra Premium Collection",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
+        "fetch_via": "jina_reader"
+      },
+      "3478498": {
+        "name": "Pokemon TCG First Partner Illustration Collection Box Series 2",
+        "price": null,
+        "stock": "BESTILLINGSVARE",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-First-Partner-Illustration-Collection-Box-Series-2/3478498",
         "fetch_via": "jina_reader"
       },
       "3478496": {
@@ -331,7 +331,7 @@
         "price": 499.0,
         "online_count": 0,
         "online_stock": false,
-        "store_count": 17,
+        "store_count": 15,
         "local_stocks": {
           "1662": {
             "name": "Bilka Kolding",
@@ -371,7 +371,7 @@
         "price": 299.0,
         "online_count": 0,
         "online_stock": false,
-        "store_count": 17,
+        "store_count": 16,
         "local_stocks": {
           "1662": {
             "name": "Bilka Kolding",
@@ -704,12 +704,12 @@
       "last_success_at": "2026-09-23T19:04:33.864722+00:00"
     },
     "proshop": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-09-24T11:11:32.515840+00:00",
-      "last_success_at": "2026-09-24T11:14:18.087955+00:00"
+      "backoff_level": 1,
+      "next_allowed_at": 1790248874.8256373,
+      "generic_failures": 1,
+      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "last_failure_at": "2026-09-24T11:19:14.825612+00:00",
+      "last_success_at": "2026-09-24T11:18:20.204325+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -736,6 +736,6 @@
       "last_success_at": "2026-09-21T18:45:00.335465+00:00"
     }
   },
-  "updated_at": "2026-09-24T11:14:32.281600+00:00",
+  "updated_at": "2026-09-24T11:19:27.513891+00:00",
   "proshop_discovery_version": 4
 }
