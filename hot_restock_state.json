@@ -30,6 +30,13 @@
         "online_stock": true,
         "url": "https://www.coolshop.dk/produkt/pokemon-deck-pro-poke-mega-charizard-y/23UF9A/"
       },
+      "https://www.coolshop.dk/produkt/pokemon-mega-evolution-me02-5-ascended-heroes-elite-trainer-box-pok10315-101/23V948/": {
+        "name": "Pokémon - Mega Evolution ME02.5: Ascended Heroes - Elite Trainer Box (POK10315-101)",
+        "game": "POKÉMON",
+        "price": 1399.0,
+        "online_stock": true,
+        "url": "https://www.coolshop.dk/produkt/pokemon-mega-evolution-me02-5-ascended-heroes-elite-trainer-box-pok10315-101/23V948/"
+      },
       "https://www.coolshop.dk/produkt/pokemon-30th-celebration-elite-trainer-box-pok10447-101/23Y9WQ/": {
         "name": "Pokémon - 30th Celebration - Elite Trainer Box (POK10447-101)",
         "game": "POKÉMON",
@@ -704,12 +711,12 @@
       "last_success_at": "2026-09-23T19:04:33.864722+00:00"
     },
     "proshop": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-09-24T12:10:36.455017+00:00",
-      "last_success_at": "2026-09-24T12:19:12.925597+00:00"
+      "backoff_level": 1,
+      "next_allowed_at": 1790252778.3670855,
+      "generic_failures": 1,
+      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "last_failure_at": "2026-09-24T12:24:18.367043+00:00",
+      "last_success_at": "2026-09-24T12:23:23.020749+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -736,6 +743,6 @@
       "last_success_at": "2026-09-21T18:45:00.335465+00:00"
     }
   },
-  "updated_at": "2026-09-24T12:19:23.745630+00:00",
+  "updated_at": "2026-09-24T12:24:31.571190+00:00",
   "proshop_discovery_version": 4
 }
