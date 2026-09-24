@@ -6873,21 +6873,6 @@
         "online_to",
         "sold_in_stores"
       ],
-      "name": "Pokémon TCG collector's chest pikachu",
-      "product_id": "200307649",
-      "sku": "10910095-EA",
-      "source": "foetex",
-      "stage_after": "PREPARED",
-      "stage_before": "PREPARED",
-      "ts": 1789730664.0122578
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "f_stock_availability",
-        "online_to",
-        "sold_in_stores"
-      ],
       "name": "Pokémon Destined Rivals boosterpakke - flere varianter - assorteret",
       "product_id": "200322372",
       "sku": "11018996-EA",
@@ -21515,6 +21500,19 @@
       "stage_after": "INBOUND_UNDATED",
       "stage_before": null,
       "ts": 1790202571.0994327
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
+      "product_id": "3447589",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1790213370.385962
     }
   ],
   "sources": {
@@ -36849,11 +36847,9 @@
         "stage": "LIVE_STOCK",
         "status": "PÅ LAGER",
         "surface_statuses": {
-          "pokemon-brand": "PÅ LAGER",
           "pokemon-kort": "PÅ LAGER"
         },
         "surfaces": [
-          "pokemon-brand",
           "pokemon-kort"
         ],
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Zygarde-ex-Premium-Collection/3447589"
@@ -36914,6 +36910,6 @@
       }
     }
   },
-  "updated_at": 1790213077.468089,
+  "updated_at": 1790213370.3868449,
   "version": 1
 }
