@@ -133,7 +133,7 @@
         "price": 799.0,
         "online_count": 0,
         "online_stock": false,
-        "store_count": 1,
+        "store_count": 3,
         "kolding_stock": 0,
         "esbjerg_stock": 0,
         "quantity_limit": 1,
@@ -181,7 +181,7 @@
         "price": 299.0,
         "online_count": 0,
         "online_stock": false,
-        "store_count": 1,
+        "store_count": 4,
         "kolding_stock": 0,
         "esbjerg_stock": 0,
         "quantity_limit": 1,
@@ -193,7 +193,7 @@
         "price": 499.0,
         "online_count": 0,
         "online_stock": false,
-        "store_count": 1,
+        "store_count": 3,
         "kolding_stock": 0,
         "esbjerg_stock": 0,
         "quantity_limit": 1,
@@ -383,15 +383,15 @@
         "price": 299.0,
         "online_count": 0,
         "online_stock": false,
-        "store_count": 0,
+        "store_count": 13,
         "local_stocks": {
           "1662": {
             "name": "Bilka Kolding",
-            "stock": 0
+            "stock": 5
           },
           "1659": {
             "name": "Bilka Esbjerg",
-            "stock": 0
+            "stock": 5
           }
         },
         "quantity_limit": 1,
@@ -716,12 +716,12 @@
       "last_success_at": "2026-09-23T19:04:33.864722+00:00"
     },
     "proshop": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-09-24T05:14:12.710363+00:00",
-      "last_success_at": "2026-09-24T05:19:21.243817+00:00"
+      "backoff_level": 1,
+      "next_allowed_at": 1790227460.8809838,
+      "generic_failures": 1,
+      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "last_failure_at": "2026-09-24T05:22:20.880954+00:00",
+      "last_success_at": "2026-09-24T05:21:24.578569+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -748,6 +748,6 @@
       "last_success_at": "2026-09-21T18:45:00.335465+00:00"
     }
   },
-  "updated_at": "2026-09-24T05:19:35.070038+00:00",
+  "updated_at": "2026-09-24T05:24:21.433963+00:00",
   "proshop_discovery_version": 4
 }
