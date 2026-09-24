@@ -2270,11 +2270,12 @@
   "sources": {
     "bogide": {
       "health": {
-        "consecutive_failures": 0,
-        "last_error": "",
+        "consecutive_failures": 1,
+        "last_error": "503 Server Error: Service Unavailable for url: https://www.bog-ide.dk/collections/pokemon-tcg/products.json?limit=250&page=1",
+        "last_failure": "2026-09-24T16:25:31.358360+00:00",
         "last_success": "2026-09-24T16:20:40.055953+00:00",
         "observed_count": 7,
-        "status": "ok"
+        "status": "failed"
       },
       "label": "BOG & IDÉ",
       "mode": "shadow",
@@ -2402,11 +2403,12 @@
     },
     "legekaeden": {
       "health": {
-        "consecutive_failures": 0,
-        "last_error": "",
+        "consecutive_failures": 1,
+        "last_error": "503 Server Error: Service Unavailable for url: https://www.legekaeden.dk/collections/pokemon-tcg/products.json?limit=250&page=1",
+        "last_failure": "2026-09-24T16:25:31.358360+00:00",
         "last_success": "2026-09-24T16:20:40.055953+00:00",
         "observed_count": 3,
-        "status": "ok"
+        "status": "failed"
       },
       "label": "LEGEKÆDEN",
       "mode": "shadow",
@@ -2465,6 +2467,6 @@
       }
     }
   },
-  "updated_at": "2026-09-24T16:20:40.055953+00:00",
+  "updated_at": "2026-09-24T16:25:31.358360+00:00",
   "version": 4
 }
