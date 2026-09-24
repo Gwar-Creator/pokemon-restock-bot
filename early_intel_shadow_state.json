@@ -6409,7 +6409,7 @@
           "sold_online": true,
           "stage": "LIVE_STOCK",
           "stock_online": 0,
-          "stock_stores": 1
+          "stock_stores": 15
         },
         "br": {
           "expected_available_from": null,
@@ -6866,68 +6866,6 @@
     }
   },
   "events": [
-    {
-      "event": "REMOVED",
-      "fields": [],
-      "name": "Pokemon TCG Mega Greninja ex Premium Collection",
-      "product_id": "3478496",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "INBOUND_UNDATED",
-      "stage_before": null,
-      "ts": 1789745082.301478
-    },
-    {
-      "event": "REMOVED",
-      "fields": [],
-      "name": "Pokemon TCG First Partner Illustration Collection Box Series 2",
-      "product_id": "3478498",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "INBOUND_UNDATED",
-      "stage_before": null,
-      "ts": 1789745082.3014793
-    },
-    {
-      "event": "CROSS_CHANGE",
-      "fields": [
-        "br"
-      ],
-      "name": "Pokémon Battle Deck EX samlekort",
-      "product_id": "10564347-EA",
-      "sku": "10564347-EA",
-      "source": "cross_salling",
-      "stage_after": null,
-      "stage_before": null,
-      "ts": 1789745082.302525
-    },
-    {
-      "event": "CROSS_CHANGE",
-      "fields": [
-        "br"
-      ],
-      "name": "Pokémon Pitch Black booster bundle - samlekort",
-      "product_id": "11320905-EA",
-      "sku": "11320905-EA",
-      "source": "cross_salling",
-      "stage_after": null,
-      "stage_before": null,
-      "ts": 1789745082.3026986
-    },
-    {
-      "event": "CROSS_CHANGE",
-      "fields": [
-        "br",
-        "foetex"
-      ],
-      "name": "Pokémon Pitch Black 1-pak – flere varianter – assorteret",
-      "product_id": "11320906-EA",
-      "sku": "11320906-EA",
-      "source": "cross_salling",
-      "stage_after": null,
-      "stage_before": null,
-      "ts": 1789745082.302704
-    },
     {
       "event": "CROSS_CHANGE",
       "fields": [
@@ -21438,12 +21376,77 @@
       "stage_after": "INBOUND_UNDATED",
       "stage_before": null,
       "ts": 1790226580.8053095
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "in_stock_stores_count"
+      ],
+      "name": "Pokémon Binder Collection 30th",
+      "product_id": "200392204",
+      "sku": "11379492-EA",
+      "source": "bilka",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1790227178.1899173
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "f_stock_availability"
+      ],
+      "name": "Pokémon Sylveon ex Box 30th",
+      "product_id": "200392806",
+      "sku": "11381817-EA",
+      "source": "bilka",
+      "stage_after": "EXPOSED_NO_STOCK",
+      "stage_before": "EXPOSED_NO_STOCK",
+      "ts": 1790227178.189957
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "f_stock_availability"
+      ],
+      "name": "Pokemon Sylveon EX tin samlekort",
+      "product_id": "200392808",
+      "sku": "11381823-EA",
+      "source": "bilka",
+      "stage_after": "EXPOSED_NO_STOCK",
+      "stage_before": "EXPOSED_NO_STOCK",
+      "ts": 1790227178.1899698
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "f_stock_availability"
+      ],
+      "name": "Pokemon Greninja EX tin samlekort",
+      "product_id": "200392809",
+      "sku": "11381826-EA",
+      "source": "bilka",
+      "stage_after": "EXPOSED_NO_STOCK",
+      "stage_before": "EXPOSED_NO_STOCK",
+      "ts": 1790227178.1899762
+    },
+    {
+      "event": "CROSS_CHANGE",
+      "fields": [
+        "bilka"
+      ],
+      "name": "Pokémon Binder Collection 30th",
+      "product_id": "11379492-EA",
+      "sku": "11379492-EA",
+      "source": "cross_salling",
+      "stage_after": null,
+      "stage_before": null,
+      "ts": 1790227183.1436357
     }
   ],
   "sources": {
     "bilka": {
       "100559056": {
-        "epoch_updated_at": 1790226163,
+        "epoch_updated_at": 1790227071,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -23269,7 +23272,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-prismatic-tech-klistermaerkekollektion-flere-varianter-assorteret/200308045/"
       },
       "200308076": {
-        "epoch_updated_at": 1790226163,
+        "epoch_updated_at": 1790227071,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -24033,7 +24036,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-tcg-poster-coll-sv10-5/200329200/"
       },
       "200329216": {
-        "epoch_updated_at": 1790226163,
+        "epoch_updated_at": 1790227071,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -24089,7 +24092,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-binder-collection-rsv10-5/200329217/"
       },
       "200329218": {
-        "epoch_updated_at": 1790226164,
+        "epoch_updated_at": 1790227071,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -24119,7 +24122,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-elite-trainer-box-zsv10-5/200329218/"
       },
       "200329219": {
-        "epoch_updated_at": 1790226163,
+        "epoch_updated_at": 1790227071,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -24665,7 +24668,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-mega-kangaskhan-ex-box-pokemonkort/200340781/"
       },
       "200340782": {
-        "epoch_updated_at": 1790226163,
+        "epoch_updated_at": 1790227071,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -24721,7 +24724,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-mega-charizard-x-ex-ultra-premium-collection-pakke/200340783/"
       },
       "200340784": {
-        "epoch_updated_at": 1790226163,
+        "epoch_updated_at": 1790227071,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -25201,7 +25204,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-boosterpakke-me02-5-ascended-heros/200353708/"
       },
       "200356077": {
-        "epoch_updated_at": 1790226164,
+        "epoch_updated_at": 1790227071,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -25257,7 +25260,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-tcg-booster-pack-samlekort/200356078/"
       },
       "200356085": {
-        "epoch_updated_at": 1790226164,
+        "epoch_updated_at": 1790227071,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -25520,7 +25523,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-chaos-rising-booster-pack-samlekort/200366281/"
       },
       "200366282": {
-        "epoch_updated_at": 1790226164,
+        "epoch_updated_at": 1790227071,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -25696,7 +25699,7 @@
         "url": "https://www.bilka.dk/produkter/pokemin-mini-tin-med-samlekort-meganium-meowstic/200371875/"
       },
       "200371876": {
-        "epoch_updated_at": 1790226163,
+        "epoch_updated_at": 1790227071,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -25752,7 +25755,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-mini-tin-med-samlekort-feraligatr-budew/200371877/"
       },
       "200371882": {
-        "epoch_updated_at": 1790226164,
+        "epoch_updated_at": 1790227071,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -25780,7 +25783,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-mini-tin-med-samlekort-gallade-goomy/200371882/"
       },
       "200371884": {
-        "epoch_updated_at": 1790226164,
+        "epoch_updated_at": 1790227071,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -25808,7 +25811,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-tin-summer-ex-med-samlekort-mega-gengar/200371884/"
       },
       "200371885": {
-        "epoch_updated_at": 1790226163,
+        "epoch_updated_at": 1790227071,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -25989,7 +25992,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-pitch-black-checklane-booster-pack/200380911/"
       },
       "200380917": {
-        "epoch_updated_at": 1790226164,
+        "epoch_updated_at": 1790227071,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -26019,7 +26022,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-pitch-black-premium-checklane-flere-varianter-assorteret/200380917/"
       },
       "200380918": {
-        "epoch_updated_at": 1790226164,
+        "epoch_updated_at": 1790227071,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -26111,7 +26114,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-first-partner-collection-box-3-samlekort/200385295/"
       },
       "200392202": {
-        "epoch_updated_at": 1790226164,
+        "epoch_updated_at": 1790227071,
         "expected_available_from": null,
         "f_campaign_name": [
           "Nyhed"
@@ -26141,7 +26144,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-elite-trainer-box-30th-samlekort/200392202/"
       },
       "200392203": {
-        "epoch_updated_at": 1790226164,
+        "epoch_updated_at": 1790227071,
         "expected_available_from": null,
         "f_campaign_name": [
           "Nyhed"
@@ -26173,7 +26176,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-tech-sticker-collection-30th/200392203/"
       },
       "200392204": {
-        "epoch_updated_at": 1790226164,
+        "epoch_updated_at": 1790227071,
         "expected_available_from": null,
         "f_campaign_name": [
           "Nyhed"
@@ -26182,7 +26185,7 @@
         "has_image": true,
         "id": "200392204",
         "image_primary": "https://digitalassets.sallinggroup.com/image/upload/e_trim/b_white,c_pad,e_sharpen:80,f_auto,q_auto,w_464,h_464/a5e38d2ded15b0d1df0974cfae3b9640",
-        "in_stock_stores_count": 1,
+        "in_stock_stores_count": 15,
         "is_click_and_collectible": false,
         "is_exposed": true,
         "is_reservable": false,
@@ -26265,7 +26268,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-ex-box-30th-samlekort/200392206/"
       },
       "200392214": {
-        "epoch_updated_at": 1790226164,
+        "epoch_updated_at": 1790227071,
         "expected_available_from": null,
         "f_campaign_name": [
           "Nyhed"
@@ -26383,14 +26386,12 @@
         "url": "https://www.bilka.dk/produkter/pokemon-30th-lucario-sticker/200392805/"
       },
       "200392806": {
-        "epoch_updated_at": 1790226164,
+        "epoch_updated_at": 1790227071,
         "expected_available_from": null,
         "f_campaign_name": [
           "Nyhed"
         ],
-        "f_stock_availability": [
-          "På lager online"
-        ],
+        "f_stock_availability": [],
         "has_image": true,
         "id": "200392806",
         "image_primary": "https://digitalassets.sallinggroup.com/image/upload/e_trim/b_white,c_pad,e_sharpen:80,f_auto,q_auto,w_464,h_464/6283455391777e3b909245fcf3cc0181",
@@ -26447,14 +26448,12 @@
         "url": "https://www.bilka.dk/produkter/pokemon-greninja-ex-samlekort-box/200392807/"
       },
       "200392808": {
-        "epoch_updated_at": 1790226163,
+        "epoch_updated_at": 1790227071,
         "expected_available_from": null,
         "f_campaign_name": [
           "Nyhed"
         ],
-        "f_stock_availability": [
-          "På lager online"
-        ],
+        "f_stock_availability": [],
         "has_image": true,
         "id": "200392808",
         "image_primary": "https://digitalassets.sallinggroup.com/image/upload/e_trim/b_white,c_pad,e_sharpen:80,f_auto,q_auto,w_464,h_464/ee0cc67730c9a20af5a74466c497bdde",
@@ -26479,14 +26478,12 @@
         "url": "https://www.bilka.dk/produkter/pokemon-sylveon-ex-tin-samlekort/200392808/"
       },
       "200392809": {
-        "epoch_updated_at": 1790226163,
+        "epoch_updated_at": 1790227071,
         "expected_available_from": null,
         "f_campaign_name": [
           "Nyhed"
         ],
-        "f_stock_availability": [
-          "På lager online"
-        ],
+        "f_stock_availability": [],
         "has_image": true,
         "id": "200392809",
         "image_primary": "https://digitalassets.sallinggroup.com/image/upload/e_trim/b_white,c_pad,e_sharpen:80,f_auto,q_auto,w_464,h_464/deff7d0eee0e8c896801d5ff292cd51a",
@@ -36861,6 +36858,6 @@
       }
     }
   },
-  "updated_at": 1790226870.248637,
+  "updated_at": 1790227183.1436744,
   "version": 1
 }
