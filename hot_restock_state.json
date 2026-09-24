@@ -23,19 +23,19 @@
         "online_stock": true,
         "url": "https://www.coolshop.dk/produkt/pokemon-pokeball-tin-pok10273-104/23XH6F/"
       },
-      "https://www.coolshop.dk/produkt/pokemon-deck-pro-poke-mega-charizard-y/23UF9A/": {
-        "name": "Pokémon - Deck Pro Poke - Mega Charizard Y",
-        "game": "POKÉMON",
-        "price": 62.0,
-        "online_stock": true,
-        "url": "https://www.coolshop.dk/produkt/pokemon-deck-pro-poke-mega-charizard-y/23UF9A/"
-      },
       "https://www.coolshop.dk/produkt/pokemon-mega-evolution-me02-5-ascended-heroes-elite-trainer-box-pok10315-101/23V948/": {
         "name": "Pokémon - Mega Evolution ME02.5: Ascended Heroes - Elite Trainer Box (POK10315-101)",
         "game": "POKÉMON",
         "price": 1399.0,
         "online_stock": true,
         "url": "https://www.coolshop.dk/produkt/pokemon-mega-evolution-me02-5-ascended-heroes-elite-trainer-box-pok10315-101/23V948/"
+      },
+      "https://www.coolshop.dk/produkt/pokemon-deck-pro-poke-mega-charizard-y/23UF9A/": {
+        "name": "Pokémon - Deck Pro Poke - Mega Charizard Y",
+        "game": "POKÉMON",
+        "price": 62.0,
+        "online_stock": true,
+        "url": "https://www.coolshop.dk/produkt/pokemon-deck-pro-poke-mega-charizard-y/23UF9A/"
       },
       "https://www.coolshop.dk/produkt/pokemon-30th-celebration-elite-trainer-box-pok10447-101/23Y9WQ/": {
         "name": "Pokémon - 30th Celebration - Elite Trainer Box (POK10447-101)",
@@ -79,35 +79,35 @@
         "price": 329.0,
         "stock": "PÅ LAGER",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
-        "fetch_via": "jina_reader"
+        "fetch_via": "jina_reader+direct_frontend_search"
       },
       "3417744": {
         "name": "Pokemon TCG Mega Charizard X ex Ultra Premium Collection",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
-        "fetch_via": "jina_reader"
+        "fetch_via": "jina_reader+direct_frontend_search"
       },
       "3478498": {
         "name": "Pokemon TCG First Partner Illustration Collection Box Series 2",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-First-Partner-Illustration-Collection-Box-Series-2/3478498",
-        "fetch_via": "jina_reader"
+        "fetch_via": "jina_reader+direct_frontend_search"
       },
       "3478496": {
         "name": "Pokemon TCG Mega Greninja ex Premium Collection",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
-        "fetch_via": "jina_reader"
+        "fetch_via": "jina_reader+direct_frontend_search"
       },
       "3447592": {
         "name": "Pokemon TCG Mega EvolutionChaos Rising Booster box with 36 boosters",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-EvolutionChaos-Rising-Booster-box-with-36-boosters/3447592",
-        "fetch_via": "jina_reader"
+        "fetch_via": "jina_reader+direct_frontend_search"
       }
     },
     "br": {
@@ -171,18 +171,6 @@
         "sku": "11379490-EA",
         "url": "https://www.br.dk/produkter/pokemon-elite-trainer-box-30th-samlekort/200392202/"
       },
-      "200392214": {
-        "name": "Pokémon 30th samlekort",
-        "price": 179.0,
-        "online_count": 0,
-        "online_stock": false,
-        "store_count": 1,
-        "kolding_stock": 0,
-        "esbjerg_stock": 0,
-        "quantity_limit": 1,
-        "sku": "11379495-EA",
-        "url": "https://www.br.dk/produkter/pokemon-30th-samlekort/200392214/"
-      },
       "200392205": {
         "name": "Pokémon Poster Collection 30th",
         "price": 299.0,
@@ -194,6 +182,18 @@
         "quantity_limit": 1,
         "sku": "11379493-EA",
         "url": "https://www.br.dk/produkter/pokemon-poster-collection-30th/200392205/"
+      },
+      "200392214": {
+        "name": "Pokémon 30th samlekort",
+        "price": 179.0,
+        "online_count": 0,
+        "online_stock": false,
+        "store_count": 1,
+        "kolding_stock": 0,
+        "esbjerg_stock": 0,
+        "quantity_limit": 1,
+        "sku": "11379495-EA",
+        "url": "https://www.br.dk/produkter/pokemon-30th-samlekort/200392214/"
       },
       "200392204": {
         "name": "Pokémon Binder Collection 30th",
@@ -711,12 +711,12 @@
       "last_success_at": "2026-09-23T19:04:33.864722+00:00"
     },
     "proshop": {
-      "backoff_level": 1,
-      "next_allowed_at": 1790252778.3670855,
-      "generic_failures": 1,
-      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "backoff_level": 0,
+      "next_allowed_at": 0.0,
+      "generic_failures": 0,
+      "last_error": null,
       "last_failure_at": "2026-09-24T12:24:18.367043+00:00",
-      "last_success_at": "2026-09-24T12:23:23.020749+00:00"
+      "last_success_at": "2026-09-24T12:29:24.696876+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -743,6 +743,6 @@
       "last_success_at": "2026-09-21T18:45:00.335465+00:00"
     }
   },
-  "updated_at": "2026-09-24T12:24:31.571190+00:00",
+  "updated_at": "2026-09-24T12:29:37.226333+00:00",
   "proshop_discovery_version": 4
 }
