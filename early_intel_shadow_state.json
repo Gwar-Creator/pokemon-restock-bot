@@ -6869,22 +6869,6 @@
     {
       "event": "CHANGE",
       "fields": [
-        "f_stock_availability",
-        "in_stock_stores_count",
-        "is_click_and_collectible",
-        "stage"
-      ],
-      "name": "Pokémon Chaos Rising Elite Trainer Box",
-      "product_id": "200366283",
-      "sku": "11263286-EA",
-      "source": "br",
-      "stage_after": "EXPOSED_NO_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1789831470.2363591
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
         "in_stock_stores_count"
       ],
       "name": "Pokémon Pitch Black booster bundle - samlekort",
@@ -21509,6 +21493,19 @@
       "stage_after": "LIVE_STOCK",
       "stage_before": "LIVE_STOCK",
       "ts": 1790258696.6595016
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
+      "product_id": "3447589",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1790259313.1691492
     }
   ],
   "sources": {
@@ -36846,9 +36843,11 @@
         "stage": "LIVE_STOCK",
         "status": "PÅ LAGER",
         "surface_statuses": {
+          "pokemon-brand": "PÅ LAGER",
           "pokemon-kort": "PÅ LAGER"
         },
         "surfaces": [
+          "pokemon-brand",
           "pokemon-kort"
         ],
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Zygarde-ex-Premium-Collection/3447589"
@@ -36909,6 +36908,6 @@
       }
     }
   },
-  "updated_at": 1790258991.6042695,
+  "updated_at": 1790259313.1704292,
   "version": 1
 }
