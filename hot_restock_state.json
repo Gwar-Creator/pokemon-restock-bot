@@ -177,8 +177,8 @@
         "online_count": 0,
         "online_stock": false,
         "store_count": 3,
-        "kolding_stock": 6,
-        "esbjerg_stock": 6,
+        "kolding_stock": 0,
+        "esbjerg_stock": 0,
         "quantity_limit": 1,
         "sku": "11379493-EA",
         "url": "https://www.br.dk/produkter/pokemon-poster-collection-30th/200392205/"
@@ -386,7 +386,7 @@
           },
           "1659": {
             "name": "Bilka Esbjerg",
-            "stock": 5
+            "stock": 0
           }
         },
         "quantity_limit": 1,
@@ -711,12 +711,12 @@
       "last_success_at": "2026-09-24T14:39:28.184810+00:00"
     },
     "proshop": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-09-24T17:55:31.255426+00:00",
-      "last_success_at": "2026-09-24T17:59:09.495930+00:00"
+      "backoff_level": 1,
+      "next_allowed_at": 1790274378.4158323,
+      "generic_failures": 1,
+      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "last_failure_at": "2026-09-24T18:24:18.415799+00:00",
+      "last_success_at": "2026-09-24T18:23:21.257292+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -743,6 +743,6 @@
       "last_success_at": "2026-09-21T18:45:00.335465+00:00"
     }
   },
-  "updated_at": "2026-09-24T18:19:28.650662+00:00",
+  "updated_at": "2026-09-24T18:24:32.287440+00:00",
   "proshop_discovery_version": 4
 }
