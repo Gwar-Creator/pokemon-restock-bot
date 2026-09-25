@@ -6871,19 +6871,6 @@
       "fields": [
         "in_stock_stores_count"
       ],
-      "name": "Pokémon Pitch Black 1-pak – flere varianter – assorteret",
-      "product_id": "200380909",
-      "sku": "11320906-EA",
-      "source": "br",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1790011473.6508942
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "in_stock_stores_count"
-      ],
       "name": "Pokémon TCG Pitch Black Elite Trainer Box",
       "product_id": "200380918",
       "sku": "11320995-EA",
@@ -21318,6 +21305,19 @@
       "stage_after": "INBOUND_UNDATED",
       "stage_before": null,
       "ts": 1790348988.9029908
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
+      "product_id": "3447589",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1790349270.077417
     }
   ],
   "sources": {
@@ -36652,9 +36652,11 @@
         "stage": "LIVE_STOCK",
         "status": "PÅ LAGER",
         "surface_statuses": {
+          "pokemon-brand": "PÅ LAGER",
           "pokemon-kort": "PÅ LAGER"
         },
         "surfaces": [
+          "pokemon-brand",
           "pokemon-kort"
         ],
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Zygarde-ex-Premium-Collection/3447589"
@@ -36715,6 +36717,6 @@
       }
     }
   },
-  "updated_at": 1790348988.9041767,
+  "updated_at": 1790349270.0786116,
   "version": 1
 }
