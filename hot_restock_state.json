@@ -767,12 +767,12 @@
       "last_success_at": "2026-09-25T03:49:09.831535+00:00"
     },
     "proshop": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-09-25T13:30:48.910307+00:00",
-      "last_success_at": "2026-09-25T13:39:07.047229+00:00"
+      "backoff_level": 1,
+      "next_allowed_at": 1790344234.7518961,
+      "generic_failures": 1,
+      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "last_failure_at": "2026-09-25T13:48:34.751856+00:00",
+      "last_success_at": "2026-09-25T13:47:38.806506+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -799,6 +799,6 @@
       "last_success_at": "2026-09-21T18:45:00.335465+00:00"
     }
   },
-  "updated_at": "2026-09-25T13:44:21.048323+00:00",
+  "updated_at": "2026-09-25T13:49:39.669809+00:00",
   "proshop_discovery_version": 4
 }
