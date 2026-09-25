@@ -6873,21 +6873,6 @@
         "online_to",
         "sold_in_stores"
       ],
-      "name": "Pokémon TCG: GO Tin - Assorted",
-      "product_id": "200147881",
-      "sku": "10253605-EA",
-      "source": "br",
-      "stage_after": "PREPARED",
-      "stage_before": "PREPARED",
-      "ts": 1789978167.3139608
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "f_stock_availability",
-        "online_to",
-        "sold_in_stores"
-      ],
       "name": "Pokémon TCG: Annihilape Ex Box",
       "product_id": "200202871",
       "sku": "10504064-EA",
@@ -21405,6 +21390,19 @@
       "stage_after": "LIVE_STOCK",
       "stage_before": "LIVE_STOCK",
       "ts": 1790324377.7569377
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
+      "product_id": "3447589",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1790324973.962144
     }
   ],
   "sources": {
@@ -36739,9 +36737,11 @@
         "stage": "LIVE_STOCK",
         "status": "PÅ LAGER",
         "surface_statuses": {
+          "pokemon-brand": "PÅ LAGER",
           "pokemon-kort": "PÅ LAGER"
         },
         "surfaces": [
+          "pokemon-brand",
           "pokemon-kort"
         ],
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Zygarde-ex-Premium-Collection/3447589"
@@ -36802,6 +36802,6 @@
       }
     }
   },
-  "updated_at": 1790324679.4831853,
+  "updated_at": 1790324973.9632869,
   "version": 1
 }
