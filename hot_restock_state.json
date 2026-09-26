@@ -61,7 +61,7 @@
       "https://www.coolshop.dk/produkt/pokemon-30th-celebrations-tin-box-pok10466-101/23Y9X5/": {
         "name": "Pokémon - 30th Celebrations - Tin Box (POK10466-101)",
         "game": "POKÉMON",
-        "price": 399.95,
+        "price": 379.95,
         "online_stock": false,
         "url": "https://www.coolshop.dk/produkt/pokemon-30th-celebrations-tin-box-pok10466-101/23Y9X5/"
       },
@@ -75,7 +75,7 @@
       "https://www.coolshop.dk/produkt/pokemon-30th-celebration-2-pack-blister-pok10666-102/23Y9X4/": {
         "name": "Pokémon - 30th Celebration - 2 pack Blister (POK10666-102)",
         "game": "POKÉMON",
-        "price": null,
+        "price": 179.95,
         "online_stock": false,
         "url": "https://www.coolshop.dk/produkt/pokemon-30th-celebration-2-pack-blister-pok10666-102/23Y9X4/"
       }
@@ -774,11 +774,11 @@
       "last_success_at": "2026-09-26T10:14:11.763640+00:00"
     },
     "proshop": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-09-26T12:06:21.840803+00:00",
+      "backoff_level": 2,
+      "next_allowed_at": 1790425097.1722648,
+      "generic_failures": 2,
+      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "last_failure_at": "2026-09-26T12:13:17.172236+00:00",
       "last_success_at": "2026-09-26T12:09:08.760494+00:00"
     },
     "br": {
@@ -806,6 +806,6 @@
       "last_success_at": "2026-09-21T18:45:00.335465+00:00"
     }
   },
-  "updated_at": "2026-09-26T12:09:21.071524+00:00",
+  "updated_at": "2026-09-26T12:14:25.231179+00:00",
   "proshop_discovery_version": 4
 }
