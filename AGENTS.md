@@ -43,7 +43,7 @@ Læs altid de live filer i GitHub. Stol ikke alene på en ældre chat, lokal kop
 
 ## Overvågede kilder
 
-Scannerens nuværende aktive kilder omfatter Coolshop, Proshop, BR, Bilka, Føtex, PokeHulen, Rogerz, MTGwebshop, Luckbox, Spilforsyningen, Musen & Slottet, Symbizon, CardX, Matraws, Halmes Hule, CardsDirect, Baltzer Games, TCG Shoppen, Pokemons.dk, Pocket Monster, Fun-shop, PokéPulls, Staalz, PBCards, KoCardz, Vaulted, Pokedexet, Pokemonportalen, TCGBruuS, Pokemon Plaza, Kelz0r, Faraos, Goblin Games, Hyggeonkel, Nostalgic, &Cards, Pokecards.dk, Epic Panda, Steffen-O og Next Level Games.
+Scannerens nuværende aktive kilder omfatter Coolshop, Proshop, BR, Bilka, Føtex, Boozt, Magasin, PokeHulen, Rogerz, MTGwebshop, Luckbox, Spilforsyningen, Musen & Slottet, Symbizon, CardX, Matraws, Halmes Hule, CardsDirect, Baltzer Games, TCG Shoppen, Pokemons.dk, Pocket Monster, Fun-shop, PokéPulls, Staalz, PBCards, KoCardz, Vaulted, Pokedexet, Pokemonportalen, TCGBruuS, Pokemon Plaza, Kelz0r, Faraos, Goblin Games, Hyggeonkel, Nostalgic, &Cards, Pokecards.dk, Epic Panda, Steffen-O og Next Level Games.
 
 Elgiganten, CardstoreCPH og ZZGames er historiske/retired kilder. Deres state må gerne bevares, men de skal ikke fetches eller bruges som friske Price Watch-/Price History-kilder.
 
@@ -206,6 +206,7 @@ Gode næste trin, som skal indføres enkeltvis og sikkert:
   krævede købbar/preorder-status for nye katalogalerts, flyttede scanner-health ud
   af Restock, ensrettede checklane/battle-deck-filteret i Price, fjernede tomme
   prisdigests og adskilte Card Market fra Price History.
+- 2026-09-26: Boozt og Magasin blev tilføjet til Tier A HOT-scanneren som brede retailkilder. Nye kilder baseline-indlæses stille; manglende katalogvarer bevares som udsolgte, så et comeback kan registreres som reel restock.
 - Lav-signal-produkter skal normalt forblive i state, men ikke sendes til Discord.
 
 - 2026-08-31: V47 tilføjede et Matraws-specifikt Discord-værn mod enkeltkort med Matraws' per-card titelkonvention (fx `[CLC-009]`). Produkterne bevares i state, men må ikke udløse Restock-alerts.
