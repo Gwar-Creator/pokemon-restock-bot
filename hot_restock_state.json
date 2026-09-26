@@ -855,20 +855,20 @@
   },
   "source_controls": {
     "coolshop": {
-      "backoff_level": 1,
-      "next_allowed_at": 1790448610.5696685,
-      "generic_failures": 1,
-      "last_error": "503 Server Error: Service Unavailable for url: https://www.coolshop.dk/api/search",
+      "backoff_level": 0,
+      "next_allowed_at": 0.0,
+      "generic_failures": 0,
+      "last_error": null,
       "last_failure_at": "2026-09-26T18:48:10.569639+00:00",
-      "last_success_at": "2026-09-26T18:47:17.837283+00:00"
+      "last_success_at": "2026-09-26T18:54:12.901511+00:00"
     },
     "proshop": {
-      "backoff_level": 2,
-      "next_allowed_at": 1790448793.6107543,
-      "generic_failures": 2,
-      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "backoff_level": 1,
+      "next_allowed_at": 1790448919.3042374,
+      "generic_failures": 0,
+      "last_error": null,
       "last_failure_at": "2026-09-26T18:48:13.610679+00:00",
-      "last_success_at": "2026-09-26T18:44:15.361679+00:00"
+      "last_success_at": "2026-09-26T18:53:19.304221+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -904,14 +904,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1790448590.9679043,
+      "next_allowed_at": 1790448895.3676605,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-09-26T15:39:28.835094+00:00",
-      "last_success_at": "2026-09-26T18:45:50.967878+00:00"
+      "last_success_at": "2026-09-26T18:50:55.367632+00:00"
     }
   },
-  "updated_at": "2026-09-26T18:49:22.789857+00:00",
+  "updated_at": "2026-09-26T18:54:32.617811+00:00",
   "proshop_discovery_version": 4,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -941,11 +941,11 @@
             "https://www.magasin.dk/poke-box/BTBH32-0008.html",
             "https://www.magasin.dk/poke-elite-trainer-box-30/BTBH30-0008.html"
           ],
-          "last_checked": "2026-09-26T18:45:49.594745+00:00"
+          "last_checked": "2026-09-26T18:50:54.025393+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1790448348.8983712,
+      "last_discovery_epoch": 1790448652.7573652,
       "last_full_discovery_epoch": 1790437666.7256086,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
