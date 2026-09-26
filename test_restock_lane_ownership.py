@@ -64,6 +64,61 @@ class RestockLaneOwnershipTests(unittest.TestCase):
         self.assertFalse(hot_v4.online_lane_product_available("foetex", local_only))
         self.assertTrue(hot_v4.online_lane_product_available("foetex", online))
 
+
+    def test_hot_broad_retail_sources_use_online_stock_flag(self):
+        self.assertTrue(
+            hot_v4.base.product_available(
+                "boozt",
+                {"in_stock": True},
+            )
+        )
+        self.assertFalse(
+            hot_v4.base.product_available(
+                "boozt",
+                {"in_stock": False},
+            )
+        )
+        self.assertTrue(
+            hot_v4.base.product_available(
+                "magasin",
+                {"in_stock": True},
+            )
+        )
+
+    def test_hot_retail_product_url_detection(self):
+        self.assertTrue(
+            hot_v4.base._boozt_product_url(
+                "https://www.boozt.com/dk/da/pokmon-trading-cards/"
+                "poke-me05-elite-trainer-box_33181863/233181708"
+            )
+        )
+        self.assertFalse(
+            hot_v4.base._boozt_product_url(
+                "https://www.boozt.com/dk/da/pokemon-trading-cards/born"
+            )
+        )
+        self.assertTrue(
+            hot_v4.base._magasin_product_url(
+                "https://www.magasin.dk/poke-me05-booster/BRXZ18.html"
+            )
+        )
+
+    def test_missing_retail_product_is_preserved_as_out_of_stock(self):
+        old = {
+            "https://example.invalid/product": {
+                "name": "Pokemon Binder Collection",
+                "game": "POKÉMON",
+                "price": 499.0,
+                "in_stock": True,
+                "url": "https://example.invalid/product",
+            }
+        }
+        merged = hot_v4.base._preserve_missing_as_out_of_stock(old, {})
+        self.assertIn("https://example.invalid/product", merged)
+        self.assertFalse(
+            merged["https://example.invalid/product"]["in_stock"]
+        )
+
     def test_hot_shared_tier_a_policy_mutes_abundant_pack(self):
         shared = {"restock_alert_allowed": lambda _product, _game: True}
         products = {
