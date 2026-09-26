@@ -69,6 +69,8 @@ jobs:
               "boozt_trading_cards": "https://r.jina.ai/https://www.boozt.com/dk/da/born/legetoej/samlekort",
               "magasin_category": "https://r.jina.ai/https://www.magasin.dk/boern/legetoej/samlekort-og-mapper/pokemon/",
               "magasin_binder": "https://r.jina.ai/https://www.magasin.dk/poke-binder-coll-30th/BTBH31-0008.html",
+              "magasin_binder_direct": "https://www.magasin.dk/poke-binder-coll-30th/BTBH31-0008.html",
+              "magasin_booster_direct": "https://www.magasin.dk/poke-me05-booster/BRXZ18-0008.html",
               "magasin_brand": "https://r.jina.ai/https://www.magasin.dk/maerker/pokemon/",
               "magasin_search": "https://r.jina.ai/https://www.magasin.dk/soeg/?q=pokemon",
               "magasin_sfcc_grid": "https://www.magasin.dk/on/demandware.store/Sites-DK-Site/da_DK/Search-UpdateGrid?q=pokemon&start=0&sz=48",
@@ -179,6 +181,25 @@ jobs:
                       for needle in ("btbh31", "brxz18", "poke-binder-coll-30th", "poke-me05-booster"):
                           if needle in low:
                               print("FOUND", needle, "IN", loc)
+
+                      product_urls = re.findall(
+                          r"<loc>(https://www\.magasin\.dk/[^<]+)</loc>",
+                          child.text or "",
+                          flags=re.IGNORECASE,
+                      )
+                      tcg_markers = (
+                          "booster", "blister", "binder-coll", "trainer-box",
+                          "elite-trainer", "mini-tin", "checklane", "battle-deck",
+                          "collection", "poke-box", "pokemon-box", "poke-ball",
+                      )
+                      tcg_urls = [
+                          url for url in product_urls
+                          if any(marker in url.lower() for marker in tcg_markers)
+                          and ("poke" in url.lower() or "pokemon" in url.lower())
+                      ]
+                      print("TCG_URLS", len(tcg_urls), "IN", loc)
+                      for url in tcg_urls[:80]:
+                          print("TCG", url)
                   except Exception as error:
                       print("CHILD_ERROR", loc, repr(error))
           except Exception as error:
