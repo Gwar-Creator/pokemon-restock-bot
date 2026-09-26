@@ -14,6 +14,8 @@ class RestockV2PolicyTests(unittest.TestCase):
     def test_source_tiers(self):
         self.assertEqual(source_tier("coolshop"), "A")
         self.assertEqual(source_tier("proshop"), "A")
+        self.assertEqual(source_tier("boozt"), "A")
+        self.assertEqual(source_tier("magasin"), "A")
         self.assertEqual(source_tier("indeks_retail"), "B")
         self.assertEqual(source_tier("matraws"), "SPECIALTY")
         self.assertEqual(source_tier("softgunshoppen"), "SPECIALTY")
