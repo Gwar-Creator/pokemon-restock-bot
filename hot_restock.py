@@ -4,6 +4,7 @@ import re
 import time
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
+from html import unescape
 from pathlib import Path
 from urllib.parse import urljoin
 
@@ -26,7 +27,24 @@ PROSHOP_DISCOVERY_VERSION = 4
 
 BOOZT_CATEGORY_URL = "https://www.boozt.com/dk/da/pokemon-trading-cards/born"
 MAGASIN_CATEGORY_URL = "https://www.magasin.dk/boern/legetoej/samlekort-og-mapper/pokemon/"
-RETAIL_DISCOVERY_VERSION = 3
+MAGASIN_SITEMAP_INDEX_URL = "https://www.magasin.dk/sitemap_index.xml"
+MAGASIN_DISCOVERY_INTERVAL_SECONDS = 240
+MAGASIN_FULL_DISCOVERY_INTERVAL_SECONDS = 6 * 60 * 60
+MAGASIN_TCG_URL_MARKERS = (
+    "booster",
+    "blister",
+    "binder-coll",
+    "binder-collection",
+    "elite-trainer",
+    "trainer-box",
+    "mini-tin",
+    "checklane",
+    "battle-deck",
+    "collection",
+    "poke-box",
+    "pokemon-box",
+)
+RETAIL_DISCOVERY_VERSION = 4
 RETAIL_MIN_PRODUCTS = {
     "boozt": 2,
     "magasin": 2,
@@ -642,6 +660,8 @@ def _retail_catalog_product_allowed(source_key, name):
         " display ",
         " collection ",
         " binder collection ",
+        " binder coll ",
+        " poke box ",
         " battle deck ",
         " trainer toolkit ",
         " battle academy ",
@@ -698,39 +718,45 @@ def _markdown_price_near(markdown, start, end):
 
 
 def _parse_boozt_reader_markdown(shared, markdown):
-    pattern = re.compile(
+    nested_pattern = re.compile(
+        r"\[!\[Image\s+\d+:\s*(?P<label>[^\]]{1,800})\]\([^)]+\)\]\("
+        r"(?P<url>https?://(?:www\.)?boozt\.com/dk/da/"
+        r"pokmon-trading-cards/[^)\s?#]+?_(?P<style>\d{6,})"
+        r"(?:/\d{6,})?(?:[?#][^)]*)?)\)",
+        re.IGNORECASE | re.DOTALL,
+    )
+    simple_pattern = re.compile(
         r"\[(?P<label>[^\]]{1,800})\]\("
         r"(?P<url>https?://(?:www\.)?boozt\.com/dk/da/"
         r"pokmon-trading-cards/[^)\s?#]+?_(?P<style>\d{6,})"
         r"(?:/\d{6,})?(?:[?#][^)]*)?)\)",
         re.IGNORECASE | re.DOTALL,
     )
-    matches = list(pattern.finditer(markdown or ""))
+
+    matches = list(nested_pattern.finditer(markdown or ""))
+    if not matches:
+        matches = list(simple_pattern.finditer(markdown or ""))
+
     products = {}
 
     for index, match in enumerate(matches):
         next_start = matches[index + 1].start() if index + 1 < len(matches) else len(markdown)
-        price_segment = (markdown[match.end():next_start] or "")[:900]
+        price_segment = (markdown[match.end():next_start] or "")[:1000]
         price = _retail_price(price_segment)
-        if price is None:
-            price = _retail_price((markdown[max(0, match.start() - 250):match.start()] or ""))
 
         url = match.group("url").split("?", 1)[0].rstrip("/")
         label = re.sub(r"\s+", " ", match.group("label") or "").strip()
-        name = re.sub(r"^Image:\s*", "", label, flags=re.IGNORECASE).strip()
+        name = re.sub(r"^Image\s+\d+:\s*", "", label, flags=re.IGNORECASE).strip()
         if not name or name.lower() in {"pokemon trading cards", "pokémon trading cards"}:
             name = _retail_name_from_slug(url)
-
-        if not _retail_catalog_product_allowed("boozt", name):
-            continue
 
         key = f"boozt:{match.group('style')}"
         candidate = {
             "name": name,
             "game": "POKÉMON",
             "price": price,
-            # Boozt's brand/category listing is the purchasable catalogue:
-            # products that drop out are retained below as out of stock.
+            # Boozt's public brand catalogue currently contains the products
+            # that can be purchased. Missing products stay in state as OOS.
             "in_stock": True,
             "availability_known": True,
             "url": url,
@@ -743,7 +769,6 @@ def _parse_boozt_reader_markdown(shared, markdown):
             products[key] = candidate
 
     return filter_hot_products(shared, products), len(matches)
-
 
 def _parse_magasin_reader_markdown(shared, markdown):
     pattern = re.compile(
@@ -1130,6 +1155,305 @@ def _preserve_missing_as_out_of_stock(source_key, old_products, current_products
     return merged
 
 
+
+def _magasin_tcg_url_allowed(value):
+    text = str(value or "").lower()
+    if "magasin.dk/" not in text or ".html" not in text:
+        return False
+    if "poke" not in text and "pokemon" not in text:
+        return False
+    return any(marker in text for marker in MAGASIN_TCG_URL_MARKERS)
+
+
+def _magasin_sitemap_number(url):
+    match = re.search(r"/sitemap_(\d+)-product\.xml(?:$|[?#])", str(url or ""), re.I)
+    return int(match.group(1)) if match else -1
+
+
+def _magasin_meta(state):
+    return (
+        state.setdefault("retail_meta", {})
+        .setdefault("magasin", {})
+    )
+
+
+def _magasin_discover_candidates(state, old_products):
+    meta = _magasin_meta(state)
+    now = time.time()
+
+    candidates = {
+        str(product.get("url"))
+        for product in (old_products or {}).values()
+        if isinstance(product, dict)
+        and product.get("url")
+        and _magasin_tcg_url_allowed(product.get("url"))
+    }
+
+    last_discovery = float(meta.get("last_discovery_epoch") or 0)
+    if candidates and now - last_discovery < MAGASIN_DISCOVERY_INTERVAL_SECONDS:
+        return sorted(candidates)
+
+    headers = {
+        "User-Agent": "Mozilla/5.0 Pokemon-Lorcana-MasterBot/4.0",
+        "Accept": "application/xml,text/xml;q=0.9,*/*;q=0.5",
+        "Accept-Language": "da-DK,da;q=0.9,en;q=0.8",
+    }
+    response = requests.get(MAGASIN_SITEMAP_INDEX_URL, headers=headers, timeout=30)
+    response.raise_for_status()
+    sitemap_urls = re.findall(
+        r"<loc>\s*(https://www\.magasin\.dk/sitemap_\d+-product\.xml)\s*</loc>",
+        response.text or "",
+        flags=re.IGNORECASE,
+    )
+    sitemap_urls = sorted(set(sitemap_urls), key=_magasin_sitemap_number)
+    if not sitemap_urls:
+        raise RuntimeError("MAGASIN sitemap-index gav ingen product-sitemaps")
+
+    sitemap_meta = meta.setdefault("sitemaps", {})
+    last_full = float(meta.get("last_full_discovery_epoch") or 0)
+    full_refresh = (
+        not meta.get("initialized")
+        or now - last_full >= MAGASIN_FULL_DISCOVERY_INTERVAL_SECONDS
+    )
+    targets = sitemap_urls if full_refresh else [sitemap_urls[-1]]
+
+    successful_targets = 0
+    for sitemap_url in targets:
+        cached = sitemap_meta.setdefault(sitemap_url, {})
+        request_headers = dict(headers)
+        if cached.get("etag"):
+            request_headers["If-None-Match"] = cached["etag"]
+        if cached.get("last_modified"):
+            request_headers["If-Modified-Since"] = cached["last_modified"]
+
+        try:
+            sitemap_response = requests.get(
+                sitemap_url,
+                headers=request_headers,
+                timeout=35,
+            )
+            if sitemap_response.status_code == 304:
+                discovered = cached.get("candidates") or []
+            else:
+                sitemap_response.raise_for_status()
+                product_urls = re.findall(
+                    r"<loc>\s*(https://www\.magasin\.dk/[^<]+?\.html)\s*</loc>",
+                    sitemap_response.text or "",
+                    flags=re.IGNORECASE,
+                )
+                discovered = sorted({
+                    url.strip()
+                    for url in product_urls
+                    if _magasin_tcg_url_allowed(url)
+                })
+                cached["etag"] = sitemap_response.headers.get("ETag") or ""
+                cached["last_modified"] = (
+                    sitemap_response.headers.get("Last-Modified") or ""
+                )
+                cached["candidates"] = discovered
+                cached["last_checked"] = _utc_now_iso()
+
+            candidates.update(discovered)
+            successful_targets += 1
+        except Exception as error:
+            print(
+                f"HOT MAGASIN sitemap warning {sitemap_url}: {error}"
+            )
+            candidates.update(cached.get("candidates") or [])
+
+    if not successful_targets and not candidates:
+        raise RuntimeError("MAGASIN product-sitemaps kunne ikke læses")
+
+    meta["initialized"] = True
+    meta["last_discovery_epoch"] = now
+    if full_refresh:
+        meta["last_full_discovery_epoch"] = now
+    meta["product_sitemaps"] = sitemap_urls
+
+    if len(candidates) < RETAIL_MIN_PRODUCTS["magasin"]:
+        raise RuntimeError(
+            f"MAGASIN sitemap gav kun {len(candidates)} TCG-kandidater"
+        )
+
+    return sorted(candidates)
+
+
+def _magasin_gtm_item(html_text):
+    match = re.search(
+        r'gtm-product-detail-view="([^"]+)"',
+        html_text or "",
+        flags=re.IGNORECASE,
+    )
+    if not match:
+        return None
+
+    try:
+        payload = json.loads(unescape(match.group(1)))
+    except (TypeError, ValueError, json.JSONDecodeError):
+        return None
+
+    items = ((payload.get("ecommerce") or {}).get("items") or [])
+    if not items or not isinstance(items[0], dict):
+        return None
+    return items[0]
+
+
+def _magasin_parse_product_response(
+    shared,
+    product_url,
+    html_text,
+    final_url,
+    old_product=None,
+):
+    old_product = old_product or {}
+    if "productnotfound=" in str(final_url or "").lower():
+        stale = dict(old_product)
+        stale.update({
+            "name": stale.get("name") or _retail_name_from_slug(product_url),
+            "game": "POKÉMON",
+            "in_stock": False,
+            "availability_known": True,
+            "preorder": False,
+            "url": product_url,
+            "fetch_via": "direct_product_redirect",
+        })
+        return stale
+
+    soup = shared["BeautifulSoup"](html_text, "html.parser")
+    name = ""
+    price = None
+    in_stock = None
+
+    structured_products = _retail_jsonld_products(soup)
+    if structured_products:
+        raw_product = structured_products[0]
+        name = _retail_clean_text(raw_product.get("name"))
+        price, in_stock = _retail_offer_values(raw_product)
+
+    gtm_item = _magasin_gtm_item(html_text)
+    if gtm_item:
+        if not name:
+            name = _retail_clean_text(gtm_item.get("item_name"))
+        if price is None:
+            try:
+                price = float(gtm_item.get("price"))
+            except (TypeError, ValueError):
+                pass
+
+        stock_status = str(gtm_item.get("stock_status") or "").strip().lower()
+        if stock_status in {"in stock", "instock", "på lager", "pa lager"}:
+            in_stock = True
+        elif stock_status in {
+            "out of stock", "outofstock", "not in stock",
+            "udsolgt", "ikke på lager", "ikke pa lager",
+        }:
+            in_stock = False
+
+    if not name:
+        name = old_product.get("name") or _retail_name_from_slug(product_url)
+
+    if not _retail_catalog_product_allowed("magasin", name):
+        raise RuntimeError(f"ikke-TCG Magasin-produkt: {name}")
+
+    availability_known = in_stock is not None
+    if not availability_known and old_product:
+        in_stock = bool(old_product.get("in_stock"))
+        availability_known = bool(old_product.get("availability_known", False))
+
+    return {
+        "name": name,
+        "game": "POKÉMON",
+        "price": price if price is not None else old_product.get("price"),
+        "in_stock": bool(in_stock),
+        "availability_known": availability_known,
+        "preorder": False,
+        "url": product_url,
+        "fetch_via": "direct_product",
+    }
+
+
+def _magasin_fetch_product(shared, product_url, old_product=None):
+    headers = {
+        **shared.get("BROWSER_HEADERS", {}),
+        "Accept-Language": "da-DK,da;q=0.9,en;q=0.8",
+    }
+    response = requests.get(
+        product_url,
+        headers=headers,
+        timeout=30,
+        allow_redirects=True,
+    )
+    response.raise_for_status()
+    return _magasin_parse_product_response(
+        shared,
+        product_url,
+        response.text,
+        response.url,
+        old_product,
+    )
+
+
+def _fetch_magasin_via_sitemaps(shared, old_products, state):
+    candidate_urls = _magasin_discover_candidates(state, old_products)
+    old_by_url = {
+        str(product.get("url")): product
+        for product in (old_products or {}).values()
+        if isinstance(product, dict) and product.get("url")
+    }
+
+    products = {}
+    known_count = 0
+
+    def worker(product_url):
+        old = old_by_url.get(product_url)
+        try:
+            product = _magasin_fetch_product(shared, product_url, old)
+            return product_url, product, None
+        except Exception as error:
+            return product_url, old, error
+
+    with ThreadPoolExecutor(
+        max_workers=min(4, max(1, len(candidate_urls)))
+    ) as executor:
+        for product_url, product, error in executor.map(worker, candidate_urls):
+            if error is not None:
+                print(f"HOT MAGASIN detail warning {product_url}: {error}")
+                if not isinstance(product, dict):
+                    continue
+                product = dict(product)
+                product["fetch_via"] = "stale_after_error"
+
+            if not isinstance(product, dict):
+                continue
+            if not _retail_catalog_product_allowed(
+                "magasin",
+                product.get("name"),
+            ):
+                continue
+
+            key = _retail_product_key("magasin", product_url)
+            products[key] = product
+            if product.get("availability_known"):
+                known_count += 1
+
+    products = filter_hot_products(shared, products)
+    required_known = max(
+        RETAIL_MIN_PRODUCTS["magasin"],
+        (len(products) + 1) // 2,
+    )
+    if len(products) < RETAIL_MIN_PRODUCTS["magasin"]:
+        raise RuntimeError(
+            f"MAGASIN gav kun {len(products)} relevante sitemap-produkter"
+        )
+    if known_count < required_known:
+        raise RuntimeError(
+            f"MAGASIN lagerstatus kun kendt for {known_count}/{len(products)} "
+            f"(minimum {required_known})"
+        )
+
+    return products
+
+
 def get_boozt_products(shared, old_products):
     errors = []
     try:
@@ -1151,28 +1475,15 @@ def get_boozt_products(shared, old_products):
     return _preserve_missing_as_out_of_stock("boozt", old_products, current)
 
 
-def get_magasin_products(shared, old_products):
-    errors = []
-    try:
-        current = _fetch_magasin_via_reader(shared, old_products)
-    except Exception as error:
-        errors.append(f"Reader: {error}")
-        try:
-            current = _fetch_broad_retail_products(
-                shared,
-                "magasin",
-                MAGASIN_CATEGORY_URL,
-                _magasin_product_url,
-                old_products,
-            )
-        except Exception as fallback_error:
-            errors.append(f"direct: {fallback_error}")
-            raise RuntimeError("MAGASIN fejlede: " + " | ".join(errors))
-
-    return _preserve_missing_as_out_of_stock("magasin", old_products, current)
+def get_magasin_products(shared, old_products, state):
+    return _fetch_magasin_via_sitemaps(
+        shared,
+        old_products,
+        state,
+    )
 
 
-def fetch_source(shared, source_key, old_products):
+def fetch_source(shared, source_key, old_products, state=None):
     if source_key == "coolshop":
         return shared["get_coolshop_products"]()
     if source_key == "proshop":
@@ -1184,7 +1495,7 @@ def fetch_source(shared, source_key, old_products):
     if source_key == "boozt":
         return get_boozt_products(shared, old_products)
     if source_key == "magasin":
-        return get_magasin_products(shared, old_products)
+        return get_magasin_products(shared, old_products, state or {})
     raise KeyError(source_key)
 
 
@@ -1194,23 +1505,32 @@ def run_scan(shared, state):
 
     for source_key in SOURCE_LABELS:
         label = SOURCE_LABELS[source_key]
-        if (
+        retail_version_changed = (
             source_key in ("boozt", "magasin")
             and (state.get("retail_discovery_versions") or {}).get(source_key)
             != RETAIL_DISCOVERY_VERSION
-        ):
+        )
+        if retail_version_changed:
             control = _source_control(state, source_key)
             control["backoff_level"] = 0
             control["next_allowed_at"] = 0.0
             control["generic_failures"] = 0
+            if source_key == "magasin":
+                state.setdefault("retail_meta", {})["magasin"] = {}
 
         wait_seconds = _source_wait_seconds(state, source_key)
         if wait_seconds > 0:
             level = _source_control(state, source_key)["backoff_level"]
-            print(
-                f"HOT {label} BACKOFF: springer over i {wait_seconds}s "
-                f"(niveau {level})"
-            )
+            if source_key == "magasin" and level == 0:
+                print(
+                    f"HOT {label} cadence: næste produkttjek om "
+                    f"{wait_seconds}s"
+                )
+            else:
+                print(
+                    f"HOT {label} BACKOFF: springer over i {wait_seconds}s "
+                    f"(niveau {level})"
+                )
             continue
 
         old_products = source_state.get(source_key)
@@ -1220,16 +1540,14 @@ def run_scan(shared, state):
             and state.get("proshop_discovery_version") != PROSHOP_DISCOVERY_VERSION
         ):
             source_baseline = True
-        if (
-            source_key in ("boozt", "magasin")
-            and (state.get("retail_discovery_versions") or {}).get(source_key)
-            != RETAIL_DISCOVERY_VERSION
-        ):
+        if retail_version_changed:
             source_baseline = True
         old_products = old_products if isinstance(old_products, dict) else {}
+        if retail_version_changed:
+            old_products = {}
 
         try:
-            fetched = fetch_source(shared, source_key, old_products)
+            fetched = fetch_source(shared, source_key, old_products, state)
             current = filter_hot_products(shared, fetched)
         except Exception as error:
             delay = _register_source_failure(state, source_key, error)
@@ -1287,6 +1605,11 @@ def run_scan(shared, state):
             state.setdefault("retail_discovery_versions", {})[
                 source_key
             ] = RETAIL_DISCOVERY_VERSION
+        if source_key == "magasin":
+            _source_control(state, source_key)["next_allowed_at"] = (
+                time.time() + MAGASIN_DISCOVERY_INTERVAL_SECONDS
+            )
+
         print(
             f"HOT {label}: "
             f"{len(current)} relevante · "
