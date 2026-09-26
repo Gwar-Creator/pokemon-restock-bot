@@ -141,6 +141,49 @@ jobs:
                           print("STRONG", line[:1600])
               except Exception as error:
                   print("ERROR", repr(error))
+
+          print("\n===== magasin_sitemap_index =====")
+          try:
+              import xml.etree.ElementTree as ET
+
+              response = requests.get(
+                  "https://www.magasin.dk/sitemap_index.xml",
+                  headers={"User-Agent": "Mozilla/5.0 Pokemon-Retail-Probe/1.0"},
+                  timeout=30,
+              )
+              print("status", response.status_code, "length", len(response.text or ""))
+              response.raise_for_status()
+              root = ET.fromstring(response.text)
+              locs = [
+                  node.text.strip()
+                  for node in root.iter()
+                  if node.tag.lower().endswith("loc") and node.text
+              ]
+              print("sitemap_locs", len(locs))
+              for loc in locs[:80]:
+                  print("SITEMAP", loc)
+
+              for loc in locs[:20]:
+                  if not any(marker in loc.lower() for marker in ("product", "produkt", "catalog", "sitemap")):
+                      continue
+                  try:
+                      child = requests.get(
+                          loc,
+                          headers={"User-Agent": "Mozilla/5.0 Pokemon-Retail-Probe/1.0"},
+                          timeout=30,
+                      )
+                      print("CHILD", child.status_code, len(child.text or ""), loc)
+                      if child.status_code != 200:
+                          continue
+                      low = (child.text or "").lower()
+                      for needle in ("btbh31", "brxz18", "poke-binder-coll-30th", "poke-me05-booster"):
+                          if needle in low:
+                              print("FOUND", needle, "IN", loc)
+                  except Exception as error:
+                      print("CHILD_ERROR", loc, repr(error))
+          except Exception as error:
+              print("SITEMAP_ERROR", repr(error))
+
           PY
 
       - name: Compile changed scanner modules
