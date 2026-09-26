@@ -708,7 +708,13 @@ def _parse_boozt_reader_markdown(shared, markdown):
     matches = list(pattern.finditer(markdown or ""))
     products = {}
 
-    for match in matches:
+    for index, match in enumerate(matches):
+        next_start = matches[index + 1].start() if index + 1 < len(matches) else len(markdown)
+        price_segment = (markdown[match.end():next_start] or "")[:900]
+        price = _retail_price(price_segment)
+        if price is None:
+            price = _retail_price((markdown[max(0, match.start() - 250):match.start()] or ""))
+
         url = match.group("url").split("?", 1)[0].rstrip("/")
         label = re.sub(r"\s+", " ", match.group("label") or "").strip()
         name = re.sub(r"^Image:\s*", "", label, flags=re.IGNORECASE).strip()
@@ -722,7 +728,7 @@ def _parse_boozt_reader_markdown(shared, markdown):
         candidate = {
             "name": name,
             "game": "POKÉMON",
-            "price": _markdown_price_near(markdown, match.start(), match.end()),
+            "price": price,
             # Boozt's brand/category listing is the purchasable catalogue:
             # products that drop out are retained below as out of stock.
             "in_stock": True,
@@ -749,7 +755,13 @@ def _parse_magasin_reader_markdown(shared, markdown):
     matches = list(pattern.finditer(markdown or ""))
     products = {}
 
-    for match in matches:
+    for index, match in enumerate(matches):
+        next_start = matches[index + 1].start() if index + 1 < len(matches) else len(markdown)
+        price_segment = (markdown[match.end():next_start] or "")[:900]
+        price = _retail_price(price_segment)
+        if price is None:
+            price = _retail_price((markdown[max(0, match.start() - 250):match.start()] or ""))
+
         url = match.group("url").split("?", 1)[0].rstrip("/")
         label = re.sub(r"\s+", " ", match.group("label") or "").strip()
         name = re.sub(r"^Image:\s*", "", label, flags=re.IGNORECASE).strip()
@@ -763,7 +775,7 @@ def _parse_magasin_reader_markdown(shared, markdown):
         candidate = {
             "name": name,
             "game": "POKÉMON",
-            "price": _markdown_price_near(markdown, match.start(), match.end()),
+            "price": price,
             "in_stock": False,
             "availability_known": False,
             "url": url,
@@ -1088,11 +1100,10 @@ def _fetch_broad_retail_products(
     )
 
 def _boozt_product_url(value):
-    text = str(value or "").lower()
+    text = str(value or "").lower().split("#", 1)[0].split("?", 1)[0].rstrip("/")
     return "/dk/da/pokmon-trading-cards/" in text and bool(
-        re.search(r"/\d{6,}(?:$|[?#])", text)
+        re.search(r"_\d{6,}(?:/\d{6,})?$", text)
     )
-
 
 def _magasin_product_url(value):
     text = str(value or "").lower()
