@@ -768,7 +768,7 @@
         "name": "Pokémon Trading Cards Poke Box Premium EX - Pokémon Trading Cards - BLUE / blue",
         "game": "POKÉMON",
         "price": 529.0,
-        "in_stock": true,
+        "in_stock": false,
         "availability_known": true,
         "url": "https://www.boozt.com/dk/da/pokmon-trading-cards/poke-box-premium-ex_33181865/233181710"
       },
@@ -776,7 +776,7 @@
         "name": "Pokémon Trading Cards Poke Mini Tin June - Pokémon Trading Cards - MULTI COLOURED / multi",
         "game": "POKÉMON",
         "price": 139.0,
-        "in_stock": true,
+        "in_stock": false,
         "availability_known": true,
         "url": "https://www.boozt.com/dk/da/pokmon-trading-cards/poke-mini-tin-june_33186417/233210201"
       },
@@ -784,7 +784,7 @@
         "name": "Pokémon Trading Cards Poke Blister 3P ME04 REL 22/5 - Pokémon Trading Cards - BLACK / black",
         "game": "POKÉMON",
         "price": 279.0,
-        "in_stock": true,
+        "in_stock": false,
         "availability_known": true,
         "url": "https://www.boozt.com/dk/da/pokmon-trading-cards/poke-blister-3p-me04-rel-22-5_33175544/233145334"
       },
@@ -792,7 +792,7 @@
         "name": "Pokémon Trading Cards Poke ME04 Elite Trainer Box REL 22/5 - Pokémon Trading Cards - BLACK / black",
         "game": "POKÉMON",
         "price": 929.0,
-        "in_stock": true,
+        "in_stock": false,
         "availability_known": true,
         "url": "https://www.boozt.com/dk/da/pokmon-trading-cards/poke-me04-elite-trainer-box-rel-22-5_33175543/233145333"
       },
@@ -800,9 +800,54 @@
         "name": "Pokémon Trading Cards Poke Box Premium EX Mega Zygarde 1/5 - Pokémon Trading Cards - MULTI COLOURED / multi",
         "game": "POKÉMON",
         "price": 819.0,
-        "in_stock": true,
+        "in_stock": false,
         "availability_known": true,
         "url": "https://www.boozt.com/dk/da/pokmon-trading-cards/poke-box-premium-ex-mega-zygarde-1-5_33175542/233145332"
+      },
+      "boozt:33181865": {
+        "name": "Pokémon Trading Cards Poke Box Premium EX - Pokémon Trading Cards - BLUE / blue",
+        "game": "POKÉMON",
+        "price": 529.0,
+        "in_stock": true,
+        "availability_known": true,
+        "url": "https://www.boozt.com/dk/da/pokmon-trading-cards/poke-box-premium-ex_33181865/233181710",
+        "fetch_via": "direct_category"
+      },
+      "boozt:33186417": {
+        "name": "Pokémon Trading Cards Poke Mini Tin June - Pokémon Trading Cards - MULTI COLOURED / multi",
+        "game": "POKÉMON",
+        "price": 139.0,
+        "in_stock": true,
+        "availability_known": true,
+        "url": "https://www.boozt.com/dk/da/pokmon-trading-cards/poke-mini-tin-june_33186417/233210201",
+        "fetch_via": "direct_category"
+      },
+      "boozt:33175544": {
+        "name": "Pokémon Trading Cards Poke Blister 3P ME04 REL 22/5 - Pokémon Trading Cards - BLACK / black",
+        "game": "POKÉMON",
+        "price": 279.0,
+        "in_stock": true,
+        "availability_known": true,
+        "url": "https://www.boozt.com/dk/da/pokmon-trading-cards/poke-blister-3p-me04-rel-22-5_33175544/233145334",
+        "fetch_via": "direct_category"
+      },
+      "boozt:33175543": {
+        "name": "Pokémon Trading Cards Poke ME04 Elite Trainer Box REL 22/5 - Pokémon Trading Cards - BLACK / black",
+        "game": "POKÉMON",
+        "price": 929.0,
+        "in_stock": true,
+        "availability_known": true,
+        "url": "https://www.boozt.com/dk/da/pokmon-trading-cards/poke-me04-elite-trainer-box-rel-22-5_33175543/233145333",
+        "fetch_via": "direct_category"
+      },
+      "boozt:33175542": {
+        "name": "Pokémon Trading Cards Poke Box Premium EX Mega Zygarde 1/5 - Pokémon Trading Cards - MULTI COLOURED / multi",
+        "game": "POKÉMON",
+        "price": 819.0,
+        "in_stock": true,
+        "availability_known": true,
+        "url": "https://www.boozt.com/dk/da/pokmon-trading-cards/poke-box-premium-ex-mega-zygarde-1-5_33175542/233145332",
+        "fetch_via": "direct_category"
       }
     },
     "magasin": {
@@ -1066,16 +1111,16 @@
       "next_allowed_at": 0.0,
       "generic_failures": 0,
       "last_error": null,
-      "last_failure_at": "2026-09-26T12:59:31.147826+00:00",
-      "last_success_at": "2026-09-26T13:04:32.818033+00:00"
+      "last_failure_at": "2026-09-26T14:03:31.251845+00:00",
+      "last_success_at": "2026-09-26T14:07:08.594221+00:00"
     },
     "proshop": {
-      "backoff_level": 2,
-      "next_allowed_at": 1790432511.731409,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-09-26T13:59:02.076563+00:00",
-      "last_success_at": "2026-09-26T14:16:51.731394+00:00"
+      "backoff_level": 3,
+      "next_allowed_at": 1790433386.5801384,
+      "generic_failures": 1,
+      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "last_failure_at": "2026-09-26T14:21:26.580101+00:00",
+      "last_success_at": "2026-09-26T14:12:25.327304+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -1102,25 +1147,25 @@
       "last_success_at": "2026-09-21T18:45:00.335465+00:00"
     },
     "boozt": {
-      "backoff_level": 1,
-      "next_allowed_at": 1790432566.8446996,
-      "generic_failures": 1,
-      "last_error": "BOOZT fejlede: Reader: BOOZT Reader gav 0 rå links / 0 relevante produkter | direct: 429 Client Error: Too Many Requests for url: https://www.boozt.com/dk/da/pokemon-trading-cards/born",
-      "last_failure_at": "2026-09-26T14:20:46.844681+00:00",
-      "last_success_at": "2026-09-26T14:11:54.372640+00:00"
+      "backoff_level": 0,
+      "next_allowed_at": 0.0,
+      "generic_failures": 0,
+      "last_error": null,
+      "last_failure_at": "2026-09-26T14:16:17.549434+00:00",
+      "last_success_at": "2026-09-26T14:25:23.174881+00:00"
     },
     "magasin": {
       "backoff_level": 0,
       "next_allowed_at": 0.0,
       "generic_failures": 1,
       "last_error": "MAGASIN fejlede: Reader: MAGASIN Reader gav 33 rå links / 0 relevante produkter | direct: MAGASIN gav kun 0 relevante produkter (minimum 2)",
-      "last_failure_at": "2026-09-26T14:20:52.827409+00:00",
-      "last_success_at": "2026-09-26T13:53:53.172568+00:00"
+      "last_failure_at": "2026-09-26T14:25:36.164400+00:00",
+      "last_success_at": "2026-09-26T13:58:21.413141+00:00"
     }
   },
-  "updated_at": "2026-09-26T14:20:52.827440+00:00",
+  "updated_at": "2026-09-26T14:25:36.164435+00:00",
   "proshop_discovery_version": 4,
   "retail_discovery_versions": {
-    "boozt": 2
+    "boozt": 3
   }
 }
