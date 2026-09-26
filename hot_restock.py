@@ -25,7 +25,8 @@ PROSHOP_FRONTEND_URL = "https://www.proshop.dk/?s=Pokemon+TCG"
 PROSHOP_DISCOVERY_VERSION = 4
 
 BOOZT_CATEGORY_URL = "https://www.boozt.com/dk/da/pokemon-trading-cards/born"
-MAGASIN_CATEGORY_URL = "https://www.magasin.dk/maerker/pokemon/"
+MAGASIN_CATEGORY_URL = "https://www.magasin.dk/boern/legetoej/samlekort-og-mapper/pokemon/"
+RETAIL_DISCOVERY_VERSION = 2
 RETAIL_MIN_PRODUCTS = {
     "boozt": 2,
     "magasin": 2,
@@ -621,6 +622,37 @@ def _retail_offer_values(product):
     return price, in_stock
 
 
+def _retail_catalog_product_allowed(source_key, name):
+    text = " " + _retail_clean_text(name).lower() + " "
+    if source_key == "boozt":
+        return True
+
+    # Magasin's brand page contains figures/plush/LEGO and global navigation.
+    # The dedicated TCG category is primary, but keep an explicit sealed gate
+    # as a second guard against unrelated .html links.
+    markers = (
+        " booster ",
+        " blister ",
+        " tin ",
+        " elite trainer ",
+        " etb ",
+        " booster bundle ",
+        " booster box ",
+        " booster display ",
+        " display ",
+        " collection ",
+        " binder collection ",
+        " battle deck ",
+        " trainer toolkit ",
+        " battle academy ",
+        " build & battle ",
+        " build and battle ",
+        " checklane ",
+        " check lane ",
+    )
+    return any(marker in text for marker in markers)
+
+
 def _parse_broad_retail_products(
     shared,
     source_key,
@@ -631,27 +663,37 @@ def _parse_broad_retail_products(
     soup = shared["BeautifulSoup"](html_text, "html.parser")
     products = {}
 
-    # Structured data is the safest first path when the retailer exposes it.
+    # Structured data is useful for product identity/price. Availability from
+    # category pages is accepted only when Schema.org explicitly supplies it;
+    # product detail pages are still refreshed below before alerts are allowed.
     for raw_product in _retail_jsonld_products(soup):
         name = _retail_clean_text(raw_product.get("name"))
         product_url = str(raw_product.get("url") or "")
         if product_url and not product_url.startswith("http"):
             product_url = shared["urljoin"](category_url, product_url)
 
-        if not name or not product_url or not is_product_url(product_url):
+        if (
+            not name
+            or not product_url
+            or not is_product_url(product_url)
+            or not _retail_catalog_product_allowed(source_key, name)
+        ):
             continue
 
         price, in_stock = _retail_offer_values(raw_product)
-        products[product_url.rstrip("/")] = {
+        product_url = product_url.rstrip("/")
+        products[product_url] = {
             "name": name,
             "game": "POKÉMON",
             "price": price,
             "in_stock": bool(in_stock),
-            "url": product_url.rstrip("/"),
+            "availability_known": in_stock is not None,
+            "url": product_url,
         }
 
-    # DOM fallback/overlay: captures retailer-specific cart/notify stock markers
-    # even when the category's JSON-LD omits availability.
+    # DOM fallback supplies product identity and price. Do NOT infer stock from
+    # category-card text: both retailers can render global/hidden stock dialogs
+    # that make card-level "Skriv mig op"/cart text ambiguous.
     anchors_by_url = {}
     for anchor in soup.find_all("a", href=True):
         href = shared["urljoin"](category_url, anchor.get("href"))
@@ -667,91 +709,144 @@ def _parse_broad_retail_products(
         )
         card = _retail_nearest_card(anchor, product_url, is_product_url)
         text = _retail_clean_text(card.get_text(" ", strip=True))
-        low = text.lower()
         name = _retail_name_from_card(card, anchors)
-        if not name:
+        if not name or not _retail_catalog_product_allowed(source_key, name):
             continue
 
-        if source_key == "boozt":
-            explicit_in = any(marker in low for marker in ("læg i kurv", "laeg i kurv"))
-            explicit_out = any(
-                marker in low
-                for marker in (
-                    "giv mig besked",
-                    "udsolgt",
-                    "ikke på lager",
-                    "ikke pa lager",
-                )
-            )
-        else:
-            explicit_in = any(
-                marker in low
-                for marker in (
-                    "tilføj til kurv",
-                    "tilfoej til kurv",
-                    "læg i kurv",
-                    "laeg i kurv",
-                )
-            )
-            explicit_out = any(
-                marker in low
-                for marker in (
-                    "skriv mig op",
-                    "udsolgt",
-                    "ikke på lager",
-                    "ikke pa lager",
-                )
-            )
-
         old = products.get(product_url) or {}
-        current_in_stock = old.get("in_stock")
-        if explicit_in:
-            current_in_stock = True
-        elif explicit_out:
-            current_in_stock = False
-
         parsed_price = _retail_price(text)
         products[product_url] = {
             "name": name,
             "game": "POKÉMON",
             "price": parsed_price if parsed_price is not None else old.get("price"),
-            "in_stock": bool(current_in_stock),
+            "in_stock": bool(old.get("in_stock")),
+            "availability_known": bool(old.get("availability_known")),
             "url": product_url,
         }
 
     return filter_hot_products(shared, products)
 
 
-def _fetch_broad_retail_products(shared, source_key, category_url, is_product_url):
-    headers = {
-        **shared.get("BROWSER_HEADERS", {}),
-        "Accept-Language": "da-DK,da;q=0.9,en;q=0.8",
-    }
-
-    response = None
+def _fetch_retail_html(shared, url, headers):
     curl_requests = shared.get("curl_requests")
     if curl_requests is not None:
         try:
             response = curl_requests.get(
-                category_url,
+                url,
                 headers=headers,
                 timeout=30,
                 impersonate="chrome",
             )
             response.raise_for_status()
+            return response.text
         except Exception as error:
-            print(f"HOT {SOURCE_LABELS[source_key]} curl warning: {error}")
-            response = None
+            print(f"HOT retail curl warning {url}: {error}")
 
-    if response is None:
-        response = requests.get(category_url, headers=headers, timeout=30)
-        response.raise_for_status()
+    response = requests.get(url, headers=headers, timeout=30)
+    response.raise_for_status()
+    return response.text
+
+
+def _parse_retail_detail_availability(shared, source_key, html_text):
+    soup = shared["BeautifulSoup"](html_text, "html.parser")
+    text = _retail_clean_text(soup.get_text(" ", strip=True)).lower()
+
+    if source_key == "boozt":
+        if "læg i kurv" in text or "laeg i kurv" in text:
+            return True
+        if any(
+            marker in text
+            for marker in ("giv mig besked", "ikke på lager", "ikke pa lager", "udsolgt")
+        ):
+            return False
+        return None
+
+    # Magasin renders a hidden "Skriv mig op" dialog even on some in-stock
+    # pages. The actionable cart button therefore wins if both texts exist.
+    if "tilføj til kurv" in text or "tilfoej til kurv" in text:
+        return True
+    if "skriv mig op" in text or "udsolgt" in text:
+        return False
+    return None
+
+
+def _refresh_retail_product_availability(
+    shared,
+    source_key,
+    products,
+    old_products,
+):
+    headers = {
+        **shared.get("BROWSER_HEADERS", {}),
+        "Accept-Language": "da-DK,da;q=0.9,en;q=0.8",
+    }
+    refreshed = {}
+    known_count = 0
+
+    for product_id, product in (products or {}).items():
+        current = dict(product)
+        old = (old_products or {}).get(product_id)
+        try:
+            html_text = _fetch_retail_html(shared, current["url"], headers)
+            available = _parse_retail_detail_availability(
+                shared,
+                source_key,
+                html_text,
+            )
+        except Exception as error:
+            print(
+                f"HOT {SOURCE_LABELS[source_key]} detail warning "
+                f"{current.get('name')}: {error}"
+            )
+            available = None
+
+        if available is not None:
+            current["in_stock"] = bool(available)
+            current["availability_known"] = True
+            known_count += 1
+        elif isinstance(old, dict):
+            current["in_stock"] = bool(old.get("in_stock"))
+            current["availability_known"] = bool(
+                old.get("availability_known", False)
+            )
+        else:
+            current["in_stock"] = False
+            current["availability_known"] = False
+
+        refreshed[product_id] = current
+
+    required_known = max(
+        RETAIL_MIN_PRODUCTS[source_key],
+        (len(refreshed) + 1) // 2,
+    )
+    if known_count < required_known:
+        raise RuntimeError(
+            f"{SOURCE_LABELS[source_key]} lagerstatus kun kendt for "
+            f"{known_count}/{len(refreshed)} produkter "
+            f"(minimum {required_known})"
+        )
+
+    return refreshed
+
+
+def _fetch_broad_retail_products(
+    shared,
+    source_key,
+    category_url,
+    is_product_url,
+    old_products,
+):
+    headers = {
+        **shared.get("BROWSER_HEADERS", {}),
+        "Accept-Language": "da-DK,da;q=0.9,en;q=0.8",
+    }
+    html_text = _fetch_retail_html(shared, category_url, headers)
 
     filtered = _parse_broad_retail_products(
         shared,
         source_key,
         category_url,
-        response.text,
+        html_text,
         is_product_url,
     )
 
@@ -761,7 +856,13 @@ def _fetch_broad_retail_products(shared, source_key, category_url, is_product_ur
             f"{SOURCE_LABELS[source_key]} gav kun {len(filtered)} relevante produkter "
             f"(minimum {minimum})"
         )
-    return filtered
+
+    return _refresh_retail_product_availability(
+        shared,
+        source_key,
+        filtered,
+        old_products,
+    )
 
 def _boozt_product_url(value):
     text = str(value or "").lower()
@@ -777,13 +878,16 @@ def _magasin_product_url(value):
     return text.endswith(".html") or ".html?" in text
 
 
-def _preserve_missing_as_out_of_stock(old_products, current_products):
+def _preserve_missing_as_out_of_stock(source_key, old_products, current_products):
     merged = {}
     for product_id, product in (old_products or {}).items():
         if not isinstance(product, dict):
             continue
+        if not _retail_catalog_product_allowed(source_key, product.get("name")):
+            continue
         stale = dict(product)
         stale["in_stock"] = False
+        stale["availability_known"] = True
         merged[str(product_id)] = stale
 
     for product_id, product in (current_products or {}).items():
@@ -798,8 +902,9 @@ def get_boozt_products(shared, old_products):
         "boozt",
         BOOZT_CATEGORY_URL,
         _boozt_product_url,
+        old_products,
     )
-    return _preserve_missing_as_out_of_stock(old_products, current)
+    return _preserve_missing_as_out_of_stock("boozt", old_products, current)
 
 
 def get_magasin_products(shared, old_products):
@@ -808,8 +913,9 @@ def get_magasin_products(shared, old_products):
         "magasin",
         MAGASIN_CATEGORY_URL,
         _magasin_product_url,
+        old_products,
     )
-    return _preserve_missing_as_out_of_stock(old_products, current)
+    return _preserve_missing_as_out_of_stock("magasin", old_products, current)
 
 
 def fetch_source(shared, source_key, old_products):
@@ -848,6 +954,12 @@ def run_scan(shared, state):
         if (
             source_key == "proshop"
             and state.get("proshop_discovery_version") != PROSHOP_DISCOVERY_VERSION
+        ):
+            source_baseline = True
+        if (
+            source_key in ("boozt", "magasin")
+            and (state.get("retail_discovery_versions") or {}).get(source_key)
+            != RETAIL_DISCOVERY_VERSION
         ):
             source_baseline = True
         old_products = old_products if isinstance(old_products, dict) else {}
@@ -895,12 +1007,22 @@ def run_scan(shared, state):
                     send_hot_alert(source_key, product, "NYT")
                     continue
 
+                if (
+                    source_key in ("boozt", "magasin")
+                    and not old.get("availability_known", False)
+                ):
+                    continue
+
                 if not product_available(source_key, old):
                     send_hot_alert(source_key, product, "RESTOCK")
 
         source_state[source_key] = current
         if source_key == "proshop":
             state["proshop_discovery_version"] = PROSHOP_DISCOVERY_VERSION
+        if source_key in ("boozt", "magasin"):
+            state.setdefault("retail_discovery_versions", {})[
+                source_key
+            ] = RETAIL_DISCOVERY_VERSION
         print(
             f"HOT {label}: "
             f"{len(current)} relevante · "
