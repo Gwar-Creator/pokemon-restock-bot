@@ -6867,17 +6867,6 @@
   },
   "events": [
     {
-      "event": "NEW",
-      "fields": [],
-      "name": "Pokemon TCG First Partner Illustration Collection Box Series 2",
-      "product_id": "3478498",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "INBOUND_UNDATED",
-      "stage_before": null,
-      "ts": 1790221783.9803627
-    },
-    {
       "event": "CHANGE",
       "fields": [
         "surface_statuses"
@@ -21202,6 +21191,19 @@
       "stage_after": "LIVE_STOCK",
       "stage_before": "LIVE_STOCK",
       "ts": 1790462376.5115008
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
+      "product_id": "3447589",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1790462677.8370492
     }
   ],
   "sources": {
@@ -36535,9 +36537,11 @@
         "stage": "LIVE_STOCK",
         "status": "PÅ LAGER",
         "surface_statuses": {
+          "pokemon-brand": "PÅ LAGER",
           "pokemon-kort": "PÅ LAGER"
         },
         "surfaces": [
+          "pokemon-brand",
           "pokemon-kort"
         ],
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Zygarde-ex-Premium-Collection/3447589"
@@ -36598,6 +36602,6 @@
       }
     }
   },
-  "updated_at": 1790462376.5125048,
+  "updated_at": 1790462677.8381007,
   "version": 1
 }
