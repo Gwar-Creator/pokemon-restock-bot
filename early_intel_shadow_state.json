@@ -6872,20 +6872,6 @@
         "in_stock_stores_count",
         "stage"
       ],
-      "name": "Pokémon Elite Trainer Box 30th samlekort",
-      "product_id": "200392202",
-      "sku": "11379490-EA",
-      "source": "br",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "EXPOSED_NO_STOCK",
-      "ts": 1790162676.426688
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "in_stock_stores_count",
-        "stage"
-      ],
       "name": "Pokémon Binder Collection 30th",
       "product_id": "200392204",
       "sku": "11379492-EA",
@@ -21217,6 +21203,19 @@
       "stage_after": "LIVE_STOCK",
       "stage_before": "LIVE_STOCK",
       "ts": 1790428168.6083076
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
+      "product_id": "3447589",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1790428469.718977
     }
   ],
   "sources": {
@@ -36550,11 +36549,9 @@
         "stage": "LIVE_STOCK",
         "status": "PÅ LAGER",
         "surface_statuses": {
-          "pokemon-brand": "PÅ LAGER",
           "pokemon-kort": "PÅ LAGER"
         },
         "surfaces": [
-          "pokemon-brand",
           "pokemon-kort"
         ],
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Zygarde-ex-Premium-Collection/3447589"
@@ -36615,6 +36612,6 @@
       }
     }
   },
-  "updated_at": 1790428168.6095855,
+  "updated_at": 1790428469.7201042,
   "version": 1
 }
