@@ -1,4 +1,7 @@
 import unittest
+from urllib.parse import urljoin
+
+from bs4 import BeautifulSoup
 
 import hot_restock_v4 as hot_v4
 import restock_lane_runner as lane
@@ -102,6 +105,65 @@ class RestockLaneOwnershipTests(unittest.TestCase):
                 "https://www.magasin.dk/poke-me05-booster/BRXZ18.html"
             )
         )
+
+    def _retail_shared(self):
+        return {
+            "BeautifulSoup": BeautifulSoup,
+            "urljoin": urljoin,
+            "restock_alert_allowed": lambda _product, _game: True,
+        }
+
+    def test_boozt_category_parser_reads_price_and_stock(self):
+        html = """
+        <div class="product-card">
+          <a href="/dk/da/pokmon-trading-cards/poke-me05-etb_33181863/233181708">
+            <h3>Pokemon ME05 Elite Trainer Box</h3>
+          </a>
+          <span>599,00 kr.</span>
+          <button>Læg i kurv</button>
+        </div>
+        """
+        products = hot_v4.base._parse_broad_retail_products(
+            self._retail_shared(),
+            "boozt",
+            hot_v4.base.BOOZT_CATEGORY_URL,
+            html,
+            hot_v4.base._boozt_product_url,
+        )
+        self.assertEqual(len(products), 1)
+        product = next(iter(products.values()))
+        self.assertEqual(product["price"], 599.0)
+        self.assertTrue(product["in_stock"])
+
+    def test_magasin_category_parser_keeps_binder_collection(self):
+        html = """
+        <div class="product-card">
+          <a href="/pokemon-binder-collection/ABC123.html">
+            <h3>Pokemon Binder Collection</h3>
+          </a>
+          <span>499,00 kr.</span>
+          <button>Tilføj til kurv</button>
+        </div>
+        <div class="product-card">
+          <a href="/poke-me05-booster/BRXZ18.html">
+            <h3>Poke ME05 Booster</h3>
+          </a>
+          <span>49,95 kr.</span>
+          <button>Skriv mig op</button>
+        </div>
+        """
+        products = hot_v4.base._parse_broad_retail_products(
+            self._retail_shared(),
+            "magasin",
+            hot_v4.base.MAGASIN_CATEGORY_URL,
+            html,
+            hot_v4.base._magasin_product_url,
+        )
+        self.assertEqual(len(products), 2)
+        by_name = {product["name"]: product for product in products.values()}
+        self.assertEqual(by_name["Pokemon Binder Collection"]["price"], 499.0)
+        self.assertTrue(by_name["Pokemon Binder Collection"]["in_stock"])
+        self.assertFalse(by_name["Poke ME05 Booster"]["in_stock"])
 
     def test_missing_retail_product_is_preserved_as_out_of_stock(self):
         old = {
