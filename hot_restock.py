@@ -23,6 +23,13 @@ WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL", "").strip()
 PROSHOP_FRONTEND_URL = "https://www.proshop.dk/?s=Pokemon+TCG"
 PROSHOP_DISCOVERY_VERSION = 4
 
+BOOZT_CATEGORY_URL = "https://www.boozt.com/dk/da/pokemon-trading-cards/born"
+MAGASIN_CATEGORY_URL = "https://www.magasin.dk/maerker/pokemon/"
+RETAIL_MIN_PRODUCTS = {
+    "boozt": 2,
+    "magasin": 2,
+}
+
 RATE_LIMIT_BACKOFF_SECONDS = (0, 120, 300, 900)
 RATE_LIMIT_MARKERS = (
     "429",
@@ -45,6 +52,8 @@ SOURCE_LABELS = {
     "br": "BR",
     "bilka": "BILKA",
     "foetex": "FØTEX",
+    "boozt": "BOOZT",
+    "magasin": "MAGASIN",
 }
 
 if tuple(SOURCE_LABELS) != tuple(TIER_A_SOURCES):
@@ -199,6 +208,9 @@ def product_available(source_key, product):
                 return True
         return False
 
+    if source_key in ("boozt", "magasin"):
+        return bool(product.get("in_stock"))
+
     return False
 
 
@@ -208,6 +220,9 @@ def availability_text(source_key, product):
 
     if source_key == "proshop":
         return product.get("stock") or "UKENDT"
+
+    if source_key in ("boozt", "magasin"):
+        return "Online" if product.get("in_stock") else "Ikke på lager"
 
     bits = []
     online = int(product.get("online_count") or 0)
@@ -408,6 +423,353 @@ def _fetch_expanded_proshop_products(shared):
     return merged
 
 
+
+def _retail_clean_text(value):
+    return re.sub(r"\s+", " ", str(value or "")).strip()
+
+
+def _retail_price(text):
+    matches = re.findall(
+        r"(?<!\d)(\d{1,4}(?:\.\d{3})*(?:,\d{2})?)\s*(?:kr\.?|dkk)\b",
+        str(text or ""),
+        flags=re.IGNORECASE,
+    )
+    if not matches:
+        return None
+
+    try:
+        value = matches[-1].replace(".", "").replace(",", ".")
+        return float(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def _retail_name_from_card(card, anchors):
+    candidates = []
+
+    for selector in (
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "[class*='product-name']",
+        "[class*='productName']",
+        "[class*='product-title']",
+        "[class*='productTitle']",
+    ):
+        node = card.select_one(selector)
+        if node:
+            candidates.append(_retail_clean_text(node.get_text(" ", strip=True)))
+
+    for anchor in anchors:
+        candidates.append(_retail_clean_text(anchor.get_text(" ", strip=True)))
+        image = anchor.find("img", alt=True)
+        if image:
+            candidates.append(_retail_clean_text(image.get("alt")))
+
+    blocked = {
+        "",
+        "se produkt",
+        "læs mere",
+        "laes mere",
+        "læg i kurv",
+        "laeg i kurv",
+        "tilføj til kurv",
+        "tilfoej til kurv",
+        "giv mig besked",
+        "skriv mig op",
+    }
+    candidates = [
+        value
+        for value in candidates
+        if len(value) >= 4 and value.lower() not in blocked
+    ]
+
+    sealed_markers = (
+        "pokemon",
+        "pokémon",
+        "poke ",
+        "booster",
+        "blister",
+        "tin",
+        "collection",
+        "elite trainer",
+        " etb",
+        "bundle",
+        "box",
+        "display",
+        "pack",
+    )
+    candidates.sort(
+        key=lambda value: (
+            any(marker in value.lower() for marker in sealed_markers),
+            len(value),
+        ),
+        reverse=True,
+    )
+    return candidates[0] if candidates else ""
+
+
+def _retail_nearest_card(anchor, product_url, is_product_url):
+    node = anchor
+    best = anchor.parent or anchor
+
+    for _ in range(10):
+        node = node.parent
+        if node is None:
+            break
+
+        links = set()
+        for child in node.find_all("a", href=True):
+            href = child.get("href") or ""
+            if is_product_url(href):
+                links.add(href.split("#", 1)[0].split("?", 1)[0].rstrip("/"))
+
+        normalized_product_url = product_url.split("#", 1)[0].split("?", 1)[0].rstrip("/")
+        if normalized_product_url not in links:
+            continue
+
+        if len(links) > 1:
+            break
+
+        best = node
+        text = _retail_clean_text(node.get_text(" ", strip=True)).lower()
+        if any(
+            marker in text
+            for marker in (
+                " kr",
+                "dkk",
+                "læg i kurv",
+                "laeg i kurv",
+                "tilføj til kurv",
+                "tilfoej til kurv",
+                "giv mig besked",
+                "skriv mig op",
+                "udsolgt",
+                "ikke på lager",
+                "ikke pa lager",
+            )
+        ):
+            return node
+
+    return best
+
+
+def _retail_jsonld_products(soup):
+    products = []
+
+    def walk(value):
+        if isinstance(value, list):
+            for item in value:
+                walk(item)
+            return
+        if not isinstance(value, dict):
+            return
+
+        item_type = value.get("@type")
+        if isinstance(item_type, list):
+            is_product = any(str(entry).lower() == "product" for entry in item_type)
+        else:
+            is_product = str(item_type or "").lower() == "product"
+
+        if is_product:
+            products.append(value)
+
+        for child in value.values():
+            if isinstance(child, (dict, list)):
+                walk(child)
+
+    for script in soup.find_all("script", attrs={"type": "application/ld+json"}):
+        raw = script.string or script.get_text()
+        if not raw:
+            continue
+        try:
+            walk(json.loads(raw))
+        except (TypeError, json.JSONDecodeError):
+            continue
+
+    return products
+
+
+def _retail_offer_values(product):
+    offers = product.get("offers")
+    if isinstance(offers, dict):
+        offers = [offers]
+    elif not isinstance(offers, list):
+        offers = []
+
+    price = None
+    in_stock = None
+
+    for offer in offers:
+        if not isinstance(offer, dict):
+            continue
+        if price is None:
+            raw_price = offer.get("price")
+            try:
+                price = float(str(raw_price).replace(",", "."))
+            except (TypeError, ValueError):
+                pass
+
+        availability = str(offer.get("availability") or "").lower()
+        if "instock" in availability:
+            in_stock = True
+        elif any(marker in availability for marker in ("outofstock", "soldout", "discontinued")):
+            in_stock = False
+
+    return price, in_stock
+
+
+def _fetch_broad_retail_products(shared, source_key, category_url, is_product_url):
+    headers = {
+        **shared.get("BROWSER_HEADERS", {}),
+        "Accept-Language": "da-DK,da;q=0.9,en;q=0.8",
+    }
+
+    response = None
+    curl_requests = shared.get("curl_requests")
+    if curl_requests is not None:
+        try:
+            response = curl_requests.get(
+                category_url,
+                headers=headers,
+                timeout=30,
+                impersonate="chrome",
+            )
+            response.raise_for_status()
+        except Exception as error:
+            print(f"HOT {SOURCE_LABELS[source_key]} curl warning: {error}")
+            response = None
+
+    if response is None:
+        response = requests.get(category_url, headers=headers, timeout=30)
+        response.raise_for_status()
+
+    soup = shared["BeautifulSoup"](response.text, "html.parser")
+    products = {}
+
+    # Structured data is the safest first path when the retailer exposes it.
+    for raw_product in _retail_jsonld_products(soup):
+        name = _retail_clean_text(raw_product.get("name"))
+        product_url = str(raw_product.get("url") or "")
+        if product_url and not product_url.startswith("http"):
+            product_url = shared["urljoin"](category_url, product_url)
+
+        if not name or not product_url or not is_product_url(product_url):
+            continue
+
+        price, in_stock = _retail_offer_values(raw_product)
+        products[product_url] = {
+            "name": name,
+            "game": "POKÉMON",
+            "price": price,
+            "in_stock": bool(in_stock),
+            "url": product_url,
+        }
+
+    # DOM fallback/overlay: captures retailer-specific cart/notify stock markers
+    # even when the category's JSON-LD omits availability.
+    anchors_by_url = {}
+    for anchor in soup.find_all("a", href=True):
+        href = shared["urljoin"](category_url, anchor.get("href"))
+        href = href.split("#", 1)[0].split("?", 1)[0].rstrip("/")
+        if not is_product_url(href):
+            continue
+        anchors_by_url.setdefault(href, []).append(anchor)
+
+    for product_url, anchors in anchors_by_url.items():
+        anchor = max(
+            anchors,
+            key=lambda item: len(_retail_clean_text(item.get_text(" ", strip=True))),
+        )
+        card = _retail_nearest_card(anchor, product_url, is_product_url)
+        text = _retail_clean_text(card.get_text(" ", strip=True))
+        low = text.lower()
+        name = _retail_name_from_card(card, anchors)
+        if not name:
+            continue
+
+        if source_key == "boozt":
+            explicit_in = any(marker in low for marker in ("læg i kurv", "laeg i kurv"))
+            explicit_out = any(marker in low for marker in ("giv mig besked", "udsolgt", "ikke på lager", "ikke pa lager"))
+        else:
+            explicit_in = any(marker in low for marker in ("tilføj til kurv", "tilfoej til kurv", "læg i kurv", "laeg i kurv"))
+            explicit_out = any(marker in low for marker in ("skriv mig op", "udsolgt", "ikke på lager", "ikke pa lager"))
+
+        old = products.get(product_url) or {}
+        current_in_stock = old.get("in_stock")
+        if explicit_in:
+            current_in_stock = True
+        elif explicit_out:
+            current_in_stock = False
+
+        products[product_url] = {
+            "name": name,
+            "game": "POKÉMON",
+            "price": _retail_price(text) if _retail_price(text) is not None else old.get("price"),
+            "in_stock": bool(current_in_stock),
+            "url": product_url,
+        }
+
+    filtered = filter_hot_products(shared, products)
+    minimum = RETAIL_MIN_PRODUCTS[source_key]
+    if len(filtered) < minimum:
+        raise RuntimeError(
+            f"{SOURCE_LABELS[source_key]} gav kun {len(filtered)} relevante produkter "
+            f"(minimum {minimum})"
+        )
+    return filtered
+
+
+def _boozt_product_url(value):
+    text = str(value or "").lower()
+    return "/dk/da/pokmon-trading-cards/" in text and bool(
+        re.search(r"/\d{6,}(?:$|[?#])", text)
+    )
+
+
+def _magasin_product_url(value):
+    text = str(value or "").lower()
+    if "magasin.dk" in text and "/search" in text:
+        return False
+    return text.endswith(".html") or ".html?" in text
+
+
+def _preserve_missing_as_out_of_stock(old_products, current_products):
+    merged = {}
+    for product_id, product in (old_products or {}).items():
+        if not isinstance(product, dict):
+            continue
+        stale = dict(product)
+        stale["in_stock"] = False
+        merged[str(product_id)] = stale
+
+    for product_id, product in (current_products or {}).items():
+        merged[str(product_id)] = product
+
+    return merged
+
+
+def get_boozt_products(shared, old_products):
+    current = _fetch_broad_retail_products(
+        shared,
+        "boozt",
+        BOOZT_CATEGORY_URL,
+        _boozt_product_url,
+    )
+    return _preserve_missing_as_out_of_stock(old_products, current)
+
+
+def get_magasin_products(shared, old_products):
+    current = _fetch_broad_retail_products(
+        shared,
+        "magasin",
+        MAGASIN_CATEGORY_URL,
+        _magasin_product_url,
+    )
+    return _preserve_missing_as_out_of_stock(old_products, current)
+
+
 def fetch_source(shared, source_key, old_products):
     if source_key == "coolshop":
         return shared["get_coolshop_products"]()
@@ -417,6 +779,10 @@ def fetch_source(shared, source_key, old_products):
         return shared["get_br_products"](old_products)
     if source_key in ("bilka", "foetex"):
         return shared["get_salling_products"](source_key, old_products)
+    if source_key == "boozt":
+        return get_boozt_products(shared, old_products)
+    if source_key == "magasin":
+        return get_magasin_products(shared, old_products)
     raise KeyError(source_key)
 
 
