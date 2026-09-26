@@ -59,6 +59,29 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      - name: Live validate Boozt and Magasin retail sources
+        run: |
+          timeout 120s python - <<'PY'
+          import hot_restock as hot
+
+          shared = hot.load_shared_namespace()
+          state = {"retail_meta": {}, "sources": {}, "source_controls": {}}
+
+          boozt = hot.get_boozt_products(shared, {})
+          print("LIVE BOOZT", len(boozt))
+          for key, product in sorted(boozt.items()):
+              print("BOOZT", key, product.get("name"), product.get("price"), product.get("in_stock"))
+          assert len(boozt) >= 2
+          assert all(product.get("availability_known") for product in boozt.values())
+
+          magasin = hot.get_magasin_products(shared, {}, state)
+          print("LIVE MAGASIN", len(magasin))
+          for key, product in sorted(magasin.items()):
+              print("MAGASIN", key, product.get("name"), product.get("price"), product.get("in_stock"), product.get("availability_known"))
+          assert len(magasin) >= 2
+          assert sum(1 for product in magasin.values() if product.get("availability_known")) >= 2
+          PY
+
       - name: Compile changed scanner modules
         run: python -m py_compile alert_policy.py restock_v2_runner.py restock_lane_runner.py faraos_parser_v2.py tier_b_wave1_sources.py tier_b_wave1_shadow.py tier_b_wave2_sources.py tier_b_wave2_shadow.py tier_b_wave3_sources.py tier_b_wave3_shadow.py tier_b_wave4_shadow.py indeks_retail_shadow.py flinamania_product_probe.py hot_restock.py hot_restock_v4.py state_commit_guard.py
 
