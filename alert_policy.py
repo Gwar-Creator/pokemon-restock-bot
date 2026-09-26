@@ -12,6 +12,8 @@ TIER_A_SOURCES = (
     "br",
     "bilka",
     "foetex",
+    "boozt",
+    "magasin",
 )
 
 BACKUP_RETAIL_SOURCES = (
@@ -203,7 +205,7 @@ def tier_a_signal_allowed(
     event="RESTOCK",
     release_date=None,
 ):
-    """Fast-lane gate for the five broad Tier A retailers."""
+    """Fast-lane gate for the broad Tier A retailers."""
     event = str(event or "RESTOCK").strip().upper()
     status = set_status(name, series, release_date=release_date)
 
