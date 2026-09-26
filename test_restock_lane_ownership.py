@@ -95,6 +95,12 @@ class RestockLaneOwnershipTests(unittest.TestCase):
                 "poke-me05-elite-trainer-box_33181863/233181708"
             )
         )
+        self.assertTrue(
+            hot_v4.base._boozt_product_url(
+                "https://www.boozt.com/dk/da/pokmon-trading-cards/"
+                "poke-me05-elite-trainer-box_33181863"
+            )
+        )
         self.assertFalse(
             hot_v4.base._boozt_product_url(
                 "https://www.boozt.com/dk/da/pokemon-trading-cards/born"
@@ -105,6 +111,55 @@ class RestockLaneOwnershipTests(unittest.TestCase):
                 "https://www.magasin.dk/poke-me05-booster/BRXZ18.html"
             )
         )
+
+    def test_boozt_reader_parser_uses_stable_style_key_and_category_stock(self):
+        markdown = """
+        [Poke ME05 Elite Trainer Box - Samlekort](https://www.boozt.com/dk/da/pokmon-trading-cards/poke-me05-elite-trainer-box_33181863)
+        ONE SIZE
+        599 kr
+        [Poke Mini Tin June - Samlekort](https://www.boozt.com/dk/da/pokmon-trading-cards/poke-mini-tin-june_33186417/233210201)
+        139 kr
+        """
+        products, raw_links = hot_v4.base._parse_boozt_reader_markdown(
+            self._retail_shared(),
+            markdown,
+        )
+        self.assertEqual(raw_links, 2)
+        self.assertIn("boozt:33181863", products)
+        self.assertTrue(products["boozt:33181863"]["in_stock"])
+        self.assertTrue(products["boozt:33181863"]["availability_known"])
+        self.assertEqual(products["boozt:33181863"]["price"], 599.0)
+
+    def test_magasin_reader_parser_keeps_tcg_and_rejects_figures(self):
+        markdown = """
+        [Poke Blister 1P ME05](https://www.magasin.dk/poke-blister-1p-me05/BRXZ17-0008.html)
+        49,95 kr.
+        [Pokemon Battle figure 6pack](https://www.magasin.dk/pokemon-battle-figure-6pack/BKOE56-0008.html)
+        249,95 kr.
+        [Pokemon Binder Collection](https://www.magasin.dk/pokemon-binder-collection/ABC123-0008.html)
+        499,00 kr.
+        """
+        products, raw_links = hot_v4.base._parse_magasin_reader_markdown(
+            self._retail_shared(),
+            markdown,
+        )
+        self.assertEqual(raw_links, 3)
+        names = {product["name"] for product in products.values()}
+        self.assertIn("Poke Blister 1P ME05", names)
+        self.assertIn("Pokemon Binder Collection", names)
+        self.assertNotIn("Pokemon Battle figure 6pack", names)
+
+    def test_retail_product_key_is_stable_for_boozt_variants(self):
+        base = hot_v4.base._retail_product_key(
+            "boozt",
+            "https://www.boozt.com/dk/da/pokmon-trading-cards/poke-me05-etb_33181863",
+        )
+        variant = hot_v4.base._retail_product_key(
+            "boozt",
+            "https://www.boozt.com/dk/da/pokmon-trading-cards/poke-me05-etb_33181863/233181708",
+        )
+        self.assertEqual(base, "boozt:33181863")
+        self.assertEqual(base, variant)
 
     def _retail_shared(self):
         return {

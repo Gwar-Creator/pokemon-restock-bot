@@ -26,7 +26,7 @@ PROSHOP_DISCOVERY_VERSION = 4
 
 BOOZT_CATEGORY_URL = "https://www.boozt.com/dk/da/pokemon-trading-cards/born"
 MAGASIN_CATEGORY_URL = "https://www.magasin.dk/boern/legetoej/samlekort-og-mapper/pokemon/"
-RETAIL_DISCOVERY_VERSION = 2
+RETAIL_DISCOVERY_VERSION = 3
 RETAIL_MIN_PRODUCTS = {
     "boozt": 2,
     "magasin": 2,
@@ -653,6 +653,232 @@ def _retail_catalog_product_allowed(source_key, name):
     return any(marker in text for marker in markers)
 
 
+
+def _retail_product_key(source_key, product_url):
+    url = str(product_url or "").split("#", 1)[0].split("?", 1)[0].rstrip("/")
+    if source_key == "boozt":
+        match = re.search(r"_(\d{6,})(?:/\d{6,})?$", url)
+        if match:
+            return f"boozt:{match.group(1)}"
+    return url
+
+
+def _retail_name_from_slug(product_url):
+    path = str(product_url or "").split("?", 1)[0].rstrip("/")
+    parts = path.split("/")
+    slug = parts[-2] if parts and parts[-1].lower().endswith(".html") and len(parts) > 1 else parts[-1]
+    slug = re.sub(r"_\d{6,}$", "", slug)
+    return re.sub(r"[-_]+", " ", slug).strip().title()
+
+
+def _fetch_reader_text(url, source_key):
+    response = requests.get(
+        "https://r.jina.ai/" + str(url),
+        headers={
+            "Accept": "text/plain, text/markdown;q=0.9, */*;q=0.5",
+            "User-Agent": f"Pokemon-Lorcana-MasterBot/3.0 {SOURCE_LABELS[source_key]}",
+            "x-no-cache": "true",
+            "x-engine": "browser",
+        },
+        timeout=50,
+    )
+    response.raise_for_status()
+    text = response.text or ""
+    if len(text) < 500:
+        raise RuntimeError(
+            f"{SOURCE_LABELS[source_key]} Reader returnerede kun {len(text)} tegn"
+        )
+    return text
+
+
+def _markdown_price_near(markdown, start, end):
+    before = (markdown[max(0, start - 250):start] or "")
+    after = (markdown[end:min(len(markdown), end + 900)] or "")
+    return _retail_price(after) or _retail_price(before)
+
+
+def _parse_boozt_reader_markdown(shared, markdown):
+    pattern = re.compile(
+        r"\[(?P<label>[^\]]{1,800})\]\("
+        r"(?P<url>https?://(?:www\.)?boozt\.com/dk/da/"
+        r"pokmon-trading-cards/[^)\s?#]+?_(?P<style>\d{6,})"
+        r"(?:/\d{6,})?(?:[?#][^)]*)?)\)",
+        re.IGNORECASE | re.DOTALL,
+    )
+    matches = list(pattern.finditer(markdown or ""))
+    products = {}
+
+    for index, match in enumerate(matches):
+        next_start = matches[index + 1].start() if index + 1 < len(matches) else len(markdown)
+        price_segment = (markdown[match.end():next_start] or "")[:900]
+        price = _retail_price(price_segment)
+        if price is None:
+            price = _retail_price((markdown[max(0, match.start() - 250):match.start()] or ""))
+
+        url = match.group("url").split("?", 1)[0].rstrip("/")
+        label = re.sub(r"\s+", " ", match.group("label") or "").strip()
+        name = re.sub(r"^Image:\s*", "", label, flags=re.IGNORECASE).strip()
+        if not name or name.lower() in {"pokemon trading cards", "pokémon trading cards"}:
+            name = _retail_name_from_slug(url)
+
+        if not _retail_catalog_product_allowed("boozt", name):
+            continue
+
+        key = f"boozt:{match.group('style')}"
+        candidate = {
+            "name": name,
+            "game": "POKÉMON",
+            "price": price,
+            # Boozt's brand/category listing is the purchasable catalogue:
+            # products that drop out are retained below as out of stock.
+            "in_stock": True,
+            "availability_known": True,
+            "url": url,
+            "fetch_via": "jina_reader_category",
+        }
+        current = products.get(key)
+        if current is None or (
+            current.get("price") is None and candidate.get("price") is not None
+        ):
+            products[key] = candidate
+
+    return filter_hot_products(shared, products), len(matches)
+
+
+def _parse_magasin_reader_markdown(shared, markdown):
+    pattern = re.compile(
+        r"\[(?P<label>[^\]]{1,800})\]\("
+        r"(?P<url>https?://(?:www\.)?magasin\.dk/[^)\s?#]+\.html"
+        r"(?:[?#][^)]*)?)\)",
+        re.IGNORECASE | re.DOTALL,
+    )
+    matches = list(pattern.finditer(markdown or ""))
+    products = {}
+
+    for index, match in enumerate(matches):
+        next_start = matches[index + 1].start() if index + 1 < len(matches) else len(markdown)
+        price_segment = (markdown[match.end():next_start] or "")[:900]
+        price = _retail_price(price_segment)
+        if price is None:
+            price = _retail_price((markdown[max(0, match.start() - 250):match.start()] or ""))
+
+        url = match.group("url").split("?", 1)[0].rstrip("/")
+        label = re.sub(r"\s+", " ", match.group("label") or "").strip()
+        name = re.sub(r"^Image:\s*", "", label, flags=re.IGNORECASE).strip()
+        if not _retail_catalog_product_allowed("magasin", name):
+            fallback = _retail_name_from_slug(url)
+            if not _retail_catalog_product_allowed("magasin", fallback):
+                continue
+            name = fallback
+
+        key = _retail_product_key("magasin", url)
+        candidate = {
+            "name": name,
+            "game": "POKÉMON",
+            "price": price,
+            "in_stock": False,
+            "availability_known": False,
+            "url": url,
+            "fetch_via": "jina_reader_category",
+        }
+        current = products.get(key)
+        if current is None or (
+            current.get("price") is None and candidate.get("price") is not None
+        ):
+            products[key] = candidate
+
+    return filter_hot_products(shared, products), len(matches)
+
+
+def _reader_detail_one(shared, source_key, product_id, product, old_products):
+    current = dict(product)
+    old = (old_products or {}).get(product_id)
+    try:
+        markdown = _fetch_reader_text(current["url"], source_key)
+        available = _parse_retail_detail_availability(
+            shared,
+            source_key,
+            markdown,
+        )
+    except Exception as error:
+        print(
+            f"HOT {SOURCE_LABELS[source_key]} Reader detail warning "
+            f"{current.get('name')}: {error}"
+        )
+        available = None
+
+    if available is not None:
+        current["in_stock"] = bool(available)
+        current["availability_known"] = True
+        return product_id, current, True
+
+    if isinstance(old, dict):
+        current["in_stock"] = bool(old.get("in_stock"))
+        current["availability_known"] = bool(old.get("availability_known", False))
+    else:
+        current["in_stock"] = False
+        current["availability_known"] = False
+    return product_id, current, False
+
+
+def _refresh_retail_via_reader_details(shared, source_key, products, old_products):
+    refreshed = {}
+    known_count = 0
+    items = list((products or {}).items())
+
+    def worker(item):
+        product_id, product = item
+        return _reader_detail_one(
+            shared,
+            source_key,
+            product_id,
+            product,
+            old_products,
+        )
+
+    with ThreadPoolExecutor(max_workers=min(4, max(1, len(items)))) as executor:
+        for product_id, current, known in executor.map(worker, items):
+            refreshed[product_id] = current
+            known_count += int(known)
+
+    required_known = max(
+        RETAIL_MIN_PRODUCTS[source_key],
+        (len(refreshed) + 1) // 2,
+    )
+    if known_count < required_known:
+        raise RuntimeError(
+            f"{SOURCE_LABELS[source_key]} Reader lagerstatus kun kendt for "
+            f"{known_count}/{len(refreshed)} produkter "
+            f"(minimum {required_known})"
+        )
+    return refreshed
+
+
+def _fetch_boozt_via_reader(shared):
+    markdown = _fetch_reader_text(BOOZT_CATEGORY_URL, "boozt")
+    products, raw_links = _parse_boozt_reader_markdown(shared, markdown)
+    if raw_links < RETAIL_MIN_PRODUCTS["boozt"] or len(products) < RETAIL_MIN_PRODUCTS["boozt"]:
+        raise RuntimeError(
+            f"BOOZT Reader gav {raw_links} rå links / {len(products)} relevante produkter"
+        )
+    return products
+
+
+def _fetch_magasin_via_reader(shared, old_products):
+    markdown = _fetch_reader_text(MAGASIN_CATEGORY_URL, "magasin")
+    products, raw_links = _parse_magasin_reader_markdown(shared, markdown)
+    if raw_links < RETAIL_MIN_PRODUCTS["magasin"] or len(products) < RETAIL_MIN_PRODUCTS["magasin"]:
+        raise RuntimeError(
+            f"MAGASIN Reader gav {raw_links} rå links / {len(products)} relevante produkter"
+        )
+    return _refresh_retail_via_reader_details(
+        shared,
+        "magasin",
+        products,
+        old_products,
+    )
+
+
 def _parse_broad_retail_products(
     shared,
     source_key,
@@ -682,7 +908,8 @@ def _parse_broad_retail_products(
 
         price, in_stock = _retail_offer_values(raw_product)
         product_url = product_url.rstrip("/")
-        products[product_url] = {
+        product_key = _retail_product_key(source_key, product_url)
+        products[product_key] = {
             "name": name,
             "game": "POKÉMON",
             "price": price,
@@ -713,9 +940,10 @@ def _parse_broad_retail_products(
         if not name or not _retail_catalog_product_allowed(source_key, name):
             continue
 
-        old = products.get(product_url) or {}
+        product_key = _retail_product_key(source_key, product_url)
+        old = products.get(product_key) or {}
         parsed_price = _retail_price(text)
-        products[product_url] = {
+        products[product_key] = {
             "name": name,
             "game": "POKÉMON",
             "price": parsed_price if parsed_price is not None else old.get("price"),
@@ -857,6 +1085,13 @@ def _fetch_broad_retail_products(
             f"(minimum {minimum})"
         )
 
+    if source_key == "boozt":
+        for product in filtered.values():
+            product["in_stock"] = True
+            product["availability_known"] = True
+            product["fetch_via"] = "direct_category"
+        return filtered
+
     return _refresh_retail_product_availability(
         shared,
         source_key,
@@ -865,11 +1100,10 @@ def _fetch_broad_retail_products(
     )
 
 def _boozt_product_url(value):
-    text = str(value or "").lower()
+    text = str(value or "").lower().split("#", 1)[0].split("?", 1)[0].rstrip("/")
     return "/dk/da/pokmon-trading-cards/" in text and bool(
-        re.search(r"/\d{6,}(?:$|[?#])", text)
+        re.search(r"_\d{6,}(?:/\d{6,})?$", text)
     )
-
 
 def _magasin_product_url(value):
     text = str(value or "").lower()
@@ -897,24 +1131,44 @@ def _preserve_missing_as_out_of_stock(source_key, old_products, current_products
 
 
 def get_boozt_products(shared, old_products):
-    current = _fetch_broad_retail_products(
-        shared,
-        "boozt",
-        BOOZT_CATEGORY_URL,
-        _boozt_product_url,
-        old_products,
-    )
+    errors = []
+    try:
+        current = _fetch_boozt_via_reader(shared)
+    except Exception as error:
+        errors.append(f"Reader: {error}")
+        try:
+            current = _fetch_broad_retail_products(
+                shared,
+                "boozt",
+                BOOZT_CATEGORY_URL,
+                _boozt_product_url,
+                old_products,
+            )
+        except Exception as fallback_error:
+            errors.append(f"direct: {fallback_error}")
+            raise RuntimeError("BOOZT fejlede: " + " | ".join(errors))
+
     return _preserve_missing_as_out_of_stock("boozt", old_products, current)
 
 
 def get_magasin_products(shared, old_products):
-    current = _fetch_broad_retail_products(
-        shared,
-        "magasin",
-        MAGASIN_CATEGORY_URL,
-        _magasin_product_url,
-        old_products,
-    )
+    errors = []
+    try:
+        current = _fetch_magasin_via_reader(shared, old_products)
+    except Exception as error:
+        errors.append(f"Reader: {error}")
+        try:
+            current = _fetch_broad_retail_products(
+                shared,
+                "magasin",
+                MAGASIN_CATEGORY_URL,
+                _magasin_product_url,
+                old_products,
+            )
+        except Exception as fallback_error:
+            errors.append(f"direct: {fallback_error}")
+            raise RuntimeError("MAGASIN fejlede: " + " | ".join(errors))
+
     return _preserve_missing_as_out_of_stock("magasin", old_products, current)
 
 
@@ -940,6 +1194,16 @@ def run_scan(shared, state):
 
     for source_key in SOURCE_LABELS:
         label = SOURCE_LABELS[source_key]
+        if (
+            source_key in ("boozt", "magasin")
+            and (state.get("retail_discovery_versions") or {}).get(source_key)
+            != RETAIL_DISCOVERY_VERSION
+        ):
+            control = _source_control(state, source_key)
+            control["backoff_level"] = 0
+            control["next_allowed_at"] = 0.0
+            control["generic_failures"] = 0
+
         wait_seconds = _source_wait_seconds(state, source_key)
         if wait_seconds > 0:
             level = _source_control(state, source_key)["backoff_level"]
