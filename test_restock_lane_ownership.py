@@ -405,6 +405,16 @@ class RestockLaneOwnershipTests(unittest.TestCase):
             merged["https://example.invalid/product"]["availability_known"]
         )
 
+    def test_shared_restock_policy_allows_abbreviated_binder_collection(self):
+        shared = hot_v4.base.load_shared_namespace()
+        product = {
+            "name": "Poke Binder Coll 30th",
+            "game": "POKÉMON",
+            "price": 499.95,
+            "in_stock": True,
+        }
+        self.assertTrue(shared["restock_alert_allowed"](product, "POKÉMON"))
+
     def test_hot_shared_tier_a_policy_mutes_abundant_pack(self):
         shared = {"restock_alert_allowed": lambda _product, _game: True}
         products = {
