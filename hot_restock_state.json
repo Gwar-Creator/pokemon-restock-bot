@@ -9,13 +9,6 @@
         "online_stock": true,
         "url": "https://www.coolshop.dk/produkt/pokemon-pokeball-tin-pok10273-104/23XH6F/"
       },
-      "https://www.coolshop.dk/produkt/pokemon-mega-evolution-me02-5-ascended-heroes-elite-trainer-box-pok10315-101/23V948/": {
-        "name": "Pokémon - Mega Evolution ME02.5: Ascended Heroes - Elite Trainer Box (POK10315-101)",
-        "game": "POKÉMON",
-        "price": 1399.0,
-        "online_stock": true,
-        "url": "https://www.coolshop.dk/produkt/pokemon-mega-evolution-me02-5-ascended-heroes-elite-trainer-box-pok10315-101/23V948/"
-      },
       "https://www.coolshop.dk/produkt/pokemon-deck-pro-poke-mega-charizard-y/23UF9A/": {
         "name": "Pokémon - Deck Pro Poke - Mega Charizard Y",
         "game": "POKÉMON",
@@ -78,6 +71,13 @@
         "price": 179.95,
         "online_stock": false,
         "url": "https://www.coolshop.dk/produkt/pokemon-30th-celebration-2-pack-blister-pok10666-102/23Y9X4/"
+      },
+      "https://www.coolshop.dk/produkt/pokemon-mega-evolution-me02-5-ascended-heroes-elite-trainer-box-pok10315-101/23V948/": {
+        "name": "Pokémon - Mega Evolution ME02.5: Ascended Heroes - Elite Trainer Box (POK10315-101)",
+        "game": "POKÉMON",
+        "price": 1399.0,
+        "online_stock": true,
+        "url": "https://www.coolshop.dk/produkt/pokemon-mega-evolution-me02-5-ascended-heroes-elite-trainer-box-pok10315-101/23V948/"
       }
     },
     "proshop": {
@@ -86,30 +86,6 @@
         "price": null,
         "stock": "PÅ LAGER",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827"
-      },
-      "3417744": {
-        "name": "Pokemon TCG Mega Charizard X ex Ultra Premium Collection",
-        "price": null,
-        "stock": "BESTILLINGSVARE",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744"
-      },
-      "3478498": {
-        "name": "Pokemon TCG First Partner Illustration Collection Box Series 2",
-        "price": null,
-        "stock": "BESTILLINGSVARE",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-First-Partner-Illustration-Collection-Box-Series-2/3478498"
-      },
-      "3478496": {
-        "name": "Pokemon TCG Mega Greninja ex Premium Collection",
-        "price": null,
-        "stock": "BESTILLINGSVARE",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496"
-      },
-      "3447592": {
-        "name": "Pokemon TCG Mega EvolutionChaos Rising Booster box with 36 boosters",
-        "price": null,
-        "stock": "BESTILLINGSVARE",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-EvolutionChaos-Rising-Booster-box-with-36-boosters/3447592"
       }
     },
     "br": {
@@ -858,12 +834,12 @@
       "last_success_at": "2026-09-26T14:07:08.594221+00:00"
     },
     "proshop": {
-      "backoff_level": 2,
-      "next_allowed_at": 1790442091.1471791,
-      "generic_failures": 2,
-      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "backoff_level": 0,
+      "next_allowed_at": 0.0,
+      "generic_failures": 0,
+      "last_error": null,
       "last_failure_at": "2026-09-26T16:56:31.147143+00:00",
-      "last_success_at": "2026-09-26T16:53:18.845320+00:00"
+      "last_success_at": "2026-09-26T17:04:34.176045+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -899,14 +875,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1790442012.3513017,
+      "next_allowed_at": 1790442311.9595933,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-09-26T15:39:28.835094+00:00",
-      "last_success_at": "2026-09-26T16:56:12.351275+00:00"
+      "last_success_at": "2026-09-26T17:01:11.959568+00:00"
     }
   },
-  "updated_at": "2026-09-26T16:59:29.863804+00:00",
+  "updated_at": "2026-09-26T17:04:49.933907+00:00",
   "proshop_discovery_version": 4,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -936,11 +912,11 @@
             "https://www.magasin.dk/poke-box/BTBH32-0008.html",
             "https://www.magasin.dk/poke-elite-trainer-box-30/BTBH30-0008.html"
           ],
-          "last_checked": "2026-09-26T16:56:11.223143+00:00"
+          "last_checked": "2026-09-26T17:01:10.858098+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1790441769.432022,
+      "last_discovery_epoch": 1790442069.7562804,
       "last_full_discovery_epoch": 1790437666.7256086,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
