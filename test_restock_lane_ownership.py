@@ -130,6 +130,26 @@ class RestockLaneOwnershipTests(unittest.TestCase):
         self.assertTrue(products["boozt:33181863"]["availability_known"])
         self.assertEqual(products["boozt:33181863"]["price"], 599.0)
 
+    def test_boozt_reader_parser_handles_real_nested_image_links(self):
+        markdown = """
+        [![Image 3: Pokémon Trading Cards Poke Box Premium EX - Pokémon Trading Cards - BLUE / blue](https://image-resizing.booztcdn.com/example.webp)](https://www.boozt.com/dk/da/pokmon-trading-cards/poke-box-premium-ex_33181865/233181710)
+        Pokémon Trading Cards
+        Poke Box Premium EX - Samlekort
+        529 kr
+        [![Image 4: Pokémon Trading Cards Poke Mini Tin June - Pokémon Trading Cards - MULTI COLOURED / multi](https://image-resizing.booztcdn.com/example2.webp)](https://www.boozt.com/dk/da/pokmon-trading-cards/poke-mini-tin-june_33186417/233210201)
+        Pokémon Trading Cards
+        Poke Mini Tin June - Samlekort
+        139 kr
+        """
+        products, raw_links = hot_v4.base._parse_boozt_reader_markdown(
+            self._retail_shared(),
+            markdown,
+        )
+        self.assertEqual(raw_links, 2)
+        self.assertEqual(products["boozt:33181865"]["price"], 529.0)
+        self.assertTrue(products["boozt:33181865"]["in_stock"])
+        self.assertIn("Poke Box Premium EX", products["boozt:33181865"]["name"])
+
     def test_magasin_reader_parser_keeps_tcg_and_rejects_figures(self):
         markdown = """
         [Poke Blister 1P ME05](https://www.magasin.dk/poke-blister-1p-me05/BRXZ17-0008.html)
@@ -272,6 +292,18 @@ class RestockLaneOwnershipTests(unittest.TestCase):
                 "Poke ME05 Booster",
             )
         )
+        self.assertTrue(
+            hot_v4.base._retail_catalog_product_allowed(
+                "magasin",
+                "Poke Binder Coll 30th",
+            )
+        )
+        self.assertTrue(
+            hot_v4.base._retail_catalog_product_allowed(
+                "magasin",
+                "Poke Box",
+            )
+        )
         self.assertFalse(
             hot_v4.base._retail_catalog_product_allowed(
                 "magasin",
@@ -284,6 +316,71 @@ class RestockLaneOwnershipTests(unittest.TestCase):
                 "Magasin Goodie fordelsunivers",
             )
         )
+
+    def test_magasin_sitemap_url_gate_keeps_tcg_and_rejects_toys(self):
+        allowed = (
+            "https://www.magasin.dk/poke-elite-trainer-box-30/BTBH30-0008.html",
+            "https://www.magasin.dk/poke-binder-coll-30th/BTBH31-0008.html",
+            "https://www.magasin.dk/poke-box/BTBH32-0008.html",
+            "https://www.magasin.dk/poke-2-pack-blister-30th/BTBH35-0008.html",
+        )
+        for url in allowed:
+            self.assertTrue(hot_v4.base._magasin_tcg_url_allowed(url))
+
+        self.assertFalse(
+            hot_v4.base._magasin_tcg_url_allowed(
+                "https://www.magasin.dk/pokemon-battle-figure-6pack/BKOE56-0008.html"
+            )
+        )
+        self.assertFalse(
+            hot_v4.base._magasin_tcg_url_allowed(
+                "https://www.magasin.dk/pikachu-og-poke-ball-72152/BRAL27-0008.html"
+            )
+        )
+
+    def test_magasin_product_response_reads_gtm_stock_price_and_name(self):
+        html = """
+        <html><body>
+          <script type="application/ld+json">
+          {"@context":"http://schema.org/","@type":"Product","name":"Poke Binder Coll 30th"}
+          </script>
+          <div
+            gtm-product-detail-view="{&quot;event&quot;:&quot;view_item&quot;,&quot;ecommerce&quot;:{&quot;currency&quot;:&quot;DKK&quot;,&quot;items&quot;:[{&quot;item_name&quot;:&quot;poke binder coll 30th&quot;,&quot;stock_status&quot;:&quot;in stock&quot;,&quot;price&quot;:499.95,&quot;sku&quot;:&quot;S15871238&quot;,&quot;variant_id&quot;:&quot;BTBH31-0008&quot;}]}}"
+          ></div>
+        </body></html>
+        """
+        url = "https://www.magasin.dk/poke-binder-coll-30th/BTBH31-0008.html"
+        product = hot_v4.base._magasin_parse_product_response(
+            self._retail_shared(),
+            url,
+            html,
+            url,
+            None,
+        )
+        self.assertEqual(product["name"], "Poke Binder Coll 30th")
+        self.assertEqual(product["price"], 499.95)
+        self.assertTrue(product["in_stock"])
+        self.assertTrue(product["availability_known"])
+
+    def test_magasin_productnotfound_redirect_becomes_out_of_stock(self):
+        old = {
+            "name": "Poke ME05 Booster",
+            "game": "POKÉMON",
+            "price": 49.95,
+            "in_stock": True,
+            "availability_known": True,
+            "url": "https://www.magasin.dk/poke-me05-booster/BRXZ18-0008.html",
+        }
+        product = hot_v4.base._magasin_parse_product_response(
+            self._retail_shared(),
+            old["url"],
+            "<html><body>Produktet kan desværre ikke findes</body></html>",
+            "https://www.magasin.dk/hjem/?productnotfound=BRXZ18-0008",
+            old,
+        )
+        self.assertFalse(product["in_stock"])
+        self.assertTrue(product["availability_known"])
+        self.assertEqual(product["price"], 49.95)
 
     def test_missing_retail_product_is_preserved_as_out_of_stock(self):
         old = {
@@ -307,6 +404,16 @@ class RestockLaneOwnershipTests(unittest.TestCase):
         self.assertTrue(
             merged["https://example.invalid/product"]["availability_known"]
         )
+
+    def test_shared_restock_policy_allows_abbreviated_binder_collection(self):
+        shared = hot_v4.base.load_shared_namespace()
+        product = {
+            "name": "Poke Binder Coll 30th",
+            "game": "POKÉMON",
+            "price": 499.95,
+            "in_stock": True,
+        }
+        self.assertTrue(shared["restock_alert_allowed"](product, "POKÉMON"))
 
     def test_hot_shared_tier_a_policy_mutes_abundant_pack(self):
         shared = {"restock_alert_allowed": lambda _product, _game: True}

@@ -206,7 +206,7 @@ Gode næste trin, som skal indføres enkeltvis og sikkert:
   krævede købbar/preorder-status for nye katalogalerts, flyttede scanner-health ud
   af Restock, ensrettede checklane/battle-deck-filteret i Price, fjernede tomme
   prisdigests og adskilte Card Market fra Price History.
-- 2026-09-26: Boozt og Magasin blev tilføjet til Tier A HOT-scanneren som brede retailkilder. Nye kilder baseline-indlæses stille; manglende katalogvarer bevares som udsolgte, så et comeback kan registreres som reel restock.
+- 2026-09-26: Boozt og Magasin blev tilføjet til Tier A HOT-scanneren. Boozt læses via den offentligt renderede brand-katalogside (Reader transport), hvor forsvundne varer bevares som udsolgte. Magasin opdager TCG-produkter via de offentlige product-sitemaps og læser pris/lager direkte fra produktsidens GTM/produktdata; Magasin køres med ca. 5 minutters cadence. Retail-parserændringer baseline-indlæses stille via RETAIL_DISCOVERY_VERSION.
 - Lav-signal-produkter skal normalt forblive i state, men ikke sendes til Discord.
 
 - 2026-08-31: V47 tilføjede et Matraws-specifikt Discord-værn mod enkeltkort med Matraws' per-card titelkonvention (fx `[CLC-009]`). Produkterne bevares i state, men må ikke udløse Restock-alerts.
