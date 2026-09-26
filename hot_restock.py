@@ -44,6 +44,7 @@ MAGASIN_TCG_URL_MARKERS = (
     "poke-box",
     "pokemon-box",
 )
+# Version changes intentionally force a silent retail baseline before alerts resume.
 RETAIL_DISCOVERY_VERSION = 4
 RETAIL_MIN_PRODUCTS = {
     "boozt": 2,

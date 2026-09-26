@@ -1,3 +1,4 @@
+import os
 import unittest
 from urllib.parse import urljoin
 
@@ -406,7 +407,16 @@ class RestockLaneOwnershipTests(unittest.TestCase):
         )
 
     def test_shared_restock_policy_allows_abbreviated_binder_collection(self):
-        shared = hot_v4.base.load_shared_namespace()
+        previous = os.environ.get("DISCORD_WEBHOOK_URL")
+        os.environ["DISCORD_WEBHOOK_URL"] = "https://example.invalid/webhook"
+        try:
+            shared = hot_v4.base.load_shared_namespace()
+        finally:
+            if previous is None:
+                os.environ.pop("DISCORD_WEBHOOK_URL", None)
+            else:
+                os.environ["DISCORD_WEBHOOK_URL"] = previous
+
         product = {
             "name": "Poke Binder Coll 30th",
             "game": "POKÉMON",
