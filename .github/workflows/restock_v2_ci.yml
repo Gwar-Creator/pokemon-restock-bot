@@ -108,6 +108,33 @@ jobs:
                   print("matching_lines", len(hits))
                   for line in hits[:120]:
                       print(line[:1200])
+
+                  if name.startswith("magasin"):
+                      strong = [
+                          line for line in lines
+                          if (
+                              ".html" in line.lower()
+                              and any(
+                                  marker in line.lower()
+                                  for marker in (
+                                      "poke", "pokemon", "pokémon", "booster",
+                                      "blister", "binder", "tin", "trainer",
+                                      "collection", "samlekort"
+                                  )
+                              )
+                          )
+                          or any(
+                              marker in line.lower()
+                              for marker in (
+                                  "btbh31", "brxz", "tilføj til kurv",
+                                  "skriv mig op", "på lager", "udsolgt",
+                                  "499,00", "499.00", "499 kr"
+                              )
+                          )
+                      ]
+                      print("strong_magasin_lines", len(strong))
+                      for line in strong[:240]:
+                          print("STRONG", line[:1600])
               except Exception as error:
                   print("ERROR", repr(error))
           PY
