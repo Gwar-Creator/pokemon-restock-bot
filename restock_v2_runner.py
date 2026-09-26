@@ -32,6 +32,8 @@ TIER_A_LABELS = {
     "br": "BR",
     "bilka": "BILKA",
     "foetex": "FØTEX",
+    "boozt": "BOOZT",
+    "magasin": "MAGASIN",
 }
 
 SPECIALTY_LABELS = {

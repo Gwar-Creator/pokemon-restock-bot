@@ -2,7 +2,7 @@
 """Final Restock-channel ownership wrapper.
 
 Tier A Pokemon RESTOCK events are owned by the dedicated fast/local lanes:
-- HOT owns online restocks for Coolshop, Proshop, BR, Bilka and Foetex.
+- HOT owns online restocks for Coolshop, Proshop, BR, Bilka, Foetex, Boozt and Magasin.
 - Local Stock owns target-store restocks for BR, Bilka and Foetex.
 
 Wave 4 product events are owned by the dedicated Tier B Wave 4 live lane:
