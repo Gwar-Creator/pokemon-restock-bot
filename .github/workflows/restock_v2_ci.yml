@@ -59,6 +59,59 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      - name: Probe Boozt and Magasin public Reader output
+        run: |
+          python - <<'PY'
+          import requests
+
+          targets = {
+              "boozt_brand": "https://r.jina.ai/https://www.boozt.com/dk/da/pokemon-trading-cards/born",
+              "boozt_trading_cards": "https://r.jina.ai/https://www.boozt.com/dk/da/born/legetoej/samlekort",
+              "magasin_category": "https://r.jina.ai/https://www.magasin.dk/boern/legetoej/samlekort-og-mapper/pokemon/",
+              "magasin_binder": "https://r.jina.ai/https://www.magasin.dk/poke-binder-coll-30th/BTBH31-0008.html",
+          }
+          needles = (
+              "pokemon",
+              "pokémon",
+              "poke ",
+              "boozt.com/dk/da/pokmon-trading-cards",
+              "magasin.dk/",
+              "booster",
+              "binder",
+              "tilføj til kurv",
+              "læg i kurv",
+              "giv mig besked",
+              "skriv mig op",
+              "499",
+          )
+
+          for name, url in targets.items():
+              print(f"\n===== {name} =====")
+              try:
+                  response = requests.get(
+                      url,
+                      headers={
+                          "Accept": "text/plain, text/markdown;q=0.9, */*;q=0.5",
+                          "User-Agent": "Pokemon-Retail-Probe/1.0",
+                          "x-no-cache": "true",
+                          "x-engine": "browser",
+                      },
+                      timeout=50,
+                  )
+                  print("status", response.status_code, "length", len(response.text or ""))
+                  response.raise_for_status()
+                  lines = (response.text or "").splitlines()
+                  hits = [
+                      line for line in lines
+                      if any(needle in line.lower() for needle in needles)
+                  ]
+                  print("matching_lines", len(hits))
+                  for line in hits[:120]:
+                      print(line[:1200])
+              except Exception as error:
+                  print("ERROR", repr(error))
+          PY
+
       - name: Compile changed scanner modules
         run: python -m py_compile alert_policy.py restock_v2_runner.py restock_lane_runner.py faraos_parser_v2.py tier_b_wave1_sources.py tier_b_wave1_shadow.py tier_b_wave2_sources.py tier_b_wave2_shadow.py tier_b_wave3_sources.py tier_b_wave3_shadow.py tier_b_wave4_shadow.py indeks_retail_shadow.py flinamania_product_probe.py hot_restock.py hot_restock_v4.py state_commit_guard.py
 
