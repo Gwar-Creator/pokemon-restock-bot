@@ -792,8 +792,8 @@
         "name": "Pokémon Trading Cards Poke ME04 Elite Trainer Box REL 22/5 - Pokémon Trading Cards - BLACK / black",
         "game": "POKÉMON",
         "price": 929.0,
-        "in_stock": true,
-        "availability_known": true,
+        "in_stock": false,
+        "availability_known": false,
         "url": "https://www.boozt.com/dk/da/pokmon-trading-cards/poke-me04-elite-trainer-box-rel-22-5_33175543/233145333"
       },
       "https://www.boozt.com/dk/da/pokmon-trading-cards/poke-box-premium-ex-mega-zygarde-1-5_33175542/233145332": {
@@ -1066,15 +1066,15 @@
       "next_allowed_at": 0.0,
       "generic_failures": 0,
       "last_error": null,
-      "last_failure_at": "2026-09-26T12:59:31.147826+00:00",
-      "last_success_at": "2026-09-26T13:04:32.818033+00:00"
+      "last_failure_at": "2026-09-26T14:03:31.251845+00:00",
+      "last_success_at": "2026-09-26T14:07:08.594221+00:00"
     },
     "proshop": {
       "backoff_level": 3,
-      "next_allowed_at": 1790432042.0765958,
+      "next_allowed_at": 1790431823.278523,
       "generic_failures": 4,
       "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
-      "last_failure_at": "2026-09-26T13:59:02.076563+00:00",
+      "last_failure_at": "2026-09-26T13:55:23.278478+00:00",
       "last_success_at": "2026-09-26T13:30:44.428435+00:00"
     },
     "br": {
@@ -1102,23 +1102,23 @@
       "last_success_at": "2026-09-21T18:45:00.335465+00:00"
     },
     "boozt": {
-      "backoff_level": 1,
-      "next_allowed_at": 1790431384.27437,
+      "backoff_level": 0,
+      "next_allowed_at": 0.0,
       "generic_failures": 1,
-      "last_error": "429 Client Error: Too Many Requests for url: https://www.boozt.com/dk/da/pokemon-trading-cards/born",
-      "last_failure_at": "2026-09-26T14:01:04.274352+00:00",
-      "last_success_at": "2026-09-26T14:00:14.672791+00:00"
+      "last_error": "BOOZT lagerstatus kun kendt for 2/5 produkter (minimum 3)",
+      "last_failure_at": "2026-09-26T14:07:26.325733+00:00",
+      "last_success_at": "2026-09-26T14:06:31.208062+00:00"
     },
     "magasin": {
       "backoff_level": 2,
-      "next_allowed_at": 1790431674.9210045,
+      "next_allowed_at": 1790431946.9954414,
       "generic_failures": 3,
       "last_error": "MAGASIN gav kun 0 relevante produkter (minimum 2)",
-      "last_failure_at": "2026-09-26T14:02:54.920983+00:00",
-      "last_success_at": "2026-09-26T13:53:53.172568+00:00"
+      "last_failure_at": "2026-09-26T14:07:26.995422+00:00",
+      "last_success_at": "2026-09-26T13:58:21.413141+00:00"
     }
   },
-  "updated_at": "2026-09-26T14:02:54.921156+00:00",
+  "updated_at": "2026-09-26T14:07:26.995650+00:00",
   "proshop_discovery_version": 4,
   "retail_discovery_versions": {
     "boozt": 2
