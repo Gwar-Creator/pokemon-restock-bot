@@ -59,6 +59,155 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      - name: Probe Boozt and Magasin public Reader output
+        run: |
+          python - <<'PY'
+          import re
+          import requests
+
+          targets = {
+              "boozt_brand": "https://r.jina.ai/https://www.boozt.com/dk/da/pokemon-trading-cards/born",
+              "boozt_trading_cards": "https://r.jina.ai/https://www.boozt.com/dk/da/born/legetoej/samlekort",
+              "magasin_category": "https://r.jina.ai/https://www.magasin.dk/boern/legetoej/samlekort-og-mapper/pokemon/",
+              "magasin_binder": "https://r.jina.ai/https://www.magasin.dk/poke-binder-coll-30th/BTBH31-0008.html",
+              "magasin_binder_direct": "https://www.magasin.dk/poke-binder-coll-30th/BTBH31-0008.html",
+              "magasin_booster_direct": "https://www.magasin.dk/poke-me05-booster/BRXZ18-0008.html",
+              "magasin_brand": "https://r.jina.ai/https://www.magasin.dk/maerker/pokemon/",
+              "magasin_search": "https://r.jina.ai/https://www.magasin.dk/soeg/?q=pokemon",
+              "magasin_sfcc_grid": "https://www.magasin.dk/on/demandware.store/Sites-DK-Site/da_DK/Search-UpdateGrid?q=pokemon&start=0&sz=48",
+              "magasin_sfcc_ajax": "https://www.magasin.dk/on/demandware.store/Sites-DK-Site/da_DK/Search-ShowAjax?q=pokemon",
+          }
+          needles = (
+              "pokemon",
+              "pokémon",
+              "poke ",
+              "boozt.com/dk/da/pokmon-trading-cards",
+              "magasin.dk/",
+              "booster",
+              "binder",
+              "tilføj til kurv",
+              "læg i kurv",
+              "giv mig besked",
+              "skriv mig op",
+              "499",
+          )
+
+          for name, url in targets.items():
+              print(f"\n===== {name} =====")
+              try:
+                  response = requests.get(
+                      url,
+                      headers={
+                          "Accept": "text/plain, text/markdown;q=0.9, */*;q=0.5",
+                          "User-Agent": "Pokemon-Retail-Probe/1.0",
+                          "x-no-cache": "true",
+                          "x-engine": "browser",
+                      },
+                      timeout=50,
+                  )
+                  print("status", response.status_code, "length", len(response.text or ""), "final_url", response.url)
+                  response.raise_for_status()
+                  lines = (response.text or "").splitlines()
+                  hits = [
+                      line for line in lines
+                      if any(needle in line.lower() for needle in needles)
+                  ]
+                  print("matching_lines", len(hits))
+                  for line in hits[:120]:
+                      print(line[:1200])
+
+                  if name.startswith("magasin"):
+                      strong = [
+                          line for line in lines
+                          if (
+                              ".html" in line.lower()
+                              and any(
+                                  marker in line.lower()
+                                  for marker in (
+                                      "poke", "pokemon", "pokémon", "booster",
+                                      "blister", "binder", "tin", "trainer",
+                                      "collection", "samlekort"
+                                  )
+                              )
+                          )
+                          or any(
+                              marker in line.lower()
+                              for marker in (
+                                  "btbh31", "brxz", "tilføj til kurv",
+                                  "skriv mig op", "på lager", "udsolgt",
+                                  "499,00", "499.00", "499 kr"
+                              )
+                          )
+                      ]
+                      print("strong_magasin_lines", len(strong))
+                      for line in strong[:240]:
+                          print("STRONG", line[:1600])
+              except Exception as error:
+                  print("ERROR", repr(error))
+
+          print("\n===== magasin_sitemap_index =====")
+          try:
+              import xml.etree.ElementTree as ET
+
+              response = requests.get(
+                  "https://www.magasin.dk/sitemap_index.xml",
+                  headers={"User-Agent": "Mozilla/5.0 Pokemon-Retail-Probe/1.0"},
+                  timeout=30,
+              )
+              print("status", response.status_code, "length", len(response.text or ""))
+              response.raise_for_status()
+              root = ET.fromstring(response.text)
+              locs = [
+                  node.text.strip()
+                  for node in root.iter()
+                  if node.tag.lower().endswith("loc") and node.text
+              ]
+              print("sitemap_locs", len(locs))
+              for loc in locs[:80]:
+                  print("SITEMAP", loc)
+
+              for loc in locs[:20]:
+                  if not any(marker in loc.lower() for marker in ("product", "produkt", "catalog", "sitemap")):
+                      continue
+                  try:
+                      child = requests.get(
+                          loc,
+                          headers={"User-Agent": "Mozilla/5.0 Pokemon-Retail-Probe/1.0"},
+                          timeout=30,
+                      )
+                      print("CHILD", child.status_code, len(child.text or ""), loc)
+                      if child.status_code != 200:
+                          continue
+                      low = (child.text or "").lower()
+                      for needle in ("btbh31", "brxz18", "poke-binder-coll-30th", "poke-me05-booster"):
+                          if needle in low:
+                              print("FOUND", needle, "IN", loc)
+
+                      product_urls = re.findall(
+                          r"<loc>(https://www\.magasin\.dk/[^<]+)</loc>",
+                          child.text or "",
+                          flags=re.IGNORECASE,
+                      )
+                      tcg_markers = (
+                          "booster", "blister", "binder-coll", "trainer-box",
+                          "elite-trainer", "mini-tin", "checklane", "battle-deck",
+                          "collection", "poke-box", "pokemon-box", "poke-ball",
+                      )
+                      tcg_urls = [
+                          url for url in product_urls
+                          if any(marker in url.lower() for marker in tcg_markers)
+                          and ("poke" in url.lower() or "pokemon" in url.lower())
+                      ]
+                      print("TCG_URLS", len(tcg_urls), "IN", loc)
+                      for url in tcg_urls[:80]:
+                          print("TCG", url)
+                  except Exception as error:
+                      print("CHILD_ERROR", loc, repr(error))
+          except Exception as error:
+              print("SITEMAP_ERROR", repr(error))
+
+          PY
+
       - name: Compile changed scanner modules
         run: python -m py_compile alert_policy.py restock_v2_runner.py restock_lane_runner.py faraos_parser_v2.py tier_b_wave1_sources.py tier_b_wave1_shadow.py tier_b_wave2_sources.py tier_b_wave2_shadow.py tier_b_wave3_sources.py tier_b_wave3_shadow.py tier_b_wave4_shadow.py indeks_retail_shadow.py flinamania_product_probe.py hot_restock.py hot_restock_v4.py state_commit_guard.py
 
