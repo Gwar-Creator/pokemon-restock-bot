@@ -6867,20 +6867,6 @@
   },
   "events": [
     {
-      "event": "CHANGE",
-      "fields": [
-        "is_exposed",
-        "stage"
-      ],
-      "name": "Pokémon TCG Pitch Black Elite Trainer Box",
-      "product_id": "200380918",
-      "sku": "11320995-EA",
-      "source": "br",
-      "stage_after": "DATED_PREP",
-      "stage_before": "EXPOSED_NO_STOCK",
-      "ts": 1790155463.0700846
-    },
-    {
       "event": "NEW",
       "fields": [],
       "name": "Pokémon 30th Exeggutor sticker",
@@ -21247,6 +21233,19 @@
       "stage_after": "INBOUND_UNDATED",
       "stage_before": null,
       "ts": 1790405967.3340595
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
+      "product_id": "3447589",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1790406879.8841736
     }
   ],
   "sources": {
@@ -36582,9 +36581,11 @@
         "stage": "LIVE_STOCK",
         "status": "PÅ LAGER",
         "surface_statuses": {
+          "pokemon-brand": "PÅ LAGER",
           "pokemon-kort": "PÅ LAGER"
         },
         "surfaces": [
+          "pokemon-brand",
           "pokemon-kort"
         ],
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Zygarde-ex-Premium-Collection/3447589"
@@ -36645,6 +36646,6 @@
       }
     }
   },
-  "updated_at": 1790406581.323223,
+  "updated_at": 1790406879.8854275,
   "version": 1
 }
