@@ -621,32 +621,14 @@ def _retail_offer_values(product):
     return price, in_stock
 
 
-def _fetch_broad_retail_products(shared, source_key, category_url, is_product_url):
-    headers = {
-        **shared.get("BROWSER_HEADERS", {}),
-        "Accept-Language": "da-DK,da;q=0.9,en;q=0.8",
-    }
-
-    response = None
-    curl_requests = shared.get("curl_requests")
-    if curl_requests is not None:
-        try:
-            response = curl_requests.get(
-                category_url,
-                headers=headers,
-                timeout=30,
-                impersonate="chrome",
-            )
-            response.raise_for_status()
-        except Exception as error:
-            print(f"HOT {SOURCE_LABELS[source_key]} curl warning: {error}")
-            response = None
-
-    if response is None:
-        response = requests.get(category_url, headers=headers, timeout=30)
-        response.raise_for_status()
-
-    soup = shared["BeautifulSoup"](response.text, "html.parser")
+def _parse_broad_retail_products(
+    shared,
+    source_key,
+    category_url,
+    html_text,
+    is_product_url,
+):
+    soup = shared["BeautifulSoup"](html_text, "html.parser")
     products = {}
 
     # Structured data is the safest first path when the retailer exposes it.
@@ -660,12 +642,12 @@ def _fetch_broad_retail_products(shared, source_key, category_url, is_product_ur
             continue
 
         price, in_stock = _retail_offer_values(raw_product)
-        products[product_url] = {
+        products[product_url.rstrip("/")] = {
             "name": name,
             "game": "POKÉMON",
             "price": price,
             "in_stock": bool(in_stock),
-            "url": product_url,
+            "url": product_url.rstrip("/"),
         }
 
     # DOM fallback/overlay: captures retailer-specific cart/notify stock markers
@@ -692,10 +674,34 @@ def _fetch_broad_retail_products(shared, source_key, category_url, is_product_ur
 
         if source_key == "boozt":
             explicit_in = any(marker in low for marker in ("læg i kurv", "laeg i kurv"))
-            explicit_out = any(marker in low for marker in ("giv mig besked", "udsolgt", "ikke på lager", "ikke pa lager"))
+            explicit_out = any(
+                marker in low
+                for marker in (
+                    "giv mig besked",
+                    "udsolgt",
+                    "ikke på lager",
+                    "ikke pa lager",
+                )
+            )
         else:
-            explicit_in = any(marker in low for marker in ("tilføj til kurv", "tilfoej til kurv", "læg i kurv", "laeg i kurv"))
-            explicit_out = any(marker in low for marker in ("skriv mig op", "udsolgt", "ikke på lager", "ikke pa lager"))
+            explicit_in = any(
+                marker in low
+                for marker in (
+                    "tilføj til kurv",
+                    "tilfoej til kurv",
+                    "læg i kurv",
+                    "laeg i kurv",
+                )
+            )
+            explicit_out = any(
+                marker in low
+                for marker in (
+                    "skriv mig op",
+                    "udsolgt",
+                    "ikke på lager",
+                    "ikke pa lager",
+                )
+            )
 
         old = products.get(product_url) or {}
         current_in_stock = old.get("in_stock")
@@ -704,15 +710,51 @@ def _fetch_broad_retail_products(shared, source_key, category_url, is_product_ur
         elif explicit_out:
             current_in_stock = False
 
+        parsed_price = _retail_price(text)
         products[product_url] = {
             "name": name,
             "game": "POKÉMON",
-            "price": _retail_price(text) if _retail_price(text) is not None else old.get("price"),
+            "price": parsed_price if parsed_price is not None else old.get("price"),
             "in_stock": bool(current_in_stock),
             "url": product_url,
         }
 
-    filtered = filter_hot_products(shared, products)
+    return filter_hot_products(shared, products)
+
+
+def _fetch_broad_retail_products(shared, source_key, category_url, is_product_url):
+    headers = {
+        **shared.get("BROWSER_HEADERS", {}),
+        "Accept-Language": "da-DK,da;q=0.9,en;q=0.8",
+    }
+
+    response = None
+    curl_requests = shared.get("curl_requests")
+    if curl_requests is not None:
+        try:
+            response = curl_requests.get(
+                category_url,
+                headers=headers,
+                timeout=30,
+                impersonate="chrome",
+            )
+            response.raise_for_status()
+        except Exception as error:
+            print(f"HOT {SOURCE_LABELS[source_key]} curl warning: {error}")
+            response = None
+
+    if response is None:
+        response = requests.get(category_url, headers=headers, timeout=30)
+        response.raise_for_status()
+
+    filtered = _parse_broad_retail_products(
+        shared,
+        source_key,
+        category_url,
+        response.text,
+        is_product_url,
+    )
+
     minimum = RETAIL_MIN_PRODUCTS[source_key]
     if len(filtered) < minimum:
         raise RuntimeError(
@@ -720,7 +762,6 @@ def _fetch_broad_retail_products(shared, source_key, category_url, is_product_ur
             f"(minimum {minimum})"
         )
     return filtered
-
 
 def _boozt_product_url(value):
     text = str(value or "").lower()
