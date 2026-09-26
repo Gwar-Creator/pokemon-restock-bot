@@ -86,35 +86,35 @@
         "price": 329.0,
         "stock": "PÅ LAGER",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
-        "fetch_via": "jina_reader"
+        "fetch_via": "jina_reader+direct_frontend_search"
       },
       "3417744": {
         "name": "Pokemon TCG Mega Charizard X ex Ultra Premium Collection",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
-        "fetch_via": "jina_reader"
+        "fetch_via": "jina_reader+direct_frontend_search"
       },
       "3478498": {
         "name": "Pokemon TCG First Partner Illustration Collection Box Series 2",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-First-Partner-Illustration-Collection-Box-Series-2/3478498",
-        "fetch_via": "jina_reader"
+        "fetch_via": "jina_reader+direct_frontend_search"
       },
       "3478496": {
         "name": "Pokemon TCG Mega Greninja ex Premium Collection",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
-        "fetch_via": "jina_reader"
+        "fetch_via": "jina_reader+direct_frontend_search"
       },
       "3447592": {
         "name": "Pokemon TCG Mega EvolutionChaos Rising Booster box with 36 boosters",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-EvolutionChaos-Rising-Booster-box-with-36-boosters/3447592",
-        "fetch_via": "jina_reader"
+        "fetch_via": "jina_reader+direct_frontend_search"
       }
     },
     "br": {
@@ -1115,12 +1115,12 @@
       "last_success_at": "2026-09-26T14:07:08.594221+00:00"
     },
     "proshop": {
-      "backoff_level": 3,
-      "next_allowed_at": 1790433386.5801384,
-      "generic_failures": 1,
-      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "backoff_level": 2,
+      "next_allowed_at": 1790433741.529855,
+      "generic_failures": 0,
+      "last_error": null,
       "last_failure_at": "2026-09-26T14:21:26.580101+00:00",
-      "last_success_at": "2026-09-26T14:12:25.327304+00:00"
+      "last_success_at": "2026-09-26T14:37:21.529840+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -1147,11 +1147,11 @@
       "last_success_at": "2026-09-21T18:45:00.335465+00:00"
     },
     "boozt": {
-      "backoff_level": 2,
-      "next_allowed_at": 1790433534.6252835,
-      "generic_failures": 2,
+      "backoff_level": 3,
+      "next_allowed_at": 1790434457.2675111,
+      "generic_failures": 3,
       "last_error": "BOOZT fejlede: Reader: BOOZT Reader gav 0 rå links / 0 relevante produkter | direct: 429 Client Error: Too Many Requests for url: https://www.boozt.com/dk/da/pokemon-trading-cards/born",
-      "last_failure_at": "2026-09-26T14:33:54.625261+00:00",
+      "last_failure_at": "2026-09-26T14:39:17.267489+00:00",
       "last_success_at": "2026-09-26T14:25:23.174881+00:00"
     },
     "magasin": {
@@ -1159,11 +1159,11 @@
       "next_allowed_at": 0.0,
       "generic_failures": 1,
       "last_error": "MAGASIN fejlede: Reader: MAGASIN Reader gav 33 rå links / 0 relevante produkter | direct: MAGASIN gav kun 0 relevante produkter (minimum 2)",
-      "last_failure_at": "2026-09-26T14:34:53.060819+00:00",
+      "last_failure_at": "2026-09-26T14:39:23.682396+00:00",
       "last_success_at": "2026-09-26T13:58:21.413141+00:00"
     }
   },
-  "updated_at": "2026-09-26T14:34:53.060852+00:00",
+  "updated_at": "2026-09-26T14:39:23.682431+00:00",
   "proshop_discovery_version": 4,
   "retail_discovery_versions": {
     "boozt": 3
