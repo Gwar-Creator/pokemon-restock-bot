@@ -5,6 +5,7 @@ import time
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 from pathlib import Path
+from urllib.parse import urljoin
 
 import requests
 
@@ -521,7 +522,7 @@ def _retail_nearest_card(anchor, product_url, is_product_url):
 
         links = set()
         for child in node.find_all("a", href=True):
-            href = child.get("href") or ""
+            href = urljoin(product_url, child.get("href") or "")
             if is_product_url(href):
                 links.add(href.split("#", 1)[0].split("?", 1)[0].rstrip("/"))
 
