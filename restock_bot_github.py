@@ -1507,6 +1507,7 @@ ACCESSORY_BLOCK_MARKERS = (
 # These are real sealed TCG products with boosters, not loose accessories.
 ACCESSORY_COLLECTION_EXCEPTIONS = (
     "binder collection",
+    "binder coll",
     "playmat collection",
     "play mat collection",
     "accessory pouch special collection",
@@ -1658,7 +1659,11 @@ def restock_alert_allowed(product, game_override=None):
             return False
         if " playmat " in padded_name and " collection " not in padded_name:
             return False
-        if " binder " in padded_name and " collection " not in padded_name:
+        if (
+            " binder " in padded_name
+            and " collection " not in padded_name
+            and " binder coll " not in padded_name
+        ):
             return False
 
     if not is_english_card_product(name):
