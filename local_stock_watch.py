@@ -493,7 +493,6 @@ def canonical_salling_product_key(product):
 
 def send_discovery_alert(products):
     """Send one clearly separated PRE-PUBLISH discovery alert per Salling SKU."""
-    # V46_UNIFIED_ABUNDANT_SET_POLICY
     products = [
         product for product in products
         if abundant_set_signal_allowed(
@@ -513,48 +512,57 @@ def send_discovery_alert(products):
     )
     representative = products[0]
     series = short_series_name(representative.get("series"))
-    product_line = (
-        f"**{series} · {representative['type']}**"
+    product_name = (
+        f"{series} · {representative['type']}"
         if series
-        else f"**{representative['name']} · {representative['type']}**"
+        else f"{representative['name']} · {representative['type']}"
     )
 
-    lines = [
-        "👀 **NY SKJULT VARE — ikke en lageralarm**",
-        product_line,
-    ]
+    availability_lines = []
     for product in products:
         store_count = max(0, safe_int(product.get("store_count"), 0))
-        lines.append(
-            f"• **{product['site']}** · {format_price(product.get('price'))} · "
-            f"{store_count} butikker med registreret lager"
+        availability_lines.append(
+            f"**{product['site']}** · {format_price(product.get('price'))} · "
+            f"{store_count} butikker"
         )
-    lines.append(f"🔎 SKU: `{representative['sku']}`")
-    lines.append(
-        "⏭️ Discovery sendes kun én gang. Næste signal kommer først ved "
-        "lokal 0 → positiv lagerstatus."
-    )
 
-    payload = {
-        "username": "MasterBot",
-        "allowed_mentions": {"parse": []},
-        "embeds": [
+    embed = {
+        "title": "NY SKJULT VARE · SALLING",
+        "description": f"**{product_name}**",
+        "color": 0x5865F2,
+        "fields": [
             {
-                "title": "👀 [POKÉMON] SALLING PRE-PUBLISH DISCOVERY",
-                "description": "\n".join(lines)[:4096],
-                "color": 0x5865F2,
-                "footer": {
-                    "text": "MasterBot · Salling Discovery · NY SKJULT VARE"
-                },
-            }
+                "name": "Fundet hos",
+                "value": "\n".join(availability_lines)[:1024],
+                "inline": False,
+            },
+            {
+                "name": "Status",
+                "value": (
+                    "Pre-publish · endnu ikke en lageralarm. "
+                    "Næste signal kommer ved lokal 0 → positiv lagerstatus."
+                ),
+                "inline": False,
+            },
         ],
+        "footer": {
+            "text": f"MasterBot · Salling Discovery · SKU {representative['sku']}"
+        },
     }
-    response = requests.post(WEBHOOK_URL, json=payload, timeout=20)
+
+    response = requests.post(
+        WEBHOOK_URL,
+        json={
+            "username": "MasterBot",
+            "allowed_mentions": {"parse": []},
+            "embeds": [embed],
+        },
+        timeout=20,
+    )
     response.raise_for_status()
 
 
 def send_local_alert(product, transitions):
-    # V46_UNIFIED_ABUNDANT_SET_POLICY
     if not abundant_set_signal_allowed(
         product.get("name"),
         product.get("series"),
@@ -565,54 +573,73 @@ def send_local_alert(product, transitions):
 
     visibility = product.get("visibility") or "UNKNOWN"
     pre_publish = visibility == "PRE-PUBLISH"
-    title = (
-        f"🔥 [POKÉMON] {product['site']} LOCAL STOCK [PRE-PUBLISH]"
-        if pre_publish
-        else f"🏪 [POKÉMON] {product['site']} LOCAL STOCK"
-    )
     color = 0xF1C40F if pre_publish else 0x57F287
     series = short_series_name(product.get("series"))
-    product_line = (
-        f"**{series} · {product['type']}**"
+    product_name = (
+        f"{series} · {product['type']}"
         if series
-        else f"**{product['name']} · {product['type']}**"
+        else f"{product['name']} · {product['type']}"
     )
 
-    lines = [product_line]
-    for transition in transitions:
-        lines.append(
-            f"🏪 {transition['name']}: {transition['old']} → "
-            f"**{transition['new']} stk.**"
-        )
-    lines.append(f"💰 {format_price(product.get('price'))}")
+    transition_lines = [
+        f"**{transition['name']}** · {transition['old']} → {transition['new']} stk."
+        for transition in transitions
+    ]
+
+    url = str(product.get("url") or "").strip()
+    description = f"**{product_name}**"
+    if url and not pre_publish:
+        description += f"\n[Se produkt →]({url})"
+
+    fields = [
+        {
+            "name": "Butikslager",
+            "value": "\n".join(transition_lines)[:1024],
+            "inline": False,
+        },
+        {
+            "name": "Pris",
+            "value": format_price(product.get("price"))[:1024],
+            "inline": True,
+        },
+    ]
 
     if pre_publish:
-        lines.append(
-            "🟡 Ikke eksponeret på webshoppen endnu — "
-            "fysisk lager bør bekræftes i butikken."
-        )
-        lines.append(f"🔎 SKU: `{product['sku']}`")
+        fields.append({
+            "name": "Status",
+            "value": "Pre-publish · fysisk lager bør bekræftes i butikken.",
+            "inline": True,
+        })
     elif visibility == "UNKNOWN":
-        lines.append("⚪ Webshop-eksponering kunne ikke klassificeres sikkert.")
+        fields.append({
+            "name": "Status",
+            "value": "Webshop-status kunne ikke klassificeres sikkert.",
+            "inline": True,
+        })
 
-    if product.get("url") and not pre_publish:
-        lines.append(f"🔗 {product['url']}")
-
-    payload = {
-        "username": "MasterBot",
-        "allowed_mentions": {"parse": []},
-        "embeds": [
-            {
-                "title": title[:256],
-                "description": "\n".join(lines)[:4096],
-                "color": color,
-                "footer": {
-                    "text": "MasterBot · Local Stock Watch · Kolding/Esbjerg"
-                },
-            }
-        ],
+    embed = {
+        "title": (
+            f"LOKALT LAGER · {product['site']} · PRE-PUBLISH"
+            if pre_publish
+            else f"LOKALT LAGER · {product['site']}"
+        )[:256],
+        "description": description[:4096],
+        "color": color,
+        "fields": fields,
+        "footer": {"text": "MasterBot · Kolding / Esbjerg"},
     }
-    response = requests.post(WEBHOOK_URL, json=payload, timeout=20)
+    if url and not pre_publish:
+        embed["url"] = url
+
+    response = requests.post(
+        WEBHOOK_URL,
+        json={
+            "username": "MasterBot",
+            "allowed_mentions": {"parse": []},
+            "embeds": [embed],
+        },
+        timeout=20,
+    )
     response.raise_for_status()
 
 
