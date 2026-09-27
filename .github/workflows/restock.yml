@@ -82,7 +82,7 @@ jobs:
           DISCORD_RETENTION_HOURS: "24"
         run: python discord_cleanup.py
 
-      - name: Run Restock V2 + Local Stock + Tier B waves safely
+      - name: Run Restock V2 + Local Stock
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           PRICE_WATCH_WEBHOOK_URL: ${{ secrets.PRICE_WATCH_WEBHOOK_URL }}
@@ -94,70 +94,23 @@ jobs:
           RESTOCK_PID=$!
           python local_stock_watch.py &
           LOCAL_STOCK_PID=$!
-          python tier_b_wave1_shadow.py &
-          WAVE1_PID=$!
-          python tier_b_wave2_shadow.py &
-          WAVE2_PID=$!
-          python indeks_retail_shadow.py &
-          INDEKS_PID=$!
-
-          # Wave 3 is qualified/live. Stagger its start so it does not join
-          # the initial request burst, but let it overlap the slower legacy tail.
-          (
-            sleep 75
-            python tier_b_wave3_shadow.py
-          ) &
-          WAVE3_PID=$!
 
           wait "$RESTOCK_PID"
           RESTOCK_STATUS=$?
-
-          # Wave 4 is live but deliberately reuses the fresh main-scanner state
-          # after main finishes. Main owns the retailer fetch; Wave 4 owns its
-          # NEW/PREORDER/RESTOCK Discord transitions, so there is no duplicate traffic.
-          python tier_b_wave4_shadow.py
-          WAVE4_STATUS=$?
-
           wait "$LOCAL_STOCK_PID"
           LOCAL_STOCK_STATUS=$?
-          wait "$WAVE1_PID"
-          WAVE1_STATUS=$?
-          wait "$WAVE2_PID"
-          WAVE2_STATUS=$?
-          wait "$WAVE3_PID"
-          WAVE3_STATUS=$?
-          wait "$INDEKS_PID"
-          INDEKS_STATUS=$?
           set -e
 
           if [ "$LOCAL_STOCK_STATUS" -ne 0 ]; then
             echo "::warning::Local Stock Watch exited with status $LOCAL_STOCK_STATUS; main restock state is still saved"
           fi
 
-          if [ "$WAVE1_STATUS" -ne 0 ]; then
-            echo "::warning::Tier B Wave 1 exited with status $WAVE1_STATUS; primary production alerts are unaffected"
-          fi
-
-          if [ "$WAVE2_STATUS" -ne 0 ]; then
-            echo "::warning::Tier B Wave 2 live runner exited with status $WAVE2_STATUS; primary production alerts are unaffected"
-          fi
-
-          if [ "$WAVE3_STATUS" -ne 0 ]; then
-            echo "::warning::Tier B Wave 3 live runner exited with status $WAVE3_STATUS; primary production alerts are unaffected"
-          fi
-
-          if [ "$WAVE4_STATUS" -ne 0 ]; then
-            echo "::warning::Tier B Wave 4 live runner exited with status $WAVE4_STATUS; primary production alerts are unaffected"
-          fi
-
-          if [ "$INDEKS_STATUS" -ne 0 ]; then
-            echo "::warning::Indeks Retail shadow scanner exited with status $INDEKS_STATUS; primary production alerts are unaffected"
-          fi
-
           if [ "$RESTOCK_STATUS" -ne 0 ]; then
             echo "::error::Main restock scan exited with status $RESTOCK_STATUS"
             exit "$RESTOCK_STATUS"
           fi
+
+          echo "Tier B/Wave scanners are paused in production; their files and states remain available for later price-gated use."
 
       - name: Audit scanner health (Actions only)
         continue-on-error: true
