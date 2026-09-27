@@ -6871,19 +6871,6 @@
       "fields": [
         "f_stock_availability"
       ],
-      "name": "Pokemon Sylveon EX tin samlekort",
-      "product_id": "200392808",
-      "sku": "11381823-EA",
-      "source": "bilka",
-      "stage_after": "EXPOSED_NO_STOCK",
-      "stage_before": "EXPOSED_NO_STOCK",
-      "ts": 1790225365.5768747
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "f_stock_availability"
-      ],
       "name": "Pokemon Greninja EX tin samlekort",
       "product_id": "200392809",
       "sku": "11381826-EA",
@@ -21208,6 +21195,19 @@
       "stage_after": "INBOUND_UNDATED",
       "stage_before": null,
       "ts": 1790469575.5097737
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
+      "product_id": "3447589",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1790469870.9569724
     }
   ],
   "sources": {
@@ -36541,11 +36541,9 @@
         "stage": "LIVE_STOCK",
         "status": "PÅ LAGER",
         "surface_statuses": {
-          "pokemon-brand": "PÅ LAGER",
           "pokemon-kort": "PÅ LAGER"
         },
         "surfaces": [
-          "pokemon-brand",
           "pokemon-kort"
         ],
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Zygarde-ex-Premium-Collection/3447589"
@@ -36606,6 +36604,6 @@
       }
     }
   },
-  "updated_at": 1790469575.510687,
+  "updated_at": 1790469870.95796,
   "version": 1
 }
