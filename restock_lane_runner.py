@@ -49,9 +49,17 @@ def restock_lane_channel_alert_allowed(message, legacy_policy=None):
         ):
             return False
 
-        # Wave 4 has its own live transition/baseline handling. Main still scans
-        # these sources, but all product-event alert ownership is suppressed here
-        # to guarantee one Discord owner per source.
+        # The main scanner is now data/Price-Watch first. Specialist and backup
+        # retail product events stay out of the Restock channel; only Tier A
+        # discovery/Lorcana events can pass through this legacy lane.
+        if (
+            event in {"NEW", "PREORDER", "RESTOCK"}
+            and not base._is_tier_a_headline(headline)
+        ):
+            return False
+
+        # Wave 4 remains explicitly owned outside the main scanner if those
+        # jobs are re-enabled later.
         if event in {"NEW", "PREORDER", "RESTOCK"} and _wave4_headline(headline):
             return False
 

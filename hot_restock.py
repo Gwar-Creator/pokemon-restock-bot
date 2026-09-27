@@ -77,6 +77,16 @@ SOURCE_LABELS = {
     "magasin": "MAGASIN",
 }
 
+# Only these five sources are allowed to interrupt the Restock channel.
+# Boozt/Magasin can still be scanned as data sources without creating noise.
+DISCORD_ALERT_SOURCES = {
+    "coolshop",
+    "proshop",
+    "br",
+    "bilka",
+    "foetex",
+}
+
 if tuple(SOURCE_LABELS) != tuple(TIER_A_SOURCES):
     raise RuntimeError("HOT source list er ikke synkron med TIER_A_SOURCES")
 
@@ -278,24 +288,64 @@ def format_price(value):
 
 def send_hot_alert(source_key, product, event):
     label = SOURCE_LABELS[source_key]
-    message = (
-        f"🚨 **HOT {event} · {label}**\n"
-        f"**{product.get('name') or 'Ukendt produkt'}**\n"
-        f"💰 {format_price(product.get('price'))}\n"
-        f"📦 {availability_text(source_key, product)}\n"
-        f"🔗 {product.get('url') or ''}"
-    )
+
+    if source_key not in DISCORD_ALERT_SOURCES:
+        print(
+            f"HOT {label}: produkt-event registreret som data-only; "
+            "Discord-alert undertrykt"
+        )
+        return False
+
+    event_key = str(event or "").strip().upper()
+    event_label = "RESTOCK" if event_key == "RESTOCK" else "NYT PRODUKT"
+    color = 0x57F287 if event_key == "RESTOCK" else 0x5865F2
+
+    name = str(product.get("name") or "Ukendt produkt").strip()
+    url = str(product.get("url") or "").strip()
+    description = f"**{name}**"
+    if url:
+        description += f"\n[Se produkt →]({url})"
+
+    embed = {
+        "title": f"{event_label} · {label}"[:256],
+        "description": description[:4096],
+        "color": color,
+        "fields": [
+            {
+                "name": "Pris",
+                "value": format_price(product.get("price"))[:1024],
+                "inline": True,
+            },
+            {
+                "name": "Lager",
+                "value": availability_text(source_key, product)[:1024],
+                "inline": True,
+            },
+        ],
+        "footer": {"text": "MasterBot · Pokémon Restock"},
+    }
+    if url:
+        embed["url"] = url
 
     if HOT_DRY_RUN:
         print("HOT DRY RUN:")
-        print(message)
-        return
+        print(json.dumps(embed, ensure_ascii=False, indent=2))
+        return True
 
     if not WEBHOOK_URL:
         raise RuntimeError("DISCORD_WEBHOOK_URL mangler til HOT scanner")
 
-    response = requests.post(WEBHOOK_URL, json={"content": message}, timeout=15)
+    response = requests.post(
+        WEBHOOK_URL,
+        json={
+            "username": "MasterBot",
+            "allowed_mentions": {"parse": []},
+            "embeds": [embed],
+        },
+        timeout=15,
+    )
     response.raise_for_status()
+    return True
 
 
 def filter_hot_products(shared, products):
