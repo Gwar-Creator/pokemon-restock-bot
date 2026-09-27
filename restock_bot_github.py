@@ -72,6 +72,7 @@ KELZ0R_STABILITY_V42 = True
 RESTOCK_REPLAY_GUARD_V44 = True
 PRICE_WATCH_FOCUS_V58 = True
 PRICE_HISTORY_BACKEND_V59 = True
+DISCORD_ALERT_CLEANUP_V60 = True
 RESTOCK_RECOVERY_GAP_SECONDS = 30 * 60
 RESTOCK_DUPLICATE_COOLDOWN_SECONDS = 6 * 60 * 60
 RESTOCK_NEW_PRODUCT_COOLDOWN_SECONDS = 24 * 60 * 60
@@ -863,11 +864,10 @@ def _discord_embed_color(message, kind="restock"):
     if "FORUDBESTILLING" in upper or "PREORDER" in upper:
         return 0xFEE75C
 
-    if (
-        "BEDRE PRIS" in upper
-        or "PRISFALD" in upper
-        or "RESTOCK" in upper
-    ):
+    if "RESTOCK" in upper:
+        return 0x57F287
+
+    if "BEDRE PRIS" in upper or "PRISFALD" in upper:
         return 0x57F287
 
     if "BEDSTE PRIS ÆNDRET" in upper:
@@ -879,40 +879,189 @@ def _discord_embed_color(message, kind="restock"):
     return 0x5865F2 if kind == "restock" else 0x57F287
 
 
-def _discord_embed_payload(message, kind="restock"):
-    lines = (message or "").splitlines()
+def _discord_clean_line(value):
+    return re.sub(r"\s+", " ", str(value or "").replace("**", "")).strip()
 
-    if lines:
-        title = lines[0].replace("**", "").strip()
-        description = "\n".join(lines[1:]).strip()
+
+def _discord_message_parts(message):
+    raw_lines = [
+        line.strip()
+        for line in str(message or "").splitlines()
+        if line.strip()
+    ]
+
+    headline = _discord_clean_line(raw_lines[0]) if raw_lines else "MasterBot"
+    product = _discord_clean_line(raw_lines[1]) if len(raw_lines) > 1 else ""
+
+    game_match = re.search(r"\[([^\]]+)\]", headline)
+    game = game_match.group(1).strip() if game_match else ""
+
+    upper = headline.upper()
+    if "RESTOCK" in upper:
+        event = "RESTOCK"
+    elif "FORUDBESTILLING" in upper or "PREORDER" in upper:
+        event = "FORUDBESTILLING"
+    elif "PRISFALD" in upper or "BEDRE PRIS" in upper:
+        event = "PRISFALD"
+    elif "NYT" in upper or "NY " in upper:
+        event = "NYT PRODUKT"
     else:
-        title = "MasterBot"
-        description = ""
+        event = ""
 
-    if not title:
-        title = "MasterBot"
+    source = ""
+    if " HOS " in upper:
+        source = headline[upper.rfind(" HOS ") + 5:].strip()
+    elif event:
+        source_text = re.sub(r"\[[^\]]+\]", "", headline)
+        source_text = re.sub(r"^[^\wÆØÅæøå]+", "", source_text).strip()
+        source_text = re.sub(
+            r"\b(?:RESTOCK|PRISFALD|NYT PRODUKT|NYT FUNDET|NYT|FORUDBESTILLING|PREORDER)\b.*$",
+            "",
+            source_text,
+            flags=re.IGNORECASE,
+        ).strip(" ·-")
+        source = source_text
 
-    # Discord limits: title 256, description 4096.
-    title = title[:256]
-    description = (description or " ")[:4096]
+    url_match = re.search(r"https?://\S+", str(message or ""))
+    url = url_match.group(0).rstrip(").,>") if url_match else ""
 
-    footer = (
-        "MasterBot · Price Watch"
-        if kind == "price"
-        else "MasterBot · Restock Watch"
+    body_lines = []
+    for line in raw_lines[2:]:
+        clean = _discord_clean_line(line)
+        if not clean:
+            continue
+        if url and url in clean:
+            continue
+        clean = re.sub(r"^[📦💰📅🌐🏪🇩🇰👤⚡✨🚨🟢🔴🆕🔥]\s*", "", clean).strip()
+        if clean:
+            body_lines.append(clean)
+
+    return {
+        "headline": headline,
+        "product": product,
+        "game": game,
+        "event": event,
+        "source": source,
+        "url": url,
+        "body_lines": body_lines,
+    }
+
+
+def _discord_product_embed(message, kind="restock"):
+    parts = _discord_message_parts(message)
+
+    # Price Watch summaries are multi-product reports. Keep those compact and
+    # readable rather than forcing them through the single-product layout.
+    if kind == "price" and (
+        "DAGENS BEDSTE PRISER" in parts["headline"].upper()
+        or not parts["product"]
+    ):
+        lines = str(message or "").splitlines()
+        title = _discord_clean_line(lines[0]) if lines else "Price Watch"
+        description = "\n".join(lines[1:]).strip() or " "
+        return {
+            "title": title[:256],
+            "description": description[:4096],
+            "color": _discord_embed_color(message, kind),
+            "footer": {"text": "MasterBot · Price Watch"},
+        }
+
+    title_bits = [value for value in (parts["event"], parts["source"]) if value]
+    title = " · ".join(title_bits) or parts["headline"] or "MasterBot"
+
+    price_lines = []
+    stock_lines = []
+    status_lines = []
+    other_lines = []
+
+    for line in parts["body_lines"]:
+        lower = line.lower()
+
+        if "kr" in lower or "pris" in lower:
+            price_lines.append(line)
+        elif (
+            "lager" in lower
+            or "udsolgt" in lower
+            or "online" in lower
+            or "butik" in lower
+            or "kolding" in lower
+            or "esbjerg" in lower
+        ):
+            stock_lines.append(line)
+        elif "forudbestilling" in lower or "preorder" in lower:
+            status_lines.append(line)
+        else:
+            other_lines.append(line)
+
+    description_lines = []
+    if parts["product"]:
+        description_lines.append(f"**{parts['product']}**")
+
+    meta = " · ".join(
+        value for value in (parts["game"], parts["source"]) if value
     )
+    if meta:
+        description_lines.append(meta)
 
+    if parts["url"]:
+        description_lines.append(f"[Se produkt →]({parts['url']})")
+
+    embed = {
+        "title": title[:256],
+        "description": ("\n".join(description_lines) or " ")[:4096],
+        "color": _discord_embed_color(message, kind),
+        "fields": [],
+        "footer": {
+            "text": (
+                "MasterBot · Price Watch"
+                if kind == "price"
+                else "MasterBot · Restock"
+            )
+        },
+    }
+
+    if price_lines:
+        embed["fields"].append({
+            "name": "Pris",
+            "value": "\n".join(price_lines)[:1024],
+            "inline": True,
+        })
+
+    if stock_lines:
+        embed["fields"].append({
+            "name": "Lager",
+            "value": "\n".join(stock_lines)[:1024],
+            "inline": True,
+        })
+
+    if status_lines:
+        embed["fields"].append({
+            "name": "Status",
+            "value": "\n".join(status_lines)[:1024],
+            "inline": True,
+        })
+
+    if other_lines:
+        embed["fields"].append({
+            "name": "Detaljer",
+            "value": "\n".join(other_lines)[:1024],
+            "inline": False,
+        })
+
+    if not embed["fields"]:
+        embed.pop("fields")
+
+    if parts["url"]:
+        embed["url"] = parts["url"]
+
+    return embed
+
+
+def _discord_embed_payload(message, kind="restock"):
     return {
         "username": "MasterBot",
         "allowed_mentions": {"parse": []},
-        "embeds": [
-            {
-                "title": title,
-                "description": description,
-                "color": _discord_embed_color(message, kind),
-                "footer": {"text": footer},
-            }
-        ],
+        "embeds": [_discord_product_embed(message, kind)],
     }
 
 
@@ -921,14 +1070,16 @@ def _post_discord(webhook_url, message, kind):
         webhook_url,
         json=_discord_embed_payload(message, kind),
         headers={
-            "User-Agent": "Pokemon-Lorcana-MasterBot/1.3"
+            "User-Agent": "Pokemon-Lorcana-MasterBot/1.6"
         },
         timeout=20,
     )
-
     response.raise_for_status()
 
 
+# Ordinary restocks are only worth interrupting Discord for from the five
+# high-signal retail sources. Other sources remain active for matching,
+# Price Watch, new products and preorders.
 RESTOCK_DISCORD_ALLOWED_SOURCES = (
     "COOLSHOP",
     "PROSHOP",
@@ -939,46 +1090,11 @@ RESTOCK_DISCORD_ALLOWED_SOURCES = (
 
 
 def restock_channel_alert_allowed(message):
-    """Mute ordinary restocks outside the selected retail sources."""
-    lines = [
-        line.replace("**", "").strip()
-        for line in str(message or "").splitlines()
-        if line.strip()
-    ]
-    headline = lines[0].upper() if lines else ""
+    """Mute ordinary restocks outside the selected high-signal sources."""
+    parts = _discord_message_parts(message)
+    headline = parts["headline"].upper()
 
-    # Actual product-restock headlines use [GAME] ... RESTOCK.
-    # New products, preorders and operational messages stay unchanged.
-    if not re.search(r"\[[^\]]+\].*\bRESTOCK\b", headline):
-        return True
-
-    return any(
-        re.search(rf"\b{re.escape(source)}\b", headline)
-        for source in RESTOCK_DISCORD_ALLOWED_SOURCES
-    )
-
-
-RESTOCK_DISCORD_ALLOWED_SOURCES = (
-    "COOLSHOP",
-    "PROSHOP",
-    "BR",
-    "BILKA",
-    "FØTEX",
-)
-
-
-def restock_channel_alert_allowed(message):
-    """Mute ordinary restocks outside the selected retail sources."""
-    lines = [
-        line.replace("**", "").strip()
-        for line in str(message or "").splitlines()
-        if line.strip()
-    ]
-    headline = lines[0].upper() if lines else ""
-
-    # Actual product-restock headlines use [GAME] ... RESTOCK.
-    # New products, preorders and operational messages stay unchanged.
-    if not re.search(r"\[[^\]]+\].*\bRESTOCK\b", headline):
+    if "RESTOCK" not in headline:
         return True
 
     return any(
@@ -989,14 +1105,7 @@ def restock_channel_alert_allowed(message):
 
 def send_discord(message):
     if not restock_channel_alert_allowed(message):
-        headline = next(
-            (
-                line.replace("**", "").strip()
-                for line in str(message or "").splitlines()
-                if line.strip()
-            ),
-            "ukendt restock",
-        )
+        headline = _discord_message_parts(message)["headline"] or "ukendt restock"
         print(
             "RESTOCK CHANNEL: almindelig restock muted: "
             f"{headline}"
@@ -1021,6 +1130,7 @@ def send_discord(message):
     if product_fingerprint:
         RESTOCK_SEEN_PRODUCTS.add(product_fingerprint)
     return True
+
 
 def send_price_watch(message):
     if not PRICE_WATCH_WEBHOOK_URL:
