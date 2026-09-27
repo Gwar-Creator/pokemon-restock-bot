@@ -6869,20 +6869,6 @@
     {
       "event": "CHANGE",
       "fields": [
-        "stage",
-        "stock_count_online"
-      ],
-      "name": "Pokémon Sylveon ex Box 30th",
-      "product_id": "200392806",
-      "sku": "11381817-EA",
-      "source": "br",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "EXPOSED_NO_STOCK",
-      "ts": 1790225063.4778645
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
         "surface_statuses"
       ],
       "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
@@ -21221,6 +21207,19 @@
       "stage_after": "INBOUND_UNDATED",
       "stage_before": null,
       "ts": 1790467495.9339912
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
+      "product_id": "3447589",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1790468070.9735804
     }
   ],
   "sources": {
@@ -36554,9 +36553,11 @@
         "stage": "LIVE_STOCK",
         "status": "PÅ LAGER",
         "surface_statuses": {
+          "pokemon-brand": "PÅ LAGER",
           "pokemon-kort": "PÅ LAGER"
         },
         "surfaces": [
+          "pokemon-brand",
           "pokemon-kort"
         ],
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Zygarde-ex-Premium-Collection/3447589"
@@ -36617,6 +36618,6 @@
       }
     }
   },
-  "updated_at": 1790467778.3174508,
+  "updated_at": 1790468070.9750159,
   "version": 1
 }
