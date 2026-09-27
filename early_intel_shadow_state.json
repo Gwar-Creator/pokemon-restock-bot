@@ -6867,19 +6867,6 @@
   },
   "events": [
     {
-      "event": "CHANGE",
-      "fields": [
-        "surface_statuses"
-      ],
-      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
-      "product_id": "3447589",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1790243073.2531652
-    },
-    {
       "event": "REMOVED",
       "fields": [],
       "name": "Pokemon TCG Mega Charizard X ex Ultra Premium Collection",
@@ -21042,7 +21029,20 @@
       "source": "proshop",
       "stage_after": "LIVE_STOCK",
       "stage_before": "LIVE_STOCK",
-      "ts": 1790490537.838737
+      "ts": 1790490274.049412
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
+      "product_id": "3447589",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1790490811.9368975
     },
     {
       "event": "REMOVED",
@@ -21053,7 +21053,7 @@
       "source": "proshop",
       "stage_after": "INBOUND_UNDATED",
       "stage_before": null,
-      "ts": 1790490537.8387442
+      "ts": 1790490811.9369085
     },
     {
       "event": "REMOVED",
@@ -21064,7 +21064,7 @@
       "source": "proshop",
       "stage_after": "INBOUND_UNDATED",
       "stage_before": null,
-      "ts": 1790490537.8387468
+      "ts": 1790490811.936913
     },
     {
       "event": "REMOVED",
@@ -21075,7 +21075,7 @@
       "source": "proshop",
       "stage_after": "INBOUND_UNDATED",
       "stage_before": null,
-      "ts": 1790490537.8387485
+      "ts": 1790490811.9369159
     },
     {
       "event": "REMOVED",
@@ -21086,13 +21086,13 @@
       "source": "proshop",
       "stage_after": "INBOUND_UNDATED",
       "stage_before": null,
-      "ts": 1790490537.8387494
+      "ts": 1790490811.9369175
     }
   ],
   "sources": {
     "bilka": {
       "100559056": {
-        "epoch_updated_at": 1790489858,
+        "epoch_updated_at": 1790490753,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -36411,6 +36411,6 @@
       }
     }
   },
-  "updated_at": 1790490537.8396578,
+  "updated_at": 1790490811.9381087,
   "version": 1
 }
