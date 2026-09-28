@@ -62,38 +62,38 @@
     "proshop": {
       "3421827": {
         "name": "Pokemon TCG 2024 World Championships Deck",
-        "price": null,
+        "price": 329.0,
         "stock": "PÅ LAGER",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
-        "fetch_via": "direct_frontend_search"
+        "fetch_via": "jina_reader+direct_frontend_search"
       },
       "3417744": {
         "name": "Pokemon TCG Mega Charizard X ex Ultra Premium Collection",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
-        "fetch_via": "direct_frontend_search"
+        "fetch_via": "jina_reader+direct_frontend_search"
       },
       "3478498": {
         "name": "Pokemon TCG First Partner Illustration Collection Box Series 2",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-First-Partner-Illustration-Collection-Box-Series-2/3478498",
-        "fetch_via": "direct_frontend_search"
-      },
-      "3478496": {
-        "name": "Pokemon TCG Mega Greninja ex Premium Collection",
-        "price": null,
-        "stock": "BESTILLINGSVARE",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
-        "fetch_via": "direct_frontend_search"
+        "fetch_via": "jina_reader+direct_frontend_search"
       },
       "3447592": {
         "name": "Pokemon TCG Mega EvolutionChaos Rising Booster box with 36 boosters",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-EvolutionChaos-Rising-Booster-box-with-36-boosters/3447592",
-        "fetch_via": "direct_frontend_search"
+        "fetch_via": "jina_reader+direct_frontend_search"
+      },
+      "3478496": {
+        "name": "Pokemon TCG Mega Greninja ex Premium Collection",
+        "price": null,
+        "stock": "BESTILLINGSVARE",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
+        "fetch_via": "jina_reader+direct_frontend_search"
       }
     },
     "br": {
@@ -786,12 +786,12 @@
       "last_success_at": "2026-09-28T12:39:15.725095+00:00"
     },
     "proshop": {
-      "backoff_level": 3,
-      "next_allowed_at": 1790604855.6188583,
-      "generic_failures": 3,
-      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "backoff_level": 2,
+      "next_allowed_at": 1790605161.0600917,
+      "generic_failures": 0,
+      "last_error": null,
       "last_failure_at": "2026-09-28T13:59:15.618817+00:00",
-      "last_success_at": "2026-09-28T13:29:17.714320+00:00"
+      "last_success_at": "2026-09-28T14:14:21.060075+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -827,14 +827,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1790604597.3744168,
+      "next_allowed_at": 1790604901.9864645,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-09-26T15:39:28.835094+00:00",
-      "last_success_at": "2026-09-28T14:05:57.374395+00:00"
+      "last_success_at": "2026-09-28T14:11:01.986443+00:00"
     }
   },
-  "updated_at": "2026-09-28T14:09:32.373313+00:00",
+  "updated_at": "2026-09-28T14:14:39.857257+00:00",
   "proshop_discovery_version": 4,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -859,11 +859,11 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-09-28T14:05:56.801156+00:00"
+          "last_checked": "2026-09-28T14:11:01.163228+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1790604356.1625414,
+      "last_discovery_epoch": 1790604660.375374,
       "last_full_discovery_epoch": 1790590261.6603925,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
