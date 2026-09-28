@@ -779,11 +779,11 @@
       "last_success_at": "2026-09-28T12:39:15.725095+00:00"
     },
     "proshop": {
-      "backoff_level": 1,
-      "next_allowed_at": 1790633967.8866603,
-      "generic_failures": 1,
+      "backoff_level": 2,
+      "next_allowed_at": 1790634335.572304,
+      "generic_failures": 2,
       "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
-      "last_failure_at": "2026-09-28T22:17:27.886628+00:00",
+      "last_failure_at": "2026-09-28T22:20:35.572266+00:00",
       "last_success_at": "2026-09-28T22:16:38.322762+00:00"
     },
     "br": {
@@ -820,14 +820,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1790634001.5958972,
+      "next_allowed_at": 1790634304.2017012,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-09-26T15:39:28.835094+00:00",
-      "last_success_at": "2026-09-28T22:16:01.595875+00:00"
+      "last_success_at": "2026-09-28T22:21:04.201678+00:00"
     }
   },
-  "updated_at": "2026-09-28T22:19:35.050606+00:00",
+  "updated_at": "2026-09-28T22:24:33.670789+00:00",
   "proshop_discovery_version": 4,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -840,24 +840,24 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-09-28T16:16:03.098198+00:00"
+          "last_checked": "2026-09-28T22:21:00.624875+00:00"
         },
         "https://www.magasin.dk/sitemap_1-product.xml": {
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-09-28T16:16:04.010751+00:00"
+          "last_checked": "2026-09-28T22:21:01.132466+00:00"
         },
         "https://www.magasin.dk/sitemap_2-product.xml": {
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-09-28T22:16:00.575717+00:00"
+          "last_checked": "2026-09-28T22:21:01.495501+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1790633759.506402,
-      "last_full_discovery_epoch": 1790612161.5828004,
+      "last_discovery_epoch": 1790634059.0513017,
+      "last_full_discovery_epoch": 1790634059.0513017,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
         "https://www.magasin.dk/sitemap_1-product.xml",
