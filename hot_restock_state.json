@@ -62,33 +62,38 @@
     "proshop": {
       "3421827": {
         "name": "Pokemon TCG 2024 World Championships Deck",
-        "price": null,
+        "price": 329.0,
         "stock": "PÅ LAGER",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827"
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
+        "fetch_via": "jina_reader+direct_frontend_search"
       },
       "3417744": {
         "name": "Pokemon TCG Mega Charizard X ex Ultra Premium Collection",
         "price": null,
         "stock": "BESTILLINGSVARE",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744"
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
+        "fetch_via": "jina_reader+direct_frontend_search"
       },
       "3478498": {
         "name": "Pokemon TCG First Partner Illustration Collection Box Series 2",
         "price": null,
         "stock": "BESTILLINGSVARE",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-First-Partner-Illustration-Collection-Box-Series-2/3478498"
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-First-Partner-Illustration-Collection-Box-Series-2/3478498",
+        "fetch_via": "jina_reader+direct_frontend_search"
       },
       "3447592": {
         "name": "Pokemon TCG Mega EvolutionChaos Rising Booster box with 36 boosters",
         "price": null,
         "stock": "BESTILLINGSVARE",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-EvolutionChaos-Rising-Booster-box-with-36-boosters/3447592"
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-EvolutionChaos-Rising-Booster-box-with-36-boosters/3447592",
+        "fetch_via": "jina_reader+direct_frontend_search"
       },
       "3478496": {
         "name": "Pokemon TCG Mega Greninja ex Premium Collection",
         "price": null,
         "stock": "BESTILLINGSVARE",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496"
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
+        "fetch_via": "jina_reader+direct_frontend_search"
       }
     },
     "br": {
@@ -211,18 +216,6 @@
         "quantity_limit": null,
         "sku": "10831913-EA",
         "url": "https://www.br.dk/produkter/pokemon-trainer-toolkit/200291392/"
-      },
-      "200371886": {
-        "name": "Pokémon First Partner Collection Box 2 samlekort",
-        "price": 249.0,
-        "online_count": 0,
-        "online_stock": false,
-        "store_count": 0,
-        "kolding_stock": 0,
-        "esbjerg_stock": 0,
-        "quantity_limit": 1,
-        "sku": "11274529-EA",
-        "url": "https://www.br.dk/produkter/pokemon-first-partner-collection-box-2-samlekort/200371886/"
       }
     },
     "bilka": {
@@ -620,30 +613,6 @@
         "sku": "11379492-EA",
         "url": "https://www.foetex.dk/produkter/pokemon-binder-collection-30th/200392204/"
       },
-      "200371886": {
-        "name": "Pokémon First Partner Collection Box 2 samlekort",
-        "price": 249.0,
-        "online_count": 0,
-        "online_stock": false,
-        "store_count": 0,
-        "local_stocks": {
-          "1307": {
-            "name": "føtex Kolding",
-            "stock": 0
-          },
-          "1370": {
-            "name": "føtex Kolding Syd",
-            "stock": 0
-          },
-          "1223": {
-            "name": "føtex Esbjerg Broen",
-            "stock": 0
-          }
-        },
-        "quantity_limit": 1,
-        "sku": "11274529-EA",
-        "url": "https://www.foetex.dk/produkter/pokemon-first-partner-collection-box-2-samlekort/200371886/"
-      },
       "200356077": {
         "name": "Pokémon Mega Evolution pokémonkort",
         "price": 49.0,
@@ -849,23 +818,23 @@
       "last_success_at": "2026-09-21T18:45:00.335465+00:00"
     },
     "boozt": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-09-27T21:37:04.385786+00:00",
-      "last_success_at": "2026-09-27T21:39:26.937508+00:00"
+      "backoff_level": 1,
+      "next_allowed_at": 1790602005.1067562,
+      "generic_failures": 1,
+      "last_error": "BOOZT fejlede: Reader: BOOZT Reader returnerede kun 248 tegn | direct: 429 Client Error: Too Many Requests for url: https://www.boozt.com/dk/da/pokemon-trading-cards/born",
+      "last_failure_at": "2026-09-28T13:24:45.106732+00:00",
+      "last_success_at": "2026-09-28T13:23:41.065006+00:00"
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1790601602.2668352,
+      "next_allowed_at": 1790601909.2293773,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-09-26T15:39:28.835094+00:00",
-      "last_success_at": "2026-09-28T13:16:02.266813+00:00"
+      "last_success_at": "2026-09-28T13:21:09.229357+00:00"
     }
   },
-  "updated_at": "2026-09-28T13:19:43.445540+00:00",
+  "updated_at": "2026-09-28T13:24:45.108298+00:00",
   "proshop_discovery_version": 4,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -890,11 +859,11 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-09-28T13:16:01.120184+00:00"
+          "last_checked": "2026-09-28T13:21:08.572685+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1790601360.2998998,
+      "last_discovery_epoch": 1790601667.6372354,
       "last_full_discovery_epoch": 1790590261.6603925,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
