@@ -23,19 +23,19 @@
         "online_stock": false,
         "url": "https://www.coolshop.dk/produkt/pokemon-sv10-destined-rivals-elite-trainer-box-pok10652/23R8NJ/"
       },
-      "https://www.coolshop.dk/produkt/pokemon-first-partner-illustration-collection-series-2-pok10395-101/23XF7G/": {
-        "name": "Pokémon - First Partner Illustration Collection: Series 2 (POK10395-101)",
-        "game": "POKÉMON",
-        "price": 349.0,
-        "online_stock": false,
-        "url": "https://www.coolshop.dk/produkt/pokemon-first-partner-illustration-collection-series-2-pok10395-101/23XF7G/"
-      },
       "https://www.coolshop.dk/produkt/pokemon-30th-celebration-ex-box-pok10463-101/23Y9WZ/": {
         "name": "Pokémon - 30th Celebration - ex Box (POK10463-101)",
         "game": "POKÉMON",
         "price": 349.0,
         "online_stock": false,
         "url": "https://www.coolshop.dk/produkt/pokemon-30th-celebration-ex-box-pok10463-101/23Y9WZ/"
+      },
+      "https://www.coolshop.dk/produkt/pokemon-30th-celebrations-tin-box-pok10466-101/23Y9X5/": {
+        "name": "Pokémon - 30th Celebrations - Tin Box (POK10466-101)",
+        "game": "POKÉMON",
+        "price": 399.95,
+        "online_stock": false,
+        "url": "https://www.coolshop.dk/produkt/pokemon-30th-celebrations-tin-box-pok10466-101/23Y9X5/"
       },
       "https://www.coolshop.dk/produkt/pokemon-30th-celebration-binder-collection-pok10450-101/23Y9WV/": {
         "name": "Pokémon - 30th Celebration - Binder Collection (POK10450-101)",
@@ -65,35 +65,35 @@
         "price": 329.0,
         "stock": "PÅ LAGER",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
-        "fetch_via": "jina_reader+direct_frontend_search"
+        "fetch_via": "jina_reader"
       },
       "3417744": {
         "name": "Pokemon TCG Mega Charizard X ex Ultra Premium Collection",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
-        "fetch_via": "jina_reader+direct_frontend_search"
+        "fetch_via": "jina_reader"
       },
       "3478498": {
         "name": "Pokemon TCG First Partner Illustration Collection Box Series 2",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-First-Partner-Illustration-Collection-Box-Series-2/3478498",
-        "fetch_via": "jina_reader+direct_frontend_search"
+        "fetch_via": "jina_reader"
       },
       "3447592": {
         "name": "Pokemon TCG Mega EvolutionChaos Rising Booster box with 36 boosters",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-EvolutionChaos-Rising-Booster-box-with-36-boosters/3447592",
-        "fetch_via": "jina_reader+direct_frontend_search"
+        "fetch_via": "jina_reader"
       },
       "3478496": {
         "name": "Pokemon TCG Mega Greninja ex Premium Collection",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
-        "fetch_via": "jina_reader+direct_frontend_search"
+        "fetch_via": "jina_reader"
       }
     },
     "br": {
@@ -842,12 +842,12 @@
       "last_success_at": "2026-09-28T08:34:27.461747+00:00"
     },
     "proshop": {
-      "backoff_level": 1,
-      "next_allowed_at": 1790585678.7940147,
-      "generic_failures": 1,
-      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: Failed to perform, curl: (35) Recv failure: Connection reset by peer. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "backoff_level": 0,
+      "next_allowed_at": 0.0,
+      "generic_failures": 0,
+      "last_error": null,
       "last_failure_at": "2026-09-28T08:52:38.793952+00:00",
-      "last_success_at": "2026-09-28T08:51:37.829379+00:00"
+      "last_success_at": "2026-09-28T08:59:07.023863+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -883,14 +883,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1790585705.026723,
+      "next_allowed_at": 1790585987.1981423,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-09-26T15:39:28.835094+00:00",
-      "last_success_at": "2026-09-28T08:51:05.026696+00:00"
+      "last_success_at": "2026-09-28T08:55:47.198121+00:00"
     }
   },
-  "updated_at": "2026-09-28T08:54:47.147289+00:00",
+  "updated_at": "2026-09-28T08:59:22.712646+00:00",
   "proshop_discovery_version": 4,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -915,11 +915,11 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-09-28T08:51:03.933209+00:00"
+          "last_checked": "2026-09-28T08:55:46.725678+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1790585463.1514502,
+      "last_discovery_epoch": 1790585746.090421,
       "last_full_discovery_epoch": 1790568357.7162194,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
