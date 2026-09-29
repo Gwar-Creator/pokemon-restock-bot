@@ -771,12 +771,12 @@
   },
   "source_controls": {
     "coolshop": {
-      "backoff_level": 1,
-      "next_allowed_at": 1790665538.3654988,
-      "generic_failures": 2,
-      "last_error": "503 Server Error: Service Unavailable for url: https://www.coolshop.dk/api/search",
+      "backoff_level": 0,
+      "next_allowed_at": 0.0,
+      "generic_failures": 0,
+      "last_error": null,
       "last_failure_at": "2026-09-29T07:03:38.365476+00:00",
-      "last_success_at": "2026-09-29T07:01:51.242208+00:00"
+      "last_success_at": "2026-09-29T07:09:13.022090+00:00"
     },
     "proshop": {
       "backoff_level": 0,
@@ -795,12 +795,12 @@
       "last_success_at": "2026-09-09T01:49:13.686238+00:00"
     },
     "bilka": {
-      "backoff_level": 2,
-      "next_allowed_at": 1790665566.5782194,
+      "backoff_level": 0,
+      "next_allowed_at": 0.0,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-09-29T06:45:39.844365+00:00",
-      "last_success_at": "2026-09-29T07:01:06.578205+00:00"
+      "last_success_at": "2026-09-29T07:09:26.986303+00:00"
     },
     "foetex": {
       "backoff_level": 0,
@@ -820,14 +820,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1790665517.4436743,
+      "next_allowed_at": 1790665789.8097796,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-09-26T15:39:28.835094+00:00",
-      "last_success_at": "2026-09-29T07:01:17.443653+00:00"
+      "last_success_at": "2026-09-29T07:05:49.809757+00:00"
     }
   },
-  "updated_at": "2026-09-29T07:04:49.331790+00:00",
+  "updated_at": "2026-09-29T07:09:37.745300+00:00",
   "proshop_discovery_version": 4,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -852,11 +852,11 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-09-29T07:01:16.941189+00:00"
+          "last_checked": "2026-09-29T07:05:49.009001+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1790665276.156177,
+      "last_discovery_epoch": 1790665548.232265,
       "last_full_discovery_epoch": 1790655957.5199704,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
