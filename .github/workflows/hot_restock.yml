@@ -19,6 +19,7 @@ on:
       - "salling_early_radar_runner.py"
       - "early_intel_shadow.py"
       - "test_early_intel_shadow.py"
+      - "test_salling_early_radar.py"
       - ".github/workflows/hot_restock.yml"
 
 permissions:
@@ -53,7 +54,7 @@ jobs:
       - name: Validate Tier A HOT scanner and Salling Early Radar
         run: |
           python -m py_compile alert_policy.py hot_restock.py hot_restock_v4.py salling_early_radar.py salling_early_radar_runner.py early_intel_shadow.py state_commit_guard.py
-          python -m unittest test_state_commit_guard.py test_alert_policy_v2.py test_restock_lane_ownership.py test_early_intel_shadow.py
+          python -m unittest test_state_commit_guard.py test_alert_policy_v2.py test_restock_lane_ownership.py test_early_intel_shadow.py test_salling_early_radar.py
           python - <<'PY'
           import ast
           from pathlib import Path

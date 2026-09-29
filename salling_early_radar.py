@@ -438,13 +438,57 @@ def stock_signal_text(product):
     return " · ".join(bits) if bits else "stadig skjult uden lager"
 
 
-def best_url(product):
+def best_url(product, preferred_site=None):
     sites = product.get("sites") or {}
-    for key in ("bilka", "foetex"):
+
+    if preferred_site in sites:
+        url = (sites.get(preferred_site) or {}).get("url")
+        if url:
+            return url
+
+    for key in SITES:
         url = (sites.get(key) or {}).get("url")
         if url:
             return url
     return ""
+
+
+def site_live_signal(site):
+    site = site or {}
+    return (
+        bool(site.get("is_exposed"))
+        or int(site.get("online_count") or 0) > 0
+        or int(site.get("store_count") or 0) > 0
+    )
+
+
+def preferred_site_for_change(old, current):
+    old_sites = (old or {}).get("sites") or {}
+    current_sites = (current or {}).get("sites") or {}
+
+    # For live/stock alerts, link to the retailer whose availability actually
+    # crossed from no signal to a positive signal.
+    for site_key in SITES:
+        before = old_sites.get(site_key) or {}
+        after = current_sites.get(site_key) or {}
+        if not site_live_signal(before) and site_live_signal(after):
+            return site_key
+
+    # For metadata movement, link to the retailer whose record changed.
+    for site_key in SITES:
+        before = old_sites.get(site_key) or {}
+        after = current_sites.get(site_key) or {}
+        if any(before.get(field) != after.get(field) for field in MOVEMENT_FIELDS):
+            return site_key
+
+    # Timestamp-only Early Radar signals should also use the site that moved.
+    for site_key in SITES:
+        before_epoch = int((old_sites.get(site_key) or {}).get("epoch_updated_at") or 0)
+        after_epoch = int((current_sites.get(site_key) or {}).get("epoch_updated_at") or 0)
+        if after_epoch > before_epoch:
+            return site_key
+
+    return None
 
 
 def latest_record_update(product):
@@ -535,7 +579,7 @@ def recent_record_update(product, max_age_seconds=1800):
     return 0 <= time.time() - value <= max_age_seconds
 
 
-def send_alert(title, product, detail):
+def send_alert(title, product, detail, preferred_site=None):
     webhook = os.getenv("DISCORD_WEBHOOK_URL", "").strip()
     if not webhook:
         raise RuntimeError("DISCORD_WEBHOOK_URL mangler")
@@ -552,7 +596,7 @@ def send_alert(title, product, detail):
         f"🆔 {product.get('id')} · SKU {product.get('sku') or '-'}\n"
         f"📦 {stock_signal_text(product)}"
         f"{updated_line}\n"
-        f"🔗 {best_url(product)}"
+        f"🔗 {best_url(product, preferred_site)}"
     )
 
     response = requests.post(webhook, json={"content": message}, timeout=15)
@@ -656,12 +700,24 @@ def main():
                 send_alert("NY VARE", product, "nyt produkt-ID fundet")
             continue
 
+        preferred_site = preferred_site_for_change(old, product)
+
         # Strongest signals first.
         if became_hidden_stocked(old, product):
-            send_alert("LAGER FØR LIVE", product, "skjult vare har fået lager-signal")
+            send_alert(
+                "LAGER FØR LIVE",
+                product,
+                "skjult vare har fået lager-signal",
+                preferred_site=preferred_site,
+            )
             continue
         if became_live(old, product):
-            send_alert("GÅR LIVE", product, "vare har fået første live-signal")
+            send_alert(
+                "GÅR LIVE",
+                product,
+                "vare har fået første live-signal",
+                preferred_site=preferred_site,
+            )
             continue
 
         changes = site_movement_changes(old, product)
@@ -669,7 +725,12 @@ def main():
             detail = " · ".join(changes[:4])
             if len(changes) > 4:
                 detail += f" · +{len(changes) - 4} ændringer"
-            send_alert("EARLY MOVEMENT", product, detail)
+            send_alert(
+                "EARLY MOVEMENT",
+                product,
+                detail,
+                preferred_site=preferred_site,
+            )
             continue
 
         if (
@@ -681,6 +742,7 @@ def main():
                 "RECORD OPDATERET",
                 product,
                 "skjult high-signal vare blev netop opdateret uden synlig feltændring",
+                preferred_site=preferred_site,
             )
 
     save_state(current)
