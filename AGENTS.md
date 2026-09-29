@@ -206,6 +206,7 @@ Gode næste trin, som skal indføres enkeltvis og sikkert:
   krævede købbar/preorder-status for nye katalogalerts, flyttede scanner-health ud
   af Restock, ensrettede checklane/battle-deck-filteret i Price, fjernede tomme
   prisdigests og adskilte Card Market fra Price History.
+- 2026-09-29: Local Stock undertrykker løse `BOOSTER PACK`-signaler for Mega Evolution: Perfect Order. Produktet bevares i state, og andre Perfect Order-formater samt andre booster packs påvirkes ikke.
 - 2026-09-26: Boozt og Magasin blev tilføjet til Tier A HOT-scanneren. Boozt læses via den offentligt renderede brand-katalogside (Reader transport), hvor forsvundne varer bevares som udsolgte. Magasin opdager TCG-produkter via de offentlige product-sitemaps og læser pris/lager direkte fra produktsidens GTM/produktdata; Magasin køres med ca. 5 minutters cadence. Retail-parserændringer baseline-indlæses stille via RETAIL_DISCOVERY_VERSION.
 - Lav-signal-produkter skal normalt forblive i state, men ikke sendes til Discord.
 

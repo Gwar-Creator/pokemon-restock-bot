@@ -481,6 +481,25 @@ def short_series_name(value):
     return value
 
 
+def local_stock_signal_allowed(product):
+    """Keep known low-value local stock noise out of Discord without deleting state."""
+    product = product or {}
+    product_type = str(product.get("type") or "").strip().upper()
+    series = normalize_search_text(product.get("series"))
+
+    # Perfect Order loose packs are useful inventory data, but repeated local
+    # 0 -> positive transitions are not decision-useful enough for Discord.
+    if (
+        product_type == "BOOSTER PACK"
+        and series == normalize_search_text("Mega Evolution: Perfect Order")
+    ):
+        return False
+
+    return abundant_set_signal_allowed(
+        product.get("name"),
+        product.get("series"),
+    )
+
 
 def canonical_salling_product_key(product):
     """Stable identity shared across BR/Bilka/Foetex for discovery de-duplication."""
@@ -563,10 +582,7 @@ def send_discovery_alert(products):
 
 
 def send_local_alert(product, transitions):
-    if not abundant_set_signal_allowed(
-        product.get("name"),
-        product.get("series"),
-    ):
+    if not local_stock_signal_allowed(product):
         return
     if not WEBHOOK_URL:
         raise RuntimeError("DISCORD_WEBHOOK_URL mangler")
