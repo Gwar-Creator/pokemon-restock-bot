@@ -6867,65 +6867,6 @@
   },
   "events": [
     {
-      "event": "NEW",
-      "fields": [],
-      "name": "Pokemon TCG Mega Charizard X ex Ultra Premium Collection",
-      "product_id": "3417744",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "INBOUND_UNDATED",
-      "stage_before": null,
-      "ts": 1790429077.4323263
-    },
-    {
-      "event": "NEW",
-      "fields": [],
-      "name": "Pokemon TCG Mega EvolutionChaos Rising Booster box with 36 boosters",
-      "product_id": "3447592",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "INBOUND_UNDATED",
-      "stage_before": null,
-      "ts": 1790429077.432331
-    },
-    {
-      "event": "NEW",
-      "fields": [],
-      "name": "Pokemon TCG Mega Greninja ex Premium Collection",
-      "product_id": "3478496",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "INBOUND_UNDATED",
-      "stage_before": null,
-      "ts": 1790429077.4323332
-    },
-    {
-      "event": "NEW",
-      "fields": [],
-      "name": "Pokemon TCG First Partner Illustration Collection Box Series 2",
-      "product_id": "3478498",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "INBOUND_UNDATED",
-      "stage_before": null,
-      "ts": 1790429077.432335
-    },
-    {
-      "event": "CROSS_CHANGE",
-      "fields": [
-        "bilka",
-        "br",
-        "foetex"
-      ],
-      "name": "Pokémon Battle Academy 2024",
-      "product_id": "10791068-EA",
-      "sku": "10791068-EA",
-      "source": "cross_salling",
-      "stage_after": null,
-      "stage_before": null,
-      "ts": 1790429077.4334488
-    },
-    {
       "event": "CROSS_CHANGE",
       "fields": [
         "br"
@@ -21014,12 +20955,69 @@
       "stage_after": "LIVE_STOCK",
       "stage_before": "LIVE_STOCK",
       "ts": 1790655888.0614166
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
+      "product_id": "3447589",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1790656485.0025134
+    },
+    {
+      "event": "REMOVED",
+      "fields": [],
+      "name": "Pokemon TCG Mega Charizard X ex Ultra Premium Collection",
+      "product_id": "3417744",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "INBOUND_UNDATED",
+      "stage_before": null,
+      "ts": 1790656485.0025213
+    },
+    {
+      "event": "REMOVED",
+      "fields": [],
+      "name": "Pokemon TCG Mega EvolutionChaos Rising Booster box with 36 boosters",
+      "product_id": "3447592",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "INBOUND_UNDATED",
+      "stage_before": null,
+      "ts": 1790656485.0025241
+    },
+    {
+      "event": "REMOVED",
+      "fields": [],
+      "name": "Pokemon TCG Mega Greninja ex Premium Collection",
+      "product_id": "3478496",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "INBOUND_UNDATED",
+      "stage_before": null,
+      "ts": 1790656485.0025258
+    },
+    {
+      "event": "REMOVED",
+      "fields": [],
+      "name": "Pokemon TCG First Partner Illustration Collection Box Series 2",
+      "product_id": "3478498",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "INBOUND_UNDATED",
+      "stage_before": null,
+      "ts": 1790656485.002527
     }
   ],
   "sources": {
     "bilka": {
       "100559056": {
-        "epoch_updated_at": 1790655475,
+        "epoch_updated_at": 1790656372,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -21161,7 +21159,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-tcg-go-tin-assorted/200147881/"
       },
       "200156133": {
-        "epoch_updated_at": 1790655476,
+        "epoch_updated_at": 1790656373,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -21359,7 +21357,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-tcg-my-first-battle-samlekortsaet/200209927/"
       },
       "200209928": {
-        "epoch_updated_at": 1790655476,
+        "epoch_updated_at": 1790656373,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -21417,7 +21415,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-scarlet-violet-booster-kort/200209963/"
       },
       "200210635": {
-        "epoch_updated_at": 1790655476,
+        "epoch_updated_at": 1790656372,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -21447,7 +21445,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-tcg-origin-forme-palkia-vstar-league-battle-deck/200210635/"
       },
       "200215292": {
-        "epoch_updated_at": 1790655476,
+        "epoch_updated_at": 1790656373,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -21477,7 +21475,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-tcg-scarlet-violet151-mini-tin/200215292/"
       },
       "200215319": {
-        "epoch_updated_at": 1790655474,
+        "epoch_updated_at": 1790656371,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -21509,7 +21507,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-battle-deck-ex-samlekort/200215319/"
       },
       "200223003": {
-        "epoch_updated_at": 1790655476,
+        "epoch_updated_at": 1790656372,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -21735,7 +21733,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-tcg-generic-samlekort-boosterpakke-2-pak/200245192/"
       },
       "200248867": {
-        "epoch_updated_at": 1790655476,
+        "epoch_updated_at": 1790656372,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -21821,7 +21819,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-tcg-scarlet-violetpaldean-fates-tin/200248869/"
       },
       "200255087": {
-        "epoch_updated_at": 1790655476,
+        "epoch_updated_at": 1790656373,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -22187,7 +22185,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-deluxe-battle-deck/200278314/"
       },
       "200278315": {
-        "epoch_updated_at": 1790655476,
+        "epoch_updated_at": 1790656373,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -22217,7 +22215,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-tcg-samlekort/200278315/"
       },
       "200279925": {
-        "epoch_updated_at": 1790655475,
+        "epoch_updated_at": 1790656372,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -22473,7 +22471,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-pokeball-flere-varianter-assorteret/200291389/"
       },
       "200291390": {
-        "epoch_updated_at": 1790655476,
+        "epoch_updated_at": 1790656373,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -22532,7 +22530,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-tcg-houndstone-ex-box/200291391/"
       },
       "200291392": {
-        "epoch_updated_at": 1790655476,
+        "epoch_updated_at": 1790656373,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -22844,7 +22842,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-prismatic-tech-klistermaerkekollektion-flere-varianter-assorteret/200308045/"
       },
       "200308076": {
-        "epoch_updated_at": 1790655476,
+        "epoch_updated_at": 1790656372,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -23608,7 +23606,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-tcg-poster-coll-sv10-5/200329200/"
       },
       "200329216": {
-        "epoch_updated_at": 1790655475,
+        "epoch_updated_at": 1790656372,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -23636,7 +23634,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-pokemon-binder-collection-zsv10-5/200329216/"
       },
       "200329217": {
-        "epoch_updated_at": 1790655476,
+        "epoch_updated_at": 1790656372,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -23664,7 +23662,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-binder-collection-rsv10-5/200329217/"
       },
       "200329218": {
-        "epoch_updated_at": 1790655476,
+        "epoch_updated_at": 1790656372,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -23694,7 +23692,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-elite-trainer-box-zsv10-5/200329218/"
       },
       "200329219": {
-        "epoch_updated_at": 1790655473,
+        "epoch_updated_at": 1790656371,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -23752,7 +23750,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-tsg-scarlet-violet-white-flare-tech-sticker-collection/200329836/"
       },
       "200329837": {
-        "epoch_updated_at": 1790655476,
+        "epoch_updated_at": 1790656373,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -24240,7 +24238,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-mega-kangaskhan-ex-box-pokemonkort/200340781/"
       },
       "200340782": {
-        "epoch_updated_at": 1790655474,
+        "epoch_updated_at": 1790656371,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -24296,7 +24294,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-mega-charizard-x-ex-ultra-premium-collection-pakke/200340783/"
       },
       "200340784": {
-        "epoch_updated_at": 1790655474,
+        "epoch_updated_at": 1790656371,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -24520,7 +24518,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-booster-bundle-phantasmal-samlekort/200349059/"
       },
       "200352698": {
-        "epoch_updated_at": 1790655476,
+        "epoch_updated_at": 1790656373,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -24776,7 +24774,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-boosterpakke-me02-5-ascended-heros/200353708/"
       },
       "200356077": {
-        "epoch_updated_at": 1790655475,
+        "epoch_updated_at": 1790656372,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -24804,7 +24802,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-mega-evolution-pokemonkort/200356077/"
       },
       "200356078": {
-        "epoch_updated_at": 1790655474,
+        "epoch_updated_at": 1790656372,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -24832,7 +24830,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-tcg-booster-pack-samlekort/200356078/"
       },
       "200356085": {
-        "epoch_updated_at": 1790655474,
+        "epoch_updated_at": 1790656372,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -24948,7 +24946,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-first-partner-collection-box/200356089/"
       },
       "200366277": {
-        "epoch_updated_at": 1790655474,
+        "epoch_updated_at": 1790656372,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -25006,7 +25004,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-tcg-chaos-rising-booster-bundle-samlekort/200366278/"
       },
       "200366279": {
-        "epoch_updated_at": 1790655474,
+        "epoch_updated_at": 1790656372,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -25037,7 +25035,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-chaos-rising-1-pak/200366279/"
       },
       "200366280": {
-        "epoch_updated_at": 1790655474,
+        "epoch_updated_at": 1790656372,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -25095,7 +25093,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-chaos-rising-booster-pack-samlekort/200366281/"
       },
       "200366282": {
-        "epoch_updated_at": 1790655476,
+        "epoch_updated_at": 1790656372,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -25125,7 +25123,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-chaos-rising-premium-checklane/200366282/"
       },
       "200366283": {
-        "epoch_updated_at": 1790655476,
+        "epoch_updated_at": 1790656372,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -25184,7 +25182,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-mega-evolution-ascended-heroes-flere-varianter-assorteret/200366284/"
       },
       "200366285": {
-        "epoch_updated_at": 1790655474,
+        "epoch_updated_at": 1790656371,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -25215,7 +25213,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-tcg-premium-ex-box-mega-zygarde-samlekort/200366285/"
       },
       "200371874": {
-        "epoch_updated_at": 1790655475,
+        "epoch_updated_at": 1790656372,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -25243,7 +25241,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-mini-tin-med-samlekort-salamence-litleo/200371874/"
       },
       "200371875": {
-        "epoch_updated_at": 1790655476,
+        "epoch_updated_at": 1790656372,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -25271,7 +25269,7 @@
         "url": "https://www.bilka.dk/produkter/pokemin-mini-tin-med-samlekort-meganium-meowstic/200371875/"
       },
       "200371876": {
-        "epoch_updated_at": 1790655474,
+        "epoch_updated_at": 1790656371,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -25299,7 +25297,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-mini-tin-med-samlekort-emboar-inkay/200371876/"
       },
       "200371877": {
-        "epoch_updated_at": 1790655476,
+        "epoch_updated_at": 1790656372,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -25327,7 +25325,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-mini-tin-med-samlekort-feraligatr-budew/200371877/"
       },
       "200371882": {
-        "epoch_updated_at": 1790655474,
+        "epoch_updated_at": 1790656371,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -25355,7 +25353,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-mini-tin-med-samlekort-gallade-goomy/200371882/"
       },
       "200371884": {
-        "epoch_updated_at": 1790655475,
+        "epoch_updated_at": 1790656372,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -25383,7 +25381,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-tin-summer-ex-med-samlekort-mega-gengar/200371884/"
       },
       "200371885": {
-        "epoch_updated_at": 1790655475,
+        "epoch_updated_at": 1790656372,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -25411,7 +25409,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-tin-summer-ex-med-samlekort-mega-clefable/200371885/"
       },
       "200371886": {
-        "epoch_updated_at": 1790655474,
+        "epoch_updated_at": 1790656372,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -25441,7 +25439,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-first-partner-collection-box-2-samlekort/200371886/"
       },
       "200380908": {
-        "epoch_updated_at": 1790655475,
+        "epoch_updated_at": 1790656372,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -25471,7 +25469,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-pitch-black-booster-bundle-samlekort/200380908/"
       },
       "200380909": {
-        "epoch_updated_at": 1790655476,
+        "epoch_updated_at": 1790656372,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -25502,7 +25500,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-pitch-black-1-pak-flere-varianter-assorteret/200380909/"
       },
       "200380910": {
-        "epoch_updated_at": 1790655473,
+        "epoch_updated_at": 1790656371,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -25533,7 +25531,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-me05-pitch-black-samlekort/200380910/"
       },
       "200380911": {
-        "epoch_updated_at": 1790655473,
+        "epoch_updated_at": 1790656371,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -25564,7 +25562,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-pitch-black-checklane-booster-pack/200380911/"
       },
       "200380917": {
-        "epoch_updated_at": 1790655475,
+        "epoch_updated_at": 1790656372,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -25594,7 +25592,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-pitch-black-premium-checklane-flere-varianter-assorteret/200380917/"
       },
       "200380918": {
-        "epoch_updated_at": 1790655476,
+        "epoch_updated_at": 1790656372,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -25624,7 +25622,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-tcg-pitch-black-elite-trainer-box/200380918/"
       },
       "200380919": {
-        "epoch_updated_at": 1790655474,
+        "epoch_updated_at": 1790656371,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -25654,7 +25652,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-box-premium-ex-mega-greninja/200380919/"
       },
       "200385295": {
-        "epoch_updated_at": 1790655474,
+        "epoch_updated_at": 1790656372,
         "expected_available_from": null,
         "f_campaign_name": [
           "Nyhed"
@@ -25686,7 +25684,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-first-partner-collection-box-3-samlekort/200385295/"
       },
       "200392202": {
-        "epoch_updated_at": 1790655473,
+        "epoch_updated_at": 1790656371,
         "expected_available_from": null,
         "f_campaign_name": [
           "Nyhed"
@@ -25716,7 +25714,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-elite-trainer-box-30th-samlekort/200392202/"
       },
       "200392203": {
-        "epoch_updated_at": 1790655475,
+        "epoch_updated_at": 1790656372,
         "expected_available_from": null,
         "f_campaign_name": [
           "Nyhed"
@@ -25748,7 +25746,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-tech-sticker-collection-30th/200392203/"
       },
       "200392204": {
-        "epoch_updated_at": 1790655474,
+        "epoch_updated_at": 1790656371,
         "expected_available_from": null,
         "f_campaign_name": [
           "Nyhed"
@@ -25778,7 +25776,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-binder-collection-30th/200392204/"
       },
       "200392205": {
-        "epoch_updated_at": 1790655475,
+        "epoch_updated_at": 1790656372,
         "expected_available_from": null,
         "f_campaign_name": [
           "Nyhed"
@@ -25840,7 +25838,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-ex-box-30th-samlekort/200392206/"
       },
       "200392214": {
-        "epoch_updated_at": 1790655473,
+        "epoch_updated_at": 1790656371,
         "expected_available_from": null,
         "f_campaign_name": [
           "Nyhed"
@@ -25958,7 +25956,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-30th-lucario-sticker/200392805/"
       },
       "200392806": {
-        "epoch_updated_at": 1790655475,
+        "epoch_updated_at": 1790656372,
         "expected_available_from": null,
         "f_campaign_name": [
           "Nyhed"
@@ -25988,7 +25986,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-sylveon-ex-box-30th/200392806/"
       },
       "200392807": {
-        "epoch_updated_at": 1790655474,
+        "epoch_updated_at": 1790656372,
         "expected_available_from": null,
         "f_campaign_name": [
           "Nyhed"
@@ -26018,7 +26016,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-greninja-ex-samlekort-box/200392807/"
       },
       "200392808": {
-        "epoch_updated_at": 1790655476,
+        "epoch_updated_at": 1790656372,
         "expected_available_from": null,
         "f_campaign_name": [
           "Nyhed"
@@ -26048,7 +26046,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-sylveon-ex-tin-samlekort/200392808/"
       },
       "200392809": {
-        "epoch_updated_at": 1790655473,
+        "epoch_updated_at": 1790656371,
         "expected_available_from": null,
         "f_campaign_name": [
           "Nyhed"
@@ -36325,24 +36323,6 @@
       }
     },
     "proshop": {
-      "3417744": {
-        "expected_stock_date": null,
-        "id": "3417744",
-        "low_stock_badge": false,
-        "name": "Pokemon TCG Mega Charizard X ex Ultra Premium Collection",
-        "new_badge": false,
-        "price": null,
-        "raw_status_excerpt": " Bestillingsvare, leveringstiden kan ikke oplyses * [![Image 14: Pokemon - Pokemon TCG Deluxe Battle Deck Ninetales ex/Zapdos ex - assorted - POK85600](https://www.proshop.dk/Images/174x116/3421832_88cd2a56da23.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-Deluxe-Battle-Deck-Ninetales-exZapdos-ex-assorted/3421832 \"Pokemon TCG Deluxe Battle Deck Ninetales ex/Zapdos ex - assorted - POK85600\") ## ",
-        "stage": "INBOUND_UNDATED",
-        "status": "BESTILLINGSVARE",
-        "surface_statuses": {
-          "pokemon-kort": "BESTILLINGSVARE"
-        },
-        "surfaces": [
-          "pokemon-kort"
-        ],
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744"
-      },
       "3447589": {
         "expected_stock_date": null,
         "id": "3447589",
@@ -36350,73 +36330,19 @@
         "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
         "new_badge": false,
         "price": 529.0,
-        "raw_status_excerpt": " På lager – Levering i morgen (bestil inden kl. 22) 529,00 kr.(423,20 kr.) 3447589 * [![Image 3: Pokemon - Pokemon TCG Portfolio 9-P Mega Charizard X & Mega Lopunny - ULT16088](https://www.proshop.dk/Images/174x116/3447426_2681c18713e5.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-Portfolio-9-P-Mega-Charizard-X-Mega-Lopunny/3447426 \"Pokemon TCG Portfolio 9-P Mega Charizard X & Mega Lopunny - ULT16088\") ## ",
+        "raw_status_excerpt": " På lager – Levering i morgen (bestil inden kl. 22) 529,00 kr.(423,20 kr.) Køb 3447589 * [![Image 31: Pokemon - Pokemon TCG Portfolio 9-P Mega Charizard X & Mega Lopunny - ULT16088](https://www.proshop.dk/Images/174x116/3447426_2681c18713e5.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-Portfolio-9-P-Mega-Charizard-X-Mega-Lopunny/3447426 \"Pokemon TCG Portfolio 9-P Mega Charizard X & Mega Lopunny - ULT16088\")![Image 32: LinkedIn](https://www.proshop.dk/Pokemon/Pokemon) Produktdatablad ## ",
         "stage": "LIVE_STOCK",
         "status": "PÅ LAGER",
         "surface_statuses": {
-          "pokemon-kort": "PÅ LAGER"
+          "pokemon-brand": "PÅ LAGER"
         },
         "surfaces": [
-          "pokemon-kort"
+          "pokemon-brand"
         ],
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Zygarde-ex-Premium-Collection/3447589"
-      },
-      "3447592": {
-        "expected_stock_date": null,
-        "id": "3447592",
-        "low_stock_badge": false,
-        "name": "Pokemon TCG Mega EvolutionChaos Rising Booster box with 36 boosters",
-        "new_badge": false,
-        "price": null,
-        "raw_status_excerpt": " Bestillingsvare, leveringstiden kan ikke oplyses * [![Image 19: Pokemon - Pokemon TCG Portfolio 4-P Ethan's Ho-Oh & Cynthia's Garchomp - ULT16083](https://www.proshop.dk/Images/174x116/3382585_b31a262cc6ee.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-Portfolio-4-P-Ethans-Ho-Oh-Cynthias-Garchomp/3382585 \"Pokemon TCG Portfolio 4-P Ethan's Ho-Oh & Cynthia's Garchomp - ULT16083\") ## ",
-        "stage": "INBOUND_UNDATED",
-        "status": "BESTILLINGSVARE",
-        "surface_statuses": {
-          "pokemon-kort": "BESTILLINGSVARE"
-        },
-        "surfaces": [
-          "pokemon-kort"
-        ],
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-EvolutionChaos-Rising-Booster-box-with-36-boosters/3447592"
-      },
-      "3478496": {
-        "expected_stock_date": null,
-        "id": "3478496",
-        "low_stock_badge": false,
-        "name": "Pokemon TCG Mega Greninja ex Premium Collection",
-        "new_badge": false,
-        "price": null,
-        "raw_status_excerpt": " Bestillingsvare, leveringstiden kan ikke oplyses * [![Image 18: Pokemon - Pokemon TCG Mega Evolution—Chaos Rising Booster (box with 36 boosters) - POK10407-101](https://www.proshop.dk/Images/174x116/3447592_bf6f55217e66.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-EvolutionChaos-Rising-Booster-box-with-36-boosters/3447592 \"Pokemon TCG Mega Evolution—Chaos Rising Booster (box with 36 boosters) - POK10407-101\") ## ",
-        "stage": "INBOUND_UNDATED",
-        "status": "BESTILLINGSVARE",
-        "surface_statuses": {
-          "pokemon-kort": "BESTILLINGSVARE"
-        },
-        "surfaces": [
-          "pokemon-kort"
-        ],
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496"
-      },
-      "3478498": {
-        "expected_stock_date": null,
-        "id": "3478498",
-        "low_stock_badge": false,
-        "name": "Pokemon TCG First Partner Illustration Collection Box Series 2",
-        "new_badge": false,
-        "price": null,
-        "raw_status_excerpt": " Bestillingsvare, leveringstiden kan ikke oplyses * [![Image 16: Pokemon - Pokemon TCG 2-pack Booster - POK10412-101](https://www.proshop.dk/Images/174x116/3478497_4ba6ac470992.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-2-pack-Booster/3478497 \"Pokemon TCG 2-pack Booster - POK10412-101\") ## ",
-        "stage": "INBOUND_UNDATED",
-        "status": "BESTILLINGSVARE",
-        "surface_statuses": {
-          "pokemon-kort": "BESTILLINGSVARE"
-        },
-        "surfaces": [
-          "pokemon-kort"
-        ],
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-First-Partner-Illustration-Collection-Box-Series-2/3478498"
       }
     }
   },
-  "updated_at": 1790656181.6743922,
+  "updated_at": 1790656485.003429,
   "version": 1
 }
