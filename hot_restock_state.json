@@ -795,11 +795,11 @@
       "last_success_at": "2026-09-09T01:49:13.686238+00:00"
     },
     "bilka": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-09-09T13:26:25.722131+00:00",
+      "backoff_level": 2,
+      "next_allowed_at": 1790663977.0986035,
+      "generic_failures": 3,
+      "last_error": "500 Server Error: Internal Server Error for url: https://www.bilka.dk/",
+      "last_failure_at": "2026-09-29T06:34:37.098573+00:00",
       "last_success_at": "2026-09-09T13:29:30.460556+00:00"
     },
     "foetex": {
@@ -820,14 +820,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1790663394.0127196,
+      "next_allowed_at": 1790663711.6767354,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-09-26T15:39:28.835094+00:00",
-      "last_success_at": "2026-09-29T06:25:54.012697+00:00"
+      "last_success_at": "2026-09-29T06:31:11.676708+00:00"
     }
   },
-  "updated_at": "2026-09-29T06:29:27.069726+00:00",
+  "updated_at": "2026-09-29T06:34:47.589454+00:00",
   "proshop_discovery_version": 4,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -852,11 +852,11 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-09-29T06:25:52.871149+00:00"
+          "last_checked": "2026-09-29T06:31:10.189611+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1790663151.7288172,
+      "last_discovery_epoch": 1790663468.9813814,
       "last_full_discovery_epoch": 1790655957.5199704,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
