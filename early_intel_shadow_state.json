@@ -6877,19 +6877,6 @@
       "source": "proshop",
       "stage_after": "LIVE_STOCK",
       "stage_before": "LIVE_STOCK",
-      "ts": 1790572179.450161
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "surface_statuses"
-      ],
-      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
-      "product_id": "3447589",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
       "ts": 1790573380.2085805
     },
     {
@@ -21027,6 +21014,19 @@
       "stage_after": "LIVE_STOCK",
       "stage_before": "LIVE_STOCK",
       "ts": 1790798987.4582522
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
+      "product_id": "3447589",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1790799569.0460303
     }
   ],
   "sources": {
@@ -24309,7 +24309,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-mega-charizard-x-ex-ultra-premium-collection-pakke/200340783/"
       },
       "200340784": {
-        "epoch_updated_at": 1790798552,
+        "epoch_updated_at": 1790799458,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -24477,7 +24477,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-mini-tin-kanto-powers-assorteret/200341845/"
       },
       "200341846": {
-        "epoch_updated_at": 1790798552,
+        "epoch_updated_at": 1790799457,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -25699,7 +25699,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-first-partner-collection-box-3-samlekort/200385295/"
       },
       "200392202": {
-        "epoch_updated_at": 1790798553,
+        "epoch_updated_at": 1790799457,
         "expected_available_from": null,
         "f_campaign_name": [
           "Nyhed"
@@ -36365,9 +36365,11 @@
         "stage": "LIVE_STOCK",
         "status": "PÅ LAGER",
         "surface_statuses": {
+          "pokemon-brand": "PÅ LAGER",
           "pokemon-kort": "PÅ LAGER"
         },
         "surfaces": [
+          "pokemon-brand",
           "pokemon-kort"
         ],
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Zygarde-ex-Premium-Collection/3447589"
@@ -36428,6 +36430,6 @@
       }
     }
   },
-  "updated_at": 1790799263.3624113,
+  "updated_at": 1790799569.0471694,
   "version": 1
 }
