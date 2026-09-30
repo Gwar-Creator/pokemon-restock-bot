@@ -6869,17 +6869,6 @@
     {
       "event": "REMOVED",
       "fields": [],
-      "name": "Pokemon TCG Mega Greninja ex Premium Collection",
-      "product_id": "3478496",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "INBOUND_UNDATED",
-      "stage_before": null,
-      "ts": 1790514305.0451186
-    },
-    {
-      "event": "REMOVED",
-      "fields": [],
       "name": "Pokemon TCG First Partner Illustration Collection Box Series 2",
       "product_id": "3478498",
       "sku": "",
@@ -21017,6 +21006,19 @@
       "stage_after": "INBOUND_UNDATED",
       "stage_before": null,
       "ts": 1790733287.8578644
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
+      "product_id": "3447589",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1790736584.9649258
     }
   ],
   "sources": {
@@ -23697,7 +23699,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-elite-trainer-box-zsv10-5/200329218/"
       },
       "200329219": {
-        "epoch_updated_at": 1790735579,
+        "epoch_updated_at": 1790736481,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -25009,7 +25011,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-tcg-chaos-rising-booster-bundle-samlekort/200366278/"
       },
       "200366279": {
-        "epoch_updated_at": 1790735580,
+        "epoch_updated_at": 1790736481,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -25274,7 +25276,7 @@
         "url": "https://www.bilka.dk/produkter/pokemin-mini-tin-med-samlekort-meganium-meowstic/200371875/"
       },
       "200371876": {
-        "epoch_updated_at": 1790735579,
+        "epoch_updated_at": 1790736481,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -25330,7 +25332,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-mini-tin-med-samlekort-feraligatr-budew/200371877/"
       },
       "200371882": {
-        "epoch_updated_at": 1790735579,
+        "epoch_updated_at": 1790736481,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -25627,7 +25629,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-tcg-pitch-black-elite-trainer-box/200380918/"
       },
       "200380919": {
-        "epoch_updated_at": 1790735579,
+        "epoch_updated_at": 1790736481,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -25657,7 +25659,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-box-premium-ex-mega-greninja/200380919/"
       },
       "200385295": {
-        "epoch_updated_at": 1790735579,
+        "epoch_updated_at": 1790736481,
         "expected_available_from": null,
         "f_campaign_name": [
           "Nyhed"
@@ -25689,7 +25691,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-first-partner-collection-box-3-samlekort/200385295/"
       },
       "200392202": {
-        "epoch_updated_at": 1790735579,
+        "epoch_updated_at": 1790736481,
         "expected_available_from": null,
         "f_campaign_name": [
           "Nyhed"
@@ -25781,7 +25783,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-binder-collection-30th/200392204/"
       },
       "200392205": {
-        "epoch_updated_at": 1790735579,
+        "epoch_updated_at": 1790736481,
         "expected_available_from": null,
         "f_campaign_name": [
           "Nyhed"
@@ -25991,7 +25993,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-sylveon-ex-box-30th/200392806/"
       },
       "200392807": {
-        "epoch_updated_at": 1790735579,
+        "epoch_updated_at": 1790736481,
         "expected_available_from": null,
         "f_campaign_name": [
           "Nyhed"
@@ -26051,7 +26053,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-sylveon-ex-tin-samlekort/200392808/"
       },
       "200392809": {
-        "epoch_updated_at": 1790735579,
+        "epoch_updated_at": 1790736481,
         "expected_available_from": null,
         "f_campaign_name": [
           "Nyhed"
@@ -36357,11 +36359,9 @@
         "stage": "LIVE_STOCK",
         "status": "PÅ LAGER",
         "surface_statuses": {
-          "pokemon-brand": "PÅ LAGER",
           "pokemon-kort": "PÅ LAGER"
         },
         "surfaces": [
-          "pokemon-brand",
           "pokemon-kort"
         ],
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Zygarde-ex-Premium-Collection/3447589"
@@ -36422,6 +36422,6 @@
       }
     }
   },
-  "updated_at": 1790736274.8054605,
+  "updated_at": 1790736584.9663749,
   "version": 1
 }
