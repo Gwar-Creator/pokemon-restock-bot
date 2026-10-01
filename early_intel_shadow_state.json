@@ -6871,32 +6871,6 @@
       "fields": [
         "br"
       ],
-      "name": "Pokémon Pitch Black Premium Checklane – flere varianter – assorteret",
-      "product_id": "11320992-EA",
-      "sku": "11320992-EA",
-      "source": "cross_salling",
-      "stage_after": null,
-      "stage_before": null,
-      "ts": 1790601893.5826766
-    },
-    {
-      "event": "CROSS_CHANGE",
-      "fields": [
-        "br"
-      ],
-      "name": "Pokémon TCG Pitch Black Elite Trainer Box",
-      "product_id": "11320995-EA",
-      "sku": "11320995-EA",
-      "source": "cross_salling",
-      "stage_after": null,
-      "stage_before": null,
-      "ts": 1790601893.5826797
-    },
-    {
-      "event": "CROSS_CHANGE",
-      "fields": [
-        "br"
-      ],
       "name": "Pokémon Box Premium Ex Mega Greninja",
       "product_id": "11320999-EA",
       "sku": "11320999-EA",
@@ -20989,6 +20963,32 @@
       "stage_after": "INBOUND_UNDATED",
       "stage_before": null,
       "ts": 1790862288.7816176
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
+      "product_id": "3447589",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1790869107.4240465
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
+      "product_id": "3447589",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1790869705.224482
     }
   ],
   "sources": {
@@ -24751,7 +24751,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-boosterpakke-me02-5-ascended-heros/200353708/"
       },
       "200356077": {
-        "epoch_updated_at": 1790868759,
+        "epoch_updated_at": 1790869664,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -24807,7 +24807,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-tcg-booster-pack-samlekort/200356078/"
       },
       "200356085": {
-        "epoch_updated_at": 1790868760,
+        "epoch_updated_at": 1790869664,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -25159,7 +25159,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-mega-evolution-ascended-heroes-flere-varianter-assorteret/200366284/"
       },
       "200366285": {
-        "epoch_updated_at": 1790868760,
+        "epoch_updated_at": 1790869664,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -25358,7 +25358,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-tin-summer-ex-med-samlekort-mega-gengar/200371884/"
       },
       "200371885": {
-        "epoch_updated_at": 1790868760,
+        "epoch_updated_at": 1790869664,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -25661,7 +25661,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-first-partner-collection-box-3-samlekort/200385295/"
       },
       "200392202": {
-        "epoch_updated_at": 1790868759,
+        "epoch_updated_at": 1790869664,
         "expected_available_from": null,
         "f_campaign_name": [
           "Nyhed"
@@ -25753,7 +25753,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-binder-collection-30th/200392204/"
       },
       "200392205": {
-        "epoch_updated_at": 1790868759,
+        "epoch_updated_at": 1790869664,
         "expected_available_from": null,
         "f_campaign_name": [
           "Nyhed"
@@ -25815,7 +25815,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-ex-box-30th-samlekort/200392206/"
       },
       "200392214": {
-        "epoch_updated_at": 1790868759,
+        "epoch_updated_at": 1790869664,
         "expected_available_from": null,
         "f_campaign_name": [
           "Nyhed"
@@ -36392,6 +36392,6 @@
       }
     }
   },
-  "updated_at": 1790869408.0484686,
+  "updated_at": 1790869705.225778,
   "version": 1
 }
