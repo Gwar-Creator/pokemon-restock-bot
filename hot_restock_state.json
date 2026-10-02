@@ -55,45 +55,50 @@
     "proshop": {
       "3421827": {
         "name": "Pokemon TCG 2024 World Championships Deck",
-        "price": 329.0,
+        "price": null,
         "stock": "PÅ LAGER",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
-        "fetch_via": "jina_reader"
+        "fetch_via": "direct_frontend_search"
       },
       "3417744": {
         "name": "Pokemon TCG Mega Charizard X ex Ultra Premium Collection",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
-        "fetch_via": "jina_reader"
+        "fetch_via": "direct_frontend_search"
       },
       "3478498": {
         "name": "Pokemon TCG First Partner Illustration Collection Box Series 2",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-First-Partner-Illustration-Collection-Box-Series-2/3478498",
-        "fetch_via": "jina_reader"
+        "fetch_via": "direct_frontend_search"
+      },
+      "3519999": {
+        "name": "Pokemon Mini Tins 30th Celebration assorted",
+        "price": 149.0,
+        "stock": "UKENDT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-Mini-Tins-30th-Celebration-assorted/3519999"
       },
       "3478496": {
         "name": "Pokemon TCG Mega Greninja ex Premium Collection",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
-        "fetch_via": "jina_reader"
+        "fetch_via": "direct_frontend_search"
       },
       "3447592": {
         "name": "Pokemon TCG Mega EvolutionChaos Rising Booster box with 36 boosters",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-EvolutionChaos-Rising-Booster-box-with-36-boosters/3447592",
-        "fetch_via": "jina_reader"
+        "fetch_via": "direct_frontend_search"
       },
       "3519992": {
         "name": "Pokemon Booster Bundle 30th Celebration",
         "price": null,
         "stock": "BESTILLINGSVARE",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-Booster-Bundle-30th-Celebration/3519992",
-        "fetch_via": "jina_reader"
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-Booster-Bundle-30th-Celebration/3519992"
       }
     },
     "br": {
@@ -412,11 +417,11 @@
         "local_stocks": {
           "1662": {
             "name": "Bilka Kolding",
-            "stock": 0
+            "stock": 23
           },
           "1659": {
             "name": "Bilka Esbjerg",
-            "stock": 0
+            "stock": 15
           }
         },
         "quantity_limit": null,
@@ -432,16 +437,36 @@
         "local_stocks": {
           "1662": {
             "name": "Bilka Kolding",
-            "stock": 46
+            "stock": 0
           },
           "1659": {
             "name": "Bilka Esbjerg",
-            "stock": 19
+            "stock": 0
           }
         },
         "quantity_limit": 6,
         "sku": "11263280-EA",
         "url": "https://www.bilka.dk/produkter/pokemon-tcg-booster-pack-samlekort/200366277/"
+      },
+      "200397756": {
+        "name": "Pokemon Mini Tins 30th - flere varianter - assorteret",
+        "price": 179.0,
+        "online_count": 650,
+        "online_stock": true,
+        "store_count": 15,
+        "local_stocks": {
+          "1662": {
+            "name": "Bilka Kolding",
+            "stock": 79
+          },
+          "1659": {
+            "name": "Bilka Esbjerg",
+            "stock": 0
+          }
+        },
+        "quantity_limit": 1,
+        "sku": "11406830-EA",
+        "url": "https://www.bilka.dk/produkter/pokemon-mini-tins-30th-flere-varianter-assorteret/200397756/"
       }
     },
     "foetex": {
@@ -698,7 +723,7 @@
           },
           "1370": {
             "name": "føtex Kolding Syd",
-            "stock": 2
+            "stock": 0
           },
           "1223": {
             "name": "føtex Esbjerg Broen",
@@ -851,23 +876,23 @@
       "last_success_at": "2026-09-21T18:45:00.335465+00:00"
     },
     "boozt": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-10-01T16:04:50.069210+00:00",
+      "backoff_level": 2,
+      "next_allowed_at": 1790918598.365053,
+      "generic_failures": 2,
+      "last_error": "BOOZT fejlede: Reader: 401 Client Error: Unauthorized for url: https://r.jina.ai/https://www.boozt.com/dk/da/pokemon-trading-cards/born | direct: 429 Client Error: Too Many Requests for url: https://www.boozt.com/dk/da/pokemon-trading-cards/born",
+      "last_failure_at": "2026-10-02T05:18:18.365037+00:00",
       "last_success_at": "2026-10-01T16:09:29.013116+00:00"
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1790918103.9031193,
+      "next_allowed_at": 1790918399.1867473,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-09-26T15:39:28.835094+00:00",
-      "last_success_at": "2026-10-02T05:11:03.903095+00:00"
+      "last_success_at": "2026-10-02T05:15:59.186725+00:00"
     }
   },
-  "updated_at": "2026-10-02T05:14:35.914068+00:00",
+  "updated_at": "2026-10-02T05:19:37.083007+00:00",
   "proshop_discovery_version": 4,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -892,11 +917,11 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-10-02T05:11:03.018932+00:00"
+          "last_checked": "2026-10-02T05:15:58.662279+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1790917857.3974214,
+      "last_discovery_epoch": 1790918158.0497618,
       "last_full_discovery_epoch": 1790916956.332516,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
