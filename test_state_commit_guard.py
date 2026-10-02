@@ -138,6 +138,38 @@ class StateCommitGuardTests(unittest.TestCase):
         )
         self.assertEqual(result["_last_full_scan_epoch"], 100)
 
+    def test_restock_reuses_price_watch_listing_last_seen_when_unchanged(self):
+        old = {
+            "price_watch": {
+                "listings": {
+                    "x": {
+                        "source": "proshop",
+                        "price": 499.0,
+                        "in_stock": True,
+                        "last_seen": "old-listing",
+                    }
+                }
+            }
+        }
+        new = {
+            "price_watch": {
+                "listings": {
+                    "x": {
+                        "source": "proshop",
+                        "price": 499.0,
+                        "in_stock": True,
+                        "last_seen": "new-listing",
+                    }
+                }
+            }
+        }
+
+        result = compact_restock_state(old, new)
+        self.assertEqual(
+            result["price_watch"]["listings"]["x"]["last_seen"],
+            "old-listing",
+        )
+
     def test_restock_keeps_price_last_seen_on_real_price_change(self):
         old = {
             "price_watch": {

@@ -14,7 +14,7 @@ Der er tre separate driftsbaner:
 
 2. **HOT + Salling Early** — `.github/workflows/hot_restock.yml`
    - kører `hot_restock.py`
-   - kører Victini-watch og Salling Early Radar i et hurtigere loop
+   - kører HOT Restock og Salling Early Radar i et hurtigere loop
    - har separat state og separat GitHub-concurrency
 
 3. **Cardmarket** — `.github/workflows/cardmarket.yml`
@@ -42,7 +42,8 @@ State ligger fortsat i repository for at bevare eksisterende drift og historik. 
 
 - Local Stock genbruger `observed_at`, når produktets reelle data er uændrede.
 - HOT genbruger `last_success_at`/`updated_at`, når den øvrige source-state er uændret.
-- Salling early/Victini genbruger top-level `updated_at`, når indholdet ellers er identisk.
+- Salling Early Radar genbruger top-level `updated_at`, når indholdet ellers er identisk.
+- Price Watch genbruger `last_seen` for uændrede `listings`, så et no-op scan ikke omskriver tusindvis af rækker.
 - Hovedscannerens `_last_full_scan_epoch` persisteres mindst hvert 15. minut, så V44 recovery-heartbeat fortsat ligger sikkert under 30-minuttersgrænsen uden at skabe et Git-commit hvert femte minut.
 
 `restock.yml` stager kun kendte produktionsfiler og bruger ikke længere `git add -A`.

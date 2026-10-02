@@ -112,7 +112,26 @@ def _compact_price_last_seen(old, compact, section_key):
     new_section = compact.get(section_key) or {}
     if not isinstance(old_section, dict) or not isinstance(new_section, dict):
         return
-    _compact_product_timestamp_map(old_section, new_section, "last_seen")
+
+    # Price History stores rows under "products", while Price Watch stores
+    # focused listings under "listings". The old guard only handled
+    # "products", so every Price Watch row refreshed last_seen on each scan
+    # and created large no-op Git diffs.
+    for collection_key in ("products", "listings"):
+        old_entries = old_section.get(collection_key) or {}
+        new_entries = new_section.get(collection_key) or {}
+        if not isinstance(old_entries, dict) or not isinstance(new_entries, dict):
+            continue
+
+        for entry_key, new_entry in new_entries.items():
+            old_entry = old_entries.get(entry_key)
+            if not isinstance(old_entry, dict) or not isinstance(new_entry, dict):
+                continue
+            if _same_except_keys(old_entry, new_entry, {"last_seen"}):
+                if "last_seen" in old_entry:
+                    new_entry["last_seen"] = old_entry["last_seen"]
+                else:
+                    new_entry.pop("last_seen", None)
 
 
 def compact_restock_state(old, new):
