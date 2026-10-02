@@ -6836,8 +6836,8 @@
           "price": 179.0,
           "sold_in_stores": false,
           "sold_online": true,
-          "stage": "PREPARED",
-          "stock_online": 0,
+          "stage": "HIDDEN_STOCK",
+          "stock_online": 650,
           "stock_stores": 0
         },
         "br": {
@@ -6847,8 +6847,8 @@
           "price": 179.0,
           "sold_in_stores": false,
           "sold_online": true,
-          "stage": "PREPARED",
-          "stock_online": 0,
+          "stage": "HIDDEN_STOCK",
+          "stock_online": 650,
           "stock_stores": 0
         },
         "foetex": {
@@ -6858,8 +6858,8 @@
           "price": 179.0,
           "sold_in_stores": false,
           "sold_online": true,
-          "stage": "PREPARED",
-          "stock_online": 0,
+          "stage": "HIDDEN_STOCK",
+          "stock_online": 650,
           "stock_stores": 0
         }
       }
@@ -6905,52 +6905,6 @@
     }
   },
   "events": [
-    {
-      "event": "REMOVED",
-      "fields": [],
-      "name": "Pokemon TCG First Partner Illustration Collection Box Series 2",
-      "product_id": "3478498",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "INBOUND_UNDATED",
-      "stage_before": null,
-      "ts": 1790623773.4706867
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "surface_statuses"
-      ],
-      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
-      "product_id": "3447589",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1790624374.7288454
-    },
-    {
-      "event": "NEW",
-      "fields": [],
-      "name": "Pokemon TCG Mega Charizard X ex Ultra Premium Collection",
-      "product_id": "3417744",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "INBOUND_UNDATED",
-      "stage_before": null,
-      "ts": 1790624374.7288551
-    },
-    {
-      "event": "NEW",
-      "fields": [],
-      "name": "Pokemon TCG Mega EvolutionChaos Rising Booster box with 36 boosters",
-      "product_id": "3447592",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "INBOUND_UNDATED",
-      "stage_before": null,
-      "ts": 1790624374.7288592
-    },
     {
       "event": "NEW",
       "fields": [],
@@ -21027,6 +20981,63 @@
       "stage_after": null,
       "stage_before": null,
       "ts": 1790911472.535977
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stage",
+        "stock_count_online"
+      ],
+      "name": "Pokemon Mini Tins 30th - flere varianter - assorteret",
+      "product_id": "200397756",
+      "sku": "11406830-EA",
+      "source": "br",
+      "stage_after": "HIDDEN_STOCK",
+      "stage_before": "PREPARED",
+      "ts": 1790912677.4683151
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stage",
+        "stock_count_online"
+      ],
+      "name": "Pokemon Mini Tins 30th - flere varianter - assorteret",
+      "product_id": "200397756",
+      "sku": "11406830-EA",
+      "source": "bilka",
+      "stage_after": "HIDDEN_STOCK",
+      "stage_before": "PREPARED",
+      "ts": 1790912678.884397
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stage",
+        "stock_count_online"
+      ],
+      "name": "Pokemon Mini Tins 30th - flere varianter - assorteret",
+      "product_id": "200397756",
+      "sku": "11406830-EA",
+      "source": "foetex",
+      "stage_after": "HIDDEN_STOCK",
+      "stage_before": "PREPARED",
+      "ts": 1790912680.1864457
+    },
+    {
+      "event": "CROSS_CHANGE",
+      "fields": [
+        "bilka",
+        "br",
+        "foetex"
+      ],
+      "name": "Pokemon Mini Tins 30th - flere varianter - assorteret",
+      "product_id": "11406830-EA",
+      "sku": "11406830-EA",
+      "source": "cross_salling",
+      "stage_after": null,
+      "stage_before": null,
+      "ts": 1790912684.268324
     }
   ],
   "sources": {
@@ -26118,8 +26129,8 @@
         "sku": "11406830-EA",
         "sold_in_stores": false,
         "sold_online": true,
-        "stage": "PREPARED",
-        "stock_count_online": null,
+        "stage": "HIDDEN_STOCK",
+        "stock_count_online": 650,
         "url": "https://www.bilka.dk/produkter/pokemon-mini-tins-30th-flere-varianter-assorteret/200397756/"
       }
     },
@@ -31309,8 +31320,8 @@
         "sku": "11406830-EA",
         "sold_in_stores": false,
         "sold_online": true,
-        "stage": "PREPARED",
-        "stock_count_online": null,
+        "stage": "HIDDEN_STOCK",
+        "stock_count_online": 650,
         "url": "https://www.br.dk/produkter/pokemon-mini-tins-30th-flere-varianter-assorteret/200397756/"
       }
     },
@@ -36426,8 +36437,8 @@
         "sku": "11406830-EA",
         "sold_in_stores": false,
         "sold_online": true,
-        "stage": "PREPARED",
-        "stock_count_online": null,
+        "stage": "HIDDEN_STOCK",
+        "stock_count_online": 650,
         "url": "https://www.foetex.dk/produkter/pokemon-mini-tins-30th-flere-varianter-assorteret/200397756/"
       }
     },
@@ -36526,6 +36537,6 @@
       }
     }
   },
-  "updated_at": 1790912376.1721346,
+  "updated_at": 1790912684.2683642,
   "version": 1
 }
