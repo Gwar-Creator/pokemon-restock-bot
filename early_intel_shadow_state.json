@@ -6837,7 +6837,7 @@
           "sold_in_stores": false,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 488,
+          "stock_online": 484,
           "stock_stores": 15
         },
         "br": {
@@ -6848,7 +6848,7 @@
           "sold_in_stores": false,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 488,
+          "stock_online": 484,
           "stock_stores": 31
         },
         "foetex": {
@@ -6859,7 +6859,7 @@
           "sold_in_stores": false,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 488,
+          "stock_online": 484,
           "stock_stores": 14
         }
       }
@@ -6905,6 +6905,76 @@
     }
   },
   "events": [
+    {
+      "event": "CHANGE",
+      "fields": [
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
+      "product_id": "3447589",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1790632476.7042553
+    },
+    {
+      "event": "REMOVED",
+      "fields": [],
+      "name": "Pokemon TCG Mega Charizard X ex Ultra Premium Collection",
+      "product_id": "3417744",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "INBOUND_UNDATED",
+      "stage_before": null,
+      "ts": 1790632476.7042649
+    },
+    {
+      "event": "REMOVED",
+      "fields": [],
+      "name": "Pokemon TCG Mega EvolutionChaos Rising Booster box with 36 boosters",
+      "product_id": "3447592",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "INBOUND_UNDATED",
+      "stage_before": null,
+      "ts": 1790632476.7042687
+    },
+    {
+      "event": "REMOVED",
+      "fields": [],
+      "name": "Pokemon TCG Mega Greninja ex Premium Collection",
+      "product_id": "3478496",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "INBOUND_UNDATED",
+      "stage_before": null,
+      "ts": 1790632476.7042716
+    },
+    {
+      "event": "REMOVED",
+      "fields": [],
+      "name": "Pokemon TCG First Partner Illustration Collection Box Series 2",
+      "product_id": "3478498",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "INBOUND_UNDATED",
+      "stage_before": null,
+      "ts": 1790632476.7042735
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
+      "product_id": "3447589",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1790633104.1065638
+    },
     {
       "event": "NEW",
       "fields": [],
@@ -20867,7 +20937,7 @@
       "source": "br",
       "stage_after": "LIVE_STOCK",
       "stage_before": "LIVE_STOCK",
-      "ts": 1790919895.7382617
+      "ts": 1790919613.5408955
     },
     {
       "event": "CHANGE",
@@ -20880,7 +20950,7 @@
       "source": "bilka",
       "stage_after": "LIVE_STOCK",
       "stage_before": "LIVE_STOCK",
-      "ts": 1790919896.7091932
+      "ts": 1790919614.4091985
     },
     {
       "event": "CHANGE",
@@ -20893,7 +20963,7 @@
       "source": "bilka",
       "stage_after": "LIVE_STOCK",
       "stage_before": "LIVE_STOCK",
-      "ts": 1790919896.710145
+      "ts": 1790919614.4101346
     },
     {
       "event": "CHANGE",
@@ -20906,64 +20976,7 @@
       "source": "foetex",
       "stage_after": "LIVE_STOCK",
       "stage_before": "LIVE_STOCK",
-      "ts": 1790919897.6320393
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "surface_statuses"
-      ],
-      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
-      "product_id": "3447589",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1790919901.2821069
-    },
-    {
-      "event": "REMOVED",
-      "fields": [],
-      "name": "Pokemon TCG Mega Charizard X ex Ultra Premium Collection",
-      "product_id": "3417744",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "INBOUND_UNDATED",
-      "stage_before": null,
-      "ts": 1790919901.2821167
-    },
-    {
-      "event": "REMOVED",
-      "fields": [],
-      "name": "Pokemon TCG Mega EvolutionChaos Rising Booster box with 36 boosters",
-      "product_id": "3447592",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "INBOUND_UNDATED",
-      "stage_before": null,
-      "ts": 1790919901.28212
-    },
-    {
-      "event": "REMOVED",
-      "fields": [],
-      "name": "Pokemon TCG Mega Greninja ex Premium Collection",
-      "product_id": "3478496",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "INBOUND_UNDATED",
-      "stage_before": null,
-      "ts": 1790919901.282122
-    },
-    {
-      "event": "REMOVED",
-      "fields": [],
-      "name": "Pokemon TCG First Partner Illustration Collection Box Series 2",
-      "product_id": "3478498",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "INBOUND_UNDATED",
-      "stage_before": null,
-      "ts": 1790919901.2821243
+      "ts": 1790919615.2991905
     },
     {
       "event": "CROSS_CHANGE",
@@ -20976,7 +20989,7 @@
       "source": "cross_salling",
       "stage_after": null,
       "stage_before": null,
-      "ts": 1790919901.2831078
+      "ts": 1790919619.0654984
     },
     {
       "event": "CROSS_CHANGE",
@@ -20991,7 +21004,7 @@
       "source": "cross_salling",
       "stage_after": null,
       "stage_before": null,
-      "ts": 1790919901.283295
+      "ts": 1790919619.0656824
     },
     {
       "event": "CHANGE",
@@ -21004,7 +21017,7 @@
       "source": "br",
       "stage_after": "LIVE_STOCK",
       "stage_before": "LIVE_STOCK",
-      "ts": 1790920431.1724372
+      "ts": 1790920168.396833
     },
     {
       "event": "CHANGE",
@@ -21017,7 +21030,7 @@
       "source": "bilka",
       "stage_after": "LIVE_STOCK",
       "stage_before": "LIVE_STOCK",
-      "ts": 1790920432.0096402
+      "ts": 1790920169.1868634
     },
     {
       "event": "CHANGE",
@@ -21030,64 +21043,7 @@
       "source": "foetex",
       "stage_after": "LIVE_STOCK",
       "stage_before": "LIVE_STOCK",
-      "ts": 1790920432.942152
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "surface_statuses"
-      ],
-      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
-      "product_id": "3447589",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1790920436.6298203
-    },
-    {
-      "event": "NEW",
-      "fields": [],
-      "name": "Pokemon TCG Mega Charizard X ex Ultra Premium Collection",
-      "product_id": "3417744",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "INBOUND_UNDATED",
-      "stage_before": null,
-      "ts": 1790920436.6298306
-    },
-    {
-      "event": "NEW",
-      "fields": [],
-      "name": "Pokemon TCG Mega EvolutionChaos Rising Booster box with 36 boosters",
-      "product_id": "3447592",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "INBOUND_UNDATED",
-      "stage_before": null,
-      "ts": 1790920436.6298347
-    },
-    {
-      "event": "NEW",
-      "fields": [],
-      "name": "Pokemon TCG Mega Greninja ex Premium Collection",
-      "product_id": "3478496",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "INBOUND_UNDATED",
-      "stage_before": null,
-      "ts": 1790920436.629837
-    },
-    {
-      "event": "NEW",
-      "fields": [],
-      "name": "Pokemon TCG First Partner Illustration Collection Box Series 2",
-      "product_id": "3478498",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "INBOUND_UNDATED",
-      "stage_before": null,
-      "ts": 1790920436.6298387
+      "ts": 1790920169.9498193
     },
     {
       "event": "CROSS_CHANGE",
@@ -21102,7 +21058,61 @@
       "source": "cross_salling",
       "stage_after": null,
       "stage_before": null,
-      "ts": 1790920436.6309924
+      "ts": 1790920172.9935784
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokemon Mini Tins 30th - flere varianter - assorteret",
+      "product_id": "200397756",
+      "sku": "11406830-EA",
+      "source": "br",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1790920700.6705222
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokemon Mini Tins 30th - flere varianter - assorteret",
+      "product_id": "200397756",
+      "sku": "11406830-EA",
+      "source": "bilka",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1790920701.613933
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokemon Mini Tins 30th - flere varianter - assorteret",
+      "product_id": "200397756",
+      "sku": "11406830-EA",
+      "source": "foetex",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1790920702.450914
+    },
+    {
+      "event": "CROSS_CHANGE",
+      "fields": [
+        "bilka",
+        "br",
+        "foetex"
+      ],
+      "name": "Pokemon Mini Tins 30th - flere varianter - assorteret",
+      "product_id": "11406830-EA",
+      "sku": "11406830-EA",
+      "source": "cross_salling",
+      "stage_after": null,
+      "stage_before": null,
+      "ts": 1790920710.144029
     }
   ],
   "sources": {
@@ -26195,7 +26205,7 @@
         "sold_in_stores": false,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 488,
+        "stock_count_online": 484,
         "url": "https://www.bilka.dk/produkter/pokemon-mini-tins-30th-flere-varianter-assorteret/200397756/"
       }
     },
@@ -31386,7 +31396,7 @@
         "sold_in_stores": false,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 488,
+        "stock_count_online": 484,
         "url": "https://www.br.dk/produkter/pokemon-mini-tins-30th-flere-varianter-assorteret/200397756/"
       }
     },
@@ -36503,7 +36513,7 @@
         "sold_in_stores": false,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 488,
+        "stock_count_online": 484,
         "url": "https://www.foetex.dk/produkter/pokemon-mini-tins-30th-flere-varianter-assorteret/200397756/"
       }
     },
@@ -36602,6 +36612,6 @@
       }
     }
   },
-  "updated_at": 1790920436.6310253,
+  "updated_at": 1790920710.1440635,
   "version": 1
 }
