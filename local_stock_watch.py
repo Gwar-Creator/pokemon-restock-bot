@@ -388,7 +388,8 @@ def get_algolia_candidates(site_key, config):
     return candidates, len(hits)
 
 
-def get_target_store_stocks(site_key, config, sku, session, old_stocks=None):
+def get_store_stocks(site_key, config, sku, session, old_stocks=None):
+    """Return target-store stock plus every currently positive Salling store."""
     site = SITES[site_key]
     url = f"{config['api_url']}/clickcollect/availability/{sku}"
     headers = {
@@ -404,27 +405,38 @@ def get_target_store_stocks(site_key, config, sku, session, old_stocks=None):
     if not isinstance(payload, list):
         raise RuntimeError("availability svarede ikke med en liste")
 
-    stocks = {}
+    target_stocks = {}
+    national_stores = {}
+
     for item in payload:
         store = item.get("store") or {}
         store_name = str(store.get("name") or "").strip()
-        if not any(marker in store_name.lower() for marker in TARGET_STORE_MARKERS):
-            continue
         site_id = str(store.get("sapSiteId") or "") or (
             "name:" + normalize_search_text(store_name)
         )
-        stocks[site_id] = {
+        stock = max(0, safe_int(item.get("currentStock"), 0))
+        store_entry = {
             "name": store_name or site_id,
-            "stock": max(0, safe_int(item.get("currentStock"), 0)),
+            "stock": stock,
         }
 
+        # Keep only positive nationwide stores in state. This gives us exact
+        # locations without turning the state file into a huge all-store dump.
+        if stock > 0:
+            national_stores[site_id] = dict(store_entry)
+
+        # Discord local alerts remain limited to Kolding / Esbjerg.
+        if any(marker in store_name.lower() for marker in TARGET_STORE_MARKERS):
+            target_stocks[site_id] = dict(store_entry)
+
     for site_id, old_store in (old_stocks or {}).items():
-        if site_id not in stocks:
-            stocks[site_id] = {
+        if site_id not in target_stocks:
+            target_stocks[site_id] = {
                 "name": old_store.get("name") or site_id,
                 "stock": 0,
             }
-    return stocks
+
+    return target_stocks, national_stores
 
 
 def zero_known_stocks(old_stocks):
@@ -581,6 +593,32 @@ def send_discovery_alert(products):
     response.raise_for_status()
 
 
+def national_stock_lines(product, limit=15):
+    """Compact nationwide positive-stock lines for Discord."""
+    stores = product.get("national_stores") or {}
+    positive = []
+    for store in stores.values():
+        stock = max(0, safe_int((store or {}).get("stock"), 0))
+        if stock <= 0:
+            continue
+        positive.append(
+            (
+                str((store or {}).get("name") or "Ukendt butik").strip(),
+                stock,
+            )
+        )
+
+    positive.sort(key=lambda row: (-row[1], row[0].lower()))
+    lines = [
+        f"**{name}** · {stock} stk."
+        for name, stock in positive[:limit]
+    ]
+    remaining = len(positive) - len(lines)
+    if remaining > 0:
+        lines.append(f"+ {remaining} andre butikker med lager")
+    return lines
+
+
 def send_local_alert(product, transitions):
     if not local_stock_signal_allowed(product):
         return
@@ -613,12 +651,25 @@ def send_local_alert(product, transitions):
             "value": "\n".join(transition_lines)[:1024],
             "inline": False,
         },
+    ]
+
+    nationwide_lines = national_stock_lines(product)
+    if nationwide_lines:
+        fields.append(
+            {
+                "name": "Lager i Danmark",
+                "value": "\n".join(nationwide_lines)[:1024],
+                "inline": False,
+            }
+        )
+
+    fields.append(
         {
             "name": "Pris",
             "value": format_price(product.get("price"))[:1024],
             "inline": True,
-        },
-    ]
+        }
+    )
 
     if pre_publish:
         fields.append({
@@ -673,7 +724,7 @@ def scan_site(site_key, old_products):
         old_stocks = old_product.get("stocks") or {}
         try:
             if product["visibility"] == "PRE-PUBLISH" or product["store_count"] > 0:
-                stocks = get_target_store_stocks(
+                stocks, national_stores = get_store_stocks(
                     site_key,
                     config,
                     product["sku"],
@@ -682,6 +733,7 @@ def scan_site(site_key, old_products):
                 )
             else:
                 stocks = zero_known_stocks(old_stocks)
+                national_stores = {}
         except Exception as error:
             errors += 1
             print(
@@ -694,6 +746,7 @@ def scan_site(site_key, old_products):
             **product,
             "site": site["label"],
             "stocks": stocks,
+            "national_stores": national_stores,
             "observed_at": datetime.now(timezone.utc).isoformat(),
         }
 
