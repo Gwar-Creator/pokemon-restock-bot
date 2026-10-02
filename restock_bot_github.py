@@ -25,6 +25,7 @@ from pathlib import Path
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin, unquote, urlencode
 from datetime import datetime
+from concurrent.futures import ThreadPoolExecutor
 from zoneinfo import ZoneInfo
 
 
@@ -7805,24 +7806,56 @@ def _wave4_html_parse_page(url, force_preorder=False):
 
 
 def get_pokemonportalen_html_products():
-    products = {}
-    for category_url, force_preorder in POKEMONPORTALEN_HTML_FEEDS:
+    """Fetch independent PokemonPortalen categories concurrently.
+
+    Pagination inside each category stays sequential so we preserve the same
+    stop conditions and avoid an unnecessary request burst against one feed.
+    Results are merged in the original feed order for deterministic precedence.
+    """
+    feeds = tuple(POKEMONPORTALEN_HTML_FEEDS)
+
+    def fetch_feed(feed):
+        category_url, force_preorder = feed
+        feed_products = {}
         seen_count = 0
+
         for page in range(1, 8):
-            page_url = category_url if page == 1 else category_url.rstrip("/") + f"/page/{page}/"
+            page_url = (
+                category_url
+                if page == 1
+                else category_url.rstrip("/") + f"/page/{page}/"
+            )
             try:
-                page_products = _wave4_html_parse_page(page_url, force_preorder=force_preorder)
+                page_products = _wave4_html_parse_page(
+                    page_url,
+                    force_preorder=force_preorder,
+                )
             except requests.HTTPError as error:
                 if page > 1 and getattr(error.response, "status_code", None) == 404:
                     break
                 raise
+
             if not page_products:
                 break
-            before = len(products)
-            products.update(page_products)
-            if len(products) == before or len(page_products) == seen_count:
+
+            before = len(feed_products)
+            feed_products.update(page_products)
+
+            if len(feed_products) == before or len(page_products) == seen_count:
                 break
+
             seen_count = len(page_products)
+
+        return feed_products
+
+    products = {}
+    if not feeds:
+        return products
+
+    with ThreadPoolExecutor(max_workers=min(4, len(feeds))) as executor:
+        for partial in executor.map(fetch_feed, feeds):
+            products.update(partial)
+
     return products
 
 
@@ -8272,25 +8305,42 @@ def _faraos_name(card):
 
 
 def get_faraos_products():
-    products = {}
-    session = requests.Session()
-    session.headers.update({**BROWSER_HEADERS, "Accept-Language": "da-DK,da;q=0.9,en;q=0.8"})
+    """Fetch independent Faraos sealed category feeds concurrently."""
+    feeds = tuple(FARAOS_FEEDS)
 
-    for game, category_url in FARAOS_FEEDS:
+    def fetch_feed(feed):
+        game, category_url = feed
+        feed_products = {}
+        session = requests.Session()
+        session.headers.update(
+            {
+                **BROWSER_HEADERS,
+                "Accept-Language": "da-DK,da;q=0.9,en;q=0.8",
+            }
+        )
+
         response = session.get(category_url, timeout=30)
         response.raise_for_status()
         soup = BeautifulSoup(response.text, "html.parser")
 
         for card in _faraos_cards(soup):
             name = _faraos_name(card)
-            if not name or not woocommerce_is_relevant_sealed(_wave5_synthetic(name, game)):
+            if not name or not woocommerce_is_relevant_sealed(
+                _wave5_synthetic(name, game)
+            ):
                 continue
 
             card_text = woocommerce_clean_text(card.get_text(" ", strip=True))
             low = card_text.lower()
-            preorder = any(marker in low for marker in (
-                "forudbestil", "forudbestilling", "preorder", "pre-order"
-            ))
+            preorder = any(
+                marker in low
+                for marker in (
+                    "forudbestil",
+                    "forudbestilling",
+                    "preorder",
+                    "pre-order",
+                )
+            )
             explicit_out = "udsolgt" in low
             store_only = (
                 "varen kan kun købes i en butik" in low
@@ -8311,9 +8361,24 @@ def get_faraos_products():
                     break
 
             product_id = _wave5_stable_id("faraos", name, product_url)
-            products[product_id] = _wave5_product(
-                name, game, _wave5_price(card_text), explicit_in, preorder, product_url
+            feed_products[product_id] = _wave5_product(
+                name,
+                game,
+                _wave5_price(card_text),
+                explicit_in,
+                preorder,
+                product_url,
             )
+
+        return feed_products
+
+    products = {}
+    if not feeds:
+        return products
+
+    with ThreadPoolExecutor(max_workers=min(4, len(feeds))) as executor:
+        for partial in executor.map(fetch_feed, feeds):
+            products.update(partial)
 
     return products
 
@@ -8587,24 +8652,41 @@ def get_woocommerce_products(site_key):
             ),
         )
 
-    # Targeted searches are used only where the shop's category IDs are not
-    # stable/public enough to hard-code. Results are unioned and then pass the
-    # same sealed-product filter as category feeds.
-    for game, search_terms in (site.get("searches") or {}).items():
-        for search_term in search_terms:
-            add_raw_products(
-                game,
-                fetch_woocommerce_search(
-                    site["base"],
-                    search_term,
-                    max_pages=site.get("search_max_pages", 5),
-                    request_retries=site.get("request_retries", 0),
-                    retry_backoff_seconds=site.get(
-                        "retry_backoff_seconds",
-                        2,
-                    ),
+    # Targeted search terms are independent. Fetch a small number in parallel
+    # while keeping pagination inside each term sequential and conservative.
+    # executor.map preserves the original term order, so duplicate product IDs
+    # keep exactly the same precedence as before.
+    search_jobs = [
+        (game, search_term)
+        for game, search_terms in (site.get("searches") or {}).items()
+        for search_term in search_terms
+    ]
+
+    def fetch_search_job(job):
+        game, search_term = job
+        return (
+            game,
+            fetch_woocommerce_search(
+                site["base"],
+                search_term,
+                max_pages=site.get("search_max_pages", 5),
+                request_retries=site.get("request_retries", 0),
+                retry_backoff_seconds=site.get(
+                    "retry_backoff_seconds",
+                    2,
                 ),
-            )
+            ),
+        )
+
+    if search_jobs:
+        with ThreadPoolExecutor(
+            max_workers=min(4, len(search_jobs))
+        ) as executor:
+            for game, raw_products in executor.map(
+                fetch_search_job,
+                search_jobs,
+            ):
+                add_raw_products(game, raw_products)
 
     return products
 
@@ -8779,27 +8861,35 @@ def get_nextlevel_feed(feed):
 
 
 def get_nextlevel_products():
+    """Fetch independent Next Level category feeds concurrently."""
+    feeds = tuple(NEXTLEVEL_FEEDS)
     products = {}
 
-    for feed in NEXTLEVEL_FEEDS:
-        feed_products = get_nextlevel_feed(feed)
+    if not feeds:
+        return products
 
-        for product_id, product in feed_products.items():
-            old = products.get(product_id)
+    with ThreadPoolExecutor(max_workers=min(4, len(feeds))) as executor:
+        feed_results = executor.map(get_nextlevel_feed, feeds)
 
-            if old is None:
-                products[product_id] = product
-                continue
+        # map yields results in feed order, preserving the existing precedence
+        # when a product is present in more than one category.
+        for feed_products in feed_results:
+            for product_id, product in feed_products.items():
+                old = products.get(product_id)
 
-            if product.get("preorder"):
-                products[product_id] = product
-                continue
+                if old is None:
+                    products[product_id] = product
+                    continue
 
-            if (
-                old.get("status") == "UKENDT"
-                and product.get("status") != "UKENDT"
-            ):
-                products[product_id] = product
+                if product.get("preorder"):
+                    products[product_id] = product
+                    continue
+
+                if (
+                    old.get("status") == "UKENDT"
+                    and product.get("status") != "UKENDT"
+                ):
+                    products[product_id] = product
 
     return products
 
@@ -9089,50 +9179,38 @@ def get_epicpanda_page(url, game):
 
 
 def get_epicpanda_products():
-    products = {}
+    """Fetch the independent Pokemon and Lorcana feeds concurrently."""
+    feeds = tuple(EPICPANDA_FEEDS)
 
-    for feed in EPICPANDA_FEEDS:
+    def fetch_feed(feed):
+        feed_products = {}
         seen_ids = set()
 
-        for page in range(
-            1,
-            EPICPANDA_MAX_PAGES + 1
-        ):
-            url = feed["pattern"].format(
-                page=page
-            )
+        for page in range(1, EPICPANDA_MAX_PAGES + 1):
+            url = feed["pattern"].format(page=page)
+            page_products = get_epicpanda_page(url, feed["game"])
+            page_ids = set(page_products.keys())
+            new_ids = page_ids - seen_ids
 
-            page_products = get_epicpanda_page(
-                url,
-                feed["game"]
-            )
-
-            page_ids = set(
-                page_products.keys()
-            )
-
-            new_ids = (
-                page_ids
-                - seen_ids
-            )
-
-            if (
-                not page_products
-                or not new_ids
-            ):
+            if not page_products or not new_ids:
                 break
 
-            seen_ids.update(
-                page_ids
-            )
+            seen_ids.update(page_ids)
 
             for product_id, product in page_products.items():
-                if not epicpanda_is_relevant_sealed(
-                    product["name"]
-                ):
+                if not epicpanda_is_relevant_sealed(product["name"]):
                     continue
+                feed_products[product_id] = product
 
-                products[product_id] = product
+        return feed_products
+
+    products = {}
+    if not feeds:
+        return products
+
+    with ThreadPoolExecutor(max_workers=min(2, len(feeds))) as executor:
+        for partial in executor.map(fetch_feed, feeds):
+            products.update(partial)
 
     return products
 
