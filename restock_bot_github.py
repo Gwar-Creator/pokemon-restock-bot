@@ -1825,11 +1825,15 @@ def new_product_alert_allowed(product):
     stock = product.get("stock")
     if isinstance(stock, (int, float)) and stock > 0:
         return True
+    # Proshop uses BESTILLINGSVARE for newly published order/preorder-style
+    # catalogue entries. Treat that as actionable for NEW-product discovery;
+    # actual RESTOCK events still require the source-specific in-stock check.
     if str(stock or "").strip().upper() in {
         "PÅ LAGER",
         "PA LAGER",
         "IN STOCK",
         "AVAILABLE",
+        "BESTILLINGSVARE",
     }:
         return True
 
