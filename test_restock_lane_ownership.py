@@ -425,6 +425,29 @@ class RestockLaneOwnershipTests(unittest.TestCase):
         }
         self.assertTrue(shared["restock_alert_allowed"](product, "POKÉMON"))
 
+    def test_proshop_bestillingsvare_is_actionable_new_product(self):
+        previous = os.environ.get("DISCORD_WEBHOOK_URL")
+        os.environ["DISCORD_WEBHOOK_URL"] = "https://example.invalid/webhook"
+        try:
+            shared = hot_v4.base.load_shared_namespace()
+        finally:
+            if previous is None:
+                os.environ.pop("DISCORD_WEBHOOK_URL", None)
+            else:
+                os.environ["DISCORD_WEBHOOK_URL"] = previous
+
+        product = {
+            "name": "Pokemon Booster Bundle 30th Celebration",
+            "game": "POKÉMON",
+            "price": None,
+            "stock": "BESTILLINGSVARE",
+            "url": "https://www.proshop.dk/Pokemon/Pokemon-Booster-Bundle-30th-Celebration/3519992",
+        }
+
+        self.assertTrue(shared["restock_alert_allowed"](product, "POKÉMON"))
+        self.assertTrue(shared["new_product_alert_allowed"](product))
+
+
     def test_hot_shared_tier_a_policy_mutes_abundant_pack(self):
         shared = {"restock_alert_allowed": lambda _product, _game: True}
         products = {
