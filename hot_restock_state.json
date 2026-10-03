@@ -58,42 +58,42 @@
         "price": 329.0,
         "stock": "PÅ LAGER",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
-        "fetch_via": "jina_reader"
+        "fetch_via": "jina_reader+direct_frontend_search"
       },
       "3417744": {
         "name": "Pokemon TCG Mega Charizard X ex Ultra Premium Collection",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
-        "fetch_via": "jina_reader"
+        "fetch_via": "jina_reader+direct_frontend_search"
       },
       "3478498": {
         "name": "Pokemon TCG First Partner Illustration Collection Box Series 2",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-First-Partner-Illustration-Collection-Box-Series-2/3478498",
-        "fetch_via": "jina_reader"
+        "fetch_via": "jina_reader+direct_frontend_search"
       },
       "3478496": {
         "name": "Pokemon TCG Mega Greninja ex Premium Collection",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
-        "fetch_via": "jina_reader"
+        "fetch_via": "jina_reader+direct_frontend_search"
       },
       "3447592": {
         "name": "Pokemon TCG Mega EvolutionChaos Rising Booster box with 36 boosters",
         "price": null,
-        "stock": "PÅ LAGER",
+        "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-EvolutionChaos-Rising-Booster-box-with-36-boosters/3447592",
-        "fetch_via": "jina_reader"
+        "fetch_via": "jina_reader+direct_frontend_search"
       }
     },
     "br": {
       "200397756": {
         "name": "Pokemon Mini Tins 30th - flere varianter - assorteret",
         "price": 179.0,
-        "online_count": 63,
+        "online_count": 62,
         "online_stock": true,
         "store_count": 23,
         "kolding_stock": 0,
@@ -108,8 +108,8 @@
         "online_count": 400,
         "online_stock": true,
         "store_count": 31,
-        "kolding_stock": 21,
-        "esbjerg_stock": 12,
+        "kolding_stock": 0,
+        "esbjerg_stock": 0,
         "quantity_limit": null,
         "sku": "10791068-EA",
         "url": "https://www.br.dk/produkter/pokemon-battle-academy-2024/200279925/"
@@ -251,17 +251,17 @@
       "200397756": {
         "name": "Pokemon Mini Tins 30th - flere varianter - assorteret",
         "price": 179.0,
-        "online_count": 63,
+        "online_count": 62,
         "online_stock": true,
         "store_count": 15,
         "local_stocks": {
           "1662": {
             "name": "Bilka Kolding",
-            "stock": 11
+            "stock": 0
           },
           "1659": {
             "name": "Bilka Esbjerg",
-            "stock": 3
+            "stock": 0
           }
         },
         "quantity_limit": 1,
@@ -457,11 +457,11 @@
         "local_stocks": {
           "1662": {
             "name": "Bilka Kolding",
-            "stock": 46
+            "stock": 0
           },
           "1659": {
             "name": "Bilka Esbjerg",
-            "stock": 19
+            "stock": 0
           }
         },
         "quantity_limit": 6,
@@ -473,21 +473,21 @@
       "200397756": {
         "name": "Pokemon Mini Tins 30th - flere varianter - assorteret",
         "price": 179.0,
-        "online_count": 63,
+        "online_count": 62,
         "online_stock": true,
         "store_count": 51,
         "local_stocks": {
           "1307": {
             "name": "føtex Kolding",
-            "stock": 13
+            "stock": 0
           },
           "1370": {
             "name": "føtex Kolding Syd",
-            "stock": 12
+            "stock": 0
           },
           "1223": {
             "name": "føtex Esbjerg Broen",
-            "stock": 14
+            "stock": 0
           }
         },
         "quantity_limit": 1,
@@ -868,12 +868,12 @@
       "last_success_at": "2026-10-02T18:19:17.189031+00:00"
     },
     "proshop": {
-      "backoff_level": 2,
-      "next_allowed_at": 1791031619.6312706,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-10-03T12:26:13.759007+00:00",
-      "last_success_at": "2026-10-03T12:41:59.631257+00:00"
+      "backoff_level": 3,
+      "next_allowed_at": 1791031930.5185957,
+      "generic_failures": 1,
+      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "last_failure_at": "2026-10-03T12:37:10.518557+00:00",
+      "last_success_at": "2026-10-03T12:28:01.984212+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -909,14 +909,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1791031589.038728,
+      "next_allowed_at": 1791032090.093345,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-09-26T15:39:28.835094+00:00",
-      "last_success_at": "2026-10-03T12:42:29.038709+00:00"
+      "last_success_at": "2026-10-03T12:50:50.093319+00:00"
     }
   },
-  "updated_at": "2026-10-03T12:45:58.827748+00:00",
+  "updated_at": "2026-10-03T12:51:27.603154+00:00",
   "proshop_discovery_version": 4,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -941,11 +941,11 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-10-03T12:42:28.258880+00:00"
+          "last_checked": "2026-10-03T12:50:49.065342+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1791031347.551126,
+      "last_discovery_epoch": 1791031848.4853654,
       "last_full_discovery_epoch": 1791026155.2452974,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
