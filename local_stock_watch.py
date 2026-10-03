@@ -651,25 +651,12 @@ def send_local_alert(product, transitions):
             "value": "\n".join(transition_lines)[:1024],
             "inline": False,
         },
-    ]
-
-    nationwide_lines = national_stock_lines(product)
-    if nationwide_lines:
-        fields.append(
-            {
-                "name": "Lager i Danmark",
-                "value": "\n".join(nationwide_lines)[:1024],
-                "inline": False,
-            }
-        )
-
-    fields.append(
         {
             "name": "Pris",
             "value": format_price(product.get("price"))[:1024],
             "inline": True,
-        }
-    )
+        },
+    ]
 
     if pre_publish:
         fields.append({
@@ -723,7 +710,12 @@ def scan_site(site_key, old_products):
         old_product = old_products.get(key) or {}
         old_stocks = old_product.get("stocks") or {}
         try:
-            if product["visibility"] == "PRE-PUBLISH" or product["store_count"] > 0:
+            # Algolia's chainwide store_count is the confirmation gate for
+            # physical stock. The availability endpoint can expose stale/ghost
+            # quantities for PRE-PUBLISH products even while store_count is 0.
+            # Keep PRE-PUBLISH discovery, but do not let unconfirmed endpoint
+            # quantities become local alert state.
+            if product["store_count"] > 0:
                 stocks, national_stores = get_store_stocks(
                     site_key,
                     config,
