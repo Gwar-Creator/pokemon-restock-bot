@@ -93,7 +93,7 @@
       "200397756": {
         "name": "Pokemon Mini Tins 30th - flere varianter - assorteret",
         "price": 179.0,
-        "online_count": 61,
+        "online_count": 60,
         "online_stock": true,
         "store_count": 23,
         "kolding_stock": 0,
@@ -251,7 +251,7 @@
       "200397756": {
         "name": "Pokemon Mini Tins 30th - flere varianter - assorteret",
         "price": 179.0,
-        "online_count": 61,
+        "online_count": 60,
         "online_stock": true,
         "store_count": 15,
         "local_stocks": {
@@ -261,7 +261,7 @@
           },
           "1659": {
             "name": "Bilka Esbjerg",
-            "stock": 3
+            "stock": 1
           }
         },
         "quantity_limit": 1,
@@ -473,7 +473,7 @@
       "200397756": {
         "name": "Pokemon Mini Tins 30th - flere varianter - assorteret",
         "price": 179.0,
-        "online_count": 61,
+        "online_count": 60,
         "online_stock": true,
         "store_count": 51,
         "local_stocks": {
@@ -747,7 +747,7 @@
           },
           "1370": {
             "name": "føtex Kolding Syd",
-            "stock": 0
+            "stock": 2
           },
           "1223": {
             "name": "føtex Esbjerg Broen",
@@ -868,12 +868,12 @@
       "last_success_at": "2026-10-02T18:19:17.189031+00:00"
     },
     "proshop": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-10-03T12:26:13.759007+00:00",
-      "last_success_at": "2026-10-03T12:56:09.462582+00:00"
+      "backoff_level": 3,
+      "next_allowed_at": 1791033125.3827252,
+      "generic_failures": 2,
+      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "last_failure_at": "2026-10-03T12:57:05.382691+00:00",
+      "last_success_at": "2026-10-03T12:28:01.984212+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -909,14 +909,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1791032431.1273754,
+      "next_allowed_at": 1791032487.4923596,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-09-26T15:39:28.835094+00:00",
-      "last_success_at": "2026-10-03T12:56:31.127352+00:00"
+      "last_success_at": "2026-10-03T12:57:27.492335+00:00"
     }
   },
-  "updated_at": "2026-10-03T12:56:31.127389+00:00",
+  "updated_at": "2026-10-03T13:01:02.854959+00:00",
   "proshop_discovery_version": 4,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -941,11 +941,11 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-10-03T12:56:30.357651+00:00"
+          "last_checked": "2026-10-03T12:57:26.637149+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1791032189.6711917,
+      "last_discovery_epoch": 1791032245.772944,
       "last_full_discovery_epoch": 1791026155.2452974,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
