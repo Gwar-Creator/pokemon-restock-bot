@@ -9040,12 +9040,26 @@
       "sku": "11381817-EA",
       "price": 349.0,
       "visibility": "LIVE",
-      "store_count": 0,
+      "store_count": 1,
       "url": "https://www.br.dk/produkter/pokemon-sylveon-ex-box-30th/200392806/",
       "site": "BR",
-      "stocks": {},
-      "national_stores": {},
-      "observed_at": "2026-10-02T19:01:00.704499+00:00"
+      "stocks": {
+        "2011": {
+          "name": "BR Esbjerg",
+          "stock": 0
+        },
+        "2021": {
+          "name": "BR Kolding",
+          "stock": 0
+        }
+      },
+      "national_stores": {
+        "2007": {
+          "name": "BR Bruuns Galleri Århus",
+          "stock": 1
+        }
+      },
+      "observed_at": "2026-10-03T17:25:26.843328+00:00"
     },
     "br:200392205": {
       "id": "200392205",
@@ -9275,7 +9289,7 @@
       "sku": "11406830-EA",
       "price": 179.0,
       "visibility": "LIVE",
-      "store_count": 46,
+      "store_count": 43,
       "url": "https://www.foetex.dk/produkter/pokemon-mini-tins-30th-flere-varianter-assorteret/200397756/",
       "site": "FØTEX",
       "stocks": {
@@ -9285,7 +9299,7 @@
         },
         "1307": {
           "name": "føtex Kolding",
-          "stock": 12
+          "stock": 11
         },
         "1370": {
           "name": "føtex Kolding Syd",
@@ -9304,10 +9318,6 @@
         "1383": {
           "name": "føtex Østerbro Centret",
           "stock": 2
-        },
-        "1382": {
-          "name": "føtex Nørresundby",
-          "stock": 3
         },
         "1381": {
           "name": "føtex City 2",
@@ -9391,7 +9401,7 @@
         },
         "1307": {
           "name": "føtex Kolding",
-          "stock": 12
+          "stock": 11
         },
         "1362": {
           "name": "føtex Skanderborg",
@@ -9466,7 +9476,7 @@
           "stock": 10
         }
       },
-      "observed_at": "2026-10-03T17:15:47.012635+00:00"
+      "observed_at": "2026-10-03T17:25:34.685006+00:00"
     },
     "br:200397758": {
       "id": "200397758",
@@ -9633,6 +9643,6 @@
       "observed_at": "2026-10-03T17:20:34.704881+00:00"
     }
   },
-  "last_run": "2026-10-03T17:20:44.430985+00:00",
+  "last_run": "2026-10-03T17:25:37.096931+00:00",
   "last_run_errors": 7
 }
