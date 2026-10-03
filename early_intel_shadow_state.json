@@ -6906,19 +6906,6 @@
   },
   "events": [
     {
-      "event": "CHANGE",
-      "fields": [
-        "in_stock_stores_count"
-      ],
-      "name": "Pokémon TCG booster pack samlekort",
-      "product_id": "200366277",
-      "sku": "11263280-EA",
-      "source": "foetex",
-      "stage_after": "HIDDEN_STOCK",
-      "stage_before": "HIDDEN_STOCK",
-      "ts": 1790789078.1214457
-    },
-    {
       "event": "CROSS_CHANGE",
       "fields": [
         "br"
@@ -22030,6 +22017,19 @@
       "stage_after": "INBOUND_UNDATED",
       "stage_before": null,
       "ts": 1790986177.9350467
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
+      "product_id": "3447589",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1790986477.114718
     }
   ],
   "sources": {
@@ -37464,9 +37464,11 @@
         "stage": "LIVE_STOCK",
         "status": "PÅ LAGER",
         "surface_statuses": {
+          "pokemon-brand": "PÅ LAGER",
           "pokemon-kort": "PÅ LAGER"
         },
         "surfaces": [
+          "pokemon-brand",
           "pokemon-kort"
         ],
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Zygarde-ex-Premium-Collection/3447589"
@@ -37527,6 +37529,6 @@
       }
     }
   },
-  "updated_at": 1790986177.9361448,
+  "updated_at": 1790986477.1156147,
   "version": 1
 }
