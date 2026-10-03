@@ -100,6 +100,27 @@ class LocalStockAvailabilityResilienceTests(unittest.TestCase):
         self.assertEqual(stocks["1662"]["stock"], 28)
         self.assertEqual(national["1661"]["stock"], 6)
 
+    def test_nonempty_payload_with_positive_store_is_accepted(self):
+        payload = [
+            {
+                "store": {
+                    "name": "Bilka Vejle",
+                    "sapSiteId": "1661",
+                },
+                "currentStock": 6,
+            }
+        ]
+        stocks, national = local.get_store_stocks(
+            "bilka",
+            self.config,
+            "11406830-EA",
+            _FakeAvailabilitySession(payload),
+            old_stocks=self.old_stocks,
+        )
+        self.assertEqual(national["1661"]["stock"], 6)
+        self.assertEqual(stocks["1659"]["stock"], 21)
+        self.assertEqual(stocks["1662"]["stock"], 28)
+
     def test_explicit_target_store_zero_is_kept_as_real_zero(self):
         payload = [
             {
