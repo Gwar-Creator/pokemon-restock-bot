@@ -404,6 +404,11 @@ def get_store_stocks(site_key, config, sku, session, old_stocks=None):
     payload = response.json()
     if not isinstance(payload, list):
         raise RuntimeError("availability svarede ikke med en liste")
+    if not payload:
+        # This endpoint occasionally returns HTTP 200 + [] even when Algolia
+        # still reports stores with stock. Treat that as an incomplete scan,
+        # not as a chain-wide/local sellout.
+        raise RuntimeError("availability svarede med en tom liste")
 
     target_stocks = {}
     national_stores = {}
@@ -431,9 +436,14 @@ def get_store_stocks(site_key, config, sku, session, old_stocks=None):
 
     for site_id, old_store in (old_stocks or {}).items():
         if site_id not in target_stocks:
+            # A missing target store in an otherwise valid response is unknown,
+            # not zero. Genuine zero stock is represented explicitly by Salling.
+            # Preserve the previous value so a partial payload cannot manufacture
+            # a false 0 -> positive restock on the next scan.
+            old_store = old_store or {}
             target_stocks[site_id] = {
                 "name": old_store.get("name") or site_id,
-                "stock": 0,
+                "stock": max(0, safe_int(old_store.get("stock"), 0)),
             }
 
     return target_stocks, national_stores
