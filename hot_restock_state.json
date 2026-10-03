@@ -93,7 +93,7 @@
       "200397756": {
         "name": "Pokemon Mini Tins 30th - flere varianter - assorteret",
         "price": 179.0,
-        "online_count": 6,
+        "online_count": 5,
         "online_stock": true,
         "store_count": 21,
         "kolding_stock": 0,
@@ -251,7 +251,7 @@
       "200397756": {
         "name": "Pokemon Mini Tins 30th - flere varianter - assorteret",
         "price": 179.0,
-        "online_count": 6,
+        "online_count": 5,
         "online_stock": true,
         "store_count": 11,
         "local_stocks": {
@@ -473,7 +473,7 @@
       "200397756": {
         "name": "Pokemon Mini Tins 30th - flere varianter - assorteret",
         "price": 179.0,
-        "online_count": 6,
+        "online_count": 5,
         "online_stock": true,
         "store_count": 43,
         "local_stocks": {
@@ -868,11 +868,11 @@
       "last_success_at": "2026-10-02T18:19:17.189031+00:00"
     },
     "proshop": {
-      "backoff_level": 1,
-      "next_allowed_at": 1791055569.778606,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-10-03T19:18:21.637578+00:00",
+      "backoff_level": 2,
+      "next_allowed_at": 1791055885.2147655,
+      "generic_failures": 1,
+      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "last_failure_at": "2026-10-03T19:26:25.214727+00:00",
       "last_success_at": "2026-10-03T19:24:09.778590+00:00"
     },
     "br": {
@@ -909,14 +909,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1791055487.109645,
+      "next_allowed_at": 1791055793.3221872,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-09-26T15:39:28.835094+00:00",
-      "last_success_at": "2026-10-03T19:20:47.109623+00:00"
+      "last_success_at": "2026-10-03T19:25:53.322164+00:00"
     }
   },
-  "updated_at": "2026-10-03T19:24:26.098715+00:00",
+  "updated_at": "2026-10-03T19:29:25.258637+00:00",
   "proshop_discovery_version": 4,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -941,11 +941,11 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-10-03T19:20:46.563925+00:00"
+          "last_checked": "2026-10-03T19:25:52.396457+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1791055245.8499691,
+      "last_discovery_epoch": 1791055551.2364635,
       "last_full_discovery_epoch": 1791048054.9082787,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
