@@ -58,35 +58,35 @@
         "price": 329.0,
         "stock": "PÅ LAGER",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
-        "fetch_via": "jina_reader"
+        "fetch_via": "jina_reader+direct_frontend_search"
       },
       "3417744": {
         "name": "Pokemon TCG Mega Charizard X ex Ultra Premium Collection",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
-        "fetch_via": "jina_reader"
+        "fetch_via": "jina_reader+direct_frontend_search"
       },
       "3478498": {
         "name": "Pokemon TCG First Partner Illustration Collection Box Series 2",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-First-Partner-Illustration-Collection-Box-Series-2/3478498",
-        "fetch_via": "jina_reader"
+        "fetch_via": "jina_reader+direct_frontend_search"
       },
       "3447592": {
         "name": "Pokemon TCG Mega EvolutionChaos Rising Booster box with 36 boosters",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-EvolutionChaos-Rising-Booster-box-with-36-boosters/3447592",
-        "fetch_via": "jina_reader"
+        "fetch_via": "jina_reader+direct_frontend_search"
       },
       "3478496": {
         "name": "Pokemon TCG Mega Greninja ex Premium Collection",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
-        "fetch_via": "jina_reader"
+        "fetch_via": "jina_reader+direct_frontend_search"
       }
     },
     "br": {
@@ -97,7 +97,7 @@
         "online_stock": false,
         "store_count": 21,
         "kolding_stock": 0,
-        "esbjerg_stock": 0,
+        "esbjerg_stock": 23,
         "quantity_limit": 1,
         "sku": "11406830-EA",
         "url": "https://www.br.dk/produkter/pokemon-mini-tins-30th-flere-varianter-assorteret/200397756/"
@@ -868,12 +868,12 @@
       "last_success_at": "2026-10-03T19:54:11.337373+00:00"
     },
     "proshop": {
-      "backoff_level": 2,
-      "next_allowed_at": 1791064999.2981617,
-      "generic_failures": 1,
-      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
-      "last_failure_at": "2026-10-03T21:58:19.298119+00:00",
-      "last_success_at": "2026-10-03T21:44:15.020540+00:00"
+      "backoff_level": 0,
+      "next_allowed_at": 0.0,
+      "generic_failures": 0,
+      "last_error": null,
+      "last_failure_at": "2026-10-03T22:03:42.913328+00:00",
+      "last_success_at": "2026-10-03T22:06:26.197328+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -909,14 +909,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1791064960.5141957,
+      "next_allowed_at": 1791065231.7155602,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-09-26T15:39:28.835094+00:00",
-      "last_success_at": "2026-10-03T21:58:40.514170+00:00"
+      "last_success_at": "2026-10-03T22:03:11.715537+00:00"
     }
   },
-  "updated_at": "2026-10-03T22:02:15.680508+00:00",
+  "updated_at": "2026-10-03T22:06:47.052697+00:00",
   "proshop_discovery_version": 4,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -941,11 +941,11 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-10-03T21:58:39.578907+00:00"
+          "last_checked": "2026-10-03T22:03:10.926738+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1791064718.694539,
+      "last_discovery_epoch": 1791064990.124565,
       "last_full_discovery_epoch": 1791048054.9082787,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
