@@ -6837,7 +6837,7 @@
           "sold_in_stores": false,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 1,
+          "stock_online": 0,
           "stock_stores": 11
         },
         "br": {
@@ -6848,7 +6848,7 @@
           "sold_in_stores": false,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 1,
+          "stock_online": 0,
           "stock_stores": 21
         },
         "foetex": {
@@ -6859,7 +6859,7 @@
           "sold_in_stores": false,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 1,
+          "stock_online": 0,
           "stock_stores": 43
         }
       }
@@ -6905,58 +6905,6 @@
     }
   },
   "events": [
-    {
-      "event": "CHANGE",
-      "fields": [
-        "stock_count_online"
-      ],
-      "name": "Pokemon Mini Tins 30th - flere varianter - assorteret",
-      "product_id": "200397756",
-      "sku": "11406830-EA",
-      "source": "br",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1790940574.4230564
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "stock_count_online"
-      ],
-      "name": "Pokemon Mini Tins 30th - flere varianter - assorteret",
-      "product_id": "200397756",
-      "sku": "11406830-EA",
-      "source": "bilka",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1790940575.5451105
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "stock_count_online"
-      ],
-      "name": "Pokemon Mini Tins 30th - flere varianter - assorteret",
-      "product_id": "200397756",
-      "sku": "11406830-EA",
-      "source": "foetex",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1790940576.7049809
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "surface_statuses"
-      ],
-      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
-      "product_id": "3447589",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1790940581.1760688
-    },
     {
       "event": "NEW",
       "fields": [],
@@ -22336,6 +22284,60 @@
       "stage_after": null,
       "stage_before": null,
       "ts": 1791056980.4465456
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokemon Mini Tins 30th - flere varianter - assorteret",
+      "product_id": "200397756",
+      "sku": "11406830-EA",
+      "source": "br",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1791057563.805893
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokemon Mini Tins 30th - flere varianter - assorteret",
+      "product_id": "200397756",
+      "sku": "11406830-EA",
+      "source": "bilka",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1791057564.8893492
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokemon Mini Tins 30th - flere varianter - assorteret",
+      "product_id": "200397756",
+      "sku": "11406830-EA",
+      "source": "foetex",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1791057565.9755764
+    },
+    {
+      "event": "CROSS_CHANGE",
+      "fields": [
+        "bilka",
+        "br",
+        "foetex"
+      ],
+      "name": "Pokemon Mini Tins 30th - flere varianter - assorteret",
+      "product_id": "11406830-EA",
+      "sku": "11406830-EA",
+      "source": "cross_salling",
+      "stage_after": null,
+      "stage_before": null,
+      "ts": 1791057572.5438688
     }
   ],
   "sources": {
@@ -27427,7 +27429,7 @@
         "sold_in_stores": false,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 1,
+        "stock_count_online": 0,
         "url": "https://www.bilka.dk/produkter/pokemon-mini-tins-30th-flere-varianter-assorteret/200397756/"
       }
     },
@@ -32619,7 +32621,7 @@
         "sold_in_stores": false,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 1,
+        "stock_count_online": 0,
         "url": "https://www.br.dk/produkter/pokemon-mini-tins-30th-flere-varianter-assorteret/200397756/"
       }
     },
@@ -37736,7 +37738,7 @@
         "sold_in_stores": false,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 1,
+        "stock_count_online": 0,
         "url": "https://www.foetex.dk/produkter/pokemon-mini-tins-30th-flere-varianter-assorteret/200397756/"
       }
     },
@@ -37786,7 +37788,7 @@
         "name": "Pokemon TCG Mega EvolutionChaos Rising Booster box with 36 boosters",
         "new_badge": false,
         "price": null,
-        "raw_status_excerpt": " Bestillingsvare, leveringstiden kan ikke oplyses * [![Image 16: Pokemon - Pokemon TCG Portfolio 4-P Pikachu - ULT89433](https://www.proshop.dk/Images/174x116/3276606_162b40637b7c.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-Portfolio-4-P-Pikachu/3276606 \"Pokemon TCG Portfolio 4-P Pikachu - ULT89433\") ## ",
+        "raw_status_excerpt": " Bestillingsvare, leveringstiden kan ikke oplyses * [![Image 15: Pokemon - Pokemon TCG Mega Greninja ex Premium Collection - POK10413-101](https://www.proshop.dk/Images/174x116/3478496_3c2192ce2a6e.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496 \"Pokemon TCG Mega Greninja ex Premium Collection - POK10413-101\") ## ",
         "stage": "INBOUND_UNDATED",
         "status": "BESTILLINGSVARE",
         "surface_statuses": {
@@ -37804,7 +37806,7 @@
         "name": "Pokemon TCG Mega Greninja ex Premium Collection",
         "new_badge": false,
         "price": null,
-        "raw_status_excerpt": " Bestillingsvare, leveringstiden kan ikke oplyses * [![Image 15: Pokemon - Pokemon TCG Mega Evolution—Chaos Rising Booster (box with 36 boosters) - POK10407-101](https://www.proshop.dk/Images/174x116/3447592_bf6f55217e66.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-EvolutionChaos-Rising-Booster-box-with-36-boosters/3447592 \"Pokemon TCG Mega Evolution—Chaos Rising Booster (box with 36 boosters) - POK10407-101\") ## ",
+        "raw_status_excerpt": " Bestillingsvare, leveringstiden kan ikke oplyses * [![Image 16: Pokemon - Pokemon TCG Portfolio 4-P Pikachu - ULT89433](https://www.proshop.dk/Images/174x116/3276606_162b40637b7c.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-Portfolio-4-P-Pikachu/3276606 \"Pokemon TCG Portfolio 4-P Pikachu - ULT89433\") ## ",
         "stage": "INBOUND_UNDATED",
         "status": "BESTILLINGSVARE",
         "surface_statuses": {
@@ -37835,6 +37837,6 @@
       }
     }
   },
-  "updated_at": 1791057280.7608604,
+  "updated_at": 1791057572.5438979,
   "version": 1
 }
