@@ -733,6 +733,16 @@ def scan_site(site_key, old_products):
                     session,
                     old_stocks=old_stocks,
                 )
+                if not national_stores:
+                    # Algolia says this product has positive chainwide stock,
+                    # so an availability snapshot with zero positive stores is
+                    # internally inconsistent. Keep the previous state instead
+                    # of manufacturing a local sellout/restock cycle.
+                    raise RuntimeError(
+                        "availability inkonsistent: "
+                        f"Algolia={product['store_count']} butikker, "
+                        "endpoint=0 positive butikker"
+                    )
             else:
                 stocks = zero_known_stocks(old_stocks)
                 national_stores = {}
