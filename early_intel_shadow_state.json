@@ -21502,20 +21502,6 @@
     {
       "event": "CHANGE",
       "fields": [
-        "in_stock_stores_count",
-        "stage"
-      ],
-      "name": "Pokémon Elite Trainer Box 30th samlekort",
-      "product_id": "200392202",
-      "sku": "11379490-EA",
-      "source": "br",
-      "stage_after": "EXPOSED_NO_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1791213945.053437
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
         "in_stock_stores_count"
       ],
       "name": "Pokémon Battle Deck EX samlekort",
@@ -21524,7 +21510,7 @@
       "source": "foetex",
       "stage_after": "LIVE_STOCK",
       "stage_before": "LIVE_STOCK",
-      "ts": 1791213947.3885884
+      "ts": 1791213668.2066197
     },
     {
       "event": "CHANGE",
@@ -21537,7 +21523,7 @@
       "source": "foetex",
       "stage_after": "HIDDEN_STOCK",
       "stage_before": "HIDDEN_STOCK",
-      "ts": 1791213947.3895266
+      "ts": 1791213668.2075906
     },
     {
       "event": "CROSS_CHANGE",
@@ -21550,20 +21536,7 @@
       "source": "cross_salling",
       "stage_after": null,
       "stage_before": null,
-      "ts": 1791213951.66504
-    },
-    {
-      "event": "CROSS_CHANGE",
-      "fields": [
-        "br"
-      ],
-      "name": "Pokémon Elite Trainer Box 30th samlekort",
-      "product_id": "11379490-EA",
-      "sku": "11379490-EA",
-      "source": "cross_salling",
-      "stage_after": null,
-      "stage_before": null,
-      "ts": 1791213951.6652086
+      "ts": 1791213671.9190693
     },
     {
       "event": "CROSS_CHANGE",
@@ -21576,7 +21549,34 @@
       "source": "cross_salling",
       "stage_after": null,
       "stage_before": null,
-      "ts": 1791213951.6652286
+      "ts": 1791213671.9192574
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "in_stock_stores_count",
+        "stage"
+      ],
+      "name": "Pokémon Elite Trainer Box 30th samlekort",
+      "product_id": "200392202",
+      "sku": "11379490-EA",
+      "source": "br",
+      "stage_after": "EXPOSED_NO_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1791214215.5607345
+    },
+    {
+      "event": "CROSS_CHANGE",
+      "fields": [
+        "br"
+      ],
+      "name": "Pokémon Elite Trainer Box 30th samlekort",
+      "product_id": "11379490-EA",
+      "sku": "11379490-EA",
+      "source": "cross_salling",
+      "stage_after": null,
+      "stage_before": null,
+      "ts": 1791214221.8722565
     }
   ],
   "sources": {
@@ -37068,6 +37068,6 @@
       }
     }
   },
-  "updated_at": 1791213951.665269,
+  "updated_at": 1791214221.872288,
   "version": 1
 }
