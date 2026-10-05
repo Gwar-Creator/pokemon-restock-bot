@@ -6913,19 +6913,6 @@
       "name": "Pokemon Mini Tins 30th - flere varianter - assorteret",
       "product_id": "200397756",
       "sku": "11406830-EA",
-      "source": "bilka",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1791014968.4287972
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "stock_count_online"
-      ],
-      "name": "Pokemon Mini Tins 30th - flere varianter - assorteret",
-      "product_id": "200397756",
-      "sku": "11406830-EA",
       "source": "foetex",
       "stage_after": "LIVE_STOCK",
       "stage_before": "LIVE_STOCK",
@@ -21630,6 +21617,19 @@
       "stage_after": "INBOUND_UNDATED",
       "stage_before": null,
       "ts": 1791191671.838915
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
+      "product_id": "3447589",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1791191980.5706925
     }
   ],
   "sources": {
@@ -25941,7 +25941,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-mini-tin-med-samlekort-feraligatr-budew/200371877/"
       },
       "200371882": {
-        "epoch_updated_at": 1791190943,
+        "epoch_updated_at": 1791191848,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -26300,7 +26300,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-first-partner-collection-box-3-samlekort/200385295/"
       },
       "200392202": {
-        "epoch_updated_at": 1791190943,
+        "epoch_updated_at": 1791191848,
         "expected_available_from": null,
         "f_campaign_name": [
           "Nyhed"
@@ -26362,7 +26362,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-tech-sticker-collection-30th/200392203/"
       },
       "200392204": {
-        "epoch_updated_at": 1791190942,
+        "epoch_updated_at": 1791191848,
         "expected_available_from": null,
         "f_campaign_name": [
           "Nyhed"
@@ -26392,7 +26392,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-binder-collection-30th/200392204/"
       },
       "200392205": {
-        "epoch_updated_at": 1791190942,
+        "epoch_updated_at": 1791191848,
         "expected_available_from": null,
         "f_campaign_name": [
           "Nyhed"
@@ -26454,7 +26454,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-ex-box-30th-samlekort/200392206/"
       },
       "200392214": {
-        "epoch_updated_at": 1791190943,
+        "epoch_updated_at": 1791191848,
         "expected_available_from": null,
         "f_campaign_name": [
           "Nyhed"
@@ -26572,7 +26572,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-30th-lucario-sticker/200392805/"
       },
       "200392806": {
-        "epoch_updated_at": 1791190942,
+        "epoch_updated_at": 1791191848,
         "expected_available_from": null,
         "f_campaign_name": [
           "Nyhed"
@@ -26602,7 +26602,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-sylveon-ex-box-30th/200392806/"
       },
       "200392807": {
-        "epoch_updated_at": 1791190942,
+        "epoch_updated_at": 1791191848,
         "expected_available_from": null,
         "f_campaign_name": [
           "Nyhed"
@@ -26662,7 +26662,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-sylveon-ex-tin-samlekort/200392808/"
       },
       "200392809": {
-        "epoch_updated_at": 1791190942,
+        "epoch_updated_at": 1791191848,
         "expected_available_from": null,
         "f_campaign_name": [
           "Nyhed"
@@ -37056,9 +37056,11 @@
         "stage": "LIVE_STOCK",
         "status": "PÅ LAGER",
         "surface_statuses": {
+          "pokemon-brand": "PÅ LAGER",
           "pokemon-kort": "PÅ LAGER"
         },
         "surfaces": [
+          "pokemon-brand",
           "pokemon-kort"
         ],
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Zygarde-ex-Premium-Collection/3447589"
@@ -37119,6 +37121,6 @@
       }
     }
   },
-  "updated_at": 1791191671.840098,
+  "updated_at": 1791191980.5721247,
   "version": 1
 }
