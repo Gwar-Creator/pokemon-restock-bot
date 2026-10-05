@@ -6908,22 +6908,6 @@
     {
       "event": "CHANGE",
       "fields": [
-        "f_stock_availability",
-        "in_stock_stores_count",
-        "is_click_and_collectible",
-        "stage"
-      ],
-      "name": "Pokemon First Partner collection box 3 samlekort",
-      "product_id": "200385295",
-      "sku": "11350615-EA",
-      "source": "br",
-      "stage_after": "HIDDEN_STOCK",
-      "stage_before": "DATED_PREP",
-      "ts": 1791019470.3241656
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
         "in_stock_stores_count",
         "stock_count_online"
       ],
@@ -21615,6 +21599,19 @@
       "stage_after": null,
       "stage_before": null,
       "ts": 1791201281.3817086
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
+      "product_id": "3447589",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1791201568.7306435
     }
   ],
   "sources": {
@@ -37041,9 +37038,11 @@
         "stage": "LIVE_STOCK",
         "status": "PÅ LAGER",
         "surface_statuses": {
+          "pokemon-brand": "PÅ LAGER",
           "pokemon-kort": "PÅ LAGER"
         },
         "surfaces": [
+          "pokemon-brand",
           "pokemon-kort"
         ],
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Zygarde-ex-Premium-Collection/3447589"
@@ -37104,6 +37103,6 @@
       }
     }
   },
-  "updated_at": 1791201281.3819656,
+  "updated_at": 1791201568.7316859,
   "version": 1
 }
