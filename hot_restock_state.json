@@ -793,11 +793,11 @@
       "last_success_at": "2026-10-07T09:59:05.136992+00:00"
     },
     "proshop": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-10-07T12:25:34.926877+00:00",
+      "backoff_level": 2,
+      "next_allowed_at": 1791378202.6426225,
+      "generic_failures": 2,
+      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "last_failure_at": "2026-10-07T12:58:22.642596+00:00",
       "last_success_at": "2026-10-07T12:29:15.121670+00:00"
     },
     "br": {
@@ -825,23 +825,23 @@
       "last_success_at": "2026-10-04T00:34:33.204965+00:00"
     },
     "boozt": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-10-07T10:14:41.283208+00:00",
-      "last_success_at": "2026-10-07T10:19:33.841630+00:00"
+      "backoff_level": 1,
+      "next_allowed_at": 1791377980.7926826,
+      "generic_failures": 2,
+      "last_error": "BOOZT fejlede: Reader: BOOZT Reader gav 0 rå links / 0 relevante produkter | direct: BOOZT gav kun 0 relevante produkter (minimum 2)",
+      "last_failure_at": "2026-10-07T12:57:40.792652+00:00",
+      "last_success_at": "2026-10-07T12:55:58.592710+00:00"
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1791377693.3145957,
+      "next_allowed_at": 1791378000.060898,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-09-26T15:39:28.835094+00:00",
-      "last_success_at": "2026-10-07T12:50:53.314574+00:00"
+      "last_success_at": "2026-10-07T12:56:00.060875+00:00"
     }
   },
-  "updated_at": "2026-10-07T12:54:25.623639+00:00",
+  "updated_at": "2026-10-07T12:59:24.847719+00:00",
   "proshop_discovery_version": 4,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -866,11 +866,11 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-10-07T12:50:52.489344+00:00"
+          "last_checked": "2026-10-07T12:55:59.456591+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1791377451.8969955,
+      "last_discovery_epoch": 1791377758.5927527,
       "last_full_discovery_epoch": 1791374742.0366518,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",

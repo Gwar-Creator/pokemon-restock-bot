@@ -6869,17 +6869,6 @@
     {
       "event": "REMOVED",
       "fields": [],
-      "name": "Pokemon TCG Mega EvolutionChaos Rising Booster box with 36 boosters",
-      "product_id": "3447592",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "INBOUND_UNDATED",
-      "stage_before": null,
-      "ts": 1791086074.1861267
-    },
-    {
-      "event": "REMOVED",
-      "fields": [],
       "name": "Pokemon TCG Mega Greninja ex Premium Collection",
       "product_id": "3478496",
       "sku": "",
@@ -21110,6 +21099,19 @@
       "stage_after": "LIVE_STOCK",
       "stage_before": "LIVE_STOCK",
       "ts": 1791376790.3062987
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
+      "product_id": "3447589",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1791377975.4783237
     }
   ],
   "sources": {
@@ -36451,11 +36453,9 @@
         "stage": "LIVE_STOCK",
         "status": "PÅ LAGER",
         "surface_statuses": {
-          "pokemon-brand": "PÅ LAGER",
           "pokemon-kort": "PÅ LAGER"
         },
         "surfaces": [
-          "pokemon-brand",
           "pokemon-kort"
         ],
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Zygarde-ex-Premium-Collection/3447589"
@@ -36516,6 +36516,6 @@
       }
     }
   },
-  "updated_at": 1791377673.3230362,
+  "updated_at": 1791377975.479258,
   "version": 1
 }
