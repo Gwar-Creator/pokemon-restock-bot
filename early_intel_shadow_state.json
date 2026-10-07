@@ -6867,20 +6867,6 @@
   },
   "events": [
     {
-      "event": "CROSS_CHANGE",
-      "fields": [
-        "br",
-        "foetex"
-      ],
-      "name": "Pokémon Battle Deck EX samlekort",
-      "product_id": "10564347-EA",
-      "sku": "10564347-EA",
-      "source": "cross_salling",
-      "stage_after": null,
-      "stage_before": null,
-      "ts": 1791077684.7101934
-    },
-    {
       "event": "CHANGE",
       "fields": [
         "stock_count_online"
@@ -21109,6 +21095,19 @@
       "stage_after": null,
       "stage_before": null,
       "ts": 1791369879.1634853
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
+      "product_id": "3447589",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1791370782.5949035
     }
   ],
   "sources": {
@@ -36450,11 +36449,9 @@
         "stage": "LIVE_STOCK",
         "status": "PÅ LAGER",
         "surface_statuses": {
-          "pokemon-brand": "PÅ LAGER",
           "pokemon-kort": "PÅ LAGER"
         },
         "surfaces": [
-          "pokemon-brand",
           "pokemon-kort"
         ],
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Zygarde-ex-Premium-Collection/3447589"
@@ -36515,6 +36512,6 @@
       }
     }
   },
-  "updated_at": 1791370485.0388548,
+  "updated_at": 1791370782.5958786,
   "version": 1
 }
