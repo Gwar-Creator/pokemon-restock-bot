@@ -226,11 +226,11 @@
         "local_stocks": {
           "1662": {
             "name": "Bilka Kolding",
-            "stock": 23
+            "stock": 0
           },
           "1659": {
             "name": "Bilka Esbjerg",
-            "stock": 13
+            "stock": 0
           }
         },
         "quantity_limit": null,
@@ -793,11 +793,11 @@
       "last_success_at": "2026-10-07T05:24:23.990246+00:00"
     },
     "proshop": {
-      "backoff_level": 2,
-      "next_allowed_at": 1791352698.1377857,
-      "generic_failures": 2,
+      "backoff_level": 3,
+      "next_allowed_at": 1791353650.2956142,
+      "generic_failures": 3,
       "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
-      "last_failure_at": "2026-10-07T05:53:18.137748+00:00",
+      "last_failure_at": "2026-10-07T05:59:10.295580+00:00",
       "last_success_at": "2026-10-07T05:49:16.356953+00:00"
     },
     "br": {
@@ -834,14 +834,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1791352499.5741222,
+      "next_allowed_at": 1791352790.38235,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-09-26T15:39:28.835094+00:00",
-      "last_success_at": "2026-10-07T05:50:59.574101+00:00"
+      "last_success_at": "2026-10-07T05:55:50.382328+00:00"
     }
   },
-  "updated_at": "2026-10-07T05:54:29.483708+00:00",
+  "updated_at": "2026-10-07T05:59:25.603631+00:00",
   "proshop_discovery_version": 4,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -866,11 +866,11 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-10-07T05:50:58.838537+00:00"
+          "last_checked": "2026-10-07T05:55:49.934389+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1791352258.0033429,
+      "last_discovery_epoch": 1791352549.1706212,
       "last_full_discovery_epoch": 1791330949.7222068,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
