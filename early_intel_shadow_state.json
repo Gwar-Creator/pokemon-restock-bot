@@ -6867,19 +6867,6 @@
   },
   "events": [
     {
-      "event": "CHANGE",
-      "fields": [
-        "surface_statuses"
-      ],
-      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
-      "product_id": "3447589",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1791093938.3200977
-    },
-    {
       "event": "REMOVED",
       "fields": [],
       "name": "Pokemon TCG Mega Charizard X ex Ultra Premium Collection",
@@ -21159,6 +21146,19 @@
       "stage_after": null,
       "stage_before": null,
       "ts": 1791420895.5773702
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
+      "product_id": "3447589",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1791431382.8378563
     }
   ],
   "sources": {
@@ -21622,7 +21622,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-tcg-scarlet-violet151-mini-tin/200215292/"
       },
       "200215319": {
-        "epoch_updated_at": 1791430366,
+        "epoch_updated_at": 1791431267,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -22989,7 +22989,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-prismatic-tech-klistermaerkekollektion-flere-varianter-assorteret/200308045/"
       },
       "200308076": {
-        "epoch_updated_at": 1791430366,
+        "epoch_updated_at": 1791431267,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -24413,7 +24413,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-mega-charizard-x-ex-ultra-premium-collection-pakke/200340783/"
       },
       "200340784": {
-        "epoch_updated_at": 1791430367,
+        "epoch_updated_at": 1791431268,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -25241,7 +25241,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-chaos-rising-premium-checklane/200366282/"
       },
       "200366283": {
-        "epoch_updated_at": 1791430367,
+        "epoch_updated_at": 1791431268,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -25470,7 +25470,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-mini-tin-med-samlekort-gallade-goomy/200371882/"
       },
       "200371884": {
-        "epoch_updated_at": 1791430367,
+        "epoch_updated_at": 1791431267,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -25617,7 +25617,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-pitch-black-1-pak-flere-varianter-assorteret/200380909/"
       },
       "200380910": {
-        "epoch_updated_at": 1791430367,
+        "epoch_updated_at": 1791431268,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -25893,7 +25893,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-binder-collection-30th/200392204/"
       },
       "200392205": {
-        "epoch_updated_at": 1791430367,
+        "epoch_updated_at": 1791431267,
         "expected_available_from": null,
         "f_campaign_name": [
           "Nyhed"
@@ -26103,7 +26103,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-sylveon-ex-box-30th/200392806/"
       },
       "200392807": {
-        "epoch_updated_at": 1791430367,
+        "epoch_updated_at": 1791431267,
         "expected_available_from": null,
         "f_campaign_name": [
           "Nyhed"
@@ -26133,7 +26133,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-greninja-ex-samlekort-box/200392807/"
       },
       "200392808": {
-        "epoch_updated_at": 1791430367,
+        "epoch_updated_at": 1791431267,
         "expected_available_from": null,
         "f_campaign_name": [
           "Nyhed"
@@ -36500,11 +36500,9 @@
         "stage": "LIVE_STOCK",
         "status": "PÅ LAGER",
         "surface_statuses": {
-          "pokemon-brand": "PÅ LAGER",
           "pokemon-kort": "PÅ LAGER"
         },
         "surfaces": [
-          "pokemon-brand",
           "pokemon-kort"
         ],
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Zygarde-ex-Premium-Collection/3447589"
@@ -36565,6 +36563,6 @@
       }
     }
   },
-  "updated_at": 1791431073.4809828,
+  "updated_at": 1791431382.839254,
   "version": 1
 }
