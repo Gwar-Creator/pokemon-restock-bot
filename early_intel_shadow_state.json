@@ -6867,19 +6867,6 @@
   },
   "events": [
     {
-      "event": "CHANGE",
-      "fields": [
-        "surface_statuses"
-      ],
-      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
-      "product_id": "3447589",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1791098376.683202
-    },
-    {
       "event": "NEW",
       "fields": [],
       "name": "Pokemon TCG Mega Charizard X ex Ultra Premium Collection",
@@ -21167,6 +21154,19 @@
       "stage_after": "INBOUND_UNDATED",
       "stage_before": null,
       "ts": 1791445483.1895313
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
+      "product_id": "3447589",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1791447308.7068782
     }
   ],
   "sources": {
@@ -36508,11 +36508,9 @@
         "stage": "LIVE_STOCK",
         "status": "PÅ LAGER",
         "surface_statuses": {
-          "pokemon-brand": "PÅ LAGER",
           "pokemon-kort": "PÅ LAGER"
         },
         "surfaces": [
-          "pokemon-brand",
           "pokemon-kort"
         ],
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Zygarde-ex-Premium-Collection/3447589"
@@ -36573,6 +36571,6 @@
       }
     }
   },
-  "updated_at": 1791446998.562046,
+  "updated_at": 1791447308.708066,
   "version": 1
 }
