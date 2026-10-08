@@ -1622,7 +1622,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 382,
+          "stock_online": 381,
           "stock_stores": 31
         },
         "foetex": {
@@ -1633,7 +1633,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 382,
+          "stock_online": 381,
           "stock_stores": 1
         }
       }
@@ -6866,41 +6866,6 @@
     }
   },
   "events": [
-    {
-      "event": "NEW",
-      "fields": [],
-      "name": "Pokemon TCG Mega Greninja ex Premium Collection",
-      "product_id": "3478496",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "INBOUND_UNDATED",
-      "stage_before": null,
-      "ts": 1791109473.1990209
-    },
-    {
-      "event": "NEW",
-      "fields": [],
-      "name": "Pokemon TCG First Partner Illustration Collection Box Series 2",
-      "product_id": "3478498",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "INBOUND_UNDATED",
-      "stage_before": null,
-      "ts": 1791109473.1990216
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "in_stock_stores_count"
-      ],
-      "name": "Pokemon Mini Tins 30th - flere varianter - assorteret",
-      "product_id": "200397756",
-      "sku": "11406830-EA",
-      "source": "foetex",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1791112773.0717149
-    },
     {
       "event": "CROSS_CHANGE",
       "fields": [
@@ -21164,6 +21129,46 @@
       "stage_after": "INBOUND_UNDATED",
       "stage_before": null,
       "ts": 1791463172.2149816
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon Battle Academy 2024",
+      "product_id": "200279925",
+      "sku": "10791068-EA",
+      "source": "br",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1791465601.4822147
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon Battle Academy 2024",
+      "product_id": "200279925",
+      "sku": "10791068-EA",
+      "source": "foetex",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1791465604.205158
+    },
+    {
+      "event": "CROSS_CHANGE",
+      "fields": [
+        "br",
+        "foetex"
+      ],
+      "name": "Pokémon Battle Academy 2024",
+      "product_id": "10791068-EA",
+      "sku": "10791068-EA",
+      "source": "cross_salling",
+      "stage_after": null,
+      "stage_before": null,
+      "ts": 1791465608.156315
     }
   ],
   "sources": {
@@ -21659,7 +21664,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-battle-deck-ex-samlekort/200215319/"
       },
       "200223003": {
-        "epoch_updated_at": 1791464581,
+        "epoch_updated_at": 1791465475,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -23816,7 +23821,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-elite-trainer-box-zsv10-5/200329218/"
       },
       "200329219": {
-        "epoch_updated_at": 1791464581,
+        "epoch_updated_at": 1791465476,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -24418,7 +24423,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-mega-charizard-x-ex-ultra-premium-collection-pakke/200340783/"
       },
       "200340784": {
-        "epoch_updated_at": 1791464582,
+        "epoch_updated_at": 1791465475,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -24926,7 +24931,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-mega-evolution-pokemonkort/200356077/"
       },
       "200356078": {
-        "epoch_updated_at": 1791464581,
+        "epoch_updated_at": 1791465476,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -24954,7 +24959,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-tcg-booster-pack-samlekort/200356078/"
       },
       "200356085": {
-        "epoch_updated_at": 1791464581,
+        "epoch_updated_at": 1791465476,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -25070,7 +25075,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-first-partner-collection-box/200356089/"
       },
       "200366277": {
-        "epoch_updated_at": 1791464582,
+        "epoch_updated_at": 1791465476,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -25128,7 +25133,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-tcg-chaos-rising-booster-bundle-samlekort/200366278/"
       },
       "200366279": {
-        "epoch_updated_at": 1791464580,
+        "epoch_updated_at": 1791465475,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -25447,7 +25452,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-mini-tin-med-samlekort-feraligatr-budew/200371877/"
       },
       "200371882": {
-        "epoch_updated_at": 1791464581,
+        "epoch_updated_at": 1791465475,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -25503,7 +25508,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-tin-summer-ex-med-samlekort-mega-gengar/200371884/"
       },
       "200371885": {
-        "epoch_updated_at": 1791464581,
+        "epoch_updated_at": 1791465476,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -25591,7 +25596,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-pitch-black-booster-bundle-samlekort/200380908/"
       },
       "200380909": {
-        "epoch_updated_at": 1791464581,
+        "epoch_updated_at": 1791465476,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -25774,7 +25779,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-box-premium-ex-mega-greninja/200380919/"
       },
       "200385295": {
-        "epoch_updated_at": 1791464582,
+        "epoch_updated_at": 1791465476,
         "expected_available_from": null,
         "f_campaign_name": [
           "Nyhed"
@@ -25898,7 +25903,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-binder-collection-30th/200392204/"
       },
       "200392205": {
-        "epoch_updated_at": 1791464581,
+        "epoch_updated_at": 1791465476,
         "expected_available_from": null,
         "f_campaign_name": [
           "Nyhed"
@@ -26108,7 +26113,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-sylveon-ex-box-30th/200392806/"
       },
       "200392807": {
-        "epoch_updated_at": 1791464582,
+        "epoch_updated_at": 1791465475,
         "expected_available_from": null,
         "f_campaign_name": [
           "Nyhed"
@@ -26138,7 +26143,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-greninja-ex-samlekort-box/200392807/"
       },
       "200392808": {
-        "epoch_updated_at": 1791464582,
+        "epoch_updated_at": 1791465476,
         "expected_available_from": null,
         "f_campaign_name": [
           "Nyhed"
@@ -27512,7 +27517,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 382,
+        "stock_count_online": 381,
         "url": "https://www.br.dk/produkter/pokemon-battle-academy-2024/200279925/"
       },
       "200285707": {
@@ -32623,7 +32628,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 382,
+        "stock_count_online": 381,
         "url": "https://www.foetex.dk/produkter/pokemon-battle-academy-2024/200279925/"
       },
       "200285707": {
@@ -36570,6 +36575,6 @@
       }
     }
   },
-  "updated_at": 1791465284.6122112,
+  "updated_at": 1791465608.1565156,
   "version": 1
 }
