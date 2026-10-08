@@ -848,23 +848,23 @@
       "last_success_at": "2026-10-04T00:34:33.204965+00:00"
     },
     "boozt": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-10-08T04:40:53.076304+00:00",
-      "last_success_at": "2026-10-08T04:44:30.941910+00:00"
+      "backoff_level": 1,
+      "next_allowed_at": 1791445594.8224928,
+      "generic_failures": 1,
+      "last_error": "BOOZT fejlede: Reader: BOOZT Reader returnerede kun 248 tegn | direct: 429 Client Error: Too Many Requests for url: https://www.boozt.com/dk/da/pokemon-trading-cards/born",
+      "last_failure_at": "2026-10-08T07:44:34.822473+00:00",
+      "last_success_at": "2026-10-08T07:43:39.435444+00:00"
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1791445202.2936351,
+      "next_allowed_at": 1791445498.731093,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-09-26T15:39:28.835094+00:00",
-      "last_success_at": "2026-10-08T07:36:02.293618+00:00"
+      "last_success_at": "2026-10-08T07:40:58.731070+00:00"
     }
   },
-  "updated_at": "2026-10-08T07:39:39.810251+00:00",
+  "updated_at": "2026-10-08T07:44:34.823488+00:00",
   "proshop_discovery_version": 4,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -889,11 +889,11 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-10-08T07:36:01.719933+00:00"
+          "last_checked": "2026-10-08T07:40:58.135863+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1791444960.8111815,
+      "last_discovery_epoch": 1791445257.3224883,
       "last_full_discovery_epoch": 1791439862.1646228,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
