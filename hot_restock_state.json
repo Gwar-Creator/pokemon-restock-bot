@@ -19,8 +19,8 @@
       "https://www.coolshop.dk/produkt/pokemon-30th-celebration-booster-pack-bundle-pok10451-101/23Z4NE/": {
         "name": "Pokémon - 30th Celebration - Booster Pack Bundle (POK10451-101)",
         "game": "POKÉMON",
-        "price": 399.95,
-        "online_stock": false,
+        "price": 699.0,
+        "online_stock": true,
         "url": "https://www.coolshop.dk/produkt/pokemon-30th-celebration-booster-pack-bundle-pok10451-101/23Z4NE/"
       },
       "https://www.coolshop.dk/produkt/pokemon-30th-celebration-mini-tin-pok10465-101/23Z4NH/": {
@@ -62,9 +62,38 @@
     "proshop": {
       "3421827": {
         "name": "Pokemon TCG 2024 World Championships Deck",
-        "price": null,
+        "price": 329.0,
         "stock": "PÅ LAGER",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827"
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
+        "fetch_via": "jina_reader"
+      },
+      "3417744": {
+        "name": "Pokemon TCG Mega Charizard X ex Ultra Premium Collection",
+        "price": null,
+        "stock": "BESTILLINGSVARE",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
+        "fetch_via": "jina_reader"
+      },
+      "3478498": {
+        "name": "Pokemon TCG First Partner Illustration Collection Box Series 2",
+        "price": null,
+        "stock": "BESTILLINGSVARE",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-First-Partner-Illustration-Collection-Box-Series-2/3478498",
+        "fetch_via": "jina_reader"
+      },
+      "3478496": {
+        "name": "Pokemon TCG Mega Greninja ex Premium Collection",
+        "price": null,
+        "stock": "BESTILLINGSVARE",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
+        "fetch_via": "jina_reader"
+      },
+      "3447592": {
+        "name": "Pokemon TCG Mega EvolutionChaos Rising Booster box with 36 boosters",
+        "price": null,
+        "stock": "BESTILLINGSVARE",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-EvolutionChaos-Rising-Booster-box-with-36-boosters/3447592",
+        "fetch_via": "jina_reader"
       }
     },
     "br": {
@@ -211,11 +240,11 @@
         "local_stocks": {
           "1662": {
             "name": "Bilka Kolding",
-            "stock": 23
+            "stock": 0
           },
           "1659": {
             "name": "Bilka Esbjerg",
-            "stock": 13
+            "stock": 0
           }
         },
         "quantity_limit": null,
@@ -686,7 +715,7 @@
         "in_stock": true,
         "availability_known": true,
         "url": "https://www.boozt.com/dk/da/pokmon-trading-cards/poke-mini-tin-june_33186417/233210201",
-        "fetch_via": "jina_reader_category"
+        "fetch_via": "direct_category"
       },
       "boozt:33175544": {
         "name": "Pokémon Trading Cards Poke Blister 3P ME04 REL 22/5 - Pokémon Trading Cards - BLACK / black",
@@ -695,7 +724,7 @@
         "in_stock": true,
         "availability_known": true,
         "url": "https://www.boozt.com/dk/da/pokmon-trading-cards/poke-blister-3p-me04-rel-22-5_33175544/233145334",
-        "fetch_via": "jina_reader_category"
+        "fetch_via": "direct_category"
       },
       "boozt:33175543": {
         "name": "Pokémon Trading Cards Poke ME04 Elite Trainer Box REL 22/5 - Pokémon Trading Cards - BLACK / black",
@@ -704,7 +733,7 @@
         "in_stock": true,
         "availability_known": true,
         "url": "https://www.boozt.com/dk/da/pokmon-trading-cards/poke-me04-elite-trainer-box-rel-22-5_33175543/233145333",
-        "fetch_via": "jina_reader_category"
+        "fetch_via": "direct_category"
       },
       "boozt:33175542": {
         "name": "Pokémon Trading Cards Poke Box Premium EX Mega Zygarde 1/5 - Pokémon Trading Cards - MULTI COLOURED / multi",
@@ -713,7 +742,7 @@
         "in_stock": true,
         "availability_known": true,
         "url": "https://www.boozt.com/dk/da/pokmon-trading-cards/poke-box-premium-ex-mega-zygarde-1-5_33175542/233145332",
-        "fetch_via": "jina_reader_category"
+        "fetch_via": "direct_category"
       },
       "boozt:33181863": {
         "name": "Pokémon Trading Cards Poke ME05 Elite Trainer Box - Pokémon Trading Cards - BLACK / black",
@@ -731,7 +760,7 @@
         "in_stock": true,
         "availability_known": true,
         "url": "https://www.boozt.com/dk/da/pokmon-trading-cards/poke-tin-ex-30th-2-_33202392/233321290",
-        "fetch_via": "jina_reader_category"
+        "fetch_via": "direct_category"
       }
     },
     "magasin": {
@@ -791,8 +820,8 @@
       "next_allowed_at": 0.0,
       "generic_failures": 0,
       "last_error": null,
-      "last_failure_at": "2026-10-08T08:00:57.731707+00:00",
-      "last_success_at": "2026-10-08T08:04:32.347683+00:00"
+      "last_failure_at": "2026-10-08T07:46:31.181020+00:00",
+      "last_success_at": "2026-10-08T07:49:16.130081+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -828,14 +857,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1791446726.8577445,
+      "next_allowed_at": 1791447027.4379065,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-09-26T15:39:28.835094+00:00",
-      "last_success_at": "2026-10-08T08:01:26.857730+00:00"
+      "last_success_at": "2026-10-08T08:06:27.437883+00:00"
     }
   },
-  "updated_at": "2026-10-08T08:04:53.068584+00:00",
+  "updated_at": "2026-10-08T08:09:49.769431+00:00",
   "proshop_discovery_version": 4,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -860,11 +889,11 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-10-08T08:01:25.948184+00:00"
+          "last_checked": "2026-10-08T08:06:26.425287+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1791446483.100222,
+      "last_discovery_epoch": 1791446785.5767097,
       "last_full_discovery_epoch": 1791439862.1646228,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
