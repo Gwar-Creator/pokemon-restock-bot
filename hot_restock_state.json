@@ -97,6 +97,18 @@
       }
     },
     "br": {
+      "200392202": {
+        "name": "Pokémon Elite Trainer Box 30th samlekort",
+        "price": 799.0,
+        "online_count": 0,
+        "online_stock": false,
+        "store_count": 0,
+        "kolding_stock": 0,
+        "esbjerg_stock": 0,
+        "quantity_limit": 1,
+        "sku": "11379490-EA",
+        "url": "https://www.br.dk/produkter/pokemon-elite-trainer-box-30th-samlekort/200392202/"
+      },
       "200279925": {
         "name": "Pokémon Battle Academy 2024",
         "price": 299.0,
@@ -216,21 +228,29 @@
         "quantity_limit": 1,
         "sku": "11381820-EA",
         "url": "https://www.br.dk/produkter/pokemon-greninja-ex-samlekort-box/200392807/"
-      },
+      }
+    },
+    "bilka": {
       "200392202": {
         "name": "Pokémon Elite Trainer Box 30th samlekort",
         "price": 799.0,
         "online_count": 0,
         "online_stock": false,
         "store_count": 0,
-        "kolding_stock": 0,
-        "esbjerg_stock": 0,
+        "local_stocks": {
+          "1662": {
+            "name": "Bilka Kolding",
+            "stock": 0
+          },
+          "1659": {
+            "name": "Bilka Esbjerg",
+            "stock": 0
+          }
+        },
         "quantity_limit": 1,
         "sku": "11379490-EA",
-        "url": "https://www.br.dk/produkter/pokemon-elite-trainer-box-30th-samlekort/200392202/"
-      }
-    },
-    "bilka": {
+        "url": "https://www.bilka.dk/produkter/pokemon-elite-trainer-box-30th-samlekort/200392202/"
+      },
       "200279925": {
         "name": "Pokémon Battle Academy 2024",
         "price": 299.0,
@@ -290,6 +310,26 @@
         "quantity_limit": 1,
         "sku": "11381823-EA",
         "url": "https://www.bilka.dk/produkter/pokemon-sylveon-ex-tin-samlekort/200392808/"
+      },
+      "200392807": {
+        "name": "Pokemon Greninja EX samlekort box",
+        "price": 349.0,
+        "online_count": 0,
+        "online_stock": false,
+        "store_count": 0,
+        "local_stocks": {
+          "1662": {
+            "name": "Bilka Kolding",
+            "stock": 0
+          },
+          "1659": {
+            "name": "Bilka Esbjerg",
+            "stock": 0
+          }
+        },
+        "quantity_limit": 1,
+        "sku": "11381820-EA",
+        "url": "https://www.bilka.dk/produkter/pokemon-greninja-ex-samlekort-box/200392807/"
       },
       "200392806": {
         "name": "Pokémon Sylveon ex Box 30th",
@@ -351,12 +391,12 @@
         "sku": "11379493-EA",
         "url": "https://www.bilka.dk/produkter/pokemon-poster-collection-30th/200392205/"
       },
-      "200392202": {
-        "name": "Pokémon Elite Trainer Box 30th samlekort",
-        "price": 799.0,
+      "200392204": {
+        "name": "Pokémon Binder Collection 30th",
+        "price": 499.0,
         "online_count": 0,
         "online_stock": false,
-        "store_count": 0,
+        "store_count": 2,
         "local_stocks": {
           "1662": {
             "name": "Bilka Kolding",
@@ -368,8 +408,8 @@
           }
         },
         "quantity_limit": 1,
-        "sku": "11379490-EA",
-        "url": "https://www.bilka.dk/produkter/pokemon-elite-trainer-box-30th-samlekort/200392202/"
+        "sku": "11379492-EA",
+        "url": "https://www.bilka.dk/produkter/pokemon-binder-collection-30th/200392204/"
       },
       "200366277": {
         "name": "Pokémon TCG booster pack samlekort",
@@ -390,46 +430,6 @@
         "quantity_limit": 6,
         "sku": "11263280-EA",
         "url": "https://www.bilka.dk/produkter/pokemon-tcg-booster-pack-samlekort/200366277/"
-      },
-      "200392807": {
-        "name": "Pokemon Greninja EX samlekort box",
-        "price": 349.0,
-        "online_count": 0,
-        "online_stock": false,
-        "store_count": 0,
-        "local_stocks": {
-          "1662": {
-            "name": "Bilka Kolding",
-            "stock": 0
-          },
-          "1659": {
-            "name": "Bilka Esbjerg",
-            "stock": 0
-          }
-        },
-        "quantity_limit": 1,
-        "sku": "11381820-EA",
-        "url": "https://www.bilka.dk/produkter/pokemon-greninja-ex-samlekort-box/200392807/"
-      },
-      "200392204": {
-        "name": "Pokémon Binder Collection 30th",
-        "price": 499.0,
-        "online_count": 0,
-        "online_stock": false,
-        "store_count": 2,
-        "local_stocks": {
-          "1662": {
-            "name": "Bilka Kolding",
-            "stock": 0
-          },
-          "1659": {
-            "name": "Bilka Esbjerg",
-            "stock": 0
-          }
-        },
-        "quantity_limit": 1,
-        "sku": "11379492-EA",
-        "url": "https://www.bilka.dk/produkter/pokemon-binder-collection-30th/200392204/"
       }
     },
     "foetex": {
@@ -857,14 +857,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1791451209.8316987,
+      "next_allowed_at": 1791451502.9243426,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-09-26T15:39:28.835094+00:00",
-      "last_success_at": "2026-10-08T09:16:09.831678+00:00"
+      "last_success_at": "2026-10-08T09:21:02.924322+00:00"
     }
   },
-  "updated_at": "2026-10-08T09:19:36.799055+00:00",
+  "updated_at": "2026-10-08T09:24:37.040169+00:00",
   "proshop_discovery_version": 4,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -889,11 +889,11 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-10-08T09:16:09.195985+00:00"
+          "last_checked": "2026-10-08T09:21:02.296320+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1791450967.9609756,
+      "last_discovery_epoch": 1791451260.7609348,
       "last_full_discovery_epoch": 1791439862.1646228,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
