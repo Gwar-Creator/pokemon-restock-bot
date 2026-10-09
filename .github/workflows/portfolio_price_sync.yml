@@ -1,6 +1,8 @@
 name: Portfolio Cardmarket Price Sync
 
 on:
+  schedule:
+    - cron: "20 5 * * *"
   workflow_dispatch:
     inputs:
       write_prices:
@@ -33,7 +35,7 @@ jobs:
         env:
           GOOGLE_SHEETS_CREDENTIALS: ${{ secrets.GOOGLE_SHEETS_CREDENTIALS }}
         run: |
-          if [ "${{ inputs.write_prices }}" = "true" ]; then
+          if [ "${{ github.event_name }}" = "schedule" ] || [ "${{ inputs.write_prices }}" = "true" ]; then
             python tools/portfolio_price_sync.py --write
           else
             python tools/portfolio_price_sync.py
