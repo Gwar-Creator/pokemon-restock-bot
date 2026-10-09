@@ -84,7 +84,7 @@ def main():
             keys = ("trend-holo", "low-holo", "avg7-holo", "avg30-holo")
             counts["reverse_foil"] += 1
         values = [price.get(k) for k in keys]
-        if any(not isinstance(x, (int, float)) for x in values):
+        if any(not isinstance(x, (int, float)) or x <= 0 for x in values):
             counts["incomplete_price"] += 1
             continue
         counts["matched"] += 1
