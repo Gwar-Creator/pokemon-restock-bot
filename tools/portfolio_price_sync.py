@@ -73,6 +73,7 @@ def main():
         price = guide.get(pid)
         if not price:
             counts["not_in_guide"] += 1
+            print("NOT_IN_GUIDE", number, pid, row[3])
             continue
         values = [price.get(k) for k in ("trend", "low", "avg7", "avg30")]
         if any(not isinstance(x, (int, float)) for x in values):
