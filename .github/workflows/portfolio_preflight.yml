@@ -18,6 +18,6 @@ jobs:
       - run: pip install google-auth google-api-python-client
       - name: Check service account access (read only)
         env:
-          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SHEETS_CREDENTIALS }}
           GOOGLE_CREDENTIALS_JSON: ${{ secrets.GOOGLE_CREDENTIALS_JSON }}
         run: python tools/portfolio_sync_preflight.py
