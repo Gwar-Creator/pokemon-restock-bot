@@ -722,7 +722,7 @@
         "in_stock": true,
         "availability_known": true,
         "url": "https://www.boozt.com/dk/da/pokmon-trading-cards/poke-mini-tin-june_33186417/233210201",
-        "fetch_via": "jina_reader_category"
+        "fetch_via": "direct_category"
       },
       "boozt:33175544": {
         "name": "Pokémon Trading Cards Poke Blister 3P ME04 REL 22/5 - Pokémon Trading Cards - BLACK / black",
@@ -731,7 +731,7 @@
         "in_stock": true,
         "availability_known": true,
         "url": "https://www.boozt.com/dk/da/pokmon-trading-cards/poke-blister-3p-me04-rel-22-5_33175544/233145334",
-        "fetch_via": "jina_reader_category"
+        "fetch_via": "direct_category"
       },
       "boozt:33175543": {
         "name": "Pokémon Trading Cards Poke ME04 Elite Trainer Box REL 22/5 - Pokémon Trading Cards - BLACK / black",
@@ -740,7 +740,7 @@
         "in_stock": true,
         "availability_known": true,
         "url": "https://www.boozt.com/dk/da/pokmon-trading-cards/poke-me04-elite-trainer-box-rel-22-5_33175543/233145333",
-        "fetch_via": "jina_reader_category"
+        "fetch_via": "direct_category"
       },
       "boozt:33175542": {
         "name": "Pokémon Trading Cards Poke Box Premium EX Mega Zygarde 1/5 - Pokémon Trading Cards - MULTI COLOURED / multi",
@@ -749,7 +749,7 @@
         "in_stock": true,
         "availability_known": true,
         "url": "https://www.boozt.com/dk/da/pokmon-trading-cards/poke-box-premium-ex-mega-zygarde-1-5_33175542/233145332",
-        "fetch_via": "jina_reader_category"
+        "fetch_via": "direct_category"
       },
       "boozt:33181863": {
         "name": "Pokémon Trading Cards Poke ME05 Elite Trainer Box - Pokémon Trading Cards - BLACK / black",
@@ -767,7 +767,7 @@
         "in_stock": true,
         "availability_known": true,
         "url": "https://www.boozt.com/dk/da/pokmon-trading-cards/poke-tin-ex-30th-2-_33202392/233321290",
-        "fetch_via": "jina_reader_category"
+        "fetch_via": "direct_category"
       }
     },
     "magasin": {
@@ -823,11 +823,11 @@
       "last_success_at": "2026-10-08T12:49:13.859727+00:00"
     },
     "proshop": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-10-08T23:27:14.834628+00:00",
+      "backoff_level": 2,
+      "next_allowed_at": 1791509298.6358445,
+      "generic_failures": 2,
+      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: 401 Client Error: Unauthorized for url: https://r.jina.ai/https://www.proshop.dk/pokemon-kort; pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "last_failure_at": "2026-10-09T01:23:18.635818+00:00",
       "last_success_at": "2026-10-08T23:34:27.706698+00:00"
     },
     "br": {
@@ -859,19 +859,19 @@
       "next_allowed_at": 0.0,
       "generic_failures": 0,
       "last_error": null,
-      "last_failure_at": "2026-10-09T00:19:32.116173+00:00",
-      "last_success_at": "2026-10-09T00:24:27.272854+00:00"
+      "last_failure_at": "2026-10-09T01:20:50.002199+00:00",
+      "last_success_at": "2026-10-09T01:24:29.688278+00:00"
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1791508801.5585825,
+      "next_allowed_at": 1791509092.3187435,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-09-26T15:39:28.835094+00:00",
-      "last_success_at": "2026-10-09T01:16:01.558557+00:00"
+      "last_success_at": "2026-10-09T01:20:52.318723+00:00"
     }
   },
-  "updated_at": "2026-10-09T01:19:38.878488+00:00",
+  "updated_at": "2026-10-09T01:24:29.688319+00:00",
   "proshop_discovery_version": 4,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -896,11 +896,11 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-10-09T01:15:59.929607+00:00"
+          "last_checked": "2026-10-09T01:20:51.216403+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1791508559.1559465,
+      "last_discovery_epoch": 1791508850.003333,
       "last_full_discovery_epoch": 1791504960.6291475,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
