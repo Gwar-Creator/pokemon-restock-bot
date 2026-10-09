@@ -816,11 +816,11 @@
       "last_success_at": "2026-10-09T05:09:42.572701+00:00"
     },
     "proshop": {
-      "backoff_level": 1,
-      "next_allowed_at": 1791581734.080726,
-      "generic_failures": 1,
+      "backoff_level": 2,
+      "next_allowed_at": 1791582089.0558467,
+      "generic_failures": 2,
       "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
-      "last_failure_at": "2026-10-09T21:33:34.080689+00:00",
+      "last_failure_at": "2026-10-09T21:36:29.055805+00:00",
       "last_success_at": "2026-10-09T21:32:38.368964+00:00"
     },
     "br": {
@@ -848,23 +848,23 @@
       "last_success_at": "2026-10-04T00:34:33.204965+00:00"
     },
     "boozt": {
-      "backoff_level": 1,
-      "next_allowed_at": 1791581800.2692935,
-      "generic_failures": 1,
-      "last_error": "BOOZT fejlede: Reader: 422 Client Error: Unprocessable Entity for url: https://r.jina.ai/https://www.boozt.com/dk/da/pokemon-trading-cards/born | direct: 429 Client Error: Too Many Requests for url: https://www.boozt.com/dk/da/pokemon-trading-cards/born",
+      "backoff_level": 0,
+      "next_allowed_at": 0.0,
+      "generic_failures": 0,
+      "last_error": null,
       "last_failure_at": "2026-10-09T21:34:40.269268+00:00",
-      "last_success_at": "2026-10-09T21:33:50.152951+00:00"
+      "last_success_at": "2026-10-09T21:39:25.892311+00:00"
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1791581706.981955,
+      "next_allowed_at": 1791581986.507824,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-09-26T15:39:28.835094+00:00",
-      "last_success_at": "2026-10-09T21:31:06.981932+00:00"
+      "last_success_at": "2026-10-09T21:35:46.507775+00:00"
     }
   },
-  "updated_at": "2026-10-09T21:34:40.270961+00:00",
+  "updated_at": "2026-10-09T21:39:25.892352+00:00",
   "proshop_discovery_version": 4,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -889,11 +889,11 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-10-09T21:31:06.086232+00:00"
+          "last_checked": "2026-10-09T21:35:45.425931+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1791581464.9778373,
+      "last_discovery_epoch": 1791581744.5629108,
       "last_full_discovery_epoch": 1791570067.340525,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
