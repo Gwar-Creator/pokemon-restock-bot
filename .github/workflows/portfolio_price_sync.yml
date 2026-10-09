@@ -1,0 +1,40 @@
+name: Portfolio Cardmarket Price Sync
+
+on:
+  workflow_dispatch:
+    inputs:
+      write_prices:
+        description: "Write CM prices to Google Sheets (leave off for safe test)"
+        type: boolean
+        required: false
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: portfolio-cardmarket-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install dependencies
+        run: pip install requests google-auth google-api-python-client
+      - name: Compile sync script
+        run: python -m py_compile tools/portfolio_price_sync.py
+      - name: Sync prices (dry run unless explicitly enabled)
+        env:
+          GOOGLE_SHEETS_CREDENTIALS: ${{ secrets.GOOGLE_SHEETS_CREDENTIALS }}
+        run: |
+          if [ "${{ inputs.write_prices }}" = "true" ]; then
+            python tools/portfolio_price_sync.py --write
+          else
+            python tools/portfolio_price_sync.py
+          fi
