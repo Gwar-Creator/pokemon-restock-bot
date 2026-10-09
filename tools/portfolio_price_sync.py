@@ -75,7 +75,15 @@ def main():
             counts["not_in_guide"] += 1
             print("NOT_IN_GUIDE", number, pid, row[3])
             continue
-        values = [price.get(k) for k in ("trend", "low", "avg7", "avg30")]
+        variant = str(row[6]).lower() if len(row) > 6 else ""
+        if "ikke verificeret" in variant or "unknown" in variant:
+            counts["unverified_variant"] += 1
+            continue
+        keys = ("trend", "low", "avg7", "avg30")
+        if "reverse holo" in variant:
+            keys = ("trend-holo", "low-holo", "avg7-holo", "avg30-holo")
+            counts["reverse_foil"] += 1
+        values = [price.get(k) for k in keys]
         if any(not isinstance(x, (int, float)) for x in values):
             counts["incomplete_price"] += 1
             continue
