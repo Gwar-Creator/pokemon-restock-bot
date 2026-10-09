@@ -6,7 +6,7 @@ L/M conservative valuation formulas/manual prices are never changed here.
 import argparse
 import json
 import os
-from collections import Counter
+from collections import Counter, defaultdict
 from datetime import datetime
 
 import requests
@@ -60,6 +60,14 @@ def main():
     for index, title in expected.items():
         if len(rows[0]) <= index or rows[0][index] != title:
             raise RuntimeError(f"Unexpected column {index + 1}: expected {title!r}")
+    id_numbers = defaultdict(set)
+    for row in rows[1:]:
+        if len(row) > 6 and row[0] in ("Active", "Incoming"):
+            pid = str(row[2]).strip()
+            if pid:
+                id_numbers[pid].add(str(row[5]).split("/")[0].strip())
+    conflicting_ids = {pid for pid, numbers in id_numbers.items() if len(numbers) > 1}
+
     changes = []
     counts = Counter()
     for number, row in enumerate(rows[1:], 2):
@@ -70,6 +78,10 @@ def main():
         if not pid:
             counts["missing_id"] += 1
             continue
+        if pid in conflicting_ids:
+            counts["conflicting_id"] += 1
+            print("CONFLICTING_ID", number, pid, row[3])
+            continue
         price = guide.get(pid)
         if not price:
             counts["not_in_guide"] += 1
@@ -79,6 +91,11 @@ def main():
         if "ikke verificeret" in variant or "unknown" in variant:
             counts["unverified_variant"] += 1
             continue
+        protected = ("stamp", "snowflake", "cracked ice", "cosmos",
+                     "1st edition", "4th print", "calendar", "exclusive")
+        if any(marker in variant for marker in protected):
+            counts["special_variant_skipped"] += 1
+            continue
         keys = ("trend", "low", "avg7", "avg30")
         if "reverse holo" in variant:
             keys = ("trend-holo", "low-holo", "avg7-holo", "avg30-holo")
@@ -86,6 +103,13 @@ def main():
         values = [price.get(k) for k in keys]
         if any(not isinstance(x, (int, float)) or x <= 0 for x in values):
             counts["incomplete_price"] += 1
+            continue
+        trend, low, avg7, avg30 = values
+        if (max(avg7, avg30) / min(avg7, avg30) > 8 or
+                trend / max(avg7, avg30) > 8 or
+                min(avg7, avg30) / trend > 8):
+            counts["price_anomaly_skipped"] += 1
+            print("PRICE_ANOMALY", number, pid, row[3], values)
             continue
         counts["matched"] += 1
         existing = row[16:20] if len(row) >= 20 else []
