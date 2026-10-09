@@ -115,8 +115,8 @@
         "online_count": 381,
         "online_stock": true,
         "store_count": 31,
-        "kolding_stock": 0,
-        "esbjerg_stock": 0,
+        "kolding_stock": 20,
+        "esbjerg_stock": 12,
         "quantity_limit": null,
         "sku": "10791068-EA",
         "url": "https://www.br.dk/produkter/pokemon-battle-academy-2024/200279925/"
@@ -816,11 +816,11 @@
       "last_success_at": "2026-10-09T05:09:42.572701+00:00"
     },
     "proshop": {
-      "backoff_level": 1,
-      "next_allowed_at": 1791554363.1350238,
-      "generic_failures": 1,
+      "backoff_level": 2,
+      "next_allowed_at": 1791554763.6016014,
+      "generic_failures": 2,
       "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
-      "last_failure_at": "2026-10-09T13:57:23.134992+00:00",
+      "last_failure_at": "2026-10-09T14:01:03.601564+00:00",
       "last_success_at": "2026-10-09T13:56:26.365345+00:00"
     },
     "br": {
@@ -857,14 +857,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1791554399.441232,
+      "next_allowed_at": 1791554726.4643307,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-09-26T15:39:28.835094+00:00",
-      "last_success_at": "2026-10-09T13:55:59.441212+00:00"
+      "last_success_at": "2026-10-09T14:01:26.464311+00:00"
     }
   },
-  "updated_at": "2026-10-09T13:59:29.818753+00:00",
+  "updated_at": "2026-10-09T14:05:20.382456+00:00",
   "proshop_discovery_version": 4,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -889,11 +889,11 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-10-09T13:55:57.268709+00:00"
+          "last_checked": "2026-10-09T14:01:25.478793+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1791554155.7936609,
+      "last_discovery_epoch": 1791554484.6271968,
       "last_full_discovery_epoch": 1791548456.8753617,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
