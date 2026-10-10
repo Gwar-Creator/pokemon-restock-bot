@@ -6867,17 +6867,6 @@
   },
   "events": [
     {
-      "event": "REMOVED",
-      "fields": [],
-      "name": "Pokémon TCG: Scarlet & Violet-Prismatic Evolutions Special Collection tilbehørspose",
-      "product_id": "200316865",
-      "sku": "10981120-EA",
-      "source": "foetex",
-      "stage_after": "PREPARED",
-      "stage_before": null,
-      "ts": 1791277774.5189667
-    },
-    {
       "event": "CHANGE",
       "fields": [
         "in_stock_stores_count"
@@ -21148,6 +21137,19 @@
       "stage_after": null,
       "stage_before": null,
       "ts": 1791624276.014162
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
+      "product_id": "3447589",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1791626371.7156203
     }
   ],
   "sources": {
@@ -36473,9 +36475,11 @@
         "stage": "LIVE_STOCK",
         "status": "PÅ LAGER",
         "surface_statuses": {
+          "pokemon-brand": "PÅ LAGER",
           "pokemon-kort": "PÅ LAGER"
         },
         "surfaces": [
+          "pokemon-brand",
           "pokemon-kort"
         ],
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Zygarde-ex-Premium-Collection/3447589"
@@ -36536,6 +36540,6 @@
       }
     }
   },
-  "updated_at": 1791626083.208441,
+  "updated_at": 1791626371.7169008,
   "version": 1
 }
