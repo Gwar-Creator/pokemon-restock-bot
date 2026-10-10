@@ -817,10 +817,10 @@
     },
     "proshop": {
       "backoff_level": 3,
-      "next_allowed_at": 1791633384.849513,
-      "generic_failures": 4,
-      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
-      "last_failure_at": "2026-10-10T11:41:24.849398+00:00",
+      "next_allowed_at": 1791634381.5891547,
+      "generic_failures": 5,
+      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=50); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "last_failure_at": "2026-10-10T11:58:01.589120+00:00",
       "last_success_at": "2026-10-10T11:16:32.900007+00:00"
     },
     "br": {
@@ -857,14 +857,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1791633295.170479,
+      "next_allowed_at": 1791633594.0159893,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-09-26T15:39:28.835094+00:00",
-      "last_success_at": "2026-10-10T11:50:55.170458+00:00"
+      "last_success_at": "2026-10-10T11:55:54.015968+00:00"
     }
   },
-  "updated_at": "2026-10-10T11:54:37.123483+00:00",
+  "updated_at": "2026-10-10T11:59:34.140390+00:00",
   "proshop_discovery_version": 4,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -889,11 +889,11 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-10-10T11:50:54.022938+00:00"
+          "last_checked": "2026-10-10T11:55:52.845962+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1791633052.8339374,
+      "last_discovery_epoch": 1791633351.9985595,
       "last_full_discovery_epoch": 1791613551.5171862,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
