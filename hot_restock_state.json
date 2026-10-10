@@ -65,35 +65,35 @@
         "price": 329.0,
         "stock": "PÅ LAGER",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
-        "fetch_via": "jina_reader"
+        "fetch_via": "jina_reader+direct_frontend_search"
       },
       "3417744": {
         "name": "Pokemon TCG Mega Charizard X ex Ultra Premium Collection",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
-        "fetch_via": "jina_reader"
+        "fetch_via": "jina_reader+direct_frontend_search"
       },
       "3478498": {
         "name": "Pokemon TCG First Partner Illustration Collection Box Series 2",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-First-Partner-Illustration-Collection-Box-Series-2/3478498",
-        "fetch_via": "jina_reader"
+        "fetch_via": "jina_reader+direct_frontend_search"
       },
       "3447592": {
         "name": "Pokemon TCG Mega EvolutionChaos Rising Booster box with 36 boosters",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-EvolutionChaos-Rising-Booster-box-with-36-boosters/3447592",
-        "fetch_via": "jina_reader"
+        "fetch_via": "jina_reader+direct_frontend_search"
       },
       "3478496": {
         "name": "Pokemon TCG Mega Greninja ex Premium Collection",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
-        "fetch_via": "jina_reader"
+        "fetch_via": "jina_reader+direct_frontend_search"
       }
     },
     "br": {
@@ -715,7 +715,7 @@
         "in_stock": true,
         "availability_known": true,
         "url": "https://www.boozt.com/dk/da/pokmon-trading-cards/poke-mini-tin-june_33186417/233210201",
-        "fetch_via": "direct_category"
+        "fetch_via": "jina_reader_category"
       },
       "boozt:33175544": {
         "name": "Pokémon Trading Cards Poke Blister 3P ME04 REL 22/5 - Pokémon Trading Cards - BLACK / black",
@@ -724,7 +724,7 @@
         "in_stock": true,
         "availability_known": true,
         "url": "https://www.boozt.com/dk/da/pokmon-trading-cards/poke-blister-3p-me04-rel-22-5_33175544/233145334",
-        "fetch_via": "direct_category"
+        "fetch_via": "jina_reader_category"
       },
       "boozt:33175543": {
         "name": "Pokémon Trading Cards Poke ME04 Elite Trainer Box REL 22/5 - Pokémon Trading Cards - BLACK / black",
@@ -733,7 +733,7 @@
         "in_stock": true,
         "availability_known": true,
         "url": "https://www.boozt.com/dk/da/pokmon-trading-cards/poke-me04-elite-trainer-box-rel-22-5_33175543/233145333",
-        "fetch_via": "direct_category"
+        "fetch_via": "jina_reader_category"
       },
       "boozt:33175542": {
         "name": "Pokémon Trading Cards Poke Box Premium EX Mega Zygarde 1/5 - Pokémon Trading Cards - MULTI COLOURED / multi",
@@ -742,7 +742,7 @@
         "in_stock": true,
         "availability_known": true,
         "url": "https://www.boozt.com/dk/da/pokmon-trading-cards/poke-box-premium-ex-mega-zygarde-1-5_33175542/233145332",
-        "fetch_via": "direct_category"
+        "fetch_via": "jina_reader_category"
       },
       "boozt:33181863": {
         "name": "Pokémon Trading Cards Poke ME05 Elite Trainer Box - Pokémon Trading Cards - BLACK / black",
@@ -760,7 +760,7 @@
         "in_stock": true,
         "availability_known": true,
         "url": "https://www.boozt.com/dk/da/pokmon-trading-cards/poke-tin-ex-30th_33202392/233321290",
-        "fetch_via": "direct_category"
+        "fetch_via": "jina_reader_category"
       }
     },
     "magasin": {
@@ -848,23 +848,23 @@
       "last_success_at": "2026-10-10T03:24:22.062393+00:00"
     },
     "boozt": {
-      "backoff_level": 2,
-      "next_allowed_at": 1791608073.32128,
-      "generic_failures": 2,
-      "last_error": "BOOZT fejlede: Reader: 401 Client Error: Unauthorized for url: https://r.jina.ai/https://www.boozt.com/dk/da/pokemon-trading-cards/born | direct: 429 Client Error: Too Many Requests for url: https://www.boozt.com/dk/da/pokemon-trading-cards/born",
+      "backoff_level": 0,
+      "next_allowed_at": 0.0,
+      "generic_failures": 0,
+      "last_error": null,
       "last_failure_at": "2026-10-10T04:49:33.321264+00:00",
-      "last_success_at": "2026-10-10T04:45:56.992741+00:00"
+      "last_success_at": "2026-10-10T04:59:30.469853+00:00"
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1791608093.1445496,
+      "next_allowed_at": 1791608401.6715178,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-09-26T15:39:28.835094+00:00",
-      "last_success_at": "2026-10-10T04:50:53.144527+00:00"
+      "last_success_at": "2026-10-10T04:56:01.671498+00:00"
     }
   },
-  "updated_at": "2026-10-10T04:54:29.502782+00:00",
+  "updated_at": "2026-10-10T04:59:30.469894+00:00",
   "proshop_discovery_version": 4,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -889,11 +889,11 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-10-10T04:50:52.012947+00:00"
+          "last_checked": "2026-10-10T04:56:00.615923+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1791607851.073687,
+      "last_discovery_epoch": 1791608159.7125738,
       "last_full_discovery_epoch": 1791591950.400361,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
