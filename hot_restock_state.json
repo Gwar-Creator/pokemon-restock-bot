@@ -65,35 +65,35 @@
         "price": 329.0,
         "stock": "PÅ LAGER",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
-        "fetch_via": "jina_reader+direct_frontend_search"
+        "fetch_via": "jina_reader"
       },
       "3417744": {
         "name": "Pokemon TCG Mega Charizard X ex Ultra Premium Collection",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
-        "fetch_via": "jina_reader+direct_frontend_search"
+        "fetch_via": "jina_reader"
       },
       "3478498": {
         "name": "Pokemon TCG First Partner Illustration Collection Box Series 2",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-First-Partner-Illustration-Collection-Box-Series-2/3478498",
-        "fetch_via": "jina_reader+direct_frontend_search"
+        "fetch_via": "jina_reader"
       },
       "3447592": {
         "name": "Pokemon TCG Mega EvolutionChaos Rising Booster box with 36 boosters",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-EvolutionChaos-Rising-Booster-box-with-36-boosters/3447592",
-        "fetch_via": "jina_reader+direct_frontend_search"
+        "fetch_via": "jina_reader"
       },
       "3478496": {
         "name": "Pokemon TCG Mega Greninja ex Premium Collection",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
-        "fetch_via": "jina_reader+direct_frontend_search"
+        "fetch_via": "jina_reader"
       }
     },
     "br": {
@@ -481,6 +481,54 @@
         "sku": "10791068-EA",
         "url": "https://www.foetex.dk/produkter/pokemon-battle-academy-2024/200279925/"
       },
+      "200392807": {
+        "name": "Pokemon Greninja EX samlekort box",
+        "price": 349.0,
+        "online_count": 0,
+        "online_stock": false,
+        "store_count": 0,
+        "local_stocks": {
+          "1307": {
+            "name": "føtex Kolding",
+            "stock": 0
+          },
+          "1370": {
+            "name": "føtex Kolding Syd",
+            "stock": 0
+          },
+          "1223": {
+            "name": "føtex Esbjerg Broen",
+            "stock": 0
+          }
+        },
+        "quantity_limit": 1,
+        "sku": "11381820-EA",
+        "url": "https://www.foetex.dk/produkter/pokemon-greninja-ex-samlekort-box/200392807/"
+      },
+      "200392214": {
+        "name": "Pokémon 30th samlekort",
+        "price": 179.0,
+        "online_count": 0,
+        "online_stock": false,
+        "store_count": 0,
+        "local_stocks": {
+          "1307": {
+            "name": "føtex Kolding",
+            "stock": 0
+          },
+          "1370": {
+            "name": "føtex Kolding Syd",
+            "stock": 0
+          },
+          "1223": {
+            "name": "føtex Esbjerg Broen",
+            "stock": 0
+          }
+        },
+        "quantity_limit": 1,
+        "sku": "11379495-EA",
+        "url": "https://www.foetex.dk/produkter/pokemon-30th-samlekort/200392214/"
+      },
       "200392809": {
         "name": "Pokemon Greninja EX tin samlekort",
         "price": 299.0,
@@ -529,30 +577,6 @@
         "sku": "11381823-EA",
         "url": "https://www.foetex.dk/produkter/pokemon-sylveon-ex-tin-samlekort/200392808/"
       },
-      "200392807": {
-        "name": "Pokemon Greninja EX samlekort box",
-        "price": 349.0,
-        "online_count": 0,
-        "online_stock": false,
-        "store_count": 0,
-        "local_stocks": {
-          "1307": {
-            "name": "føtex Kolding",
-            "stock": 0
-          },
-          "1370": {
-            "name": "føtex Kolding Syd",
-            "stock": 0
-          },
-          "1223": {
-            "name": "føtex Esbjerg Broen",
-            "stock": 0
-          }
-        },
-        "quantity_limit": 1,
-        "sku": "11381820-EA",
-        "url": "https://www.foetex.dk/produkter/pokemon-greninja-ex-samlekort-box/200392807/"
-      },
       "200392806": {
         "name": "Pokémon Sylveon ex Box 30th",
         "price": 349.0,
@@ -576,30 +600,6 @@
         "quantity_limit": 1,
         "sku": "11381817-EA",
         "url": "https://www.foetex.dk/produkter/pokemon-sylveon-ex-box-30th/200392806/"
-      },
-      "200392214": {
-        "name": "Pokémon 30th samlekort",
-        "price": 179.0,
-        "online_count": 0,
-        "online_stock": false,
-        "store_count": 0,
-        "local_stocks": {
-          "1307": {
-            "name": "føtex Kolding",
-            "stock": 0
-          },
-          "1370": {
-            "name": "føtex Kolding Syd",
-            "stock": 0
-          },
-          "1223": {
-            "name": "føtex Esbjerg Broen",
-            "stock": 0
-          }
-        },
-        "quantity_limit": 1,
-        "sku": "11379495-EA",
-        "url": "https://www.foetex.dk/produkter/pokemon-30th-samlekort/200392214/"
       },
       "200392205": {
         "name": "Pokémon Poster Collection 30th",
@@ -857,14 +857,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1791609291.2879658,
+      "next_allowed_at": 1791609600.022643,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-09-26T15:39:28.835094+00:00",
-      "last_success_at": "2026-10-10T05:10:51.287944+00:00"
+      "last_success_at": "2026-10-10T05:16:00.022623+00:00"
     }
   },
-  "updated_at": "2026-10-10T05:14:27.154743+00:00",
+  "updated_at": "2026-10-10T05:19:35.224249+00:00",
   "proshop_discovery_version": 4,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -889,11 +889,11 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-10-10T05:10:50.628383+00:00"
+          "last_checked": "2026-10-10T05:15:59.092111+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1791609049.9927022,
+      "last_discovery_epoch": 1791609358.2315612,
       "last_full_discovery_epoch": 1791591950.400361,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
