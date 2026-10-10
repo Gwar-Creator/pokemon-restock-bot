@@ -577,6 +577,30 @@
         "sku": "11381817-EA",
         "url": "https://www.foetex.dk/produkter/pokemon-sylveon-ex-box-30th/200392806/"
       },
+      "200392214": {
+        "name": "Pokémon 30th samlekort",
+        "price": 179.0,
+        "online_count": 0,
+        "online_stock": false,
+        "store_count": 0,
+        "local_stocks": {
+          "1307": {
+            "name": "føtex Kolding",
+            "stock": 0
+          },
+          "1370": {
+            "name": "føtex Kolding Syd",
+            "stock": 0
+          },
+          "1223": {
+            "name": "føtex Esbjerg Broen",
+            "stock": 0
+          }
+        },
+        "quantity_limit": 1,
+        "sku": "11379495-EA",
+        "url": "https://www.foetex.dk/produkter/pokemon-30th-samlekort/200392214/"
+      },
       "200392205": {
         "name": "Pokémon Poster Collection 30th",
         "price": 299.0,
@@ -672,30 +696,6 @@
         "quantity_limit": 1,
         "sku": "11125894-EA",
         "url": "https://www.foetex.dk/produkter/pokemon-collector-s-chest-kuffert-med-samlekort/200340784/"
-      },
-      "200392214": {
-        "name": "Pokémon 30th samlekort",
-        "price": 179.0,
-        "online_count": 0,
-        "online_stock": false,
-        "store_count": 0,
-        "local_stocks": {
-          "1307": {
-            "name": "føtex Kolding",
-            "stock": 0
-          },
-          "1370": {
-            "name": "føtex Kolding Syd",
-            "stock": 0
-          },
-          "1223": {
-            "name": "føtex Esbjerg Broen",
-            "stock": 0
-          }
-        },
-        "quantity_limit": 1,
-        "sku": "11379495-EA",
-        "url": "https://www.foetex.dk/produkter/pokemon-30th-samlekort/200392214/"
       }
     },
     "boozt": {
@@ -816,11 +816,11 @@
       "last_success_at": "2026-10-09T05:09:42.572701+00:00"
     },
     "proshop": {
-      "backoff_level": 2,
-      "next_allowed_at": 1791624092.4455678,
-      "generic_failures": 1,
+      "backoff_level": 3,
+      "next_allowed_at": 1791625039.4490736,
+      "generic_failures": 2,
       "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
-      "last_failure_at": "2026-10-10T09:16:32.445539+00:00",
+      "last_failure_at": "2026-10-10T09:22:19.449044+00:00",
       "last_success_at": "2026-10-10T09:14:13.408946+00:00"
     },
     "br": {
@@ -857,14 +857,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1791623996.816283,
+      "next_allowed_at": 1791624289.7190583,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-09-26T15:39:28.835094+00:00",
-      "last_success_at": "2026-10-10T09:15:56.816262+00:00"
+      "last_success_at": "2026-10-10T09:20:49.719032+00:00"
     }
   },
-  "updated_at": "2026-10-10T09:19:35.477890+00:00",
+  "updated_at": "2026-10-10T09:24:27.066181+00:00",
   "proshop_discovery_version": 4,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -889,11 +889,11 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-10-10T09:15:55.713254+00:00"
+          "last_checked": "2026-10-10T09:20:48.579770+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1791623754.9447467,
+      "last_discovery_epoch": 1791624047.4036512,
       "last_full_discovery_epoch": 1791613551.5171862,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
