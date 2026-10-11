@@ -6877,19 +6877,6 @@
       "source": "proshop",
       "stage_after": "LIVE_STOCK",
       "stage_before": "LIVE_STOCK",
-      "ts": 1791358168.3580725
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "surface_statuses"
-      ],
-      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
-      "product_id": "3447589",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
       "ts": 1791359084.7043076
     },
     {
@@ -21154,6 +21141,19 @@
       "stage_after": "LIVE_STOCK",
       "stage_before": "LIVE_STOCK",
       "ts": 1791691779.3123813
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
+      "product_id": "3447589",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1791692083.7808473
     }
   ],
   "sources": {
@@ -36477,9 +36477,11 @@
         "stage": "LIVE_STOCK",
         "status": "PÅ LAGER",
         "surface_statuses": {
+          "pokemon-brand": "PÅ LAGER",
           "pokemon-kort": "PÅ LAGER"
         },
         "surfaces": [
+          "pokemon-brand",
           "pokemon-kort"
         ],
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Zygarde-ex-Premium-Collection/3447589"
@@ -36540,6 +36542,6 @@
       }
     }
   },
-  "updated_at": 1791691779.3135173,
+  "updated_at": 1791692083.7821236,
   "version": 1
 }
