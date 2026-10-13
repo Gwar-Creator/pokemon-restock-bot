@@ -6871,19 +6871,6 @@
       "fields": [
         "f_campaign_name"
       ],
-      "name": "Pokémon Pitch Black booster bundle - samlekort",
-      "product_id": "200380908",
-      "sku": "11320905-EA",
-      "source": "foetex",
-      "stage_after": "DATED_PREP",
-      "stage_before": "DATED_PREP",
-      "ts": 1791584680.5164618
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "f_campaign_name"
-      ],
       "name": "Pokémon Pitch Black Checklane Booster Pack",
       "product_id": "200380911",
       "sku": "11320909-EA",
@@ -21055,6 +21042,19 @@
       "stage_after": "INBOUND_UNDATED",
       "stage_before": null,
       "ts": 1791903570.6907365
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
+      "product_id": "3447589",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1791904485.9014075
     }
   ],
   "sources": {
@@ -36371,11 +36371,9 @@
         "stage": "LIVE_STOCK",
         "status": "PÅ LAGER",
         "surface_statuses": {
-          "pokemon-brand": "PÅ LAGER",
           "pokemon-kort": "PÅ LAGER"
         },
         "surfaces": [
-          "pokemon-brand",
           "pokemon-kort"
         ],
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Zygarde-ex-Premium-Collection/3447589"
@@ -36436,6 +36434,6 @@
       }
     }
   },
-  "updated_at": 1791904195.453509,
+  "updated_at": 1791904485.9027915,
   "version": 1
 }
