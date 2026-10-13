@@ -721,7 +721,7 @@
           },
           "1370": {
             "name": "føtex Kolding Syd",
-            "stock": 0
+            "stock": 2
           },
           "1223": {
             "name": "føtex Esbjerg Broen",
@@ -887,11 +887,11 @@
       "last_success_at": "2026-10-13T06:59:06.527347+00:00"
     },
     "proshop": {
-      "backoff_level": 1,
-      "next_allowed_at": 1791874870.0151927,
-      "generic_failures": 1,
+      "backoff_level": 2,
+      "next_allowed_at": 1791875220.7296581,
+      "generic_failures": 2,
       "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
-      "last_failure_at": "2026-10-13T06:59:10.015153+00:00",
+      "last_failure_at": "2026-10-13T07:02:00.729616+00:00",
       "last_success_at": "2026-10-13T06:58:19.064600+00:00"
     },
     "br": {
@@ -928,14 +928,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1791874784.9382057,
+      "next_allowed_at": 1791875130.9362547,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-09-26T15:39:28.835094+00:00",
-      "last_success_at": "2026-10-13T06:55:44.938183+00:00"
+      "last_success_at": "2026-10-13T07:01:30.936227+00:00"
     }
   },
-  "updated_at": "2026-10-13T06:59:25.746310+00:00",
+  "updated_at": "2026-10-13T07:05:01.097045+00:00",
   "proshop_discovery_version": 4,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -948,24 +948,24 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-10-13T00:55:53.624188+00:00"
+          "last_checked": "2026-10-13T07:01:27.914854+00:00"
         },
         "https://www.magasin.dk/sitemap_1-product.xml": {
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-10-13T00:55:54.053102+00:00"
+          "last_checked": "2026-10-13T07:01:29.024696+00:00"
         },
         "https://www.magasin.dk/sitemap_2-product.xml": {
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-10-13T06:55:44.032576+00:00"
+          "last_checked": "2026-10-13T07:01:29.341848+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1791874543.3232913,
-      "last_full_discovery_epoch": 1791852952.7064552,
+      "last_discovery_epoch": 1791874886.6517923,
+      "last_full_discovery_epoch": 1791874886.6517923,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
         "https://www.magasin.dk/sitemap_1-product.xml",
