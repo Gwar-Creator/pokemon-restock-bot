@@ -306,26 +306,6 @@
         "sku": "10791068-EA",
         "url": "https://www.bilka.dk/produkter/pokemon-battle-academy-2024/200279925/"
       },
-      "200392809": {
-        "name": "Pokemon Greninja EX tin samlekort",
-        "price": 299.0,
-        "online_count": 0,
-        "online_stock": false,
-        "store_count": 0,
-        "local_stocks": {
-          "1662": {
-            "name": "Bilka Kolding",
-            "stock": 0
-          },
-          "1659": {
-            "name": "Bilka Esbjerg",
-            "stock": 0
-          }
-        },
-        "quantity_limit": 1,
-        "sku": "11381826-EA",
-        "url": "https://www.bilka.dk/produkter/pokemon-greninja-ex-tin-samlekort/200392809/"
-      },
       "200392808": {
         "name": "Pokemon Sylveon EX tin samlekort",
         "price": 299.0,
@@ -365,46 +345,6 @@
         "quantity_limit": 1,
         "sku": "11381820-EA",
         "url": "https://www.bilka.dk/produkter/pokemon-greninja-ex-samlekort-box/200392807/"
-      },
-      "200392806": {
-        "name": "Pokémon Sylveon ex Box 30th",
-        "price": 349.0,
-        "online_count": 0,
-        "online_stock": false,
-        "store_count": 0,
-        "local_stocks": {
-          "1662": {
-            "name": "Bilka Kolding",
-            "stock": 0
-          },
-          "1659": {
-            "name": "Bilka Esbjerg",
-            "stock": 0
-          }
-        },
-        "quantity_limit": 1,
-        "sku": "11381817-EA",
-        "url": "https://www.bilka.dk/produkter/pokemon-sylveon-ex-box-30th/200392806/"
-      },
-      "200392214": {
-        "name": "Pokémon 30th samlekort",
-        "price": 179.0,
-        "online_count": 0,
-        "online_stock": false,
-        "store_count": 1,
-        "local_stocks": {
-          "1662": {
-            "name": "Bilka Kolding",
-            "stock": 0
-          },
-          "1659": {
-            "name": "Bilka Esbjerg",
-            "stock": 0
-          }
-        },
-        "quantity_limit": 1,
-        "sku": "11379495-EA",
-        "url": "https://www.bilka.dk/produkter/pokemon-30th-samlekort/200392214/"
       },
       "200392205": {
         "name": "Pokémon Poster Collection 30th",
@@ -465,6 +405,66 @@
         "quantity_limit": 6,
         "sku": "11263280-EA",
         "url": "https://www.bilka.dk/produkter/pokemon-tcg-booster-pack-samlekort/200366277/"
+      },
+      "200392809": {
+        "name": "Pokemon Greninja EX tin samlekort",
+        "price": 299.0,
+        "online_count": 0,
+        "online_stock": false,
+        "store_count": 0,
+        "local_stocks": {
+          "1662": {
+            "name": "Bilka Kolding",
+            "stock": 0
+          },
+          "1659": {
+            "name": "Bilka Esbjerg",
+            "stock": 0
+          }
+        },
+        "quantity_limit": 1,
+        "sku": "11381826-EA",
+        "url": "https://www.bilka.dk/produkter/pokemon-greninja-ex-tin-samlekort/200392809/"
+      },
+      "200392806": {
+        "name": "Pokémon Sylveon ex Box 30th",
+        "price": 349.0,
+        "online_count": 0,
+        "online_stock": false,
+        "store_count": 0,
+        "local_stocks": {
+          "1662": {
+            "name": "Bilka Kolding",
+            "stock": 0
+          },
+          "1659": {
+            "name": "Bilka Esbjerg",
+            "stock": 0
+          }
+        },
+        "quantity_limit": 1,
+        "sku": "11381817-EA",
+        "url": "https://www.bilka.dk/produkter/pokemon-sylveon-ex-box-30th/200392806/"
+      },
+      "200392214": {
+        "name": "Pokémon 30th samlekort",
+        "price": 179.0,
+        "online_count": 0,
+        "online_stock": false,
+        "store_count": 1,
+        "local_stocks": {
+          "1662": {
+            "name": "Bilka Kolding",
+            "stock": 0
+          },
+          "1659": {
+            "name": "Bilka Esbjerg",
+            "stock": 0
+          }
+        },
+        "quantity_limit": 1,
+        "sku": "11379495-EA",
+        "url": "https://www.bilka.dk/produkter/pokemon-30th-samlekort/200392214/"
       }
     },
     "foetex": {
@@ -887,12 +887,12 @@
       "last_success_at": "2026-10-14T09:34:24.500110+00:00"
     },
     "proshop": {
-      "backoff_level": 2,
-      "next_allowed_at": 1791976702.2285326,
-      "generic_failures": 2,
-      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "backoff_level": 1,
+      "next_allowed_at": 1791976877.8770394,
+      "generic_failures": 0,
+      "last_error": null,
       "last_failure_at": "2026-10-14T11:13:22.228497+00:00",
-      "last_success_at": "2026-10-14T11:09:13.578779+00:00"
+      "last_success_at": "2026-10-14T11:19:17.877021+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -928,14 +928,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1791976501.731268,
+      "next_allowed_at": 1791976795.8064406,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-09-26T15:39:28.835094+00:00",
-      "last_success_at": "2026-10-14T11:11:01.731241+00:00"
+      "last_success_at": "2026-10-14T11:15:55.806412+00:00"
     }
   },
-  "updated_at": "2026-10-14T11:14:31.160225+00:00",
+  "updated_at": "2026-10-14T11:19:35.591023+00:00",
   "proshop_discovery_version": 4,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -960,11 +960,11 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-10-14T11:11:00.568336+00:00"
+          "last_checked": "2026-10-14T11:15:54.735892+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1791976259.4023304,
+      "last_discovery_epoch": 1791976553.6610453,
       "last_full_discovery_epoch": 1791961866.0461867,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
