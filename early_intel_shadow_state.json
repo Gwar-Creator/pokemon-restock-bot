@@ -6877,19 +6877,6 @@
       "source": "proshop",
       "stage_after": "LIVE_STOCK",
       "stage_before": "LIVE_STOCK",
-      "ts": 1791721779.0979784
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "surface_statuses"
-      ],
-      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
-      "product_id": "3447589",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
       "ts": 1791722374.937911
     },
     {
@@ -20952,6 +20939,19 @@
       "stage_after": "INBOUND_UNDATED",
       "stage_before": null,
       "ts": 1792049976.218573
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
+      "product_id": "3447589",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1792052379.298927
     }
   ],
   "sources": {
@@ -25003,7 +25003,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-chaos-rising-booster-pack-samlekort/200366281/"
       },
       "200366282": {
-        "epoch_updated_at": 1792051380,
+        "epoch_updated_at": 1792052283,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -25033,7 +25033,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-chaos-rising-premium-checklane/200366282/"
       },
       "200366283": {
-        "epoch_updated_at": 1792051380,
+        "epoch_updated_at": 1792052283,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -36264,11 +36264,9 @@
         "stage": "LIVE_STOCK",
         "status": "PÅ LAGER",
         "surface_statuses": {
-          "pokemon-brand": "PÅ LAGER",
           "pokemon-kort": "PÅ LAGER"
         },
         "surfaces": [
-          "pokemon-brand",
           "pokemon-kort"
         ],
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Zygarde-ex-Premium-Collection/3447589"
@@ -36329,6 +36327,6 @@
       }
     }
   },
-  "updated_at": 1792052079.134118,
+  "updated_at": 1792052379.3002217,
   "version": 1
 }
