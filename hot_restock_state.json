@@ -75,7 +75,7 @@
       "https://www.coolshop.dk/produkt/pokemon-30th-celebration-binder-collection-pok10450-101/23Y9WV/": {
         "name": "Pokémon - 30th Celebration - Binder Collection (POK10450-101)",
         "game": "POKÉMON",
-        "price": 549.95,
+        "price": 599.95,
         "online_stock": false,
         "url": "https://www.coolshop.dk/produkt/pokemon-30th-celebration-binder-collection-pok10450-101/23Y9WV/"
       },
@@ -861,11 +861,11 @@
       "last_success_at": "2026-10-16T12:34:27.338292+00:00"
     },
     "proshop": {
-      "backoff_level": 2,
-      "next_allowed_at": 1792163441.7967231,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-10-16T14:50:35.351265+00:00",
+      "backoff_level": 3,
+      "next_allowed_at": 1792164391.9542933,
+      "generic_failures": 1,
+      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "last_failure_at": "2026-10-16T15:11:31.954260+00:00",
       "last_success_at": "2026-10-16T15:05:41.796708+00:00"
     },
     "br": {
@@ -902,14 +902,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1792163408.523374,
+      "next_allowed_at": 1792163692.2291076,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-09-26T15:39:28.835094+00:00",
-      "last_success_at": "2026-10-16T15:06:08.523353+00:00"
+      "last_success_at": "2026-10-16T15:10:52.229084+00:00"
     }
   },
-  "updated_at": "2026-10-16T15:09:36.512957+00:00",
+  "updated_at": "2026-10-16T15:14:31.410286+00:00",
   "proshop_discovery_version": 4,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -934,11 +934,11 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-10-16T15:06:07.098449+00:00"
+          "last_checked": "2026-10-16T15:10:51.671593+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1792163166.15293,
+      "last_discovery_epoch": 1792163450.984799,
       "last_full_discovery_epoch": 1792157753.4408758,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
