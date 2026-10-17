@@ -890,12 +890,12 @@
       "last_success_at": "2026-10-16T12:34:27.338292+00:00"
     },
     "proshop": {
-      "backoff_level": 1,
-      "next_allowed_at": 1792270221.8056455,
-      "generic_failures": 1,
-      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "backoff_level": 0,
+      "next_allowed_at": 0.0,
+      "generic_failures": 0,
+      "last_error": null,
       "last_failure_at": "2026-10-17T20:48:21.805617+00:00",
-      "last_success_at": "2026-10-17T20:47:25.783095+00:00"
+      "last_success_at": "2026-10-17T20:54:11.405593+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -931,14 +931,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1792270198.7597842,
+      "next_allowed_at": 1792270487.9760714,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-09-26T15:39:28.835094+00:00",
-      "last_success_at": "2026-10-17T20:45:58.759761+00:00"
+      "last_success_at": "2026-10-17T20:50:47.976050+00:00"
     }
   },
-  "updated_at": "2026-10-17T20:49:30.655907+00:00",
+  "updated_at": "2026-10-17T20:54:26.724730+00:00",
   "proshop_discovery_version": 4,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -969,11 +969,11 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-10-17T20:45:57.405504+00:00"
+          "last_checked": "2026-10-17T20:50:47.062505+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1792269956.5669575,
+      "last_discovery_epoch": 1792270246.492368,
       "last_full_discovery_epoch": 1792266948.0194461,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
