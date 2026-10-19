@@ -6828,43 +6828,6 @@
   },
   "events": [
     {
-      "event": "CHANGE",
-      "fields": [
-        "surface_statuses"
-      ],
-      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
-      "product_id": "3447589",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1792064104.5254824
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "surface_statuses"
-      ],
-      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
-      "product_id": "3447589",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1792064374.6691449
-    },
-    {
-      "event": "REMOVED",
-      "fields": [],
-      "name": "Pokemon TCG Mega Charizard X ex Ultra Premium Collection",
-      "product_id": "3417744",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "INBOUND_UNDATED",
-      "stage_before": null,
-      "ts": 1792064374.6691527
-    },
-    {
       "event": "REMOVED",
       "fields": [],
       "name": "Pokemon TCG Mega EvolutionChaos Rising Booster box with 36 boosters",
@@ -20926,6 +20889,47 @@
       "stage_after": null,
       "stage_before": null,
       "ts": 1792404568.0921776
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "online_to"
+      ],
+      "name": "Pokémon Chaos Rising Premium Checklane",
+      "product_id": "200366282",
+      "sku": "11263285-EA",
+      "source": "br",
+      "stage_after": "EXPOSED_NO_STOCK",
+      "stage_before": "EXPOSED_NO_STOCK",
+      "ts": 1792404870.3889968
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "is_reservable",
+        "online_to"
+      ],
+      "name": "Pokémon Chaos Rising Premium Checklane",
+      "product_id": "200366282",
+      "sku": "11263285-EA",
+      "source": "bilka",
+      "stage_after": "DATED_PREP",
+      "stage_before": "DATED_PREP",
+      "ts": 1792404871.4948769
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "is_reservable",
+        "online_to"
+      ],
+      "name": "Pokémon Chaos Rising Premium Checklane",
+      "product_id": "200366282",
+      "sku": "11263285-EA",
+      "source": "foetex",
+      "stage_after": "DATED_PREP",
+      "stage_before": "DATED_PREP",
+      "ts": 1792404872.3912892
     }
   ],
   "sources": {
@@ -24945,7 +24949,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-chaos-rising-booster-pack-samlekort/200366281/"
       },
       "200366282": {
-        "epoch_updated_at": 1792404166,
+        "epoch_updated_at": 1792404777,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -24955,12 +24959,12 @@
         "in_stock_stores_count": 0,
         "is_click_and_collectible": false,
         "is_exposed": false,
-        "is_reservable": true,
+        "is_reservable": false,
         "name": "Pokémon Chaos Rising Premium Checklane",
         "not_reservable_from": "2026-05-17 22:00:00+00",
         "not_reservable_to": "2026-05-24 22:00:00+00",
         "online_from": "2026-05-22 00:00:00+00",
-        "online_to": "2026-10-18 22:00:00+00",
+        "online_to": "2026-10-19 00:00:00+00",
         "promotion_end_date": null,
         "promotion_start_date": null,
         "quantity_restriction": 6,
@@ -30053,7 +30057,7 @@
         "url": "https://www.br.dk/produkter/pokemon-chaos-rising-booster-pack-samlekort/200366281/"
       },
       "200366282": {
-        "epoch_updated_at": 1792404404,
+        "epoch_updated_at": 1792404777,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -30068,7 +30072,7 @@
         "not_reservable_from": "2026-05-17 22:00:00+00",
         "not_reservable_to": "2026-05-24 22:00:00+00",
         "online_from": "2026-05-22 00:00:00+00",
-        "online_to": "2026-10-18 22:00:00+00",
+        "online_to": "2026-10-19 00:00:00+00",
         "promotion_end_date": null,
         "promotion_start_date": null,
         "quantity_restriction": 6,
@@ -35096,7 +35100,7 @@
         "url": "https://www.foetex.dk/produkter/pokemon-chaos-rising-booster-pack-samlekort/200366281/"
       },
       "200366282": {
-        "epoch_updated_at": 1792404293,
+        "epoch_updated_at": 1792404777,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -35106,12 +35110,12 @@
         "in_stock_stores_count": 0,
         "is_click_and_collectible": false,
         "is_exposed": false,
-        "is_reservable": true,
+        "is_reservable": false,
         "name": "Pokémon Chaos Rising Premium Checklane",
         "not_reservable_from": "2026-05-17 22:00:00+00",
         "not_reservable_to": "2026-05-24 22:00:00+00",
         "online_from": "2026-05-22 00:00:00+00",
-        "online_to": "2026-10-18 22:00:00+00",
+        "online_to": "2026-10-19 00:00:00+00",
         "promotion_end_date": null,
         "promotion_start_date": null,
         "quantity_restriction": 6,
@@ -36199,6 +36203,6 @@
       }
     }
   },
-  "updated_at": 1792404568.09224,
+  "updated_at": 1792404876.034853,
   "version": 1
 }
