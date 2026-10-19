@@ -6828,19 +6828,6 @@
   },
   "events": [
     {
-      "event": "CHANGE",
-      "fields": [
-        "in_stock_stores_count"
-      ],
-      "name": "Pokemon Mini Tins 30th - flere varianter - assorteret",
-      "product_id": "200397756",
-      "sku": "11406830-EA",
-      "source": "bilka",
-      "stage_after": "HIDDEN_STOCK",
-      "stage_before": "HIDDEN_STOCK",
-      "ts": 1792100088.1581576
-    },
-    {
       "event": "CROSS_CHANGE",
       "fields": [
         "bilka"
@@ -20933,6 +20920,19 @@
       "stage_after": "LIVE_STOCK",
       "stage_before": "LIVE_STOCK",
       "ts": 1792442383.4296172
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
+      "product_id": "3447589",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1792442677.6803486
     }
   ],
   "sources": {
@@ -36142,9 +36142,11 @@
         "stage": "LIVE_STOCK",
         "status": "PÅ LAGER",
         "surface_statuses": {
+          "pokemon-brand": "PÅ LAGER",
           "pokemon-kort": "PÅ LAGER"
         },
         "surfaces": [
+          "pokemon-brand",
           "pokemon-kort"
         ],
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Zygarde-ex-Premium-Collection/3447589"
@@ -36205,6 +36207,6 @@
       }
     }
   },
-  "updated_at": 1792442383.430541,
+  "updated_at": 1792442677.681717,
   "version": 1
 }
