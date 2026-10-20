@@ -6830,19 +6830,6 @@
     {
       "event": "CHANGE",
       "fields": [
-        "in_stock_stores_count"
-      ],
-      "name": "Pokémon Poster Collection 30th",
-      "product_id": "200392205",
-      "sku": "11379493-EA",
-      "source": "bilka",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1792156775.420474
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
         "surface_statuses"
       ],
       "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
@@ -21041,6 +21028,19 @@
       "stage_after": "INBOUND_UNDATED",
       "stage_before": "LIVE_STOCK",
       "ts": 1792495774.7846327
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
+      "product_id": "3447589",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1792498482.7185433
     }
   ],
   "sources": {
@@ -36259,11 +36259,9 @@
         "stage": "LIVE_STOCK",
         "status": "PÅ LAGER",
         "surface_statuses": {
-          "pokemon-brand": "PÅ LAGER",
           "pokemon-kort": "PÅ LAGER"
         },
         "surfaces": [
-          "pokemon-brand",
           "pokemon-kort"
         ],
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Zygarde-ex-Premium-Collection/3447589"
@@ -36324,6 +36322,6 @@
       }
     }
   },
-  "updated_at": 1792498183.6479654,
+  "updated_at": 1792498482.7193973,
   "version": 1
 }
