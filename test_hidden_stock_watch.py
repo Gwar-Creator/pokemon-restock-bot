@@ -76,7 +76,7 @@ class HiddenStockLocationPolicyTests(unittest.TestCase):
         remote_row = {**local_row, "store": "føtex Østerbro Centret", "stock": 12}
         posted = Mock()
         posted.raise_for_status.return_value = None
-        with patch.object(hidden, "WEBHOOK", "https://example.test/webhook"), \\
+        with patch.object(hidden, "WEBHOOK", "https://example.test/webhook"), \
              patch.object(hidden.requests, "post", return_value=posted) as api:
             hidden.send_alert([remote_row, local_row])
         msg = api.call_args.kwargs["json"]["embeds"][0]
@@ -85,7 +85,7 @@ class HiddenStockLocationPolicyTests(unittest.TestCase):
 
     def test_remote_only_alert_is_rejected(self):
         remote = {"site": "br", "store": "BR Slagelse", "stock": 4}
-        with patch.object(hidden, "WEBHOOK", "https://example.test/webhook"), \\
+        with patch.object(hidden, "WEBHOOK", "https://example.test/webhook"), \
              patch.object(hidden.requests, "post") as api:
             with self.assertRaisesRegex(ValueError, "no approved local"):
                 hidden.send_alert([remote])
@@ -108,8 +108,8 @@ class HiddenStockLocationPolicyTests(unittest.TestCase):
                 if site == "foetex":
                     return 194, 1, 0, distant
                 return 194, 0, 0, []
-            with patch.object(hidden, "STATE_PATH", state_path), \\
-                 patch.object(hidden, "fetch_site", side_effect=fake_fetch), \\
+            with patch.object(hidden, "STATE_PATH", state_path), \
+                 patch.object(hidden, "fetch_site", side_effect=fake_fetch), \
                  patch.object(hidden, "send_alert") as send:
                 hidden.main()
                 send.assert_not_called()
