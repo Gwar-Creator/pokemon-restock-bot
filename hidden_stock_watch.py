@@ -21,6 +21,14 @@ SITES = ("br", "bilka", "foetex")
 WORKERS = 6
 MAX_ALERTS_PER_RUN = 4
 STATE_VERSION = 1
+# The full national stock history remains in state, but Discord is local.
+ALERT_CITIES = ("kolding", "esbjerg", "vejle", "fredericia")
+
+
+def is_alert_store(name):
+    """Match one of the four approved cities as a complete word."""
+    normalized = f" {local.normalize_search_text(name)} "
+    return any(f" {city} " in normalized for city in ALERT_CITIES)
 
 
 def empty_state():
@@ -170,7 +178,9 @@ def merge_site(state, site_key, observations, now):
                 "last_seq": seq,
             }
             items[key] = row
-            if streak >= 2 and not notified and local.local_stock_signal_allowed(product):
+            if (streak >= 2 and not notified
+                    and is_alert_store(store.get("name"))
+                    and local.local_stock_signal_allowed(product)):
                 group = (site_key, product["sku"])
                 candidates.setdefault(group, []).append(key)
 
@@ -181,13 +191,16 @@ def merge_site(state, site_key, observations, now):
 def send_alert(rows):
     if not WEBHOOK:
         raise RuntimeError("DISCORD_WEBHOOK_URL mangler")
-    first = rows[0]
+    # Final fail-closed guard: even a mixed or stale queue cannot leak
+    # remote shops into a Discord message.
+    locations = sorted(
+        (row for row in rows if is_alert_store(row.get("store"))),
+        key=lambda row: row["store"].lower(),
+    )
+    if not locations:
+        raise ValueError("Hidden-stock alert has no approved local stores")
+    first = locations[0]
     chain = local.SITES[first["site"]]["label"]
-    locations = sorted(rows, key=lambda r: (
-        not any(word in r["store"].lower()
-                for word in ("kolding", "esbjerg", "fredericia", "vejle", "vejen", "brørup")),
-        r["store"].lower(),
-    ))
     store_lines = [f"**{r['store']}** · {r['stock']} stk."
                    for r in locations[:12]]
     if len(locations) > 12:
@@ -263,16 +276,12 @@ def main():
                 and not row.get("notified")
                 and state["health"].get(site_key, {}).get("status") == "ok"
                 and row.get("last_seq") == state["site_scan_seq"].get(site_key)
+                and is_alert_store(row.get("store"))
                 and local.local_stock_signal_allowed(row)):
             queued.setdefault((site_key, row["sku"]), []).append(key)
 
     successes = 0
-    for group in sorted(queued, key=lambda g: (
-        not any(
-            word in state["items"][key]["store"].lower()
-            for key in queued[g]
-            for word in ("kolding", "esbjerg", "fredericia", "vejle", "vejen", "brørup")
-        ), g)):
+    for group in sorted(queued):
         if successes >= MAX_ALERTS_PER_RUN:
             break
         keys = queued[group]
