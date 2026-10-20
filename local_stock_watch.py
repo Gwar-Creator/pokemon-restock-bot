@@ -322,7 +322,14 @@ def get_algolia_candidates(site_key, config):
     params = {
         "query": "",
         "attributesToRetrieve": '["*"]',
-        "filters": 'cfh_nodes:"CFH.CollectionCards"',
+        # Filter within Algolia before limiting results. The previous broad
+        # first-500 query silently dropped older Pokémon SKUs as ranking moved,
+        # including pre-publish BR products with local shop stock.
+        "filters": (
+            'cfh_nodes:"CFH.CollectionCards" AND '
+            '(f_brand:"Pokemon" OR f_brand:"Pokémon" OR '
+            'facets.productSeriesToys:"Pokémon")'
+        ),
         "distinct": "true",
         "page": 0,
         "hitsPerPage": 500,
@@ -347,7 +354,16 @@ def get_algolia_candidates(site_key, config):
         timeout=25,
     )
     response.raise_for_status()
-    hits = response.json()["results"][0].get("hits", [])
+    result = response.json()["results"][0]
+    hits = result.get("hits", [])
+    total_hits = safe_int(result.get("nbHits"), len(hits))
+    if total_hits > 500:
+        # A truncated catalogue can miss products that still have stock.
+        # Do not treat that as a complete observation.
+        raise RuntimeError(
+            f"{SITES[site_key]['label']} Pokémon-katalog har "
+            f"{total_hits} hits; pagination kræves"
+        )
 
     candidates = []
     for product in hits:
