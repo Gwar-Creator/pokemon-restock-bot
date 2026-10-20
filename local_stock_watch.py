@@ -44,6 +44,19 @@ TARGET_STORE_MARKERS = (
     "esbjerg",
 )
 
+# Investigation only: query hidden BR SKUs directly even when Algolia
+# in_stock_stores_count is zero. Never use these results for alerts.
+BR_SHADOW_SKUS = {
+    "200291393": {
+        "sku": "10831914-EA",
+        "name": "Charizard ex Super-Premium Collection",
+    },
+    "200340038": {
+        "sku": "11119429-EA",
+        "name": "Mega Latias ex Box",
+    },
+}
+
 NON_ENGLISH_CARD_MARKERS = (
     "japansk",
     "japanese",
@@ -465,6 +478,45 @@ def get_store_stocks(site_key, config, sku, session, old_stocks=None):
     return target_stocks, national_stores
 
 
+def probe_hidden_br_inventory(config, session):
+    """Read detailed stock for zero-count BR products; diagnostic only."""
+    results = {}
+    for product_id, entry in BR_SHADOW_SKUS.items():
+        result = {
+            "name": entry["name"],
+            "sku": entry["sku"],
+            "status": "unknown",
+            "kolding": None,
+            "viborg": None,
+            "positive_stores": {},
+        }
+        try:
+            stocks, national = get_store_stocks(
+                "br", config, entry["sku"], session
+            )
+            result["status"] = "ok"
+            result["positive_stores"] = national
+            for store in stocks.values():
+                name = str(store.get("name") or "").lower()
+                if "kolding" in name:
+                    result["kolding"] = safe_int(store.get("stock"), 0)
+            for store in national.values():
+                if "viborg" in str(store.get("name") or "").lower():
+                    result["viborg"] = safe_int(store.get("stock"), 0)
+        except Exception as exc:
+            # Empty payload or temporary API failure must never become zero
+            # stock (and never trigger a restock on recovery).
+            result["status"] = "unavailable"
+            result["error_type"] = type(exc).__name__
+        results[product_id] = result
+        print(
+            f"BR SHADOW SKU {product_id}: {result['status']} | "
+            f"Kolding={result['kolding']} | Viborg={result['viborg']} | "
+            f"{len(result['positive_stores'])} positive stores"
+        )
+    return results
+
+
 def zero_known_stocks(old_stocks):
     return {
         site_id: {
@@ -730,6 +782,11 @@ def scan_site(site_key, old_products):
     session = requests.Session()
     observations = {}
     errors = 0
+    shadow_probe = None
+
+    # Separate from confirmation-gated alerts: no mutation of product stock.
+    if site_key == "br":
+        shadow_probe = probe_hidden_br_inventory(config, session)
 
     for product in candidates:
         key = f"{site_key}:{product['id']}"
@@ -796,7 +853,7 @@ def scan_site(site_key, old_products):
         f"{positive_products} med lokal stock | "
         f"{errors} availability-fejl"
     )
-    return observations, errors
+    return observations, errors, shadow_probe
 
 
 def main():
@@ -808,6 +865,8 @@ def main():
     fresh_keys = set()
     all_observations = {}
     stock_alerted_products = set()
+    old_shadow_probe = old_state.get("br_hidden_stock_probe") or {}
+    shadow_probe = old_shadow_probe
     known_product_keys = {
         canonical_salling_product_key(product)
         for product in old_products.values()
@@ -825,13 +884,15 @@ def main():
         site_had_baseline = site_baselines[site_key]
 
         try:
-            observations, errors = scan_site(site_key, old_products)
+            observations, errors, site_probe = scan_site(site_key, old_products)
         except Exception as error:
             total_errors += 1
             print(f"LOCAL STOCK {site_key.upper()} KILDEFEJL: {error}")
             continue
 
         total_errors += errors
+        if site_key == "br" and site_probe is not None:
+            shadow_probe = site_probe
         next_products.update(observations)
         fresh_keys.update(observations.keys())
         all_observations.update(observations)
@@ -908,6 +969,9 @@ def main():
         "products": next_products,
         "last_run": datetime.now(timezone.utc).isoformat(),
         "last_run_errors": total_errors,
+        # Strictly for forensic comparison of hidden inventory with Algolia
+        # and third-party Discord; excluded from transitions and alerts.
+        "br_hidden_stock_probe": shadow_probe,
     }
     save_state(next_state)
 
