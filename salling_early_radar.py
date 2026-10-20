@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parent
 SHARED_FILE = ROOT / "restock_bot_github.py"
 STATE_FILE = ROOT / "salling_early_radar_state.json"
 STATE_VERSION = 3
-SITES = ("bilka", "foetex")
+SITES = ("bilka", "foetex", "br")
 LOCAL_TZ = ZoneInfo("Europe/Copenhagen")
 MAX_POKEMON_CATALOG_HITS = 250
 MIN_POKEMON_CATALOG_HITS = 50
@@ -240,8 +240,16 @@ def description_snapshot(hit):
 
 
 def fetch_hidden_catalog(shared, site_key):
-    site = shared["SALLING_SITES"][site_key]
-    config = shared["get_salling_frontend_config"](site_key)
+    if site_key == "br":
+        # BR has its own Algolia index/config, separate from Bilka and Foetex.
+        config = shared["get_br_frontend_config"]()
+        site_base = shared["BR_BASE"]
+        algolia_index = shared["BR_ALGOLIA_INDEX"]
+    else:
+        site = shared["SALLING_SITES"][site_key]
+        config = shared["get_salling_frontend_config"](site_key)
+        site_base = site["base"]
+        algolia_index = config["algolia_index"]
     algolia_url = (
         "https://"
         f"{config['algolia_app_id'].lower()}"
@@ -267,7 +275,7 @@ def fetch_hidden_catalog(shared, site_key):
     payload = {
         "requests": [
             {
-                "indexName": config["algolia_index"],
+                "indexName": algolia_index,
                 "params": urlencode(params),
             }
         ],
@@ -323,7 +331,7 @@ def fetch_hidden_catalog(shared, site_key):
             "online_count": max(0, shared["safe_int"](hit.get("stock_count_online"), 0)),
             "store_count": max(0, shared["safe_int"](hit.get("in_stock_stores_count"), 0)),
             "priority": priority_for(hit.get("name")),
-            "url": urljoin(site["base"], product_url) if product_url else site["home"],
+            "url": urljoin(site_base, product_url) if product_url else site_base,
             "site": site_key,
             "epoch_updated_at": shared["safe_int"](hit.get("epoch_updated_at"), 0),
             "campaign": normalized_list(hit.get("f_campaign_name")),
@@ -665,6 +673,18 @@ def main():
         return
 
     previous = previous_state.get("products") or {}
+
+    # First introduction of BR: take a quiet, complete three-retailer
+    # baseline. Without this, existing BR records would generate mass
+    # false "new" and "movement" alerts because earlier state had only
+    # Bilka/Foetex. Subsequent scans compare BR changes as normal.
+    if not any("br" in (entry.get("sites") or {}) for entry in previous.values()):
+        save_state(current)
+        print(
+            f"EARLY RADAR BR: stille baseline for {len(current)} "
+            "produkt-ID'er; BR overvages fra naeste scan."
+        )
+        return
 
     # If Salling bulk-reindexes many records at once, epoch_updated_at can move
     # without meaning anything commercially. Suppress timestamp-only noise in
