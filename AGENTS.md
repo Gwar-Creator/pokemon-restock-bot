@@ -16,6 +16,8 @@ Vigtige filer:
 - `restock_bot_github.py`: primær scanner, filtre, Discord-output, Price Watch og Price History.
 - `restock_state_v2.json`: vedvarende lager-, pris-, historik- og source-health-state.
 - `local_stock_watch.py`: separat lokal Salling-stock/PRE-PUBLISH overvågning.
+- `hidden_stock_watch.py`: særskilt monitoring af PRE-PUBLISH Pokémon-sealed hos BR/Bilka/Føtex med direkte detail-lagerkontrol, 2 positive målinger og stille baseline.
+- `hidden_stock_state_v1.json`: særskilt vedvarende state for skjult butikslager; må ikke sammenblandes med de normale restock-lagertal.
 - `local_stock_state_v1.json`: vedvarende state for Local Stock Watch, når baseline er oprettet.
 - `scanner_health_audit.py`: log-only audit af de aktive scannerkilder.
 - `.github/workflows/restock.yml`: GitHub Actions-kørsel og commit af state.
@@ -90,6 +92,12 @@ Vigtige undtagelser, der fortsat kan være relevante forseglede produkter:
 - Andre officielle collection-produkter, selv hvis titlen indeholder et ord, som også bruges om tilbehør.
 
 Filtrér helst notifikationer uden at slette produktet fra state. Det bevarer historik og gør ændringer nemme at rulle tilbage. Brug præcise regler og eksplicitte undtagelser frem for brede delstringsfiltre.
+
+## Skjult butikslager
+
+Fra 2026-10-20 overvåges skjulte Pokémon-produkter via `hidden_stock_watch.py` i hovedworkflowet. Salling Algolias `in_stock_stores_count=0` betyder ikke nødvendigvis, at `clickcollect/availability/{SKU}` mangler positive butikstal; BR Kolding Charizard ex Super-Premium Collection (4) og Mega Latias ex Box (1) er verificerede eksempler i den detaljerede API. Kilden er systemlager, ikke dokumentation for at varer kan købes i butikken.
+
+Den nye lane scanner BR, Bilka og Føtex for `is_exposed=false` og `store_count=0`; almindelig Local Stock håndterer positive Algolia-lagertal separat. Første succesfulde butikskørsel opretter en stille baseline. Derefter kræves to på hinanden følgende positive SKU-/butiksaflæsninger til Discord; kun nye positive overgange efter nul er relevante, og maksimum er fire produktalerts per kørsel med lokal prioritet. API-fejl/tomme payloads betyder ukendt, ikke nul. Alarmer markeres tydeligt PRE-PUBLISH/ikke bekræftet salg. Den separate `br_hidden_stock_probe.py` er fortsat diagnostisk uden Discord.
 
 ## Lokalt fokus
 
