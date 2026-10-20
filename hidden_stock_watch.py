@@ -64,11 +64,16 @@ def fetch_detailed_stocks(site_key, config, product):
             if not site_id:
                 continue
             raw = entry.get("currentStock")
-            if raw is None:
+            if raw is None or isinstance(raw, bool):
+                continue
+            try:
+                count = int(raw)
+            except (TypeError, ValueError):
+                # Bad API data is unknown, never a fabricated zero.
                 continue
             stocks[site_id] = {
                 "name": str(store.get("name") or site_id).strip(),
-                "stock": max(0, local.safe_int(raw)),
+                "stock": max(0, count),
             }
         return stocks or None
     except (requests.RequestException, ValueError, TypeError):
