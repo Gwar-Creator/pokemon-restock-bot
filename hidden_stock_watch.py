@@ -78,6 +78,8 @@ def fetch_detailed_stocks(site_key, config, product):
 def fetch_site(site_key):
     config = local.get_frontend_config(site_key)
     products, catalog_count = local.get_algolia_candidates(site_key, config)
+    if catalog_count < 50:
+        raise RuntimeError(f"Pokemon-katalog mistænkeligt lille: {catalog_count} hits")
     # The ordinary scanner already handles positive store_count products.
     # This lane is reserved for explicitly hidden, store_count=0 SKUs.
     selected = {}
@@ -251,10 +253,13 @@ def main():
     # or the per-run spam limit postponed it.
     queued = {}
     for key, row in state["items"].items():
+        site_key = row["site"]
         if (row.get("stock", 0) > 0 and row.get("streak", 0) >= 2
                 and not row.get("notified")
+                and state["health"].get(site_key, {}).get("status") == "ok"
+                and row.get("last_seq") == state["site_scan_seq"].get(site_key)
                 and local.local_stock_signal_allowed(row)):
-            queued.setdefault((row["site"], row["sku"]), []).append(key)
+            queued.setdefault((site_key, row["sku"]), []).append(key)
 
     successes = 0
     for group in sorted(queued, key=lambda g: (
