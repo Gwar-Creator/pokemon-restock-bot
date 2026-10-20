@@ -9481,26 +9481,66 @@
       "observed_at": "2026-10-20T12:40:41.313984+00:00"
     }
   },
-  "last_run": "2026-10-20T12:45:53.115476+00:00",
-  "last_run_errors": 29,
+  "last_run": "2026-10-20T12:50:50.903838+00:00",
+  "last_run_errors": 4,
   "br_hidden_stock_probe": {
     "200291393": {
       "name": "Charizard ex Super-Premium Collection",
       "sku": "10831914-EA",
-      "status": "unavailable",
-      "kolding": null,
+      "status": "ok",
+      "kolding": 4,
       "viborg": null,
-      "positive_stores": {},
-      "error_type": "HTTPError"
+      "positive_stores": {
+        "2031": {
+          "name": "BR Nyborg",
+          "stock": 2
+        },
+        "2009": {
+          "name": "BR Nykøbing F",
+          "stock": 2
+        },
+        "2005": {
+          "name": "BR Sønderborg",
+          "stock": 1
+        },
+        "2026": {
+          "name": "BR Frederiksberg",
+          "stock": 2
+        },
+        "2025": {
+          "name": "BR Fisketorvet",
+          "stock": 1
+        },
+        "2001": {
+          "name": "BR Vimmelskaftet",
+          "stock": 3
+        },
+        "2021": {
+          "name": "BR Kolding",
+          "stock": 4
+        },
+        "2020": {
+          "name": "BR Fields",
+          "stock": 12
+        },
+        "2016": {
+          "name": "BR Slagelse",
+          "stock": 1
+        }
+      }
     },
     "200340038": {
       "name": "Mega Latias ex Box",
       "sku": "11119429-EA",
-      "status": "unavailable",
-      "kolding": null,
+      "status": "ok",
+      "kolding": 1,
       "viborg": null,
-      "positive_stores": {},
-      "error_type": "HTTPError"
+      "positive_stores": {
+        "2021": {
+          "name": "BR Kolding",
+          "stock": 1
+        }
+      }
     }
   }
 }
