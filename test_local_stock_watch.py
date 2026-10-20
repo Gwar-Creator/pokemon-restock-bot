@@ -4,6 +4,14 @@ import local_stock_watch as local
 
 
 class LocalStockSignalPolicyTests(unittest.TestCase):
+    def test_charizard_hyphenated_super_premium_is_sealed_collection(self):
+        self.assertEqual(
+            local.pokemon_product_type(
+                "Pokémon TCG: Charizard ex Super-Premium Collection"
+            ),
+            "COLLECTION",
+        )
+
     def test_perfect_order_loose_booster_pack_is_muted(self):
         self.assertFalse(
             local.local_stock_signal_allowed(
