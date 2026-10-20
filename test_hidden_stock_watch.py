@@ -80,7 +80,7 @@ class HiddenStockPolicyTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             state_path = Path(tmp) / "state.json"
             samples = iter([
-                (100, 1, 0, []),
+                (100, 1, 0, observation(0)),
                 (100, 1, 0, observation(4)),
                 (100, 1, 0, observation(4)),
             ])
