@@ -286,7 +286,10 @@ def pokemon_product_type(name, product=None):
         marker in text
         for marker in (
             " premium collection ",
+            " super-premium collection ",
+            " super premium collection ",
             " ultra-premium collection ",
+            " ultra premium collection ",
             " special collection ",
             " illustration collection ",
             " binder collection ",
