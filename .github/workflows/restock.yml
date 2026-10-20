@@ -53,6 +53,8 @@ jobs:
           python -m py_compile flinamania_product_probe.py
           python -m py_compile local_stock_watch.py
           python -m py_compile br_hidden_stock_probe.py
+          python -m py_compile hidden_stock_watch.py
+          python -m py_compile test_hidden_stock_watch.py
           python -m py_compile test_local_stock_watch.py
           python -m py_compile scanner_health_audit.py
           python -m py_compile discord_cleanup.py
@@ -63,6 +65,7 @@ jobs:
           python -m unittest test_restock_v2_runner.py
           python -m unittest test_restock_lane_ownership.py
           python -m unittest test_local_stock_watch.py
+          python -m unittest test_hidden_stock_watch.py
           python -m unittest test_faraos_parser_v2.py
           python -m unittest test_tier_b_wave1.py
           python -m unittest test_tier_b_wave1_live.py
@@ -88,6 +91,12 @@ jobs:
       - name: Probe hidden BR inventory (no alerts)
         continue-on-error: true
         run: python br_hidden_stock_probe.py
+
+      - name: Monitor confirmed hidden BR Bilka Foetex store stock
+        continue-on-error: true
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: python hidden_stock_watch.py
 
       - name: Run Restock V2 + Local Stock
         env:
@@ -137,6 +146,7 @@ jobs:
             restock_state_v2.json \
             local_stock_state_v1.json \
             br_hidden_stock_probe_state.json \
+            hidden_stock_state_v1.json \
             tier_b_wave1_shadow_state.json \
             tier_b_wave2_shadow_state.json \
             tier_b_wave3_shadow_state.json \
