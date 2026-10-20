@@ -150,5 +150,40 @@ class LocalStockAvailabilityResilienceTests(unittest.TestCase):
         self.assertEqual(stocks["1662"]["stock"], 0)
 
 
+
+class HiddenBRStockProbeTests(unittest.TestCase):
+    def test_positive_zero_gate_probe_is_diagnostic_only(self):
+        from unittest.mock import patch
+
+        kolding = {"2021": {"name": "BR Kolding", "stock": 4}}
+        national = {
+            "2021": {"name": "BR Kolding", "stock": 4},
+            "2016": {"name": "BR Viborg", "stock": 7},
+        }
+        with patch.object(local, "get_store_stocks", return_value=(kolding, national)) as fetch:
+            results = local.probe_hidden_br_inventory(
+                {"api_url": "https://api.example.test", "api_token": "token"},
+                object(),
+            )
+        self.assertEqual(fetch.call_count, len(local.BR_SHADOW_SKUS))
+        for result in results.values():
+            self.assertEqual(result["status"], "ok")
+            self.assertEqual(result["kolding"], 4)
+            self.assertEqual(result["viborg"], 7)
+
+    def test_empty_api_response_stays_unknown_not_zero(self):
+        from unittest.mock import patch
+
+        with patch.object(local, "get_store_stocks", side_effect=RuntimeError("tom liste")):
+            results = local.probe_hidden_br_inventory(
+                {"api_url": "https://api.example.test", "api_token": "token"},
+                object(),
+            )
+        for result in results.values():
+            self.assertEqual(result["status"], "unavailable")
+            self.assertIsNone(result["kolding"])
+            self.assertEqual(result["positive_stores"], {})
+
+
 if __name__ == "__main__":
     unittest.main()
