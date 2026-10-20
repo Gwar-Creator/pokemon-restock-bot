@@ -709,7 +709,7 @@
         "name": "Pokémon Trading Cards Poke Mini Tin June - Pokémon Trading Cards - MULTI COLOURED / multi",
         "game": "POKÉMON",
         "price": 139.0,
-        "in_stock": false,
+        "in_stock": true,
         "availability_known": true,
         "url": "https://www.boozt.com/dk/da/pokmon-trading-cards/poke-mini-tin-june_33186417/233210201",
         "fetch_via": "jina_reader_category"
@@ -876,12 +876,12 @@
       "last_success_at": "2026-10-20T19:39:07.363694+00:00"
     },
     "proshop": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-10-20T19:28:17.283166+00:00",
-      "last_success_at": "2026-10-20T19:34:29.903525+00:00"
+      "backoff_level": 1,
+      "next_allowed_at": 1792525465.6850924,
+      "generic_failures": 1,
+      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "last_failure_at": "2026-10-20T19:42:25.685064+00:00",
+      "last_success_at": "2026-10-20T19:41:35.548734+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -917,14 +917,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1792525191.8432531,
+      "next_allowed_at": 1792525498.836189,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-09-26T15:39:28.835094+00:00",
-      "last_success_at": "2026-10-20T19:35:51.843228+00:00"
+      "last_success_at": "2026-10-20T19:40:58.836172+00:00"
     }
   },
-  "updated_at": "2026-10-20T19:39:25.250212+00:00",
+  "updated_at": "2026-10-20T19:44:31.473597+00:00",
   "proshop_discovery_version": 4,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -955,11 +955,11 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-10-20T19:35:50.432435+00:00"
+          "last_checked": "2026-10-20T19:40:57.784319+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1792524949.587571,
+      "last_discovery_epoch": 1792525257.010481,
       "last_full_discovery_epoch": 1792506050.8760128,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
