@@ -125,6 +125,28 @@ class HiddenStockAPIValidationTests(unittest.TestCase):
                 product(),
             ))
 
+    def test_malformed_count_is_unknown_not_zero(self):
+        payload = [
+            {"store": {"sapSiteId": "2021", "name": "BR Kolding"},
+             "currentStock": "n/a"},
+        ]
+        with patch.object(hidden.requests, "get", return_value=self.FakeResponse(payload)):
+            result = hidden.fetch_detailed_stocks(
+                "br", {"api_url": "https://example.test", "api_token": "secret"},
+                product(),
+            )
+        self.assertIsNone(result)
+
+    def test_independent_store_keys_across_three_chains(self):
+        self.assertNotEqual(
+            hidden.item_key("br", "10831914-EA", "2021"),
+            hidden.item_key("bilka", "10831914-EA", "2021")
+        )
+        self.assertNotEqual(
+            hidden.item_key("bilka", "10831914-EA", "2021"),
+            hidden.item_key("foetex", "10831914-EA", "2021")
+        )
+
     def test_response_with_positive_and_explicit_zero(self):
         payload = [
             {"store": {"sapSiteId": "2021", "name": "BR Kolding"}, "currentStock": 4},
