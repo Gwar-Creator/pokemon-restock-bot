@@ -19,6 +19,102 @@ def observation(stock, store_id="2021", store_name="BR Kolding"):
     return [(product(), {store_id: {"name": store_name, "stock": stock}})]
 
 
+class HiddenStockLocationPolicyTests(unittest.TestCase):
+    def test_all_four_approved_cities_across_retailers(self):
+        accepted = (
+            "BR Kolding",
+            "BR Esbjerg",
+            "føtex Fredericia, Venusvej",
+            "føtex Fredericia City",
+            "Bilka Vejle",
+            "føtex Kolding Syd",
+        )
+        for name in accepted:
+            with self.subTest(store=name):
+                self.assertTrue(hidden.is_alert_store(name))
+
+    def test_remote_and_partial_city_names_are_excluded(self):
+        rejected = (
+            "føtex Østerbro Centret",
+            "BR Fields",
+            "BR Slagelse",
+            "BR Viborg",
+            "BR Holbæk",
+            "BR Vejen",
+            "BR Brørup",
+            "BR Vejleby",
+            "",
+            None,
+        )
+        for name in rejected:
+            with self.subTest(store=name):
+                self.assertFalse(hidden.is_alert_store(name))
+
+    def test_nonlocal_stock_is_tracked_but_never_candidate(self):
+        state = hidden.empty_state()
+        hidden.merge_site(state, "foetex", [(product(), {
+            "1383": {"name": "føtex Østerbro Centret", "stock": 0}
+        })], "now")
+        distant = [(product(), {
+            "1383": {"name": "føtex Østerbro Centret", "stock": 1}
+        })]
+        hidden.merge_site(state, "foetex", distant, "now")
+        pending = hidden.merge_site(state, "foetex", distant, "now")
+        self.assertEqual(pending, {})
+        key = hidden.item_key("foetex", "10831914-EA", "1383")
+        self.assertEqual(state["items"][key]["stock"], 1)
+        self.assertEqual(state["items"][key]["streak"], 2)
+        self.assertFalse(state["items"][key]["notified"])
+
+    def test_mixed_store_alert_only_contains_local_locations(self):
+        from unittest.mock import Mock
+        local_row = {
+            "site": "foetex", "store": "føtex Fredericia City", "stock": 2,
+            "price": 250, "name": "Pokémon Collection", "product_id": "123",
+            "sku": "ABC",
+        }
+        remote_row = {**local_row, "store": "føtex Østerbro Centret", "stock": 12}
+        posted = Mock()
+        posted.raise_for_status.return_value = None
+        with patch.object(hidden, "WEBHOOK", "https://example.test/webhook"), \\
+             patch.object(hidden.requests, "post", return_value=posted) as api:
+            hidden.send_alert([remote_row, local_row])
+        msg = api.call_args.kwargs["json"]["embeds"][0]
+        self.assertIn("Fredericia City", msg["fields"][0]["value"])
+        self.assertNotIn("Østerbro", json.dumps(msg, ensure_ascii=False))
+
+    def test_remote_only_alert_is_rejected(self):
+        remote = {"site": "br", "store": "BR Slagelse", "stock": 4}
+        with patch.object(hidden, "WEBHOOK", "https://example.test/webhook"), \\
+             patch.object(hidden.requests, "post") as api:
+            with self.assertRaisesRegex(ValueError, "no approved local"):
+                hidden.send_alert([remote])
+            api.assert_not_called()
+
+    def test_main_does_not_dispatch_remote_pending_rows(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            state_path = Path(tmp) / "hidden.json"
+            state = hidden.empty_state()
+            distant = [(product(), {
+                "1383": {"name": "føtex Østerbro Centret", "stock": 1},
+            })]
+            hidden.merge_site(state, "foetex", [(product(), {
+                "1383": {"name": "føtex Østerbro Centret", "stock": 0},
+            })], "now")
+            hidden.merge_site(state, "foetex", distant, "now")
+            hidden.merge_site(state, "foetex", distant, "now")
+            state_path.write_text(json.dumps(state), encoding="utf-8")
+            def fake_fetch(site):
+                if site == "foetex":
+                    return 194, 1, 0, distant
+                return 194, 0, 0, []
+            with patch.object(hidden, "STATE_PATH", state_path), \\
+                 patch.object(hidden, "fetch_site", side_effect=fake_fetch), \\
+                 patch.object(hidden, "send_alert") as send:
+                hidden.main()
+                send.assert_not_called()
+
+
 class HiddenStockPolicyTests(unittest.TestCase):
     def test_first_site_baseline_is_silent_even_when_positive(self):
         state = hidden.empty_state()
