@@ -6832,19 +6832,6 @@
       "fields": [
         "in_stock_stores_count"
       ],
-      "name": "Pokémon Binder Collection 30th",
-      "product_id": "200392204",
-      "sku": "11379492-EA",
-      "source": "bilka",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1792156775.4204626
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "in_stock_stores_count"
-      ],
       "name": "Pokémon Poster Collection 30th",
       "product_id": "200392205",
       "sku": "11379493-EA",
@@ -21039,6 +21026,21 @@
       "stage_after": null,
       "stage_before": null,
       "ts": 1792495481.4405663
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stage",
+        "status",
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Greninja ex Premium Collection",
+      "product_id": "3478496",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "INBOUND_UNDATED",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1792495774.7846327
     }
   ],
   "sources": {
@@ -36291,11 +36293,11 @@
         "name": "Pokemon TCG Mega Greninja ex Premium Collection",
         "new_badge": false,
         "price": null,
-        "raw_status_excerpt": " Bestillingsvare, leveringstiden kan ikke oplyses * [![Image 16: Pokemon - Dragonshield Matte Clear (100 stk) - AT11001](https://www.proshop.dk/Images/174x116/3071259_0fe6fa426e3e.jpg)](https://www.proshop.dk/Pokemon/Dragonshield-Matte-Clear-100-stk/3071259 \"Dragonshield Matte Clear (100 stk) - AT11001\") FÅ PÅ LAGER ## ",
-        "stage": "LIVE_STOCK",
-        "status": "PÅ LAGER",
+        "raw_status_excerpt": " Bestillingsvare, leveringstiden kan ikke oplyses * [![Image 16: Pokemon - Dragonshield Matte Clear (100 stk) - AT11001](https://www.proshop.dk/Images/174x116/3071259_0fe6fa426e3e.jpg)](https://www.proshop.dk/Pokemon/Dragonshield-Matte-Clear-100-stk/3071259 \"Dragonshield Matte Clear (100 stk) - AT11001\") ## ",
+        "stage": "INBOUND_UNDATED",
+        "status": "BESTILLINGSVARE",
         "surface_statuses": {
-          "pokemon-kort": "PÅ LAGER"
+          "pokemon-kort": "BESTILLINGSVARE"
         },
         "surfaces": [
           "pokemon-kort"
@@ -36322,6 +36324,6 @@
       }
     }
   },
-  "updated_at": 1792495481.4406056,
+  "updated_at": 1792495774.7856388,
   "version": 1
 }
