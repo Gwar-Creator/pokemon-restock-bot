@@ -6135,7 +6135,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 994,
+          "stock_online": 993,
           "stock_stores": 0
         },
         "br": {
@@ -6146,7 +6146,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 994,
+          "stock_online": 993,
           "stock_stores": 0
         },
         "foetex": {
@@ -6157,7 +6157,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 994,
+          "stock_online": 993,
           "stock_stores": 0
         }
       }
@@ -6827,52 +6827,6 @@
     }
   },
   "events": [
-    {
-      "event": "CHANGE",
-      "fields": [
-        "surface_statuses"
-      ],
-      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
-      "product_id": "3447589",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1792234775.323283
-    },
-    {
-      "event": "REMOVED",
-      "fields": [],
-      "name": "Pokemon TCG Mega Charizard X ex Ultra Premium Collection",
-      "product_id": "3417744",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "INBOUND_UNDATED",
-      "stage_before": null,
-      "ts": 1792234775.3232944
-    },
-    {
-      "event": "REMOVED",
-      "fields": [],
-      "name": "Pokemon TCG Mega EvolutionChaos Rising Booster box with 36 boosters",
-      "product_id": "3447592",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "INBOUND_UNDATED",
-      "stage_before": null,
-      "ts": 1792234775.3232985
-    },
-    {
-      "event": "REMOVED",
-      "fields": [],
-      "name": "Pokemon TCG Mega Greninja ex Premium Collection",
-      "product_id": "3478496",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "INBOUND_UNDATED",
-      "stage_before": null,
-      "ts": 1792234775.323301
-    },
     {
       "event": "REMOVED",
       "fields": [],
@@ -21152,6 +21106,60 @@
       "stage_after": "LIVE_STOCK",
       "stage_before": "LIVE_STOCK",
       "ts": 1792550680.1572735
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon TCG Pitch Black Elite Trainer Box",
+      "product_id": "200380918",
+      "sku": "11320995-EA",
+      "source": "br",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1792555162.4712281
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon TCG Pitch Black Elite Trainer Box",
+      "product_id": "200380918",
+      "sku": "11320995-EA",
+      "source": "bilka",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1792555163.3139322
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon TCG Pitch Black Elite Trainer Box",
+      "product_id": "200380918",
+      "sku": "11320995-EA",
+      "source": "foetex",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1792555164.1013606
+    },
+    {
+      "event": "CROSS_CHANGE",
+      "fields": [
+        "bilka",
+        "br",
+        "foetex"
+      ],
+      "name": "Pokémon TCG Pitch Black Elite Trainer Box",
+      "product_id": "11320995-EA",
+      "sku": "11320995-EA",
+      "source": "cross_salling",
+      "stage_after": null,
+      "stage_before": null,
+      "ts": 1792555173.654715
     }
   ],
   "sources": {
@@ -25694,7 +25702,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 994,
+        "stock_count_online": 993,
         "url": "https://www.bilka.dk/produkter/pokemon-tcg-pitch-black-elite-trainer-box/200380918/"
       },
       "200380919": {
@@ -30805,7 +30813,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 994,
+        "stock_count_online": 993,
         "url": "https://www.br.dk/produkter/pokemon-tcg-pitch-black-elite-trainer-box/200380918/"
       },
       "200380919": {
@@ -35848,7 +35856,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 994,
+        "stock_count_online": 993,
         "url": "https://www.foetex.dk/produkter/pokemon-tcg-pitch-black-elite-trainer-box/200380918/"
       },
       "200380919": {
@@ -36429,6 +36437,6 @@
       }
     }
   },
-  "updated_at": 1792554878.912016,
+  "updated_at": 1792555173.6547694,
   "version": 1
 }
