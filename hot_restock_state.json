@@ -833,7 +833,7 @@
         "name": "Pokémon Trading Cards Poke 2-Pack Blister 30th - Pokémon Trading Cards - GOLD / gold",
         "game": "POKÉMON",
         "price": 229.0,
-        "in_stock": false,
+        "in_stock": true,
         "availability_known": true,
         "url": "https://www.boozt.com/dk/da/pokmon-trading-cards/poke-2-pack-blister-30th_33202394/233321292",
         "fetch_via": "jina_reader_category"
@@ -892,12 +892,12 @@
       "last_success_at": "2026-10-20T19:39:07.363694+00:00"
     },
     "proshop": {
-      "backoff_level": 1,
-      "next_allowed_at": 1792592721.6899948,
-      "generic_failures": 1,
-      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "backoff_level": 0,
+      "next_allowed_at": 0.0,
+      "generic_failures": 0,
+      "last_error": null,
       "last_failure_at": "2026-10-21T14:23:21.689959+00:00",
-      "last_success_at": "2026-10-21T14:22:25.486133+00:00"
+      "last_success_at": "2026-10-21T14:29:08.733218+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -933,14 +933,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1792592693.948777,
+      "next_allowed_at": 1792592992.661156,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-09-26T15:39:28.835094+00:00",
-      "last_success_at": "2026-10-21T14:20:53.948755+00:00"
+      "last_success_at": "2026-10-21T14:25:52.661133+00:00"
     }
   },
-  "updated_at": "2026-10-21T14:24:28.997054+00:00",
+  "updated_at": "2026-10-21T14:29:27.891966+00:00",
   "proshop_discovery_version": 4,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -971,11 +971,11 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-10-21T14:20:53.184808+00:00"
+          "last_checked": "2026-10-21T14:25:51.616849+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1792592452.621156,
+      "last_discovery_epoch": 1792592750.7919073,
       "last_full_discovery_epoch": 1792571156.6414142,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
