@@ -2567,12 +2567,20 @@
         }
       },
       "national_stores": {
+        "1383": {
+          "name": "føtex Østerbro Centret",
+          "stock": 8
+        },
         "1349": {
           "name": "føtex Lautrupcentret",
           "stock": 2
+        },
+        "1363": {
+          "name": "føtex Hjørring",
+          "stock": 1
         }
       },
-      "observed_at": "2026-10-20T13:41:33.831733+00:00"
+      "observed_at": "2026-10-22T20:51:36.650582+00:00"
     },
     "foetex:200341846": {
       "id": "200341846",
@@ -2609,12 +2617,12 @@
         }
       },
       "national_stores": {
-        "1366": {
-          "name": "føtex Friheden",
-          "stock": 1
+        "1339": {
+          "name": "føtex Svendborg",
+          "stock": 2
         }
       },
-      "observed_at": "2026-10-20T13:41:34.763856+00:00"
+      "observed_at": "2026-10-22T20:51:37.303961+00:00"
     },
     "foetex:200329840": {
       "id": "200329840",
@@ -5542,9 +5550,13 @@
         "1341": {
           "name": "føtex Nordre Fasanvej",
           "stock": 1
+        },
+        "1383": {
+          "name": "føtex Østerbro Centret",
+          "stock": 10
         }
       },
-      "observed_at": "2026-10-20T13:41:35.412319+00:00"
+      "observed_at": "2026-10-22T20:51:37.622730+00:00"
     },
     "foetex:200147841": {
       "id": "200147841",
@@ -9457,24 +9469,66 @@
       "observed_at": "2026-10-20T12:40:41.313984+00:00"
     }
   },
-  "last_run": "2026-10-22T20:41:26.000657+00:00",
-  "last_run_errors": 8,
+  "last_run": "2026-10-22T20:51:37.624011+00:00",
+  "last_run_errors": 4,
   "br_hidden_stock_probe": {
     "200291393": {
       "name": "Charizard ex Super-Premium Collection",
       "sku": "10831914-EA",
       "status": "ok",
-      "kolding": 0,
+      "kolding": 4,
       "viborg": null,
-      "positive_stores": {}
+      "positive_stores": {
+        "2031": {
+          "name": "BR Nyborg",
+          "stock": 2
+        },
+        "2009": {
+          "name": "BR Nykøbing F",
+          "stock": 2
+        },
+        "2005": {
+          "name": "BR Sønderborg",
+          "stock": 1
+        },
+        "2026": {
+          "name": "BR Frederiksberg",
+          "stock": 2
+        },
+        "2025": {
+          "name": "BR Fisketorvet",
+          "stock": 1
+        },
+        "2001": {
+          "name": "BR Vimmelskaftet",
+          "stock": 3
+        },
+        "2021": {
+          "name": "BR Kolding",
+          "stock": 4
+        },
+        "2020": {
+          "name": "BR Fields",
+          "stock": 12
+        },
+        "2016": {
+          "name": "BR Slagelse",
+          "stock": 1
+        }
+      }
     },
     "200340038": {
       "name": "Mega Latias ex Box",
       "sku": "11119429-EA",
       "status": "ok",
-      "kolding": 0,
+      "kolding": 1,
       "viborg": null,
-      "positive_stores": {}
+      "positive_stores": {
+        "2021": {
+          "name": "BR Kolding",
+          "stock": 1
+        }
+      }
     }
   }
 }
