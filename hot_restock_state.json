@@ -124,8 +124,8 @@
         "online_count": 345,
         "online_stock": true,
         "store_count": 31,
-        "kolding_stock": 16,
-        "esbjerg_stock": 11,
+        "kolding_stock": 0,
+        "esbjerg_stock": 0,
         "quantity_limit": null,
         "sku": "10791068-EA",
         "url": "https://www.br.dk/produkter/pokemon-battle-academy-2024/200279925/"
@@ -493,12 +493,12 @@
       "last_success_at": "2026-10-22T00:14:19.278912+00:00"
     },
     "proshop": {
-      "backoff_level": 1,
-      "next_allowed_at": 1792682776.527101,
-      "generic_failures": 1,
-      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "backoff_level": 0,
+      "next_allowed_at": 0.0,
+      "generic_failures": 0,
+      "last_error": null,
       "last_failure_at": "2026-10-22T15:24:16.527058+00:00",
-      "last_success_at": "2026-10-22T15:23:20.366612+00:00"
+      "last_success_at": "2026-10-22T15:29:14.153668+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -529,19 +529,19 @@
       "next_allowed_at": 0.0,
       "generic_failures": 0,
       "last_error": null,
-      "last_failure_at": "2026-10-22T03:40:46.227158+00:00",
-      "last_success_at": "2026-10-22T03:44:29.784428+00:00"
+      "last_failure_at": "2026-10-22T15:26:08.921572+00:00",
+      "last_success_at": "2026-10-22T15:29:32.036709+00:00"
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1792682698.2845244,
+      "next_allowed_at": 1792683010.3429623,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-10-22T15:20:58.284500+00:00"
+      "last_success_at": "2026-10-22T15:26:10.342941+00:00"
     }
   },
-  "updated_at": "2026-10-22T15:24:34.010903+00:00",
+  "updated_at": "2026-10-22T15:29:32.036759+00:00",
   "proshop_discovery_version": 4,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -572,11 +572,11 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-10-22T15:20:56.885682+00:00"
+          "last_checked": "2026-10-22T15:26:09.578190+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1792682456.047178,
+      "last_discovery_epoch": 1792682768.9232078,
       "last_full_discovery_epoch": 1792679753.515047,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
