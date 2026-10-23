@@ -6832,19 +6832,6 @@
       "fields": [
         "stock_count_online"
       ],
-      "name": "Pokémon Battle Academy 2024",
-      "product_id": "200279925",
-      "sku": "10791068-EA",
-      "source": "br",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1792507171.1565702
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "stock_count_online"
-      ],
       "name": "Pokémon ME05 Pitch Black samlekort",
       "product_id": "200380910",
       "sku": "11320907-EA",
@@ -21754,6 +21741,19 @@
       "stage_after": null,
       "stage_before": null,
       "ts": 1792754684.8631759
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
+      "product_id": "3447589",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1792754975.7259777
     }
   ],
   "sources": {
@@ -36966,11 +36966,9 @@
         "stage": "LIVE_STOCK",
         "status": "PÅ LAGER",
         "surface_statuses": {
-          "pokemon-brand": "PÅ LAGER",
           "pokemon-kort": "PÅ LAGER"
         },
         "surfaces": [
-          "pokemon-brand",
           "pokemon-kort"
         ],
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Zygarde-ex-Premium-Collection/3447589"
@@ -37031,6 +37029,6 @@
       }
     }
   },
-  "updated_at": 1792754684.863236,
+  "updated_at": 1792754975.726957,
   "version": 1
 }
