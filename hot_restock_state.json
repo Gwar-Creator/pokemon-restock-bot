@@ -518,10 +518,10 @@
     "coolshop": {
       "backoff_level": 0,
       "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-10-24T12:14:17.617146+00:00",
-      "last_success_at": "2026-10-24T12:19:14.071401+00:00"
+      "generic_failures": 1,
+      "last_error": "500 Server Error: Internal Server Error for url: https://www.coolshop.dk/api/search",
+      "last_failure_at": "2026-10-24T15:44:12.356832+00:00",
+      "last_success_at": "2026-10-24T15:43:15.378830+00:00"
     },
     "proshop": {
       "backoff_level": 0,
@@ -565,14 +565,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1792856396.3880246,
+      "next_allowed_at": 1792856693.3621817,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-10-24T15:35:56.388002+00:00"
+      "last_success_at": "2026-10-24T15:40:53.362164+00:00"
     }
   },
-  "updated_at": "2026-10-24T15:39:24.794538+00:00",
+  "updated_at": "2026-10-24T15:44:30.071012+00:00",
   "proshop_discovery_version": 4,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -603,11 +603,11 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-10-24T15:35:55.220600+00:00"
+          "last_checked": "2026-10-24T15:40:51.926178+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1792856154.6251662,
+      "last_discovery_epoch": 1792856451.2775865,
       "last_full_discovery_epoch": 1792854075.3681524,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
