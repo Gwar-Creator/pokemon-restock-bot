@@ -5589,7 +5589,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 24,
+          "stock_online": 23,
           "stock_stores": 0
         },
         "br": {
@@ -5600,7 +5600,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 24,
+          "stock_online": 23,
           "stock_stores": 0
         },
         "foetex": {
@@ -5611,7 +5611,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 24,
+          "stock_online": 23,
           "stock_stores": 0
         }
       }
@@ -6018,7 +6018,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 89,
+          "stock_online": 88,
           "stock_stores": 1
         },
         "br": {
@@ -6029,7 +6029,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 89,
+          "stock_online": 88,
           "stock_stores": 6
         },
         "foetex": {
@@ -6040,7 +6040,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 89,
+          "stock_online": 88,
           "stock_stores": 0
         }
       }
@@ -6135,7 +6135,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 15,
+          "stock_online": 14,
           "stock_stores": 0
         },
         "br": {
@@ -6146,7 +6146,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 15,
+          "stock_online": 14,
           "stock_stores": 0
         },
         "foetex": {
@@ -6157,7 +6157,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 15,
+          "stock_online": 14,
           "stock_stores": 0
         }
       }
@@ -6827,170 +6827,6 @@
     }
   },
   "events": [
-    {
-      "event": "CHANGE",
-      "fields": [
-        "stock_count_online"
-      ],
-      "name": "Pokémon ME05 Pitch Black samlekort",
-      "product_id": "200380910",
-      "sku": "11320907-EA",
-      "source": "foetex",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1792570772.8984258
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "stock_count_online"
-      ],
-      "name": "Pokémon TCG Pitch Black Elite Trainer Box",
-      "product_id": "200380918",
-      "sku": "11320995-EA",
-      "source": "foetex",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1792570772.8984487
-    },
-    {
-      "event": "CROSS_CHANGE",
-      "fields": [
-        "bilka",
-        "br",
-        "foetex"
-      ],
-      "name": "Pokémon ME05 Pitch Black samlekort",
-      "product_id": "11320907-EA",
-      "sku": "11320907-EA",
-      "source": "cross_salling",
-      "stage_after": null,
-      "stage_before": null,
-      "ts": 1792570778.8528705
-    },
-    {
-      "event": "CROSS_CHANGE",
-      "fields": [
-        "bilka",
-        "br",
-        "foetex"
-      ],
-      "name": "Pokémon TCG Pitch Black Elite Trainer Box",
-      "product_id": "11320995-EA",
-      "sku": "11320995-EA",
-      "source": "cross_salling",
-      "stage_after": null,
-      "stage_before": null,
-      "ts": 1792570778.8528802
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "stock_count_online"
-      ],
-      "name": "Pokémon Pitch Black Checklane Booster Pack",
-      "product_id": "200380911",
-      "sku": "11320909-EA",
-      "source": "br",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1792571074.938632
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "stock_count_online"
-      ],
-      "name": "Pokémon Pitch Black Checklane Booster Pack",
-      "product_id": "200380911",
-      "sku": "11320909-EA",
-      "source": "bilka",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1792571075.6980069
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "stock_count_online"
-      ],
-      "name": "Pokémon Pitch Black Checklane Booster Pack",
-      "product_id": "200380911",
-      "sku": "11320909-EA",
-      "source": "foetex",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1792571076.4550319
-    },
-    {
-      "event": "CROSS_CHANGE",
-      "fields": [
-        "bilka",
-        "br",
-        "foetex"
-      ],
-      "name": "Pokémon Pitch Black Checklane Booster Pack",
-      "product_id": "11320909-EA",
-      "sku": "11320909-EA",
-      "source": "cross_salling",
-      "stage_after": null,
-      "stage_before": null,
-      "ts": 1792571079.403025
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "stock_count_online"
-      ],
-      "name": "Pokémon TCG Pitch Black Elite Trainer Box",
-      "product_id": "200380918",
-      "sku": "11320995-EA",
-      "source": "br",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1792571687.434217
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "stock_count_online"
-      ],
-      "name": "Pokémon TCG Pitch Black Elite Trainer Box",
-      "product_id": "200380918",
-      "sku": "11320995-EA",
-      "source": "bilka",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1792571688.6206844
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "stock_count_online"
-      ],
-      "name": "Pokémon TCG Pitch Black Elite Trainer Box",
-      "product_id": "200380918",
-      "sku": "11320995-EA",
-      "source": "foetex",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1792571689.878394
-    },
-    {
-      "event": "CROSS_CHANGE",
-      "fields": [
-        "bilka",
-        "br",
-        "foetex"
-      ],
-      "name": "Pokémon TCG Pitch Black Elite Trainer Box",
-      "product_id": "11320995-EA",
-      "sku": "11320995-EA",
-      "source": "cross_salling",
-      "stage_after": null,
-      "stage_before": null,
-      "ts": 1792571693.1594596
-    },
     {
       "event": "CHANGE",
       "fields": [
@@ -21806,6 +21642,168 @@
       "stage_after": "INBOUND_UNDATED",
       "stage_before": null,
       "ts": 1792822171.9982498
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon TCG Premium Ex Box Mega Zygarde samlekort",
+      "product_id": "200366285",
+      "sku": "11263288-EA",
+      "source": "br",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1792824279.0442474
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon ME05 Pitch Black samlekort",
+      "product_id": "200380910",
+      "sku": "11320907-EA",
+      "source": "br",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1792824279.0443113
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon TCG Pitch Black Elite Trainer Box",
+      "product_id": "200380918",
+      "sku": "11320995-EA",
+      "source": "br",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1792824279.0443282
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon TCG Premium Ex Box Mega Zygarde samlekort",
+      "product_id": "200366285",
+      "sku": "11263288-EA",
+      "source": "bilka",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1792824280.2443707
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon ME05 Pitch Black samlekort",
+      "product_id": "200380910",
+      "sku": "11320907-EA",
+      "source": "bilka",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1792824280.2444217
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon TCG Pitch Black Elite Trainer Box",
+      "product_id": "200380918",
+      "sku": "11320995-EA",
+      "source": "bilka",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1792824280.2444365
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon TCG Premium Ex Box Mega Zygarde samlekort",
+      "product_id": "200366285",
+      "sku": "11263288-EA",
+      "source": "foetex",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1792824281.5444543
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon ME05 Pitch Black samlekort",
+      "product_id": "200380910",
+      "sku": "11320907-EA",
+      "source": "foetex",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1792824281.5445077
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon TCG Pitch Black Elite Trainer Box",
+      "product_id": "200380918",
+      "sku": "11320995-EA",
+      "source": "foetex",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1792824281.5445225
+    },
+    {
+      "event": "CROSS_CHANGE",
+      "fields": [
+        "bilka",
+        "br",
+        "foetex"
+      ],
+      "name": "Pokémon TCG Premium Ex Box Mega Zygarde samlekort",
+      "product_id": "11263288-EA",
+      "sku": "11263288-EA",
+      "source": "cross_salling",
+      "stage_after": null,
+      "stage_before": null,
+      "ts": 1792824286.4904542
+    },
+    {
+      "event": "CROSS_CHANGE",
+      "fields": [
+        "bilka",
+        "br",
+        "foetex"
+      ],
+      "name": "Pokémon ME05 Pitch Black samlekort",
+      "product_id": "11320907-EA",
+      "sku": "11320907-EA",
+      "source": "cross_salling",
+      "stage_after": null,
+      "stage_before": null,
+      "ts": 1792824286.4904752
+    },
+    {
+      "event": "CROSS_CHANGE",
+      "fields": [
+        "bilka",
+        "br",
+        "foetex"
+      ],
+      "name": "Pokémon TCG Pitch Black Elite Trainer Box",
+      "product_id": "11320995-EA",
+      "sku": "11320995-EA",
+      "source": "cross_salling",
+      "stage_after": null,
+      "stage_before": null,
+      "ts": 1792824286.490481
     }
   ],
   "sources": {
@@ -25936,7 +25934,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 24,
+        "stock_count_online": 23,
         "url": "https://www.bilka.dk/produkter/pokemon-tcg-premium-ex-box-mega-zygarde-samlekort/200366285/"
       },
       "200371874": {
@@ -26255,7 +26253,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 89,
+        "stock_count_online": 88,
         "url": "https://www.bilka.dk/produkter/pokemon-me05-pitch-black-samlekort/200380910/"
       },
       "200380911": {
@@ -26348,7 +26346,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 15,
+        "stock_count_online": 14,
         "url": "https://www.bilka.dk/produkter/pokemon-tcg-pitch-black-elite-trainer-box/200380918/"
       },
       "200380919": {
@@ -31046,7 +31044,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 24,
+        "stock_count_online": 23,
         "url": "https://www.br.dk/produkter/pokemon-tcg-premium-ex-box-mega-zygarde-samlekort/200366285/"
       },
       "200371874": {
@@ -31365,7 +31363,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 89,
+        "stock_count_online": 88,
         "url": "https://www.br.dk/produkter/pokemon-me05-pitch-black-samlekort/200380910/"
       },
       "200380911": {
@@ -31459,7 +31457,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 15,
+        "stock_count_online": 14,
         "url": "https://www.br.dk/produkter/pokemon-tcg-pitch-black-elite-trainer-box/200380918/"
       },
       "200380919": {
@@ -36090,7 +36088,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 24,
+        "stock_count_online": 23,
         "url": "https://www.foetex.dk/produkter/pokemon-tcg-premium-ex-box-mega-zygarde-samlekort/200366285/"
       },
       "200371874": {
@@ -36408,7 +36406,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 89,
+        "stock_count_online": 88,
         "url": "https://www.foetex.dk/produkter/pokemon-me05-pitch-black-samlekort/200380910/"
       },
       "200380911": {
@@ -36502,7 +36500,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 15,
+        "stock_count_online": 14,
         "url": "https://www.foetex.dk/produkter/pokemon-tcg-pitch-black-elite-trainer-box/200380918/"
       },
       "200380919": {
@@ -37083,6 +37081,6 @@
       }
     }
   },
-  "updated_at": 1792823966.9896324,
+  "updated_at": 1792824286.4905398,
   "version": 1
 }
