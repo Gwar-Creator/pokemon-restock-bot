@@ -6828,17 +6828,6 @@
   },
   "events": [
     {
-      "event": "NEW",
-      "fields": [],
-      "name": "Pokemon TCG First Partner Illustration Collection Box Series 2",
-      "product_id": "3478498",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "INBOUND_UNDATED",
-      "stage_before": null,
-      "ts": 1792617280.3875113
-    },
-    {
       "event": "CROSS_CHANGE",
       "fields": [
         "bilka",
@@ -21832,6 +21821,19 @@
       "stage_after": "LIVE_STOCK",
       "stage_before": "LIVE_STOCK",
       "ts": 1792922978.554491
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
+      "product_id": "3447589",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1792924170.5745142
     }
   ],
   "sources": {
@@ -37019,7 +37021,7 @@
         "name": "Pokemon TCG Mega Charizard X ex Ultra Premium Collection",
         "new_badge": false,
         "price": null,
-        "raw_status_excerpt": " Bestillingsvare, leveringstiden kan ikke oplyses * [![Image 14: Pokemon - Pokemon TCG First Partner Illustration Collection Box Series 2 - POK10395-101](https://www.proshop.dk/Images/174x116/3478498_90a682585222.png)](https://www.proshop.dk/Pokemon/Pokemon-TCG-First-Partner-Illustration-Collection-Box-Series-2/3478498 \"Pokemon TCG First Partner Illustration Collection Box Series 2 - POK10395-101\") ## ",
+        "raw_status_excerpt": " Bestillingsvare, leveringstiden kan ikke oplyses * [![Image 15: Pokemon - Pokemon TCG Mega Evolution—Chaos Rising Booster (box with 36 boosters) - POK10407-101](https://www.proshop.dk/Images/174x116/3447592_bf6f55217e66.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-EvolutionChaos-Rising-Booster-box-with-36-boosters/3447592 \"Pokemon TCG Mega Evolution—Chaos Rising Booster (box with 36 boosters) - POK10407-101\") ## ",
         "stage": "INBOUND_UNDATED",
         "status": "BESTILLINGSVARE",
         "surface_statuses": {
@@ -37041,11 +37043,9 @@
         "stage": "LIVE_STOCK",
         "status": "PÅ LAGER",
         "surface_statuses": {
-          "pokemon-brand": "PÅ LAGER",
           "pokemon-kort": "PÅ LAGER"
         },
         "surfaces": [
-          "pokemon-brand",
           "pokemon-kort"
         ],
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Zygarde-ex-Premium-Collection/3447589"
@@ -37093,7 +37093,7 @@
         "name": "Pokemon TCG First Partner Illustration Collection Box Series 2",
         "new_badge": false,
         "price": null,
-        "raw_status_excerpt": " Bestillingsvare, leveringstiden kan ikke oplyses * [![Image 15: Pokemon - Pokemon TCG Mega Evolution—Chaos Rising Booster (box with 36 boosters) - POK10407-101](https://www.proshop.dk/Images/174x116/3447592_bf6f55217e66.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-EvolutionChaos-Rising-Booster-box-with-36-boosters/3447592 \"Pokemon TCG Mega Evolution—Chaos Rising Booster (box with 36 boosters) - POK10407-101\") ## ",
+        "raw_status_excerpt": " Bestillingsvare, leveringstiden kan ikke oplyses * [![Image 14: Pokemon - Pokemon TCG Mega Charizard X ex Ultra-Premium Collection - POK10065-101](https://www.proshop.dk/Images/174x116/3417744_c6b845fea196.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744 \"Pokemon TCG Mega Charizard X ex Ultra-Premium Collection - POK10065-101\") ## ",
         "stage": "INBOUND_UNDATED",
         "status": "BESTILLINGSVARE",
         "surface_statuses": {
@@ -37106,6 +37106,6 @@
       }
     }
   },
-  "updated_at": 1792923881.6875844,
+  "updated_at": 1792924170.5755742,
   "version": 1
 }
