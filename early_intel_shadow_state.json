@@ -597,7 +597,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 0,
+          "stock_online": 1,
           "stock_stores": 17
         },
         "br": {
@@ -6827,6 +6827,19 @@
     }
   },
   "events": [
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon TCG Pitch Black Elite Trainer Box",
+      "product_id": "200380918",
+      "sku": "11320995-EA",
+      "source": "bilka",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1792641903.0685034
+    },
     {
       "event": "CHANGE",
       "fields": [
@@ -21811,20 +21824,7 @@
       "source": "br",
       "stage_after": "LIVE_STOCK",
       "stage_before": "LIVE_STOCK",
-      "ts": 1792948230.371495
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "stock_count_online"
-      ],
-      "name": "Pokémon Battle Deck EX samlekort",
-      "product_id": "200215319",
-      "sku": "10564347-EA",
-      "source": "bilka",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1792948231.8935437
+      "ts": 1792948495.5052023
     },
     {
       "event": "CHANGE",
@@ -21837,12 +21837,11 @@
       "source": "foetex",
       "stage_after": "LIVE_STOCK",
       "stage_before": "LIVE_STOCK",
-      "ts": 1792948233.3026268
+      "ts": 1792948497.4501936
     },
     {
       "event": "CROSS_CHANGE",
       "fields": [
-        "bilka",
         "br",
         "foetex"
       ],
@@ -21852,7 +21851,7 @@
       "source": "cross_salling",
       "stage_after": null,
       "stage_before": null,
-      "ts": 1792948237.9199123
+      "ts": 1792948501.8104017
     }
   ],
   "sources": {
@@ -22344,7 +22343,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 0,
+        "stock_count_online": 1,
         "url": "https://www.bilka.dk/produkter/pokemon-battle-deck-ex-samlekort/200215319/"
       },
       "200223003": {
@@ -37127,6 +37126,6 @@
       }
     }
   },
-  "updated_at": 1792948237.920139,
+  "updated_at": 1792948501.8106322,
   "version": 1
 }
