@@ -6018,7 +6018,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 85,
+          "stock_online": 84,
           "stock_stores": 1
         },
         "br": {
@@ -6029,7 +6029,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 85,
+          "stock_online": 84,
           "stock_stores": 6
         },
         "foetex": {
@@ -6040,7 +6040,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 85,
+          "stock_online": 84,
           "stock_stores": 0
         }
       }
@@ -6827,50 +6827,6 @@
     }
   },
   "events": [
-    {
-      "event": "NEW",
-      "fields": [],
-      "name": "Pokemon TCG Mega Charizard X ex Ultra Premium Collection",
-      "product_id": "3417744",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "INBOUND_UNDATED",
-      "stage_before": null,
-      "ts": 1792607696.4759586
-    },
-    {
-      "event": "NEW",
-      "fields": [],
-      "name": "Pokemon TCG Mega EvolutionChaos Rising Booster box with 36 boosters",
-      "product_id": "3447592",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "INBOUND_UNDATED",
-      "stage_before": null,
-      "ts": 1792607696.4759626
-    },
-    {
-      "event": "NEW",
-      "fields": [],
-      "name": "Pokemon TCG Mega Greninja ex Premium Collection",
-      "product_id": "3478496",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "INBOUND_UNDATED",
-      "stage_before": null,
-      "ts": 1792607696.4759653
-    },
-    {
-      "event": "NEW",
-      "fields": [],
-      "name": "Pokemon TCG First Partner Illustration Collection Box Series 2",
-      "product_id": "3478498",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "INBOUND_UNDATED",
-      "stage_before": null,
-      "ts": 1792607696.475967
-    },
     {
       "event": "CHANGE",
       "fields": [
@@ -21823,6 +21779,60 @@
       "stage_after": "LIVE_STOCK",
       "stage_before": "LIVE_STOCK",
       "ts": 1792909185.6901724
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon ME05 Pitch Black samlekort",
+      "product_id": "200380910",
+      "sku": "11320907-EA",
+      "source": "br",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1792913366.7620378
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon ME05 Pitch Black samlekort",
+      "product_id": "200380910",
+      "sku": "11320907-EA",
+      "source": "bilka",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1792913368.0997953
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon ME05 Pitch Black samlekort",
+      "product_id": "200380910",
+      "sku": "11320907-EA",
+      "source": "foetex",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1792913369.3794599
+    },
+    {
+      "event": "CROSS_CHANGE",
+      "fields": [
+        "bilka",
+        "br",
+        "foetex"
+      ],
+      "name": "Pokémon ME05 Pitch Black samlekort",
+      "product_id": "11320907-EA",
+      "sku": "11320907-EA",
+      "source": "cross_salling",
+      "stage_after": null,
+      "stage_before": null,
+      "ts": 1792913373.1377828
     }
   ],
   "sources": {
@@ -26272,7 +26282,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 85,
+        "stock_count_online": 84,
         "url": "https://www.bilka.dk/produkter/pokemon-me05-pitch-black-samlekort/200380910/"
       },
       "200380911": {
@@ -31381,7 +31391,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 85,
+        "stock_count_online": 84,
         "url": "https://www.br.dk/produkter/pokemon-me05-pitch-black-samlekort/200380910/"
       },
       "200380911": {
@@ -36423,7 +36433,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 85,
+        "stock_count_online": 84,
         "url": "https://www.foetex.dk/produkter/pokemon-me05-pitch-black-samlekort/200380910/"
       },
       "200380911": {
@@ -37097,6 +37107,6 @@
       }
     }
   },
-  "updated_at": 1792913073.5109544,
+  "updated_at": 1792913373.137817,
   "version": 1
 }
