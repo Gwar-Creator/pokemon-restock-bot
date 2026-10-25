@@ -6835,19 +6835,6 @@
       "name": "Pokémon Pitch Black Checklane Booster Pack",
       "product_id": "200380911",
       "sku": "11320909-EA",
-      "source": "bilka",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1792657183.6668937
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "stock_count_online"
-      ],
-      "name": "Pokémon Pitch Black Checklane Booster Pack",
-      "product_id": "200380911",
-      "sku": "11320909-EA",
       "source": "foetex",
       "stage_after": "LIVE_STOCK",
       "stage_before": "LIVE_STOCK",
@@ -21827,6 +21814,21 @@
       "stage_after": "INBOUND_UNDATED",
       "stage_before": null,
       "ts": 1792967081.6591742
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stage",
+        "status",
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Greninja ex Premium Collection",
+      "product_id": "3478496",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "INBOUND_UNDATED",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1792967378.8603103
     }
   ],
   "sources": {
@@ -37067,11 +37069,11 @@
         "name": "Pokemon TCG Mega Greninja ex Premium Collection",
         "new_badge": false,
         "price": null,
-        "raw_status_excerpt": " Bestillingsvare, leveringstiden kan ikke oplyses * [![Image 16: Pokemon - Pokemon TCG 2024 World Championships Deck - POK10166](https://www.proshop.dk/Images/174x116/3421827_9f84f9509359.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827 \"Pokemon TCG 2024 World Championships Deck - POK10166\") FÅ PÅ LAGER ## ",
-        "stage": "LIVE_STOCK",
-        "status": "PÅ LAGER",
+        "raw_status_excerpt": " Bestillingsvare, leveringstiden kan ikke oplyses * [![Image 16: Pokemon - Pokemon TCG 2024 World Championships Deck - POK10166](https://www.proshop.dk/Images/174x116/3421827_9f84f9509359.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827 \"Pokemon TCG 2024 World Championships Deck - POK10166\") ## ",
+        "stage": "INBOUND_UNDATED",
+        "status": "BESTILLINGSVARE",
         "surface_statuses": {
-          "pokemon-kort": "PÅ LAGER"
+          "pokemon-kort": "BESTILLINGSVARE"
         },
         "surfaces": [
           "pokemon-kort"
@@ -37098,6 +37100,6 @@
       }
     }
   },
-  "updated_at": 1792967081.66017,
+  "updated_at": 1792967378.86154,
   "version": 1
 }
