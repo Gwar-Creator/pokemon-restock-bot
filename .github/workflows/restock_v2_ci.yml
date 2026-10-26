@@ -20,6 +20,7 @@ on:
       - "flinamania_product_probe.py"
       - "hot_restock.py"
       - "hot_restock_v4.py"
+      - "test_hot_proshop_noise.py"
       - "state_commit_guard.py"
       - "test_alert_policy.py"
       - "test_alert_policy_v2.py"
@@ -75,6 +76,9 @@ jobs:
 
       - name: Test Restock lane ownership
         run: timeout 60s python -m unittest test_restock_lane_ownership.py
+
+      - name: Test Proshop repeated-alert guard
+        run: timeout 60s python -m unittest test_hot_proshop_noise.py
 
       - name: Test Faraos parser V2
         run: timeout 60s python -m unittest test_faraos_parser_v2.py
