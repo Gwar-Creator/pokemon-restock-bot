@@ -38,8 +38,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
         with:
-          # HOT only needs the current state plus a small race window for the
-          # final state refresh. Avoid fetching every historical branch/run.
+          # Dispatch/workflow_run events can point to an older commit. Read
+          # current main state when the job actually starts to prevent replays.
+          ref: main
           fetch-depth: 10
 
       - name: Set up Python
@@ -54,7 +55,7 @@ jobs:
       - name: Validate Tier A HOT scanner and Salling Early Radar
         run: |
           python -m py_compile alert_policy.py hot_restock.py hot_restock_v4.py salling_early_radar.py salling_early_radar_runner.py early_intel_shadow.py state_commit_guard.py
-          python -m unittest test_state_commit_guard.py test_alert_policy_v2.py test_restock_lane_ownership.py test_early_intel_shadow.py test_salling_early_radar.py
+          python -m unittest test_state_commit_guard.py test_alert_policy_v2.py test_restock_lane_ownership.py test_hot_proshop_noise.py test_early_intel_shadow.py test_salling_early_radar.py
           python - <<'PY'
           import ast
           from pathlib import Path
