@@ -6830,19 +6830,6 @@
     {
       "event": "CROSS_CHANGE",
       "fields": [
-        "foetex"
-      ],
-      "name": "Pokémon Elite Trainer Box 30th samlekort",
-      "product_id": "11379490-EA",
-      "sku": "11379490-EA",
-      "source": "cross_salling",
-      "stage_after": null,
-      "stage_before": null,
-      "ts": 1792671875.0524716
-    },
-    {
-      "event": "CROSS_CHANGE",
-      "fields": [
         "br",
         "foetex"
       ],
@@ -21772,6 +21759,19 @@
       "stage_after": "LIVE_STOCK",
       "stage_before": "LIVE_STOCK",
       "ts": 1793015685.6403396
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
+      "product_id": "3447589",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1793015978.1851282
     }
   ],
   "sources": {
@@ -36979,9 +36979,11 @@
         "stage": "LIVE_STOCK",
         "status": "PÅ LAGER",
         "surface_statuses": {
+          "pokemon-brand": "PÅ LAGER",
           "pokemon-kort": "PÅ LAGER"
         },
         "surfaces": [
+          "pokemon-brand",
           "pokemon-kort"
         ],
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Zygarde-ex-Premium-Collection/3447589"
@@ -37042,6 +37044,6 @@
       }
     }
   },
-  "updated_at": 1793015685.641268,
+  "updated_at": 1793015978.186521,
   "version": 1
 }
