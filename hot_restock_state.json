@@ -81,18 +81,18 @@
       }
     },
     "proshop": {
-      "3478498": {
-        "name": "Pokemon TCG First Partner Illustration Collection Box Series 2",
-        "price": null,
-        "stock": "BESTILLINGSVARE",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-First-Partner-Illustration-Collection-Box-Series-2/3478498",
-        "fetch_via": "jina_reader"
-      },
       "3417744": {
         "name": "Pokemon TCG Mega Charizard X ex Ultra Premium Collection",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
+        "fetch_via": "jina_reader"
+      },
+      "3478498": {
+        "name": "Pokemon TCG First Partner Illustration Collection Box Series 2",
+        "price": null,
+        "stock": "BESTILLINGSVARE",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-First-Partner-Illustration-Collection-Box-Series-2/3478498",
         "fetch_via": "jina_reader"
       },
       "3447592": {
@@ -141,6 +141,18 @@
         "quantity_limit": 1,
         "sku": "11379493-EA",
         "url": "https://www.br.dk/produkter/pokemon-poster-collection-30th/200392205/"
+      },
+      "200380908": {
+        "name": "Pokémon Pitch Black booster bundle - samlekort",
+        "price": 299.0,
+        "online_count": 0,
+        "online_stock": false,
+        "store_count": 1,
+        "kolding_stock": 0,
+        "esbjerg_stock": 0,
+        "quantity_limit": 1,
+        "sku": "11320905-EA",
+        "url": "https://www.br.dk/produkter/pokemon-pitch-black-booster-bundle-samlekort/200380908/"
       }
     },
     "bilka": {
@@ -517,12 +529,12 @@
       "last_success_at": "2026-10-25T06:24:13.679090+00:00"
     },
     "proshop": {
-      "backoff_level": 2,
-      "next_allowed_at": 1793013695.5269783,
-      "generic_failures": 1,
-      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "backoff_level": 1,
+      "next_allowed_at": 1793013866.9526048,
+      "generic_failures": 0,
+      "last_error": null,
       "last_failure_at": "2026-10-26T11:16:35.526940+00:00",
-      "last_success_at": "2026-10-26T11:14:14.786289+00:00"
+      "last_success_at": "2026-10-26T11:22:26.952586+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -558,14 +570,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1793013601.6786184,
+      "next_allowed_at": 1793013896.047859,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-10-26T11:16:01.678594+00:00"
+      "last_success_at": "2026-10-26T11:20:56.047838+00:00"
     }
   },
-  "updated_at": "2026-10-26T11:19:34.345682+00:00",
+  "updated_at": "2026-10-26T11:24:31.531277+00:00",
   "proshop_discovery_version": 4,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -596,11 +608,11 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-10-26T11:16:00.091734+00:00"
+          "last_checked": "2026-10-26T11:20:54.804512+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1793013359.455283,
+      "last_discovery_epoch": 1793013653.7038343,
       "last_full_discovery_epoch": 1793005857.5608318,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
