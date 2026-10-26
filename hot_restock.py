@@ -24,6 +24,8 @@ WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL", "").strip()
 
 PROSHOP_FRONTEND_URL = "https://www.proshop.dk/?s=Pokemon+TCG"
 PROSHOP_DISCOVERY_VERSION = 4
+# One product alert per 24 hours even if Proshop source/parser status flaps.
+PROSHOP_ALERT_COOLDOWN_SECONDS = 24 * 60 * 60
 
 BOOZT_CATEGORY_URL = "https://www.boozt.com/dk/da/pokemon-trading-cards/born"
 MAGASIN_CATEGORY_URL = "https://www.magasin.dk/boern/legetoej/samlekort-og-mapper/pokemon/"
@@ -220,7 +222,10 @@ def product_available(source_key, product):
         return bool(product.get("online_stock"))
 
     if source_key == "proshop":
-        return product.get("stock") == "PÅ LAGER"
+        # BESTILLINGSVARE is already orderable. Switching between that and
+        # PÅ LAGER is not a meaningful new restock and currently flaps across
+        # Proshop discovery transports (Jina Reader versus direct frontend).
+        return product.get("stock") in {"PÅ LAGER", "BESTILLINGSVARE"}
 
     if source_key == "br":
         if int(product.get("online_count") or 0) > 0:
@@ -284,6 +289,31 @@ def format_price(value):
     except (TypeError, ValueError):
         return "Pris ikke oplyst"
     return f"{price:,.2f} kr.".replace(",", "X").replace(".", ",").replace("X", ".")
+
+
+def _hot_alert_allowed(state, source_key, product_id, now=None):
+    """Persisted same-product cooldown against duplicate Proshop NEW/RESTOCK."""
+    if source_key != "proshop":
+        return True
+    key = f"{source_key}:{product_id}"
+    raw = (state.get("last_hot_alerts") or {}).get(key)
+    try:
+        last_sent = float(raw)
+    except (TypeError, ValueError):
+        return True
+    current = time.time() if now is None else float(now)
+    return current - last_sent >= PROSHOP_ALERT_COOLDOWN_SECONDS
+
+
+def maybe_send_hot_alert(state, source_key, product_id, product, event):
+    if not _hot_alert_allowed(state, source_key, product_id):
+        print(f"HOT {source_key.upper()}: duplikat undertrykt for {product_id}")
+        return False
+    if not send_hot_alert(source_key, product, event):
+        return False
+    if source_key == "proshop":
+        state.setdefault("last_hot_alerts", {})[f"{source_key}:{product_id}"] = time.time()
+    return True
 
 
 def send_hot_alert(source_key, product, event):
@@ -1534,11 +1564,26 @@ def get_magasin_products(shared, old_products, state):
     )
 
 
+def _preserve_missing_proshop_products(old_products, current):
+    """A partial Proshop listing must not make previously seen SKUs NEW again.
+
+    Retain the last *observed* status rather than assuming that a missing
+    catalog card proves stock has disappeared.
+    """
+    merged = dict(current or {})
+    for product_id, previous in (old_products or {}).items():
+        if product_id not in merged and isinstance(previous, dict):
+            merged[product_id] = dict(previous)
+            merged[product_id]["fetch_via"] = "preserved_previous_scan"
+    return merged
+
+
 def fetch_source(shared, source_key, old_products, state=None):
     if source_key == "coolshop":
         return shared["get_coolshop_products"]()
     if source_key == "proshop":
-        return _fetch_expanded_proshop_products(shared)
+        current = _fetch_expanded_proshop_products(shared)
+        return _preserve_missing_proshop_products(old_products, current)
     if source_key == "br":
         return shared["get_br_products"](old_products)
     if source_key in ("bilka", "foetex"):
@@ -1637,7 +1682,7 @@ def run_scan(shared, state):
 
                 old = old_products.get(product_id)
                 if old is None:
-                    send_hot_alert(source_key, product, "NYT")
+                    maybe_send_hot_alert(state, source_key, product_id, product, "NYT")
                     continue
 
                 if (
@@ -1647,7 +1692,7 @@ def run_scan(shared, state):
                     continue
 
                 if not product_available(source_key, old):
-                    send_hot_alert(source_key, product, "RESTOCK")
+                    maybe_send_hot_alert(state, source_key, product_id, product, "RESTOCK")
 
         source_state[source_key] = current
         if source_key == "proshop":
