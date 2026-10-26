@@ -97,8 +97,8 @@
       },
       "3519999": {
         "name": "Pokemon TCG Mini Tins 30th Celebration assorted",
-        "price": 149.0,
-        "stock": "PÅ LAGER",
+        "price": null,
+        "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mini-Tins-30th-Celebration-assorted/3519999",
         "fetch_via": "jina_reader"
       },
@@ -524,12 +524,12 @@
       "last_success_at": "2026-10-25T06:24:13.679090+00:00"
     },
     "proshop": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-10-26T10:28:14.100624+00:00",
-      "last_success_at": "2026-10-26T10:39:07.316413+00:00"
+      "backoff_level": 1,
+      "next_allowed_at": 1793011466.9353943,
+      "generic_failures": 1,
+      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "last_failure_at": "2026-10-26T10:42:26.935353+00:00",
+      "last_success_at": "2026-10-26T10:41:31.584507+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -565,14 +565,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1793011183.709394,
+      "next_allowed_at": 1793011495.2355552,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-10-26T10:35:43.709367+00:00"
+      "last_success_at": "2026-10-26T10:40:55.235481+00:00"
     }
   },
-  "updated_at": "2026-10-26T10:39:22.565630+00:00",
+  "updated_at": "2026-10-26T10:44:30.403974+00:00",
   "proshop_discovery_version": 4,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -603,11 +603,11 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-10-26T10:35:42.343888+00:00"
+          "last_checked": "2026-10-26T10:40:53.900394+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1793010941.648524,
+      "last_discovery_epoch": 1793011253.2012818,
       "last_full_discovery_epoch": 1793005857.5608318,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
