@@ -6828,19 +6828,6 @@
   },
   "events": [
     {
-      "event": "CROSS_CHANGE",
-      "fields": [
-        "bilka"
-      ],
-      "name": "Pokemon Greninja EX tin samlekort",
-      "product_id": "11381826-EA",
-      "sku": "11381826-EA",
-      "source": "cross_salling",
-      "stage_after": null,
-      "stage_before": null,
-      "ts": 1792671583.592825
-    },
-    {
       "event": "CHANGE",
       "fields": [
         "online_to",
@@ -21790,6 +21777,22 @@
       "stage_after": "INBOUND_UNDATED",
       "stage_before": null,
       "ts": 1793011173.6072333
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "price",
+        "stage",
+        "status",
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mini Tins 30th Celebration assorted",
+      "product_id": "3519999",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "INBOUND_UNDATED",
+      "ts": 1793012376.9291587
     }
   ],
   "sources": {
@@ -36975,7 +36978,7 @@
         "name": "Pokemon TCG Mega Charizard X ex Ultra Premium Collection",
         "new_badge": false,
         "price": null,
-        "raw_status_excerpt": " Bestillingsvare, leveringstiden kan ikke oplyses * [![Image 14: Pokemon - Pokemon TCG Mini Tins 30th Celebration - assorted - POK10465-101](https://www.proshop.dk/Images/174x116/3519999_6ef9861ea3f0.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-Mini-Tins-30th-Celebration-assorted/3519999 \"Pokemon TCG Mini Tins 30th Celebration - assorted - POK10465-101\") NYHED ## ",
+        "raw_status_excerpt": " Bestillingsvare, leveringstiden kan ikke oplyses * [![Image 15: Pokemon - Pokemon TCG Mega Evolution—Chaos Rising Booster (box with 36 boosters) - POK10407-101](https://www.proshop.dk/Images/174x116/3447592_bf6f55217e66.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-EvolutionChaos-Rising-Booster-box-with-36-boosters/3447592 \"Pokemon TCG Mega Evolution—Chaos Rising Booster (box with 36 boosters) - POK10407-101\") ## ",
         "stage": "INBOUND_UNDATED",
         "status": "BESTILLINGSVARE",
         "surface_statuses": {
@@ -37049,7 +37052,7 @@
         "name": "Pokemon TCG First Partner Illustration Collection Box Series 2",
         "new_badge": false,
         "price": null,
-        "raw_status_excerpt": " Bestillingsvare, leveringstiden kan ikke oplyses * [![Image 13: Pokemon - Pokemon TCG Mega Charizard X ex Ultra-Premium Collection - POK10065-101](https://www.proshop.dk/Images/174x116/3417744_c6b845fea196.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744 \"Pokemon TCG Mega Charizard X ex Ultra-Premium Collection - POK10065-101\") ## ",
+        "raw_status_excerpt": " Bestillingsvare, leveringstiden kan ikke oplyses * [![Image 14: Pokemon - Pokemon TCG Mega Charizard X ex Ultra-Premium Collection - POK10065-101](https://www.proshop.dk/Images/174x116/3417744_c6b845fea196.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744 \"Pokemon TCG Mega Charizard X ex Ultra-Premium Collection - POK10065-101\") ## ",
         "stage": "INBOUND_UNDATED",
         "status": "BESTILLINGSVARE",
         "surface_statuses": {
@@ -37066,12 +37069,12 @@
         "low_stock_badge": false,
         "name": "Pokemon TCG Mini Tins 30th Celebration assorted",
         "new_badge": true,
-        "price": null,
-        "raw_status_excerpt": " Bestillingsvare, leveringstiden kan ikke oplyses * [![Image 15: Pokemon - Pokemon TCG Mega Evolution—Chaos Rising Booster (box with 36 boosters) - POK10407-101](https://www.proshop.dk/Images/174x116/3447592_bf6f55217e66.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-EvolutionChaos-Rising-Booster-box-with-36-boosters/3447592 \"Pokemon TCG Mega Evolution—Chaos Rising Booster (box with 36 boosters) - POK10407-101\") ## ",
-        "stage": "INBOUND_UNDATED",
-        "status": "BESTILLINGSVARE",
+        "price": 149.0,
+        "raw_status_excerpt": " På lager – Levering i morgen (bestil inden kl. 22) 149,00 kr.(119,20 kr.) 3519999 * [![Image 12: Pokemon - Pokemon TCG 2-pack Booster - POK10412-101](https://www.proshop.dk/Images/174x116/3478497_4ba6ac470992.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-2-pack-Booster/3478497 \"Pokemon TCG 2-pack Booster - POK10412-101\") ## ",
+        "stage": "LIVE_STOCK",
+        "status": "PÅ LAGER",
         "surface_statuses": {
-          "pokemon-kort": "BESTILLINGSVARE"
+          "pokemon-kort": "PÅ LAGER"
         },
         "surfaces": [
           "pokemon-kort"
@@ -37080,6 +37083,6 @@
       }
     }
   },
-  "updated_at": 1793012090.10955,
+  "updated_at": 1793012376.9303393,
   "version": 1
 }
