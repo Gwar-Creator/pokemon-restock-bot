@@ -93,35 +93,35 @@
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-First-Partner-Illustration-Collection-Box-Series-2/3478498",
-        "fetch_via": "jina_reader+direct_frontend_search"
+        "fetch_via": "jina_reader"
       },
       "3417744": {
         "name": "Pokemon TCG Mega Charizard X ex Ultra Premium Collection",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
-        "fetch_via": "jina_reader+direct_frontend_search"
+        "fetch_via": "jina_reader"
       },
       "3447592": {
         "name": "Pokemon TCG Mega EvolutionChaos Rising Booster box with 36 boosters",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-EvolutionChaos-Rising-Booster-box-with-36-boosters/3447592",
-        "fetch_via": "jina_reader+direct_frontend_search"
+        "fetch_via": "jina_reader"
       },
       "3478496": {
         "name": "Pokemon TCG Mega Greninja ex Premium Collection",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
-        "fetch_via": "jina_reader+direct_frontend_search"
+        "fetch_via": "jina_reader"
       },
       "3421827": {
         "name": "Pokemon TCG 2024 World Championships Deck",
         "price": 329.0,
         "stock": "PÅ LAGER",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
-        "fetch_via": "jina_reader+direct_frontend_search"
+        "fetch_via": "jina_reader"
       }
     },
     "br": {
@@ -524,12 +524,12 @@
       "last_success_at": "2026-10-25T06:24:13.679090+00:00"
     },
     "proshop": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-10-26T02:55:38.505955+00:00",
-      "last_success_at": "2026-10-26T02:59:14.853879+00:00"
+      "backoff_level": 1,
+      "next_allowed_at": 1792984579.1169431,
+      "generic_failures": 1,
+      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "last_failure_at": "2026-10-26T03:14:19.116900+00:00",
+      "last_success_at": "2026-10-26T03:13:21.679581+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -565,14 +565,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1792984201.7780685,
+      "next_allowed_at": 1792984501.9671068,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-10-26T03:06:01.778046+00:00"
+      "last_success_at": "2026-10-26T03:11:01.967084+00:00"
     }
   },
-  "updated_at": "2026-10-26T03:09:39.745574+00:00",
+  "updated_at": "2026-10-26T03:14:33.416979+00:00",
   "proshop_discovery_version": 4,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -585,30 +585,30 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-10-25T21:10:54.167609+00:00"
+          "last_checked": "2026-10-26T03:10:59.068370+00:00"
         },
         "https://www.magasin.dk/sitemap_1-product.xml": {
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-10-25T21:10:55.431700+00:00"
+          "last_checked": "2026-10-26T03:10:59.605681+00:00"
         },
         "https://www.magasin.dk/sitemap_2-product.xml": {
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-10-25T21:10:55.909975+00:00"
+          "last_checked": "2026-10-26T03:11:00.699228+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-10-26T03:06:00.611584+00:00"
+          "last_checked": "2026-10-26T03:11:00.980961+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1792983959.5822067,
-      "last_full_discovery_epoch": 1792962653.1455178,
+      "last_discovery_epoch": 1792984257.3371723,
+      "last_full_discovery_epoch": 1792984257.3371723,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
         "https://www.magasin.dk/sitemap_1-product.xml",
