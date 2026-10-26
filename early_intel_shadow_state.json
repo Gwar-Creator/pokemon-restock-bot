@@ -6833,75 +6833,6 @@
         "is_exposed",
         "stage"
       ],
-      "name": "Pokemon Sylveon EX tin samlekort",
-      "product_id": "200392808",
-      "sku": "11381823-EA",
-      "source": "bilka",
-      "stage_after": "CATALOG_RECORD",
-      "stage_before": "EXPOSED_NO_STOCK",
-      "ts": 1792681773.8901253
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "is_exposed",
-        "stage"
-      ],
-      "name": "Pokemon Greninja EX tin samlekort",
-      "product_id": "200392809",
-      "sku": "11381826-EA",
-      "source": "bilka",
-      "stage_after": "CATALOG_RECORD",
-      "stage_before": "EXPOSED_NO_STOCK",
-      "ts": 1792681773.8901296
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "stock_count_online"
-      ],
-      "name": "Pokémon TCG Pitch Black Elite Trainer Box",
-      "product_id": "200380918",
-      "sku": "11320995-EA",
-      "source": "foetex",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1792681775.1207242
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "is_exposed",
-        "stage"
-      ],
-      "name": "Pokémon Elite Trainer Box 30th samlekort",
-      "product_id": "200392202",
-      "sku": "11379490-EA",
-      "source": "foetex",
-      "stage_after": "CATALOG_RECORD",
-      "stage_before": "EXPOSED_NO_STOCK",
-      "ts": 1792681775.1207378
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "is_exposed",
-        "stage"
-      ],
-      "name": "Pokémon Binder Collection 30th",
-      "product_id": "200392204",
-      "sku": "11379492-EA",
-      "source": "foetex",
-      "stage_after": "CATALOG_RECORD",
-      "stage_before": "EXPOSED_NO_STOCK",
-      "ts": 1792681775.120746
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "is_exposed",
-        "stage"
-      ],
       "name": "Pokémon 30th samlekort",
       "product_id": "200392214",
       "sku": "11379495-EA",
@@ -21745,6 +21676,63 @@
       "stage_after": "INBOUND_UNDATED",
       "stage_before": null,
       "ts": 1793032500.8103445
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
+      "product_id": "3447589",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1793033081.086648
+    },
+    {
+      "event": "NEW",
+      "fields": [],
+      "name": "Pokemon TCG Mega Charizard X ex Ultra Premium Collection",
+      "product_id": "3417744",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "INBOUND_UNDATED",
+      "stage_before": null,
+      "ts": 1793033081.086656
+    },
+    {
+      "event": "NEW",
+      "fields": [],
+      "name": "Pokemon TCG Mega EvolutionChaos Rising Booster box with 36 boosters",
+      "product_id": "3447592",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "INBOUND_UNDATED",
+      "stage_before": null,
+      "ts": 1793033081.086659
+    },
+    {
+      "event": "NEW",
+      "fields": [],
+      "name": "Pokemon TCG Mega Greninja ex Premium Collection",
+      "product_id": "3478496",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": null,
+      "ts": 1793033081.0866613
+    },
+    {
+      "event": "NEW",
+      "fields": [],
+      "name": "Pokemon TCG First Partner Illustration Collection Box Series 2",
+      "product_id": "3478498",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "INBOUND_UNDATED",
+      "stage_before": null,
+      "ts": 1793033081.0866628
     }
   ],
   "sources": {
@@ -36923,6 +36911,24 @@
       }
     },
     "proshop": {
+      "3417744": {
+        "expected_stock_date": null,
+        "id": "3417744",
+        "low_stock_badge": false,
+        "name": "Pokemon TCG Mega Charizard X ex Ultra Premium Collection",
+        "new_badge": false,
+        "price": null,
+        "raw_status_excerpt": " Bestillingsvare, leveringstiden kan ikke oplyses * [![Image 14: Pokemon - Pokemon TCG Mega Evolution—Chaos Rising Booster (box with 36 boosters) - POK10407-101](https://www.proshop.dk/Images/174x116/3447592_bf6f55217e66.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-EvolutionChaos-Rising-Booster-box-with-36-boosters/3447592 \"Pokemon TCG Mega Evolution—Chaos Rising Booster (box with 36 boosters) - POK10407-101\") ## ",
+        "stage": "INBOUND_UNDATED",
+        "status": "BESTILLINGSVARE",
+        "surface_statuses": {
+          "pokemon-kort": "BESTILLINGSVARE"
+        },
+        "surfaces": [
+          "pokemon-kort"
+        ],
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744"
+      },
       "3447589": {
         "expected_stock_date": null,
         "id": "3447589",
@@ -36930,19 +36936,73 @@
         "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
         "new_badge": false,
         "price": 529.0,
-        "raw_status_excerpt": " På lager – Levering i morgen (bestil inden kl. 22) 529,00 kr.(423,20 kr.) Køb 3447589 * [![Image 30: Pokemon - Pokemon TCG Portfolio 9-P Mega Charizard X & Mega Lopunny - ULT16088](https://www.proshop.dk/Images/174x116/3447426_2681c18713e5.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-Portfolio-9-P-Mega-Charizard-X-Mega-Lopunny/3447426 \"Pokemon TCG Portfolio 9-P Mega Charizard X & Mega Lopunny - ULT16088\")![Image 31: LinkedIn](https://www.proshop.dk/Pokemon/Pokemon) Produktdatablad ## ",
+        "raw_status_excerpt": " På lager – Levering i morgen (bestil inden kl. 22) 529,00 kr.(423,20 kr.) 3447589 * [![Image 2: Pokemon - Pokemon TCG Portfolio 9-P Mega Charizard X & Mega Lopunny - ULT16088](https://www.proshop.dk/Images/174x116/3447426_2681c18713e5.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-Portfolio-9-P-Mega-Charizard-X-Mega-Lopunny/3447426 \"Pokemon TCG Portfolio 9-P Mega Charizard X & Mega Lopunny - ULT16088\") ## ",
         "stage": "LIVE_STOCK",
         "status": "PÅ LAGER",
         "surface_statuses": {
-          "pokemon-brand": "PÅ LAGER"
+          "pokemon-kort": "PÅ LAGER"
         },
         "surfaces": [
-          "pokemon-brand"
+          "pokemon-kort"
         ],
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Zygarde-ex-Premium-Collection/3447589"
+      },
+      "3447592": {
+        "expected_stock_date": null,
+        "id": "3447592",
+        "low_stock_badge": false,
+        "name": "Pokemon TCG Mega EvolutionChaos Rising Booster box with 36 boosters",
+        "new_badge": false,
+        "price": null,
+        "raw_status_excerpt": " Bestillingsvare, leveringstiden kan ikke oplyses * [![Image 15: Pokemon - Pokemon TCG Mega Greninja ex Premium Collection - POK10413-101](https://www.proshop.dk/Images/174x116/3478496_3c2192ce2a6e.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496 \"Pokemon TCG Mega Greninja ex Premium Collection - POK10413-101\") ## ",
+        "stage": "INBOUND_UNDATED",
+        "status": "BESTILLINGSVARE",
+        "surface_statuses": {
+          "pokemon-kort": "BESTILLINGSVARE"
+        },
+        "surfaces": [
+          "pokemon-kort"
+        ],
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-EvolutionChaos-Rising-Booster-box-with-36-boosters/3447592"
+      },
+      "3478496": {
+        "expected_stock_date": null,
+        "id": "3478496",
+        "low_stock_badge": false,
+        "name": "Pokemon TCG Mega Greninja ex Premium Collection",
+        "new_badge": false,
+        "price": null,
+        "raw_status_excerpt": " Bestillingsvare, leveringstiden kan ikke oplyses * [![Image 16: Pokemon - Pokemon TCG 2024 World Championships Deck - POK10166](https://www.proshop.dk/Images/174x116/3421827_9f84f9509359.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827 \"Pokemon TCG 2024 World Championships Deck - POK10166\") KUN 1 TILBAGE PÅ LAGER ## ",
+        "stage": "LIVE_STOCK",
+        "status": "PÅ LAGER",
+        "surface_statuses": {
+          "pokemon-kort": "PÅ LAGER"
+        },
+        "surfaces": [
+          "pokemon-kort"
+        ],
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496"
+      },
+      "3478498": {
+        "expected_stock_date": null,
+        "id": "3478498",
+        "low_stock_badge": false,
+        "name": "Pokemon TCG First Partner Illustration Collection Box Series 2",
+        "new_badge": false,
+        "price": null,
+        "raw_status_excerpt": " Bestillingsvare, leveringstiden kan ikke oplyses * [![Image 13: Pokemon - Pokemon TCG Mega Charizard X ex Ultra-Premium Collection - POK10065-101](https://www.proshop.dk/Images/174x116/3417744_c6b845fea196.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744 \"Pokemon TCG Mega Charizard X ex Ultra-Premium Collection - POK10065-101\") ## ",
+        "stage": "INBOUND_UNDATED",
+        "status": "BESTILLINGSVARE",
+        "surface_statuses": {
+          "pokemon-kort": "BESTILLINGSVARE"
+        },
+        "surfaces": [
+          "pokemon-kort"
+        ],
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-First-Partner-Illustration-Collection-Box-Series-2/3478498"
       }
     }
   },
-  "updated_at": 1793032779.4333837,
+  "updated_at": 1793033081.0875778,
   "version": 1
 }
