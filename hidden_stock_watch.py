@@ -21,6 +21,10 @@ SITES = ("br", "bilka", "foetex")
 WORKERS = 6
 MAX_ALERTS_PER_RUN = 4
 STATE_VERSION = 1
+# One anomalous zero-stock response must not re-arm a previously sent alert.
+ZERO_CONFIRM_SCANS = 3
+# PRE-PUBLISH data is tentative. One alert per product/store within 24 hours.
+REPEAT_ALERT_COOLDOWN_SECONDS = 24 * 60 * 60
 # The full national stock history remains in state, but Discord is local.
 ALERT_CITIES = ("kolding", "esbjerg", "vejle", "fredericia")
 
@@ -128,6 +132,14 @@ def item_key(site_key, sku, store_id):
     return f"{site_key}|{sku}|{store_id}"
 
 
+def _within_repeat_cooldown(last_notified_at, now_epoch):
+    try:
+        stamp = float(last_notified_at)
+    except (TypeError, ValueError):
+        return False
+    return stamp > 0 and 0 <= now_epoch - stamp < REPEAT_ALERT_COOLDOWN_SECONDS
+
+
 def merge_site(state, site_key, observations, now):
     """Two consecutive successful site scans are required for new alerts.
 
@@ -136,6 +148,7 @@ def merge_site(state, site_key, observations, now):
     as a second positive scan for that SKU.
     """
     items = state["items"]
+    now_epoch = time.time()
     seq = int(state["site_scan_seq"].get(site_key, 0)) + 1
     state["site_scan_seq"][site_key] = seq
     first_scan = not state["baseline_sites"].get(site_key, False)
@@ -148,10 +161,31 @@ def merge_site(state, site_key, observations, now):
             # Do not store hundreds of zeros for products never in stock.
             if count == 0 and not old:
                 continue
+            # Seed alert history once for legacy rows already marked notified.
+            # Otherwise a single false zero immediately forgets the old alert.
+            last_notified_at = old.get("last_notified_at") if old else None
+            if old and old.get("notified") and not last_notified_at:
+                last_notified_at = now_epoch
+
             if count == 0:
-                if old["stock"] != 0 or old["streak"] or old["notified"]:
-                    items[key] = {**old, "stock": 0, "streak": 0, "notified": False,
-                                  "last_seq": seq}
+                consecutive_zero = bool(
+                    old and old.get("stock", 0) == 0
+                    and old.get("last_seq") == seq - 1
+                )
+                zero_streak = (
+                    min(ZERO_CONFIRM_SCANS, int(old.get("zero_streak", 0)) + 1)
+                    if consecutive_zero else 1
+                )
+                # Only *confirmed* zero stock can re-arm the product/store.
+                # Keep last_notified_at even after re-arming for the cooldown.
+                items[key] = {
+                    **old, "stock": 0, "streak": 0,
+                    "zero_streak": zero_streak,
+                    "notified": (False if zero_streak >= ZERO_CONFIRM_SCANS
+                                 else bool(old.get("notified", False))),
+                    "last_notified_at": last_notified_at,
+                    "last_seq": seq,
+                }
                 continue
 
             sequential = bool(old and old.get("stock", 0) > 0
@@ -160,6 +194,11 @@ def merge_site(state, site_key, observations, now):
             notified = bool(old.get("notified", False)) if old else False
             if first_scan:
                 # Old, unverified legacy stock must not become a mass alert.
+                notified = True
+                last_notified_at = now_epoch
+            # Repeated positive readings during the cooldown are already
+            # handled, not a new actionable PRE-PUBLISH alert.
+            if _within_repeat_cooldown(last_notified_at, now_epoch):
                 notified = True
             row = {
                 "site": site_key,
@@ -174,7 +213,9 @@ def merge_site(state, site_key, observations, now):
                 "store": store["name"],
                 "stock": count,
                 "streak": streak,
+                "zero_streak": 0,
                 "notified": notified,
+                "last_notified_at": last_notified_at,
                 "last_seq": seq,
             }
             items[key] = row
@@ -290,8 +331,10 @@ def main():
         except Exception as exc:
             print(f"HIDDEN STOCK ALERT ERROR for {group}: {type(exc).__name__}")
             continue
+        sent_at = time.time()
         for key in keys:
             state["items"][key]["notified"] = True
+            state["items"][key]["last_notified_at"] = sent_at
         successes += 1
 
     state["last_run"] = now
