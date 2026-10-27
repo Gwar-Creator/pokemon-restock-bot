@@ -144,16 +144,62 @@ class HiddenStockPolicyTests(unittest.TestCase):
         self.assertEqual(hidden.merge_site(state, "br", observation(4), "now"), {})
         self.assertEqual(state["items"]["br|10831914-EA|2021"]["streak"], 1)
 
-    def test_explicit_zero_rearms_after_baseline(self):
+    def test_confirmed_zero_rearms_after_baseline_and_cooldown(self):
         state = hidden.empty_state()
-        hidden.merge_site(state, "br", observation(4), "now")
-        hidden.merge_site(state, "br", observation(0), "now")
+        start = 1_700_000_000
+        with patch.object(hidden.time, "time", return_value=start):
+            hidden.merge_site(state, "br", observation(4), "now")
         key = "br|10831914-EA|2021"
-        self.assertEqual(state["items"][key]["stock"], 0)
-        self.assertFalse(state["items"][key]["notified"])
-        self.assertEqual(hidden.merge_site(state, "br", observation(1), "now"), {})
-        confirmed = hidden.merge_site(state, "br", observation(1), "now")
+        with patch.object(hidden.time, "time", return_value=start + hidden.REPEAT_ALERT_COOLDOWN_SECONDS + 1):
+            for n in range(1, hidden.ZERO_CONFIRM_SCANS + 1):
+                hidden.merge_site(state, "br", observation(0), "now")
+                self.assertEqual(state["items"][key]["stock"], 0)
+                self.assertEqual(state["items"][key]["notified"], n < hidden.ZERO_CONFIRM_SCANS)
+                self.assertEqual(state["items"][key]["zero_streak"], n)
+            self.assertEqual(hidden.merge_site(state, "br", observation(1), "now"), {})
+            confirmed = hidden.merge_site(state, "br", observation(1), "now")
         self.assertEqual(confirmed, {("br", "10831914-EA"): [key]})
+
+    def test_hidden_stock_false_zero_then_six_does_not_repeat(self):
+        """The actual BR Esbjerg regression: 6 -> 0 -> 6 -> 6."""
+        state = hidden.empty_state()
+        key = hidden.item_key("br", "11350615-EA", "2011")
+        item = product(
+            "11350615-EA", "Pokemon First Partner collection box 3 samlekort"
+        )
+        def sample(count):
+            return [(item, {"2011": {"name": "BR Esbjerg", "stock": count}})]
+        t = 1_700_000_000
+        with patch.object(hidden.time, "time", return_value=t):
+            hidden.merge_site(state, "br", sample(6), "now")
+            self.assertTrue(state["items"][key]["notified"])
+            hidden.merge_site(state, "br", sample(0), "now")
+            self.assertEqual(state["items"][key]["zero_streak"], 1)
+            self.assertTrue(state["items"][key]["notified"])
+            hidden.merge_site(state, "br", sample(6), "now")
+            self.assertEqual(hidden.merge_site(state, "br", sample(6), "now"), {})
+            self.assertTrue(state["items"][key]["notified"])
+
+    def test_cooldown_survives_three_zero_scans_and_state_reloads(self):
+        state = hidden.empty_state()
+        key = hidden.item_key("br", "10831914-EA", "2021")
+        t = 1_700_000_000
+        with patch.object(hidden.time, "time", return_value=t):
+            hidden.merge_site(state, "br", observation(0), "now")
+            hidden.merge_site(state, "br", observation(4), "now")
+            hidden.merge_site(state, "br", observation(4), "now")
+            # Model a successfully sent Discord alert.
+            state["items"][key]["notified"] = True
+            state["items"][key]["last_notified_at"] = t
+        state = json.loads(json.dumps(state))
+        with patch.object(hidden.time, "time", return_value=t + 60):
+            for _ in range(hidden.ZERO_CONFIRM_SCANS):
+                hidden.merge_site(state, "br", observation(0), "now")
+            self.assertFalse(state["items"][key]["notified"])
+            self.assertEqual(hidden.merge_site(state, "br", observation(4), "now"), {})
+            self.assertEqual(hidden.merge_site(state, "br", observation(4), "now"), {})
+            self.assertTrue(state["items"][key]["notified"])
+            self.assertEqual(state["items"][key]["last_notified_at"], t)
 
     def test_legacy_stock_does_not_turn_into_new_alert(self):
         state = hidden.empty_state()
