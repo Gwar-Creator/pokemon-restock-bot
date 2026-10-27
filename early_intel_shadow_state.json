@@ -6828,28 +6828,6 @@
   },
   "events": [
     {
-      "event": "NEW",
-      "fields": [],
-      "name": "Pokemon TCG Mega Greninja ex Premium Collection",
-      "product_id": "3478496",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "INBOUND_UNDATED",
-      "stage_before": null,
-      "ts": 1792771778.2096717
-    },
-    {
-      "event": "NEW",
-      "fields": [],
-      "name": "Pokemon TCG First Partner Illustration Collection Box Series 2",
-      "product_id": "3478498",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "INBOUND_UNDATED",
-      "stage_before": null,
-      "ts": 1792771778.2096734
-    },
-    {
       "event": "CROSS_CHANGE",
       "fields": [
         "bilka",
@@ -21696,6 +21674,30 @@
       "stage_after": null,
       "stage_before": null,
       "ts": 1793123698.58516
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
+      "product_id": "3447589",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1793123983.2853768
+    },
+    {
+      "event": "NEW",
+      "fields": [],
+      "name": "Pokemon TCG Mega Greninja ex Premium Collection",
+      "product_id": "3478496",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": null,
+      "ts": 1793123983.2853868
     }
   ],
   "sources": {
@@ -36885,19 +36887,39 @@
         "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
         "new_badge": false,
         "price": 529.0,
-        "raw_status_excerpt": " På lager – Levering i morgen (bestil inden kl. 22) 529,00 kr.(423,20 kr.) Køb 3447589 * [![Image 30: Pokemon - Pokemon TCG Portfolio 9-P Mega Charizard X & Mega Lopunny - ULT16088](https://www.proshop.dk/Images/174x116/3447426_2681c18713e5.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-Portfolio-9-P-Mega-Charizard-X-Mega-Lopunny/3447426 \"Pokemon TCG Portfolio 9-P Mega Charizard X & Mega Lopunny - ULT16088\")![Image 31: LinkedIn](https://www.proshop.dk/Pokemon/Pokemon) Produktdatablad ## ",
+        "raw_status_excerpt": " På lager – Levering i morgen (bestil inden kl. 22) 529,00 kr.(423,20 kr.) 3447589 * [![Image 2: Pokemon - Pokemon TCG Portfolio 9-P Mega Charizard X & Mega Lopunny - ULT16088](https://www.proshop.dk/Images/174x116/3447426_2681c18713e5.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-Portfolio-9-P-Mega-Charizard-X-Mega-Lopunny/3447426 \"Pokemon TCG Portfolio 9-P Mega Charizard X & Mega Lopunny - ULT16088\") ## ",
         "stage": "LIVE_STOCK",
         "status": "PÅ LAGER",
         "surface_statuses": {
-          "pokemon-brand": "PÅ LAGER"
+          "pokemon-brand": "PÅ LAGER",
+          "pokemon-kort": "PÅ LAGER"
         },
         "surfaces": [
-          "pokemon-brand"
+          "pokemon-brand",
+          "pokemon-kort"
         ],
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Zygarde-ex-Premium-Collection/3447589"
+      },
+      "3478496": {
+        "expected_stock_date": null,
+        "id": "3478496",
+        "low_stock_badge": false,
+        "name": "Pokemon TCG Mega Greninja ex Premium Collection",
+        "new_badge": false,
+        "price": 499.0,
+        "raw_status_excerpt": " På lager – Levering i morgen (bestil inden kl. 22) 499,00 kr.(399,20 kr.) 3478496 * [![Image 12: Pokemon - Pokemon TCG Deluxe Battle Deck Ninetales ex/Zapdos ex - assorted - POK85600](https://www.proshop.dk/Images/174x116/3421832_88cd2a56da23.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-Deluxe-Battle-Deck-Ninetales-exZapdos-ex-assorted/3421832 \"Pokemon TCG Deluxe Battle Deck Ninetales ex/Zapdos ex - assorted - POK85600\") ## ",
+        "stage": "LIVE_STOCK",
+        "status": "PÅ LAGER",
+        "surface_statuses": {
+          "pokemon-kort": "PÅ LAGER"
+        },
+        "surfaces": [
+          "pokemon-kort"
+        ],
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496"
       }
     }
   },
-  "updated_at": 1793123698.5853443,
+  "updated_at": 1793123983.2865484,
   "version": 1
 }
