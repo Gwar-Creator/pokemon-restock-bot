@@ -134,7 +134,8 @@ Produkter over disse grænser bliver i rå restock-state og kan fortsat give res
 - HOT bruger `DISCORD_V2_HOT_MODE` med standarden `shadow`: render den nye besked diagnostisk, men send fortsat den eksisterende embed som hidtil.
 - Kun `DISCORD_V2_HOT_MODE=on` skifter HOT's udsendte embed; det kræver separat vurdering af skyggeresultater og datakvalitet. Udsend aldrig to beskeder for samme event.
 - Systemlager, PRE-PUBLISH og modstridende status må aldrig ophøjes til bekræftet købbarhed. `BESTILLINGSVARE` skal fremstå tydeligt som ordrevare, ikke garanteret øjeblikkelig levering.
-- Endnu ingen produktionsadapter for Local Stock, Hidden Stock, Salling Early Radar, Price Watch eller Cardmarket; disse bevarer deres eksisterende beskeder.
+- Local Stock, Hidden Stock og Salling Early Radar anvender `discord_v2_salling_adapter.py` til **shadow-only** klassifikation i loggen ved udsendte legacy-alerts. Ingen ekstra Discord-posts, ændret event-dedupe eller state. Positivt butikslager er `STORE_STOCK`, skjult produkt `PREPUBLISH`; Early Radar kan ikke udlede bekræftet købbarhed af katalog-/systemlagertal.
+- Fortsat ingen live V2-adapter for Local Stock, Hidden Stock, Salling Early Radar, Price Watch eller Cardmarket. Disse bevarer deres eksisterende beskeder.
 
 ## Anti-spam
 
