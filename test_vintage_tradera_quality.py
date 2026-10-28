@@ -66,6 +66,7 @@ class TraderaQualityTests(unittest.TestCase):
         self.assertEqual(result["unique_valid_listings"], 5)
         self.assertEqual(result["duplicate_search_hits"], 1)
         self.assertEqual(result["malformed_or_unsafe_links"], 1)
+        self.assertEqual(result["rejection_reasons"], {"non_tradera_host": 1})
         self.assertEqual(result["title_vintage"], 2)
         self.assertEqual(result["title_uncertain"], 1)
         self.assertEqual(result["title_excluded"], 2)
@@ -73,6 +74,22 @@ class TraderaQualityTests(unittest.TestCase):
         self.assertIsNone(result["precision"])
         self.assertNotIn("not-for-output", str(result))
         self.assertLessEqual(len(result["public_review_samples"]), 20)
+
+    def test_invalid_field_counts_are_classified_without_echoing_api_values(self):
+        rows = [
+            {"id": 1, "shortDescription": "Pokemon Fossil", "itemUrl": "/item/1"},
+            {"id": 2, "shortDescription": "Pokemon Base Set", "itemUrl": "http://www.tradera.com/item/2"},
+            {"id": 3, "shortDescription": "Pokemon Jungle", "itemUrl": ""},
+            {"id": None, "shortDescription": "Pokemon Skyridge", "itemUrl": "https://www.tradera.com/item/3"},
+            {"id": 4, "shortDescription": None, "itemUrl": "https://www.tradera.com/item/4"},
+        ]
+        result = audit_batches([("one", rows)])
+        self.assertEqual(result["malformed_or_unsafe_links"], 5)
+        self.assertEqual(result["rejection_reasons"], {
+            "invalid_id": 1, "invalid_title": 1, "missing_url": 1,
+            "non_https_url": 1, "relative_url": 1,
+        })
+        self.assertNotIn("Pokemon", str(result))
 
     def test_only_official_searches_and_no_discord_calls(self):
         response = Mock()
@@ -88,6 +105,12 @@ class TraderaQualityTests(unittest.TestCase):
             self.assertEqual(kwargs["headers"]["X-App-Key"], "KEY")
         self.assertEqual(result["unique_valid_listings"], 1)
         self.assertEqual(result["duplicate_search_hits"], len(AUDIT_QUERIES) - 1)
+        transport.reset_mock()
+        live_audit("APP", "KEY", transport, query_limit=1)
+        transport.assert_called_once()
+        with self.assertRaises(ValueError):
+            live_audit("APP", "KEY", transport, query_limit=0)
+
 
     def test_credentials_trimmed_like_successful_schema_probe(self):
         response = Mock()

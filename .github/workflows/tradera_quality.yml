@@ -1,7 +1,7 @@
 name: Tradera Vintage Finder read-only quality audit
 
 on:
-  # One bounded read-only verification of built-in Requests error category; no schedule.
+  # One bounded read-only field-format audit (first search page only); no schedule.
   push:
     branches: [main]
     paths:
@@ -44,7 +44,7 @@ jobs:
             echo "MARKETPLACE_WEBHOOK_URL: not configured (alerts DISABLED)"
           fi
       - name: Official Tradera v4 one-page searches, no publishing
-        run: python vintage_tradera_quality.py --live --output tradera_quality_report.json
+        run: python vintage_tradera_quality.py --live --query-limit 1 --output tradera_quality_report.json
       - name: Archive public-listing quality samples for manual false-positive review
         uses: actions/upload-artifact@v4
         with:

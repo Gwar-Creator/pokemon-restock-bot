@@ -9,6 +9,7 @@ import os
 import re
 from collections import Counter
 from datetime import datetime, timedelta, timezone
+from urllib.parse import urlsplit
 
 import requests
 
@@ -81,11 +82,44 @@ def _summary_record(row):
     }
 
 
+
+def _rejection_reason(row):
+    """Safe field-format classification: no API values, sellers or URLs logged."""
+    if not isinstance(row, dict):
+        return "non_object"
+    item_id = row.get("id")
+    if (isinstance(item_id, bool) or not isinstance(item_id, (str, int))
+            or not str(item_id).strip()):
+        return "invalid_id"
+    if not isinstance(row.get("shortDescription"), str) or not row["shortDescription"].strip():
+        return "invalid_title"
+    value = row.get("itemUrl")
+    if not isinstance(value, str) or not value.strip():
+        return "missing_url"
+    try:
+        parts = urlsplit(value)
+        host = (parts.hostname or "").lower()
+    except ValueError:
+        return "unparseable_url"
+    if not parts.scheme and not parts.netloc:
+        return "relative_url"
+    if parts.scheme != "https":
+        return "non_https_url"
+    if host != "tradera.com" and not host.endswith(".tradera.com"):
+        return "non_tradera_host"
+    if not parts.path or parts.path == "/":
+        return "missing_url_path"
+    if parts.username or parts.password:
+        return "url_with_userinfo"
+    return "other_invalid_url"
+
+
 def audit_batches(batches, sample_limit=MAX_PUBLIC_SAMPLES):
     """Count search noise vs title matches; NOT manually verified precision."""
     seen = {}
     query_counts = {}
     scanned = duplicates = malformed = 0
+    rejection_reasons = Counter()
     for query, rows in batches:
         if not isinstance(rows, list):
             raise ValueError("Expected official Tradera rows list")
@@ -95,6 +129,7 @@ def audit_batches(batches, sample_limit=MAX_PUBLIC_SAMPLES):
             parsed = _summary_record(row)
             if parsed is None:
                 malformed += 1
+                rejection_reasons[_rejection_reason(row)] += 1
                 continue
             if parsed["id"] in seen:
                 duplicates += 1
@@ -113,6 +148,7 @@ def audit_batches(batches, sample_limit=MAX_PUBLIC_SAMPLES):
         "unique_valid_listings": len(seen),
         "duplicate_search_hits": duplicates,
         "malformed_or_unsafe_links": malformed,
+        "rejection_reasons": dict(sorted(rejection_reasons.items())),
         "title_vintage": breakdown["TITLE_VINTAGE"],
         "title_uncertain": breakdown["TITLE_UNCERTAIN"],
         "title_excluded": breakdown["EXCLUDED"],
@@ -183,15 +219,20 @@ def actionable_signal(listing, evidence, now=None):
     return evidence.get("action") if evidence.get("action") in ("KØB", "BYD") else None
 
 
-def live_audit(app_id, app_key, transport=requests.get):
+def live_audit(app_id, app_key, transport=requests.get, query_limit=None):
     # Mirror the previously successful read-only probe: trim whitespace from
     # environment secrets before constructing HTTP header values.
     app_id = app_id.strip() if isinstance(app_id, str) else ""
     app_key = app_key.strip() if isinstance(app_key, str) else ""
     if not app_id or not app_key:
         raise ValueError("Tradera application credentials are missing")
+    if query_limit is not None and (
+        type(query_limit) is not int or not 1 <= query_limit <= len(AUDIT_QUERIES)
+    ):
+        raise ValueError("query_limit out of range")
+    terms = AUDIT_QUERIES[:query_limit] if query_limit else AUDIT_QUERIES
     batches = []
-    for index, query in enumerate(AUDIT_QUERIES, 1):
+    for index, query in enumerate(terms, 1):
         try:
             rows = fetch_search(query, app_id, app_key, transport=transport)
         except TraderaResponseFormatError as exc:
@@ -237,12 +278,15 @@ def main():
     parser = argparse.ArgumentParser(description="Inert Tradera title-quality audit")
     parser.add_argument("--live", action="store_true")
     parser.add_argument("--output", help="Local JSON report path (not repo state)")
+    parser.add_argument("--query-limit", type=int, choices=(1, 6), default=6,
+                        help="Limit the number of official read-only queries")
     args = parser.parse_args()
     if not args.live:
         report = audit_batches([])
     else:
         try:
-            report = live_audit(os.getenv("TRADERA_APP_ID"), os.getenv("TRADERA_APP_KEY"))
+            report = live_audit(os.getenv("TRADERA_APP_ID"), os.getenv("TRADERA_APP_KEY"),
+                                query_limit=args.query_limit)
         except (ValueError, RuntimeError) as exc:
             parser.exit(1, "SHADOW AUDIT FAILED: " + str(exc) + "\n")
     result = json.dumps(report, ensure_ascii=False, indent=2)
