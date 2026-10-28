@@ -12063,6 +12063,27 @@ while True:
             history_state=state.get("price_history"),
         )
 
+        # Lorcana is currently excluded from focused Discord price alerts.
+        # Audit *fresh, in-stock* price-history candidates in log-only mode
+        # before choosing sets, comparable variants, or any new notifications.
+        try:
+            from price_watch_lorcana_shadow import (
+                summarize_lorcana_coverage,
+                format_lorcana_coverage,
+            )
+            lorcana_rows = collect_price_watch_candidates(
+                price_watch_current_state,
+                fresh_sources=price_watch_fresh_sources,
+            )
+            print(format_lorcana_coverage(
+                summarize_lorcana_coverage(lorcana_rows)
+            ))
+        except Exception as error:
+            print(
+                "LORCANA PRICE SHADOW isolated error: "
+                f"{type(error).__name__}: {error}"
+            )
+
         # -------------------------
         # PRICE HISTORY V1
         # -------------------------
