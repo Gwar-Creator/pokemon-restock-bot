@@ -33,6 +33,14 @@ Læs altid de live filer i GitHub. Stol ikke alene på en ældre chat, lokal kop
 - `send_discord` og `send_price_watch` afviser eksplicit Lorcana-notifikationer før Discord-POST og før alert-memory ændres. Daglige pris- og historikoversigter viser kun Pokémon, men bagvedliggende prisdata og CSV-historik bevares.
 - Den nyudviklede Lorcana shadow price coverage-audit er stoppet; genoptag ikke Lorcana-købsalarmer uden brugerens nye beslutning. Prioritér Pokémon restocks, reprints, korrekt købbarhed og vintage/Price Watch.
 
+## Forenkling vedtaget 28. oktober 2026: Restock først
+
+- Brugeren vil prioritere funktioner med konkret hobbyværdi; den dyre ældre sealed/reprint-jagt er ikke et udviklingsspor.
+- **Price Watch og Price History Discord-output er sat på pause** via `PRICE_WATCH_DISCORD_ENABLED=0` og `PRICE_HISTORY_DISCORD_ENABLED=0` i hovedworkflowet. Standard i scanneren er også 0. Samme moduler kan fortsat registrere prisdata og historik i eksisterende state.
+- Eksisterende RESTOCK, HOT Restock, Local Stock, Early Radar og Cardmarket/Inventory Sync bevares.
+- Eksisterende pris- og historikdata må ikke slettes eller nulstilles. Aktivering af Price Watch-alerts igen kræver dokumenteret nytte ud over HOT.
+- Fremadrettet: afprøv vintage-fund fra Tradera kun gennem officiel read-only API og DBA gennem indbyggede annonceagenter, aldrig uautoriseret scraping eller automatisk budgivning. Vintage Finder skal først afprøves med tavs baseline og konservative signaler.
+
 ## Drift og kanaler
 
 - Ekstern scheduler udløser normalt `.github/workflows/restock.yml` cirka hvert 5. minut.
