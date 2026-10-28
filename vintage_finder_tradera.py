@@ -13,7 +13,7 @@ import json
 import os
 import re
 import unicodedata
-from urllib.parse import urlsplit
+from urllib.parse import urlsplit, urlunsplit
 
 import requests
 
@@ -103,17 +103,27 @@ def assess_title(title):
 
 
 def _safe_public_listing_url(value):
+    """Canonicalize public Tradera HTTP links to HTTPS, never other domains.
+
+    Legacy HTTP URLs may be supplied by the official API; these are NOT
+    additional sources or website scraping. Avoid unsafe ports/userinfo.
+    """
     if not isinstance(value, str) or len(value) > 2048:
         return ""
     try:
         parsed = urlsplit(value)
+        host = (parsed.hostname or "").lower()
+        port = parsed.port
     except ValueError:
         return ""
-    host = (parsed.hostname or "").lower()
-    if parsed.scheme != "https" or not (host == "tradera.com" or host.endswith(".tradera.com")):
+    if parsed.scheme not in ("http", "https"):
         return ""
-    if parsed.username or parsed.password or not parsed.path:
+    if not (host == "tradera.com" or host.endswith(".tradera.com")):
         return ""
+    if port is not None or parsed.username or parsed.password or not parsed.path:
+        return ""
+    if parsed.scheme == "http":
+        return urlunsplit(("https", parsed.netloc, parsed.path, parsed.query, ""))
     return value
 
 

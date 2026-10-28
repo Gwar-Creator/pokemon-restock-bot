@@ -78,7 +78,7 @@ class TraderaQualityTests(unittest.TestCase):
     def test_invalid_field_counts_are_classified_without_echoing_api_values(self):
         rows = [
             {"id": 1, "shortDescription": "Pokemon Fossil", "itemUrl": "/item/1"},
-            {"id": 2, "shortDescription": "Pokemon Base Set", "itemUrl": "http://www.tradera.com/item/2"},
+            {"id": 2, "shortDescription": "Pokemon Base Set", "itemUrl": "ftp://www.tradera.com/item/2"},
             {"id": 3, "shortDescription": "Pokemon Jungle", "itemUrl": ""},
             {"id": None, "shortDescription": "Pokemon Skyridge", "itemUrl": "https://www.tradera.com/item/3"},
             {"id": 4, "shortDescription": None, "itemUrl": "https://www.tradera.com/item/4"},
@@ -90,6 +90,19 @@ class TraderaQualityTests(unittest.TestCase):
             "non_https_url": 1, "relative_url": 1,
         })
         self.assertNotIn("Pokemon", str(result))
+
+    def test_official_legacy_http_tradera_url_is_safe_https_candidate(self):
+        report = audit_batches([("sample", [{
+            "id": 123, "shortDescription": "Pokemon Fossil samling",
+            "itemUrl": "http://www.tradera.com/item/123/123",
+        }])])
+        self.assertEqual(report["unique_valid_listings"], 1)
+        self.assertEqual(report["title_vintage"], 1)
+        self.assertEqual(report["malformed_or_unsafe_links"], 0)
+        self.assertEqual(
+            report["public_review_samples"][0]["url"],
+            "https://www.tradera.com/item/123/123",
+        )
 
     def test_only_official_searches_and_no_discord_calls(self):
         response = Mock()

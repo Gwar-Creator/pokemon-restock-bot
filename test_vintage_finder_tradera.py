@@ -117,6 +117,22 @@ class VintageFinderTraderaTests(unittest.TestCase):
         self.assertNotIn("sellerAlias", candidate)
         self.assertEqual(candidate["shipping_to_denmark"], "UNKNOWN")
 
+    def test_official_legacy_http_link_is_canonicalized_without_unsafe_hosts(self):
+        listing = {
+            "id": 987, "shortDescription": "Pokemon Fossil lot",
+            "itemUrl": "http://www.tradera.com/item/123/987",
+        }
+        candidate = normalize_listing(listing)
+        self.assertEqual(candidate["url"], "https://www.tradera.com/item/123/987")
+        for bad_url in (
+            "http://www.tradera.com.evil.invalid/item/123/987",
+            "http://user@www.tradera.com/item/123/987",
+            "http://www.tradera.com:8080/item/123/987",
+            "ftp://www.tradera.com/item/123/987",
+        ):
+            with self.subTest(url=bad_url):
+                self.assertEqual(normalize_listing({**listing, "itemUrl": bad_url})["url"], "")
+
     def test_unknown_public_link_dropped_without_dropping_candidate(self):
         candidate = normalize_listing({
             "id": 1, "shortDescription": "Pokemon Fossil lot",
