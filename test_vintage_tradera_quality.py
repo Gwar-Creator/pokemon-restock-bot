@@ -110,9 +110,28 @@ class TraderaQualityTests(unittest.TestCase):
                          "Official Tradera search transport failure (ConnectionError) at query #1")
         self.assertNotIn("SECRET", str(caught.exception))
 
-        response = Mock()
+        response = Mock(status_code=200, headers={"Content-Type": "text/html; charset=utf-8"})
         response.raise_for_status.return_value = None
-        response.json.side_effect = ValueError("SECRET RAW RESPONSE")
+        response.json.side_effect = requests.exceptions.JSONDecodeError(
+            "SECRET RAW RESPONSE", "<html>SECRET BODY</html>", 0)
+        with self.assertRaises(RuntimeError) as caught:
+            live_audit("APP", "SECRET", Mock(return_value=response))
+        self.assertEqual(str(caught.exception),
+                         "Official Tradera invalid JSON (HTTP 200, content type html) at query #1")
+        self.assertNotIn("SECRET", str(caught.exception))
+        self.assertNotIn("<html>", str(caught.exception))
+
+        response = Mock(status_code=200, headers={"Content-Type": "application/json"})
+        response.raise_for_status.return_value = None
+        response.json.side_effect = ValueError("SECRET JSON PARSE FAILURE")
+        with self.assertRaises(RuntimeError) as caught:
+            live_audit("APP", "SECRET", Mock(return_value=response))
+        self.assertEqual(str(caught.exception),
+                         "Official Tradera invalid JSON (HTTP 200, content type json) at query #1")
+        self.assertNotIn("SECRET", str(caught.exception))
+
+        response.json.side_effect = None
+        response.json.return_value = {"items": {"unexpected": "schema"}}
         with self.assertRaises(RuntimeError) as caught:
             live_audit("APP", "SECRET", Mock(return_value=response))
         self.assertEqual(str(caught.exception),
