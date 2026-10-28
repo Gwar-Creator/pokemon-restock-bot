@@ -49,6 +49,9 @@ Læs altid de live filer i GitHub. Stol ikke alene på en ældre chat, lokal kop
 ## Eksisterende Discord-kanal: #marketplace-deals
 
 - Brugeren har allerede oprettet `#marketplace-deals`; **opret aldrig en ny kanal til Vintage Finder**.
+- Tidligere aftale (20. august 2026): Kanalen bruges **kun til handlingsklare KØB eller BYD**, aldrig WATCH, OK PRIS, MÅSKE eller almindelige annoncefund. Disse labelkrav gælder fortsat; ny kode må ikke aktivere REVIEW-output til kanalen.
+- Tidligere foreslået webhook-secret-navn er `MARKETPLACE_WEBHOOK_URL`; kontrollér ved senere aktivering, om den allerede eksisterer og peger på den korrekte kanal. Opret ikke et nyt/andet navn eller brug Price Watch-/Cardmarket-webhook ved en fejl.
+
 - `vintage_marketplace_discord.py` formatterer kun en ikke-publiceret preview for relevante Tradera-kandidater, med status **TIL GENNEMGANG**, ikke BUY eller handlingsanbefaling. Den indeholder ingen Discord-POST, scheduler, secrets eller state.
 - Nye webhook-opslag skal senere sendes til den eksisterende kanal efter særskilt verifikation af den korrekte kanal/webhook. Genbrug ikke Cardmarket eller Price Watch webhook, og aktiver ikke en varselsstrøm før dokumenteret relevans og dubletbeskyttelse.
 - Manuelt relevante fund er ikke nødvendigvis køb. Fragt til DK, sprog, stand, ægthed og pris holdes uverificerede indtil gennemgang.
