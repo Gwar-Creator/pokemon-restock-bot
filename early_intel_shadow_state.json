@@ -6832,19 +6832,6 @@
       "fields": [
         "stock_count_online"
       ],
-      "name": "Pokémon TCG Premium Ex Box Mega Zygarde samlekort",
-      "product_id": "200366285",
-      "sku": "11263288-EA",
-      "source": "foetex",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1792798485.7479825
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "stock_count_online"
-      ],
       "name": "Pokémon ME05 Pitch Black samlekort",
       "product_id": "200380910",
       "sku": "11320907-EA",
@@ -21686,6 +21673,22 @@
       "stage_after": "LIVE_STOCK",
       "stage_before": null,
       "ts": 1793165383.7487507
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "price",
+        "stage",
+        "status",
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Greninja ex Premium Collection",
+      "product_id": "3478496",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "INBOUND_UNDATED",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1793167119.2406745
     }
   ],
   "sources": {
@@ -36894,12 +36897,12 @@
         "low_stock_badge": false,
         "name": "Pokemon TCG Mega Greninja ex Premium Collection",
         "new_badge": false,
-        "price": 499.0,
-        "raw_status_excerpt": " På lager – Levering i morgen (bestil inden kl. 22) 499,00 kr.(399,20 kr.) 3478496 * [![Image 11: Pokemon - Pokemon TCG 2-pack Booster - POK10412-101](https://www.proshop.dk/Images/174x116/3478497_4ba6ac470992.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-2-pack-Booster/3478497 \"Pokemon TCG 2-pack Booster - POK10412-101\") ## ",
-        "stage": "LIVE_STOCK",
-        "status": "PÅ LAGER",
+        "price": null,
+        "raw_status_excerpt": " Bestillingsvare, leveringstiden kan ikke oplyses * [![Image 14: Pokemon - Pokemon TCG Portfolio 4-P Ethan's Ho-Oh & Cynthia's Garchomp - ULT16083](https://www.proshop.dk/Images/174x116/3382585_b31a262cc6ee.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-Portfolio-4-P-Ethans-Ho-Oh-Cynthias-Garchomp/3382585 \"Pokemon TCG Portfolio 4-P Ethan's Ho-Oh & Cynthia's Garchomp - ULT16083\") ## ",
+        "stage": "INBOUND_UNDATED",
+        "status": "BESTILLINGSVARE",
         "surface_statuses": {
-          "pokemon-kort": "PÅ LAGER"
+          "pokemon-kort": "BESTILLINGSVARE"
         },
         "surfaces": [
           "pokemon-kort"
@@ -36908,6 +36911,6 @@
       }
     }
   },
-  "updated_at": 1793166857.2656066,
+  "updated_at": 1793167119.2417924,
   "version": 1
 }
