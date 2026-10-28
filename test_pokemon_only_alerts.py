@@ -56,6 +56,7 @@ class PokemonOnlyAlertsTests(unittest.TestCase):
     def test_price_watch_lorcana_is_muted_before_dedupe(self):
         posts, decisions, memory = [], [], {}
         send = load_named("send_price_watch", {
+            "PRICE_WATCH_DISCORD_ENABLED": True,
             "PRICE_WATCH_WEBHOOK_URL": "test",
             "price_alert_decision": lambda msg: decisions.append(msg) or ("key", {}),
             "_post_discord": lambda *args: posts.append(args),
@@ -69,6 +70,7 @@ class PokemonOnlyAlertsTests(unittest.TestCase):
     def test_price_watch_pokemon_still_posts(self):
         posts, memory = [], {}
         send = load_named("send_price_watch", {
+            "PRICE_WATCH_DISCORD_ENABLED": True,
             "PRICE_WATCH_WEBHOOK_URL": "test",
             "price_alert_decision": lambda _: ("key", {}),
             "_post_discord": lambda *args: posts.append(args),
