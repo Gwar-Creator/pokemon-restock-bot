@@ -184,6 +184,10 @@ def actionable_signal(listing, evidence, now=None):
 
 
 def live_audit(app_id, app_key, transport=requests.get):
+    # Mirror the previously successful read-only probe: trim whitespace from
+    # environment secrets before constructing HTTP header values.
+    app_id = app_id.strip() if isinstance(app_id, str) else ""
+    app_key = app_key.strip() if isinstance(app_key, str) else ""
     if not app_id or not app_key:
         raise ValueError("Tradera application credentials are missing")
     batches = []
@@ -208,11 +212,16 @@ def live_audit(app_id, app_key, transport=requests.get):
                 f"Official Tradera search HTTP failure at query #{index}"
             ) from None
         except requests.RequestException as exc:
-            # Exception class is safe to log; exception text may contain URLs/headers.
-            name = type(exc).__name__
-            allowed = {"Timeout", "ConnectTimeout", "ReadTimeout",
-                       "ConnectionError", "ProxyError", "SSLError"}
-            category = name if name in allowed else "OtherRequestException"
+            # Exact built-in requests exception type is safe; NEVER log its message,
+            # underlying URL, response, headers or credentials. Unknown subclasses
+            # intentionally receive a generic label.
+            known_classes = {
+                value for value in vars(requests.exceptions).values()
+                if isinstance(value, type)
+                and issubclass(value, requests.RequestException)
+            }
+            category = (type(exc).__name__ if type(exc) in known_classes
+                        else "OtherRequestException")
             raise RuntimeError(
                 f"Official Tradera search transport failure ({category}) at query #{index}"
             ) from None
