@@ -186,11 +186,27 @@ def live_audit(app_id, app_key, transport=requests.get):
     if not app_id or not app_key:
         raise ValueError("Tradera application credentials are missing")
     batches = []
-    for query in AUDIT_QUERIES:
+    for index, query in enumerate(AUDIT_QUERIES, 1):
         try:
             rows = fetch_search(query, app_id, app_key, transport=transport)
-        except (requests.RequestException, ValueError):
-            raise RuntimeError("Official Tradera read-only quality search failed") from None
+        except requests.HTTPError as exc:
+            # Status and query ordinal only: never log URL, body or headers.
+            status = getattr(getattr(exc, "response", None), "status_code", None)
+            if isinstance(status, int) and 100 <= status <= 599:
+                raise RuntimeError(
+                    f"Official Tradera search HTTP {status} at query #{index}"
+                ) from None
+            raise RuntimeError(
+                f"Official Tradera search HTTP failure at query #{index}"
+            ) from None
+        except requests.RequestException:
+            raise RuntimeError(
+                f"Official Tradera search transport failure at query #{index}"
+            ) from None
+        except ValueError:
+            raise RuntimeError(
+                f"Official Tradera search response/schema failure at query #{index}"
+            ) from None
         batches.append((query, rows))
     return audit_batches(batches)
 
