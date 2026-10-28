@@ -6018,7 +6018,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 68,
+          "stock_online": 67,
           "stock_stores": 18
         },
         "br": {
@@ -6029,7 +6029,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 68,
+          "stock_online": 67,
           "stock_stores": 31
         },
         "foetex": {
@@ -6040,7 +6040,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 68,
+          "stock_online": 67,
           "stock_stores": 0
         }
       }
@@ -6827,73 +6827,6 @@
     }
   },
   "events": [
-    {
-      "event": "CROSS_CHANGE",
-      "fields": [
-        "bilka",
-        "br",
-        "foetex"
-      ],
-      "name": "Pokémon TCG Pitch Black Elite Trainer Box",
-      "product_id": "11320995-EA",
-      "sku": "11320995-EA",
-      "source": "cross_salling",
-      "stage_after": null,
-      "stage_before": null,
-      "ts": 1792831479.0094986
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "surface_statuses"
-      ],
-      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
-      "product_id": "3447589",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1792831776.3500412
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "surface_statuses"
-      ],
-      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
-      "product_id": "3447589",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1792832700.7911136
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "surface_statuses"
-      ],
-      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
-      "product_id": "3447589",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1792832987.4737608
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "in_stock_stores_count"
-      ],
-      "name": "Pokémon Battle Deck EX samlekort",
-      "product_id": "200215319",
-      "sku": "10564347-EA",
-      "source": "bilka",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1792833570.5435479
-    },
     {
       "event": "CROSS_CHANGE",
       "fields": [
@@ -21753,6 +21686,73 @@
       "stage_after": "LIVE_STOCK",
       "stage_before": "LIVE_STOCK",
       "ts": 1793201989.1302443
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon ME05 Pitch Black samlekort",
+      "product_id": "200380910",
+      "sku": "11320907-EA",
+      "source": "br",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1793202294.2559636
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon ME05 Pitch Black samlekort",
+      "product_id": "200380910",
+      "sku": "11320907-EA",
+      "source": "bilka",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1793202295.3863914
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon ME05 Pitch Black samlekort",
+      "product_id": "200380910",
+      "sku": "11320907-EA",
+      "source": "foetex",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1793202296.5960813
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
+      "product_id": "3447589",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1793202301.3933747
+    },
+    {
+      "event": "CROSS_CHANGE",
+      "fields": [
+        "bilka",
+        "br",
+        "foetex"
+      ],
+      "name": "Pokémon ME05 Pitch Black samlekort",
+      "product_id": "11320907-EA",
+      "sku": "11320907-EA",
+      "source": "cross_salling",
+      "stage_after": null,
+      "stage_before": null,
+      "ts": 1793202301.394494
     }
   ],
   "sources": {
@@ -26202,7 +26202,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 68,
+        "stock_count_online": 67,
         "url": "https://www.bilka.dk/produkter/pokemon-me05-pitch-black-samlekort/200380910/"
       },
       "200380911": {
@@ -31314,7 +31314,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 68,
+        "stock_count_online": 67,
         "url": "https://www.br.dk/produkter/pokemon-me05-pitch-black-samlekort/200380910/"
       },
       "200380911": {
@@ -36358,7 +36358,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 68,
+        "stock_count_online": 67,
         "url": "https://www.foetex.dk/produkter/pokemon-me05-pitch-black-samlekort/200380910/"
       },
       "200380911": {
@@ -36945,19 +36945,19 @@
         "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
         "new_badge": false,
         "price": 529.0,
-        "raw_status_excerpt": " På lager – Levering i morgen (bestil inden kl. 22) 529,00 kr.(423,20 kr.) 3447589 * [![Image 2: Pokemon - Pokemon TCG Portfolio 9-P Mega Charizard X & Mega Lopunny - ULT16088](https://www.proshop.dk/Images/174x116/3447426_2681c18713e5.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-Portfolio-9-P-Mega-Charizard-X-Mega-Lopunny/3447426 \"Pokemon TCG Portfolio 9-P Mega Charizard X & Mega Lopunny - ULT16088\") ## ",
+        "raw_status_excerpt": " På lager – Levering i morgen (bestil inden kl. 22) 529,00 kr.(423,20 kr.) Køb 3447589 * [![Image 30: Pokemon - Pokemon TCG Portfolio 9-P Mega Charizard X & Mega Lopunny - ULT16088](https://www.proshop.dk/Images/174x116/3447426_2681c18713e5.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-Portfolio-9-P-Mega-Charizard-X-Mega-Lopunny/3447426 \"Pokemon TCG Portfolio 9-P Mega Charizard X & Mega Lopunny - ULT16088\")![Image 31: LinkedIn](https://www.proshop.dk/Pokemon/Pokemon) Produktdatablad ## ",
         "stage": "LIVE_STOCK",
         "status": "PÅ LAGER",
         "surface_statuses": {
-          "pokemon-kort": "PÅ LAGER"
+          "pokemon-brand": "PÅ LAGER"
         },
         "surfaces": [
-          "pokemon-kort"
+          "pokemon-brand"
         ],
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Zygarde-ex-Premium-Collection/3447589"
       }
     }
   },
-  "updated_at": 1793201989.1311738,
+  "updated_at": 1793202301.394556,
   "version": 1
 }
