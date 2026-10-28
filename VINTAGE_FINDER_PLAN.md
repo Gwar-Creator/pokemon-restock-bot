@@ -36,6 +36,15 @@ conservative maximum bid/buy price. If anything material is unknown,
 leave the candidate off Discord. No live alerts are authorized by
 this preview work.
 
+## Conservative manual budget and max-bid worksheet
+
+- `vintage_lot_budget.py` accepts **independently checked** card-level inventory, condition, English edition, seller credibility, Danish shipping, fees, current Tradera price and a separately verified SEK/DKK rate. It never calls an API or Discord, and it NEVER labels a listing KØB/BYD.
+- It requires both a **current available hobby budget in DKK** and a **personally approved conservative cap in DKK**, grounded in comparable European sales and collection interest. Neither input may be guessed or taken from title-only matches. The binding ceiling is the lower of the two.
+- All-in DKK = (current required SEK price + verified DK shipping SEK + verified platform fees SEK) × verified SEK/DKK rate + payment fees DKK. Unknown or unverifiable values **block** calculation. Input timestamps must be current; numbers use exact Decimal arithmetic and conservative rounding.
+- Maximum affordable *current* SEK bid is calculated from the remaining verified cap after all charges. This is strictly a manual affordability limit, **not a fair-market valuation, bargain score, guaranteed execution price or permission to bid**. Recheck price, FX and shipping before any action.
+- Individually identified cards are marked KEEP, SELL (proposed resale only, no assumed liquidity) or FILLER for manual quality context. A lot with only FILLER cards is not relevant. Inventory status must be checked against the current Google Sheet, not guessed.
+- All missing seller, authenticity, identity, photos, language, delivery, budget or market-comparable evidence returns `MISSING_EVIDENCE` with **no maximum bid**; over-ceiling returns `OVER_LIMIT`. This module has no webhook or purchase integration.
+
 ## Read-only listing detail schema validation
 
 - `vintage_tradera_item_probe.py` uses only official `GET /v4/items/{itemId}` with app credentials; it reads **four fixed item IDs** previously returned by the successful Tradera search, without list pagination, scraping, seller login, bids or purchases.
