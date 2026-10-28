@@ -97,6 +97,8 @@ jobs:
           EARLY_RADAR_SALLING_WEBHOOK_URL: ${{ secrets.EARLY_RADAR_SALLING_WEBHOOK_URL }}
           HOT_ITERATIONS: "5"
           HOT_INTERVAL_SECONDS: "55"
+          DISCORD_V2_HOT_MODE: "on"
+          DISCORD_V2_EARLY_MODE: "on"
         run: |
           if [ -z "$EARLY_RADAR_SALLING_WEBHOOK_URL" ]; then
             echo "::error::EARLY_RADAR_SALLING_WEBHOOK_URL mangler"
