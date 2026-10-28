@@ -77,6 +77,43 @@ class VintageFinderTraderaTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             extract_search_rows({"result": {"listings": []}})
 
+    def test_verified_v4_search_listing_shape(self):
+        data = {
+            "errors": [],
+            "totalNumberOfItems": 50,
+            "totalNumberOfPages": 1,
+            "items": [{
+                "id": 98765,
+                "shortDescription": "Pokemon Aquapolis collection",
+                "itemUrl": "https://www.tradera.com/item/123/98765",
+                "maxBid": 150,
+                "nextBid": 160,
+                "hasBids": True,
+                "sellerAlias": "public_username",
+            }],
+        }
+        rows = extract_search_rows(data)
+        candidate = normalize_listing(rows[0])
+        self.assertEqual(candidate["id"], "98765")
+        self.assertEqual(candidate["priority"], "REVIEW_HIGH")
+        self.assertEqual(candidate["title"], "Pokemon Aquapolis collection")
+        self.assertEqual(candidate["url"], "https://www.tradera.com/item/123/98765")
+        self.assertIsNone(candidate["price_sek"])
+        self.assertEqual(candidate["purchase_decision"], "DO_NOT_BUY_WITHOUT_REVIEW")
+        self.assertNotIn("sellerAlias", candidate)
+        self.assertEqual(candidate["shipping_to_denmark"], "UNKNOWN")
+
+    def test_unknown_public_link_dropped_without_dropping_candidate(self):
+        candidate = normalize_listing({
+            "id": 1, "shortDescription": "Pokemon Fossil lot",
+            "itemUrl": "https://example.invalid/card",
+        })
+        self.assertEqual(candidate["url"], "")
+
+    def test_v4_embedded_errors_rejected(self):
+        with self.assertRaises(ValueError):
+            extract_search_rows({"errors": ["unexpected failure"], "items": []})
+
     def test_no_credentials_no_request(self):
         transport = Mock()
         with self.assertRaises(ValueError):

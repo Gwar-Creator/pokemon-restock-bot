@@ -33,6 +33,12 @@ Læs altid de live filer i GitHub. Stol ikke alene på en ældre chat, lokal kop
 - `send_discord` og `send_price_watch` afviser eksplicit Lorcana-notifikationer før Discord-POST og før alert-memory ændres. Daglige pris- og historikoversigter viser kun Pokémon, men bagvedliggende prisdata og CSV-historik bevares.
 - Den nyudviklede Lorcana shadow price coverage-audit er stoppet; genoptag ikke Lorcana-købsalarmer uden brugerens nye beslutning. Prioritér Pokémon restocks, reprints, korrekt købbarhed og vintage/Price Watch.
 
+## Tradera API skema verificeret (2026-10-28)
+
+- Første faktiske `pokemon samling` REST v4-søgning lykkedes med HTTP 200; første side indeholdt 50 resultater.
+- JSON envelope indeholder `items` og `errors`; produktet har bl.a. `id`, `shortDescription` og `itemUrl`. `maxBid` / `nextBid` er ikke fuld pris med fragt og må ikke kaldes god handel.
+- `vintage_finder_tradera.py` er rettet efter dette reelle skema. Der er fortsat **ingen schedule, live Discord eller automatisk køb** i Vintage Finder.
+
 ## Tradera credentials og read-only API probe (2026-10-28)
 
 - Brugeren har oprettet Tradera Developer-app og gemt `TRADERA_APP_ID` og `TRADERA_APP_KEY` i GitHub Actions secrets. Vis eller log ALDRIG deres værdier.

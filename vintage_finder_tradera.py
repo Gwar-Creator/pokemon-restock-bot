@@ -13,6 +13,7 @@ import json
 import os
 import re
 import unicodedata
+from urllib.parse import urlsplit
 
 import requests
 
@@ -82,12 +83,27 @@ def assess_title(title):
     return {"priority": "SKIP", "reasons": ("no convincing vintage signal",)}
 
 
+def _safe_public_listing_url(value):
+    if not isinstance(value, str) or len(value) > 2048:
+        return ""
+    try:
+        parsed = urlsplit(value)
+    except ValueError:
+        return ""
+    host = (parsed.hostname or "").lower()
+    if parsed.scheme != "https" or not (host == "tradera.com" or host.endswith(".tradera.com")):
+        return ""
+    if parsed.username or parsed.password or not parsed.path:
+        return ""
+    return value
+
+
 def normalize_listing(record):
     """Strict normalized shape; refuse to invent unavailable card metadata."""
     if not isinstance(record, dict):
         return None
     item_id = record.get("id", record.get("itemId"))
-    title = record.get("title", record.get("name"))
+    title = record.get("shortDescription", record.get("title", record.get("name")))
     if item_id is None or not isinstance(title, str):
         return None
     report = assess_title(title)
@@ -98,6 +114,7 @@ def normalize_listing(record):
     return {
         "id": str(item_id),
         "title": title[:250],
+        "url": _safe_public_listing_url(record.get("itemUrl") or record.get("url")),
         "priority": report["priority"],
         "price_sek": record.get("price"),
         "shipping_to_denmark": "UNKNOWN",
@@ -112,15 +129,14 @@ def extract_search_rows(response):
     """Fail closed until the current beta response shape is validated."""
     if not isinstance(response, dict):
         raise ValueError("Unexpected Tradera search response (not object)")
-    # The v4 OpenAPI beta describes SearchResult as an opaque object.
-    # Accept common variants only after a real API integration confirms one.
-    for key in ("items", "Items"):
-        value = response.get(key)
-        if isinstance(value, list):
-            return value
-    raise ValueError(
-        "Tradera beta response keys are unverified; inspect schema before live alerts"
-    )
+    # Verified 28 October 2026: errors, items, totalNumberOfItems, totalNumberOfPages.
+    errors = response.get("errors")
+    if errors is not None and (not isinstance(errors, list) or errors):
+        raise ValueError("Tradera search returned API errors")
+    value = response.get("items")
+    if not isinstance(value, list):
+        raise ValueError("Unexpected Tradera REST v4 items shape")
+    return value
 
 
 def fetch_search(query, app_id, app_key, transport=requests.get):
