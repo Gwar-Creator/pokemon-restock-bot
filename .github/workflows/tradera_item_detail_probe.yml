@@ -1,0 +1,36 @@
+name: Tradera vintage item detail read-only schema sample
+
+on:
+  # One limited diagnostic on initial deployment, then manual invocation only.
+  push:
+    branches: [main]
+    paths: [".github/workflows/tradera_item_detail_probe.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tradera-vintage-detail-once
+  cancel-in-progress: false
+
+jobs:
+  detail-schema:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    env:
+      TRADERA_APP_ID: ${{ secrets.TRADERA_APP_ID }}
+      TRADERA_APP_KEY: ${{ secrets.TRADERA_APP_KEY }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Install official HTTP read-only client
+        run: python -m pip install --disable-pip-version-check -q requests
+      - name: Validate no-send tests before live item lookups
+        run: |
+          python -m py_compile vintage_tradera_item_probe.py test_vintage_tradera_item_probe.py
+          python -m unittest -q test_vintage_tradera_item_probe.py
+      - name: Official Tradera GET on four previously verified listing IDs
+        run: python vintage_tradera_item_probe.py
