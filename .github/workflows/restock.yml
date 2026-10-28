@@ -64,6 +64,7 @@ jobs:
           python -m unittest test_alert_policy.py
           python -m unittest test_alert_policy_v2.py
           python -m unittest test_restock_v2_runner.py
+          python -m unittest test_price_watch_focus_threshold.py
           python -m unittest test_restock_lane_ownership.py
           python -m unittest test_local_stock_watch.py
           python -m unittest test_discord_v2_salling_adapter.py
