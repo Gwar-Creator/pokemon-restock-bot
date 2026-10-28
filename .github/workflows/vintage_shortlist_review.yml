@@ -1,0 +1,43 @@
+name: Vintage Finder read-only shortlist review
+
+on:
+  # Initial one-shot sample after merging this workflow; then manual-only.
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/vintage_shortlist_review.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: vintage-shortlist-review-only
+  cancel-in-progress: false
+
+jobs:
+  shortlist:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    env:
+      TRADERA_APP_ID: ${{ secrets.TRADERA_APP_ID }}
+      TRADERA_APP_KEY: ${{ secrets.TRADERA_APP_KEY }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Install HTTP client
+        run: python -m pip install --disable-pip-version-check -q requests
+      - name: Offline tests before live read-only calls
+        run: |
+          python -m py_compile vintage_marketplace_shortlist.py vintage_marketplace_runner.py test_vintage_marketplace_shortlist.py test_vintage_marketplace_runner.py
+          python -m unittest -q test_vintage_marketplace_shortlist.py test_vintage_marketplace_runner.py
+      - name: Official Tradera REST v4 search and shortlist
+        run: python vintage_marketplace_runner.py --live --output vintage_shortlist_review.json
+      - name: Archive private manual review shortlist (no Discord)
+        uses: actions/upload-artifact@v4
+        with:
+          name: vintage-shortlist-review-only
+          path: vintage_shortlist_review.json
+          retention-days: 7
