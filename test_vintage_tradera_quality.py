@@ -89,6 +89,26 @@ class TraderaQualityTests(unittest.TestCase):
         self.assertEqual(result["unique_valid_listings"], 1)
         self.assertEqual(result["duplicate_search_hits"], len(AUDIT_QUERIES) - 1)
 
+    def test_live_http_and_schema_failures_log_only_safe_status(self):
+        import requests
+
+        response = Mock()
+        response.raise_for_status.side_effect = requests.HTTPError(
+            "SECRET REQUEST URL", response=Mock(status_code=429))
+        with self.assertRaises(RuntimeError) as caught:
+            live_audit("APP", "SECRET", Mock(return_value=response))
+        self.assertEqual(str(caught.exception),
+                         "Official Tradera search HTTP 429 at query #1")
+        self.assertNotIn("SECRET", str(caught.exception))
+
+        response = Mock()
+        response.raise_for_status.return_value = None
+        response.json.side_effect = ValueError("SECRET RAW RESPONSE")
+        with self.assertRaises(RuntimeError) as caught:
+            live_audit("APP", "SECRET", Mock(return_value=response))
+        self.assertEqual(str(caught.exception),
+                         "Official Tradera search response/schema failure at query #1")
+
     def test_fail_closed_buy_bid_without_human_evidence(self):
         listing = {"id": "10", "url": "https://www.tradera.com/item/123/10",
                    "title": "Pokemon Fossil samling"}
