@@ -6828,30 +6828,6 @@
   },
   "events": [
     {
-      "event": "REMOVED",
-      "fields": [],
-      "name": "Pokemon TCG First Partner Illustration Collection Box Series 2",
-      "product_id": "3478498",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "INBOUND_UNDATED",
-      "stage_before": null,
-      "ts": 1792811668.8871279
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "surface_statuses"
-      ],
-      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
-      "product_id": "3447589",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1792811985.2295668
-    },
-    {
       "event": "NEW",
       "fields": [],
       "name": "Pokemon TCG Mega Charizard X ex Ultra Premium Collection",
@@ -21696,6 +21672,35 @@
       "stage_after": "INBOUND_UNDATED",
       "stage_before": null,
       "ts": 1793180393.036978
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
+      "product_id": "3447589",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1793180686.5830142
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "price",
+        "stage",
+        "status",
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Greninja ex Premium Collection",
+      "product_id": "3478496",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "INBOUND_UNDATED",
+      "ts": 1793180686.5830266
     }
   ],
   "sources": {
@@ -36889,11 +36894,9 @@
         "stage": "LIVE_STOCK",
         "status": "PÅ LAGER",
         "surface_statuses": {
-          "pokemon-brand": "PÅ LAGER",
           "pokemon-kort": "PÅ LAGER"
         },
         "surfaces": [
-          "pokemon-brand",
           "pokemon-kort"
         ],
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Zygarde-ex-Premium-Collection/3447589"
@@ -36904,12 +36907,12 @@
         "low_stock_badge": false,
         "name": "Pokemon TCG Mega Greninja ex Premium Collection",
         "new_badge": false,
-        "price": null,
-        "raw_status_excerpt": " Bestillingsvare, leveringstiden kan ikke oplyses * [![Image 14: Pokemon - Pokemon TCG Portfolio 4-P Ethan's Ho-Oh & Cynthia's Garchomp - ULT16083](https://www.proshop.dk/Images/174x116/3382585_b31a262cc6ee.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-Portfolio-4-P-Ethans-Ho-Oh-Cynthias-Garchomp/3382585 \"Pokemon TCG Portfolio 4-P Ethan's Ho-Oh & Cynthia's Garchomp - ULT16083\") ## ",
-        "stage": "INBOUND_UNDATED",
-        "status": "BESTILLINGSVARE",
+        "price": 499.0,
+        "raw_status_excerpt": " På lager – Levering i morgen (bestil inden kl. 22) 499,00 kr.(399,20 kr.) 3478496 * [![Image 11: Pokemon - Pokemon TCG 2-pack Booster - POK10412-101](https://www.proshop.dk/Images/174x116/3478497_4ba6ac470992.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-2-pack-Booster/3478497 \"Pokemon TCG 2-pack Booster - POK10412-101\") ## ",
+        "stage": "LIVE_STOCK",
+        "status": "PÅ LAGER",
         "surface_statuses": {
-          "pokemon-kort": "BESTILLINGSVARE"
+          "pokemon-kort": "PÅ LAGER"
         },
         "surfaces": [
           "pokemon-kort"
@@ -36918,6 +36921,6 @@
       }
     }
   },
-  "updated_at": 1793180393.0383196,
+  "updated_at": 1793180686.5842514,
   "version": 1
 }
