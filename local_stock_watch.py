@@ -706,6 +706,13 @@ def send_local_alert(product, transitions):
     if not WEBHOOK_URL:
         raise RuntimeError("DISCORD_WEBHOOK_URL mangler")
 
+    # Discord V2 is diagnostic-only here; preserve the existing alert.
+    try:
+        from discord_v2_salling_adapter import local_stock_event, shadow_line
+        print(shadow_line("LOCAL", local_stock_event(product, transitions)))
+    except Exception as error:
+        print(f"DISCORD V2 SHADOW LOCAL failed: {type(error).__name__}: {error}")
+
     visibility = product.get("visibility") or "UNKNOWN"
     pre_publish = visibility == "PRE-PUBLISH"
     color = 0xF1C40F if pre_publish else 0x57F287
