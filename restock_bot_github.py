@@ -82,6 +82,11 @@ PRICE_ALERT_COOLDOWN_SECONDS = 24 * 60 * 60
 PRICE_ALERT_MIN_IMPROVEMENT_DKK = 25.0
 PRICE_ALERT_MIN_IMPROVEMENT_PCT = 0.05
 
+# Pokémon-first simplification, 28 Oct 2026. Preserve price/history state,
+# but opt in explicitly before sending any price-related Discord messages.
+PRICE_WATCH_DISCORD_ENABLED = os.getenv("PRICE_WATCH_DISCORD_ENABLED", "0") == "1"
+PRICE_HISTORY_DISCORD_ENABLED = os.getenv("PRICE_HISTORY_DISCORD_ENABLED", "0") == "1"
+
 # Kanalroller: Restock viser lagerhændelser. Price Watch viser relevante
 # prisfald. Price History gemmer historik som backend-data uden Discord-støj.
 RESTOCK_PRICE_ALERTS_ENABLED = False
@@ -1141,6 +1146,10 @@ def send_discord(message):
 
 
 def send_price_watch(message):
+    if not PRICE_WATCH_DISCORD_ENABLED:
+        # Track prices and update existing state, but do not interrupt Discord.
+        return False
+
     # Keep the Price Watch webhook dedicated to Pokemon.
     if re.search(r"\blorcana\b", str(message), flags=re.IGNORECASE):
         print("PRICE WATCH: Lorcana muted (Pokémon-only focus)")
@@ -1171,6 +1180,9 @@ def send_price_watch(message):
 
 
 def send_price_history_embed(title, description, color=0x5865F2, footer=None):
+    if not PRICE_HISTORY_DISCORD_ENABLED:
+        return False
+
     if not PRICE_HISTORY_WEBHOOK_URL:
         return False
 
@@ -4145,6 +4157,9 @@ def _send_price_history_embed_batches(embeds):
 
 
 def _send_price_history_csv(products, active_keys, now_local):
+    if not PRICE_HISTORY_DISCORD_ENABLED:
+        return False
+
     if not PRICE_HISTORY_WEBHOOK_URL:
         return False
 
