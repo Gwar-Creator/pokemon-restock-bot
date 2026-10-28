@@ -89,6 +89,18 @@ class TraderaQualityTests(unittest.TestCase):
         self.assertEqual(result["unique_valid_listings"], 1)
         self.assertEqual(result["duplicate_search_hits"], len(AUDIT_QUERIES) - 1)
 
+    def test_credentials_trimmed_like_successful_schema_probe(self):
+        response = Mock()
+        response.json.return_value = {"errors": [], "items": []}
+        response.raise_for_status.return_value = None
+        client = Mock(return_value=response)
+        live_audit(" APP_ID \\n", " KEY_VALUE \\n", client)
+        self.assertEqual(client.call_count, len(AUDIT_QUERIES))
+        self.assertEqual(client.call_args.kwargs["headers"]["X-App-Id"], "APP_ID")
+        self.assertEqual(client.call_args.kwargs["headers"]["X-App-Key"], "KEY_VALUE")
+        with self.assertRaisesRegex(ValueError, "credentials are missing"):
+            live_audit("  ", "KEY", client)
+
     def test_live_http_and_schema_failures_log_only_safe_status(self):
         import requests
 
