@@ -36,6 +36,13 @@ conservative maximum bid/buy price. If anything material is unknown,
 leave the candidate off Discord. No live alerts are authorized by
 this preview work.
 
+## Read-only listing detail schema validation
+
+- `vintage_tradera_item_probe.py` uses only official `GET /v4/items/{itemId}` with app credentials; it reads **four fixed item IDs** previously returned by the successful Tradera search, without list pagination, scraping, seller login, bids or purchases.
+- The one-shot `.github/workflows/tradera_item_detail_probe.yml` validates field names/types only. Seller values, listing text, actual prices, photos and full JSON **must not** be logged or committed. No Discord secret is passed.
+- Treat a returned shipping field or price field as **unverified** until its semantics, delivery destination (Denmark), currency and actual cost are checked. Card photos, actual contents/condition, English edition and seller reliability still need separate review.
+- A detail schema result is not an actionable recommendation. `#marketplace-deals` remains silent.
+
 ## Shadow quality audit — initial one-shot sample
 
 - `vintage_tradera_quality.py` takes one page for each of six Tradera REST v4 vintage-oriented queries, deduplicates by item ID and counts TITLE_VINTAGE, TITLE_UNCERTAIN and EXCLUDED. It never sends Discord or writes persistent state.
