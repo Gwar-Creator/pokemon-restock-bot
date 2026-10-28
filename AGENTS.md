@@ -46,6 +46,13 @@ Læs altid de live filer i GitHub. Stol ikke alene på en ældre chat, lokal kop
 - `vintage_tradera_probe.py` logger kun ufølsomme JSON-feltnavne og længder. Hvis API-svar er ukendt, stop og undersøg responsens struktur før Vintage Finder-prototypen ændres.
 - Når API-schema er verificeret fra en reel prøve, må en separat PR forbedre læsebaserede vintage-søgninger; ingen live Discord/notifikationer uden dokumenteret kvalitet.
 
+## Eksisterende Discord-kanal: #marketplace-deals
+
+- Brugeren har allerede oprettet `#marketplace-deals`; **opret aldrig en ny kanal til Vintage Finder**.
+- `vintage_marketplace_discord.py` formatterer kun en ikke-publiceret preview for relevante Tradera-kandidater, med status **TIL GENNEMGANG**, ikke BUY eller handlingsanbefaling. Den indeholder ingen Discord-POST, scheduler, secrets eller state.
+- Nye webhook-opslag skal senere sendes til den eksisterende kanal efter særskilt verifikation af den korrekte kanal/webhook. Genbrug ikke Cardmarket eller Price Watch webhook, og aktiver ikke en varselsstrøm før dokumenteret relevans og dubletbeskyttelse.
+- Manuelt relevante fund er ikke nødvendigvis køb. Fragt til DK, sprog, stand, ægthed og pris holdes uverificerede indtil gennemgang.
+
 ## Vintage Finder: Tradera forberedelse (28. oktober 2026)
 
 - `vintage_finder_tradera.py` er en **ikke-planlagt, read-only prototype**, ikke en kørende bot. `VINTAGE_FINDER_PLAN.md` beskriver sikkerhedsgates.
