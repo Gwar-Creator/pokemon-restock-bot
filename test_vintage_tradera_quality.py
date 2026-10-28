@@ -110,6 +110,28 @@ class TraderaQualityTests(unittest.TestCase):
                          "Official Tradera search transport failure (ConnectionError) at query #1")
         self.assertNotIn("SECRET", str(caught.exception))
 
+        for error_type, expected in (
+            (requests.exceptions.ChunkedEncodingError, "ChunkedEncodingError"),
+            (requests.exceptions.TooManyRedirects, "TooManyRedirects"),
+        ):
+            response = Mock()
+            response.raise_for_status.side_effect = error_type("SECRET URL / HEADER")
+            with self.subTest(error=expected), self.assertRaises(RuntimeError) as caught:
+                live_audit("APP", "SECRET", Mock(return_value=response))
+            self.assertEqual(str(caught.exception),
+                             f"Official Tradera search transport failure ({expected}) at query #1")
+            self.assertNotIn("SECRET", str(caught.exception))
+
+        class UnregisteredRequestError(requests.RequestException):
+            pass
+
+        response = Mock()
+        response.raise_for_status.side_effect = UnregisteredRequestError("SECRET")
+        with self.assertRaises(RuntimeError) as caught:
+            live_audit("APP", "SECRET", Mock(return_value=response))
+        self.assertEqual(str(caught.exception),
+                         "Official Tradera search transport failure (OtherRequestException) at query #1")
+
         response = Mock(status_code=200, headers={"Content-Type": "text/html; charset=utf-8"})
         response.raise_for_status.return_value = None
         response.json.side_effect = requests.exceptions.JSONDecodeError(
