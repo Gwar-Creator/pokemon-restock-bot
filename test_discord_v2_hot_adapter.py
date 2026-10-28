@@ -1,5 +1,8 @@
 """Unit tests for source-aware HOT Discord V2 shadow adapter."""
 import unittest
+from unittest.mock import patch
+
+import hot_restock as hot
 
 from discord_v2_hot_adapter import hot_event, hot_payload
 
@@ -52,6 +55,30 @@ class HotDiscordV2AdapterTests(unittest.TestCase):
 
     def test_mentions_never_enabled(self):
         self.assertEqual(hot_payload("coolshop", self._p(online_stock=True), "RESTOCK")[0]["allowed_mentions"], {"parse": []})
+
+
+    def test_shadow_posts_original_embed_only(self):
+        product = self._p(online_stock=True)
+        with patch.object(hot, "DISCORD_V2_HOT_MODE", "shadow"), \
+             patch.object(hot, "HOT_DRY_RUN", False), \
+             patch.object(hot, "WEBHOOK_URL", "https://example.invalid/webhook"), \
+             patch.object(hot.requests, "post") as post:
+            self.assertTrue(hot.send_hot_alert("coolshop", product, "RESTOCK"))
+        self.assertEqual(post.call_count, 1)
+        embed = post.call_args.kwargs["json"]["embeds"][0]
+        self.assertEqual(embed["title"], "RESTOCK · COOLSHOP")
+
+    def test_enabled_posts_v2_embed_only(self):
+        product = self._p(online_stock=True)
+        with patch.object(hot, "DISCORD_V2_HOT_MODE", "on"), \
+             patch.object(hot, "HOT_DRY_RUN", False), \
+             patch.object(hot, "WEBHOOK_URL", "https://example.invalid/webhook"), \
+             patch.object(hot.requests, "post") as post:
+            self.assertTrue(hot.send_hot_alert("coolshop", product, "RESTOCK"))
+        self.assertEqual(post.call_count, 1)
+        payload = post.call_args.kwargs["json"]
+        self.assertEqual(payload["embeds"][0]["title"], "KØB NU · COOLSHOP")
+        self.assertEqual(payload["allowed_mentions"], {"parse": []})
 
 
 if __name__ == "__main__":
