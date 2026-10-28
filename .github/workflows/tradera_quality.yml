@@ -1,7 +1,7 @@
 name: Tradera Vintage Finder read-only quality audit
 
 on:
-  # A one-shot main deployment check. Later Python changes do not trigger API use.
+  # One safe diagnostic re-run on this workflow update; afterward Python changes do not trigger API use.
   push:
     branches: [main]
     paths:
