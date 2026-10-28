@@ -4,6 +4,7 @@ This is a TITLE-based discovery audit, not verified card identification,
 market valuation, or a buy/bid recommendation. Public listing references only.
 """
 import argparse
+import hashlib
 import json
 import os
 import re
@@ -42,6 +43,61 @@ MODERN_ONLY = (
 )
 MAX_PUBLIC_SAMPLES = 20
 
+# Names of modern/other-era cards frequently mistaken for the WotC Fossil set.
+# These are TITLE-level exclusions, not assertions about card authenticity.
+FALSE_FOSSIL_CARD_NAMES = (
+    "fossil egg", "fossil excavation kit",
+)
+LOT_TITLE_TERMS = (
+    "samling", "samlingar", "kortsamling", "collection", "lot", "kortlot",
+    "album", "binder", "mapp", "mappe", "blandat", "blandade",
+    "mixed lot", "kortpaket",
+)
+
+
+def _has_lot_title_signal(title):
+    clean = _norm(title)
+    return any(re.search(r"(?<!\\w)" + re.escape(term) + r"(?!\\w)", clean)
+               for term in LOT_TITLE_TERMS)
+
+
+def _sample_key(row):
+    # Stable pseudo-random order so samples do not just select oldest IDs.
+    return hashlib.sha256(row["id"].encode("utf-8")).hexdigest()
+
+
+def _balanced_sample(rows, limit):
+    limit = min(max(int(limit), 0), MAX_PUBLIC_SAMPLES)
+    if not limit:
+        return []
+    pools = (
+        ("TITLE_VINTAGE", True, 8),
+        ("TITLE_UNCERTAIN", True, 5),
+        ("TITLE_VINTAGE", False, 4),
+        ("TITLE_UNCERTAIN", False, 2),
+        ("EXCLUDED", False, 1),
+    )
+    selected = []
+    used = set()
+    for category, lot, cap in pools:
+        choices = sorted(
+            (r for r in rows if r["category"] == category
+             and bool(r["lot_title_signal"]) == lot and r["id"] not in used),
+            key=_sample_key,
+        )
+        for item in choices[:min(cap, limit-len(selected))]:
+            selected.append(item)
+            used.add(item["id"])
+        if len(selected) == limit:
+            return selected
+    for item in sorted(rows, key=_sample_key):
+        if item["id"] not in used:
+            selected.append(item)
+            if len(selected) == limit:
+                break
+    return selected
+
+
 
 def classify_title(title):
     """Report TITLE_VINTAGE, TITLE_UNCERTAIN or EXCLUDED, never KØB/BYD."""
@@ -49,6 +105,14 @@ def classify_title(title):
     original = assess_title(title)
     if original["priority"] == "SKIP":
         return "EXCLUDED", original["reasons"][0]
+    if any(re.search(r"(?<!\\w)" + re.escape(name) + r"(?!\\w)", s)
+           for name in FALSE_FOSSIL_CARD_NAMES):
+        other_vintage = any(
+            re.search(r"(?<!\\w)" + re.escape(marker) + r"(?!\\w)", s)
+            for marker in STRONG_VINTAGE if marker != "fossil"
+        )
+        if not other_vintage:
+            return "EXCLUDED", "card-name collision with WotC Fossil"
     strong = any(re.search(r"(?<!\w)" + re.escape(k) + r"(?!\w)", s)
                  for k in STRONG_VINTAGE)
     if any(re.search(r"(?<!\w)" + re.escape(k) + r"(?!\w)", s)
@@ -78,6 +142,7 @@ def _summary_record(row):
         "title": re.sub(r"[\x00-\x1f\x7f]+", " ", title).strip()[:160],
         "url": url,
         "category": category,
+        "lot_title_signal": _has_lot_title_signal(title),
         "reason": reason,
     }
 
@@ -137,10 +202,7 @@ def audit_batches(batches, sample_limit=MAX_PUBLIC_SAMPLES):
             seen[parsed["id"]] = parsed
 
     breakdown = Counter(r["category"] for r in seen.values())
-    samples = sorted(
-        (r for r in seen.values() if r["category"] != "EXCLUDED"),
-        key=lambda r: (r["category"] != "TITLE_VINTAGE", r["id"]),
-    )[:min(max(int(sample_limit), 0), MAX_PUBLIC_SAMPLES)]
+    samples = _balanced_sample(list(seen.values()), sample_limit)
     return {
         "mode": "SHADOW_ONLY_NO_DISCORD",
         "queries": query_counts,
@@ -150,7 +212,15 @@ def audit_batches(batches, sample_limit=MAX_PUBLIC_SAMPLES):
         "malformed_or_unsafe_links": malformed,
         "rejection_reasons": dict(sorted(rejection_reasons.items())),
         "title_vintage": breakdown["TITLE_VINTAGE"],
+        "vintage_lot_title_signals": sum(
+            r["category"] == "TITLE_VINTAGE" and r["lot_title_signal"]
+            for r in seen.values()
+        ),
         "title_uncertain": breakdown["TITLE_UNCERTAIN"],
+        "uncertain_lot_title_signals": sum(
+            r["category"] == "TITLE_UNCERTAIN" and r["lot_title_signal"]
+            for r in seen.values()
+        ),
         "title_excluded": breakdown["EXCLUDED"],
         "manual_verified_relevant": None,
         "manual_verified_false_positives": None,
