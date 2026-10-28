@@ -5,6 +5,8 @@ on:
     paths:
       - "restock_bot_github.py"
       - "vintage_finder_tradera.py"
+      - "vintage_marketplace_discord.py"
+      - "test_vintage_marketplace_discord.py"
       - "vintage_tradera_probe.py"
       - "test_vintage_tradera_probe.py"
       - ".github/workflows/tradera_probe.yml"
@@ -104,6 +106,11 @@ jobs:
         run: |
           python -m py_compile vintage_tradera_probe.py test_vintage_tradera_probe.py
           python -m unittest test_vintage_tradera_probe.py
+
+      - name: Check existing marketplace-deals Discord embed draft (no posting)
+        run: |
+          python -m py_compile vintage_marketplace_discord.py test_vintage_marketplace_discord.py
+          python -m unittest test_vintage_marketplace_discord.py
 
       - name: Test read-only Vintage Finder preview (no API call or Discord)
         run: |
