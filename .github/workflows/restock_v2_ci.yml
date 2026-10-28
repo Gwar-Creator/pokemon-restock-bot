@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - "restock_bot_github.py"
+      - "test_pokemon_only_alerts.py"
       - "test_price_watch_focus_threshold.py"
       - "price_watch_lorcana_shadow.py"
       - "test_price_watch_lorcana_shadow.py"
@@ -86,6 +87,9 @@ jobs:
         run: |
           python -m py_compile price_watch_lorcana_shadow.py test_price_watch_lorcana_shadow.py
           python -m unittest test_price_watch_lorcana_shadow.py
+
+      - name: Test Pokémon-only notification policy
+        run: python -m unittest test_pokemon_only_alerts.py
 
       - name: Test focused Price Watch minimum alert thresholds
         run: python -m unittest test_price_watch_focus_threshold.py
