@@ -36,6 +36,14 @@ conservative maximum bid/buy price. If anything material is unknown,
 leave the candidate off Discord. No live alerts are authorized by
 this preview work.
 
+## Vintage Finder Light: shortlist + exact webhook verification
+
+- Keep discovery small: lot/binder/collection context plus convincing vintage set or explicit old collection signal. Do not attempt automatic identification of every card or speculative aggregate resale valuation.
+- `vintage_marketplace_runner.py` queries the six established official Tradera REST v4 searches and archives at most **eight** internal REVIEW-only listings. It makes zero Discord calls and does not schedule or mutate any existing scanner state.
+- `vintage_marketplace_shortlist.py` supplies a separate unactivated cross-run dedupe/baseline model and hard caps of three candidates per run/day and eight/week. It is currently **offline/tested**, not a production sender. An internal preview is not a BUY/BID recommendation.
+- Discord readiness: one read-only verification workflow checks `MARKETPLACE_WEBHOOK_URL` against Discord's returned `channel_id`, which must exactly equal a separately verified GitHub Actions variable `MARKETPLACE_EXPECTED_CHANNEL_ID`. Existence of the secret alone is insufficient. Never print sensitive values or send a test message to a mismatched webhook.
+- **No live alerts yet.** Confirm the existing channel, validate real-card/price/shipping evidence, and only then create a gated publisher for genuine KØB/BYD. Do not post normal shortlist listings to `#marketplace-deals`.
+
 ## Conservative manual budget and max-bid worksheet
 
 - `vintage_lot_budget.py` accepts **independently checked** card-level inventory, condition, English edition, seller credibility, Danish shipping, fees, current Tradera price and a separately verified SEK/DKK rate. It never calls an API or Discord, and it NEVER labels a listing KØB/BYD.

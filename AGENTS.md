@@ -72,6 +72,14 @@ Læs altid de live filer i GitHub. Stol ikke alene på en ældre chat, lokal kop
 - Audit tæller unikke opslag, dubletter, ubrugelige links og tekstbaserede kandidater. Reelle falske positiver og præcision er ukendte, indtil et menneske har kontrolleret annonceindhold, kort, sprog, stand, sælger og dansk samlet pris.
 - `actionable_signal` er en inert fail-closed berettigelseskontrol: kun KØB/BYD med dokumenteret, frisk, menneskeligt verificeret vurdering kan passere. Den er IKKE forbundet til nogen Discord-afsender; der er heller ingen automatisk budfunktion.
 
+## Vintage Finder: udvalgte vintage-lots og webhook-verifikation
+
+- `vintage_marketplace_shortlist.py` laver et **internt** shortlist-filter for gamle mapper/samlinger og konkrete WotC/e-reader/Gym-lots. Det kræver lot/samlingskontekst og sorterer åbenlyst moderne bulk, sealed, kopier og uønskede produkter fra. Svensk annoncetekst er IKKE et tegn på svensk kortsprog.
+- `vintage_marketplace_runner.py` laver en manuel/engangs read-only Tradera-artifact med højst otte annoncer til vurdering. Det sender **ingen** Discord-beskeder, fortolker ingen billeder og laver ingen KØB/BYD-anbefalinger.
+- `propose_shortlist` har separat, endnu ikke produktionsaktiveret baseline/dubletpolitik (første kørsel uden historiske alerts; max 3/run, 3/dag, 8/uge); der er ingen commit af bot-state eller live scheduler.
+- `vintage_marketplace_webhook_check.py` kan med et GET-kald kontrollere den eksisterende `MARKETPLACE_WEBHOOK_URL` mod det **uafhængigt oplyste** kanal-ID i GitHub Actions-variablen `MARKETPLACE_EXPECTED_CHANNEL_ID`. Den skriver kun VERIFIED/NOT_VERIFIED, aldrig URL, token, kanalnavn eller ID. Hvis variablen ikke er opsat eller mismatch, forbliver kanalen uverificeret.
+- Brugeren ønsker at få relevante notifikationer, men tidligere aftale om **kun verificerede KØB/BYD** i `#marketplace-deals` gælder fortsat. Shortlist/review må ikke postes der. Ingen webhook POST/publisher er aktiveret; budget og kortidentitet skal gennemgås separat.
+
 ## Vintage Finder: konservativt lotbudget (28. oktober 2026)
 
 - Den officielle `GET /v4/items/{itemId}` er undersøgt sikkert for fire konkrete lots via `vintage_tradera_item_probe.py`. API'et indeholder bl.a. `longDescription`, `shippingOptions`, `seller`, `detailedImageLinks` og budfelter, men **verificerer ikke** i sig selv sprog, stand, ægthed, dansk levering eller god markedspris.

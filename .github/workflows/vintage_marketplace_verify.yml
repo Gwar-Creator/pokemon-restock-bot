@@ -1,0 +1,30 @@
+name: Verify existing marketplace Discord webhook (GET only)
+
+on:
+  # One safe verification on initial deployment, then manual dispatch.
+  push:
+    branches: [main]
+    paths: [".github/workflows/vintage_marketplace_verify.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-marketplace-destination:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    env:
+      MARKETPLACE_WEBHOOK_URL: ${{ secrets.MARKETPLACE_WEBHOOK_URL }}
+      MARKETPLACE_EXPECTED_CHANNEL_ID: ${{ vars.MARKETPLACE_EXPECTED_CHANNEL_ID }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Install HTTP client
+        run: python -m pip install --disable-pip-version-check -q requests
+      - name: Test read-only exact destination verification
+        run: python -m unittest -q test_vintage_marketplace_webhook_check.py
+      - name: Verify only; never POST to Discord
+        run: python vintage_marketplace_webhook_check.py
