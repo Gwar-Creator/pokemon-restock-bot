@@ -617,7 +617,20 @@ def send_alert(title, product, detail, preferred_site=None):
         f"🔗 {best_url(product, preferred_site)}"
     )
 
-    response = requests.post(webhook, json={"content": message}, timeout=15)
+    payload = {"content": message}
+    if os.getenv("DISCORD_V2_EARLY_MODE", "shadow").strip().lower() == "on":
+        try:
+            from discord_v2_salling_adapter import early_radar_event, preview_payload
+            from discord_alert_v2 import classify
+            candidate = early_radar_event(title, product, detail, preferred_site)
+            if classify(candidate) in ("PREPUBLISH", "UNKNOWN"):
+                payload = preview_payload(candidate)
+            else:
+                print("DISCORD V2 EARLY: usikker status, beholder tidligere tekst")
+        except Exception as error:
+            print(f"DISCORD V2 EARLY fallback: {type(error).__name__}: {error}")
+
+    response = requests.post(webhook, json=payload, timeout=15)
     response.raise_for_status()
 
 
