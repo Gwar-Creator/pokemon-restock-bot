@@ -16,6 +16,9 @@ on:
       - "vintage_marketplace_shortlist.py"
       - "test_vintage_marketplace_shortlist.py"
       - "vintage_marketplace_runner.py"
+      - "vintage_marketplace_webhook_check.py"
+      - "test_vintage_marketplace_webhook_check.py"
+      - ".github/workflows/vintage_marketplace_verify.yml"
       - "test_vintage_marketplace_runner.py"
       - ".github/workflows/vintage_shortlist_review.yml"
       - "vintage_marketplace_discord.py"
@@ -150,6 +153,11 @@ jobs:
         run: |
           python -m py_compile vintage_marketplace_shortlist.py vintage_marketplace_runner.py test_vintage_marketplace_shortlist.py test_vintage_marketplace_runner.py
           python -m unittest -q test_vintage_marketplace_shortlist.py test_vintage_marketplace_runner.py
+
+      - name: Verify marketplace webhook is strictly read-only
+        run: |
+          python -m py_compile vintage_marketplace_webhook_check.py test_vintage_marketplace_webhook_check.py
+          python -m unittest -q test_vintage_marketplace_webhook_check.py
 
       - name: Test focused Price Watch minimum alert thresholds
         run: python -m unittest test_price_watch_focus_threshold.py
