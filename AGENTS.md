@@ -33,6 +33,14 @@ Læs altid de live filer i GitHub. Stol ikke alene på en ældre chat, lokal kop
 - `send_discord` og `send_price_watch` afviser eksplicit Lorcana-notifikationer før Discord-POST og før alert-memory ændres. Daglige pris- og historikoversigter viser kun Pokémon, men bagvedliggende prisdata og CSV-historik bevares.
 - Den nyudviklede Lorcana shadow price coverage-audit er stoppet; genoptag ikke Lorcana-købsalarmer uden brugerens nye beslutning. Prioritér Pokémon restocks, reprints, korrekt købbarhed og vintage/Price Watch.
 
+## Vintage Finder: Tradera forberedelse (28. oktober 2026)
+
+- `vintage_finder_tradera.py` er en **ikke-planlagt, read-only prototype**, ikke en kørende bot. `VINTAGE_FINDER_PLAN.md` beskriver sikkerhedsgates.
+- Tradera REST v4 søgning kræver app-id og app-key; der er endnu ingen bekræftet live API-response, app credentials, scheduler, webhook eller ny automatisk Discord-udsendelse.
+- Ingen DBA-scraping: brug DBAs indbyggede annonceagenter eller andet udtrykkeligt tilladt input. Ingen automatiske bud, sniping eller køb.
+- Vintage-tekstmatch er et kvalificeret forslag til **manuel vurdering**, aldrig en påstand om korrekt kortidentitet, stand, sprog eller god pris.
+- Hold brugers opmærksomhed og økonomi som prioritet: ingen køb opfordres på baggrund af uverificerede vintage-matches.
+
 ## Forenkling vedtaget 28. oktober 2026: Restock først
 
 - Brugeren vil prioritere funktioner med konkret hobbyværdi; den dyre ældre sealed/reprint-jagt er ikke et udviklingsspor.
