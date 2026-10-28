@@ -1106,6 +1106,12 @@ def restock_channel_alert_allowed(message):
 
 
 def send_discord(message):
+    # User collection focus: Pokemon only. Do not erase Lorcana from state or
+    # source histories; just suppress its explicit tagged restock messages.
+    if re.search(r"\blorcana\b", str(message), flags=re.IGNORECASE):
+        print("RESTOCK CHANNEL: Lorcana muted (Pokémon-only focus)")
+        return False
+
     if not restock_channel_alert_allowed(message):
         headline = _discord_message_parts(message)["headline"] or "ukendt restock"
         print(
@@ -1135,6 +1141,11 @@ def send_discord(message):
 
 
 def send_price_watch(message):
+    # Keep the Price Watch webhook dedicated to Pokemon.
+    if re.search(r"\blorcana\b", str(message), flags=re.IGNORECASE):
+        print("PRICE WATCH: Lorcana muted (Pokémon-only focus)")
+        return False
+
     if not PRICE_WATCH_WEBHOOK_URL:
         print(
             "PRICE_WATCH_WEBHOOK_URL mangler - "
@@ -3384,7 +3395,7 @@ def send_price_watch_daily_summary(
         )
         return False
 
-    signals_by_game = {"POKÉMON": [], "LORCANA": []}
+    signals_by_game = {"POKÉMON": []}
 
     for product_key, products in comparable_groups.items():
         info = parse_price_watch_key(product_key)
@@ -3444,7 +3455,7 @@ def send_price_watch_daily_summary(
     ]
     signal_count = 0
 
-    for game in ("POKÉMON", "LORCANA"):
+    for game in ("POKÉMON",):
         signals = sorted(
             signals_by_game[game],
             key=lambda row: (
@@ -4218,9 +4229,10 @@ def _price_history_daily_summary(products, active_keys, now_local, started_at):
     if not PRICE_HISTORY_WEBHOOK_URL:
         return False
 
+    # Only Pokémon enters the Discord digest; Lorcana prices and historical
+    # lows remain stored in the existing price_history state.
     signals_by_game = {
         "POKÉMON": {"buy": [], "wait": []},
-        "LORCANA": {"buy": [], "wait": []},
     }
     today = now_local.date().isoformat()
 
@@ -4285,13 +4297,12 @@ def _price_history_daily_summary(products, active_keys, now_local, started_at):
 
     selected_by_game = {
         "POKÉMON": {"buy": [], "wait": []},
-        "LORCANA": {"buy": [], "wait": []},
     }
     selected_rows = []
     handled_rows = []
     candidate_rows = []
 
-    for game in ("POKÉMON", "LORCANA"):
+    for game in ("POKÉMON",):
         for row in signals_by_game[game]["buy"]:
             handled_rows.append(row)
             candidate = dict(row)
@@ -4345,7 +4356,7 @@ def _price_history_daily_summary(products, active_keys, now_local, started_at):
         )
     ]
 
-    for game in ("POKÉMON", "LORCANA"):
+    for game in ("POKÉMON",):
         game_signals = selected_by_game[game]
         if not game_signals["buy"] and not game_signals["wait"]:
             continue
@@ -4566,17 +4577,10 @@ def process_price_history(old_history_state, current_state, fresh_sources):
                 1 for key in active_keys
                 if parse_price_watch_key(key)["game"] == "POKÉMON"
             )
-            lorcana_count = sum(
-                1 for key in active_keys
-                if parse_price_watch_key(key)["game"] == "LORCANA"
-            )
-
             send_price_history_embed(
                 "📊 PRICE HISTORY AKTIVERET",
                 (
-                    f"Baseline gemt for **{len(active_keys)} aktive produkter**.\n\n"
-                    f"⚡ Pokémon: **{pokemon_count}**\n"
-                    f"✨ Lorcana: **{lorcana_count}**\n\n"
+                    f"Pokémon-baseline gemt for **{pokemon_count} produkter**.\n\n"
                     "Fra nu registreres nye historiske lavpunkter. "
                     "En kort signaloversigt sendes én gang dagligt."
                 ),
@@ -12063,26 +12067,8 @@ while True:
             history_state=state.get("price_history"),
         )
 
-        # Lorcana is currently excluded from focused Discord price alerts.
-        # Audit *fresh, in-stock* price-history candidates in log-only mode
-        # before choosing sets, comparable variants, or any new notifications.
-        try:
-            from price_watch_lorcana_shadow import (
-                summarize_lorcana_coverage,
-                format_lorcana_coverage,
-            )
-            lorcana_rows = collect_price_watch_candidates(
-                price_watch_current_state,
-                fresh_sources=price_watch_fresh_sources,
-            )
-            print(format_lorcana_coverage(
-                summarize_lorcana_coverage(lorcana_rows)
-            ))
-        except Exception as error:
-            print(
-                "LORCANA PRICE SHADOW isolated error: "
-                f"{type(error).__name__}: {error}"
-            )
+        # Lorcana Price Watch audit is paused: Pokemon is the only active hobby.
+        # No historical data is removed or rewritten by this preference.
 
         # -------------------------
         # PRICE HISTORY V1

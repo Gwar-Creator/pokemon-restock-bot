@@ -26,6 +26,13 @@ Vigtige filer:
 
 Læs altid de live filer i GitHub. Stol ikke alene på en ældre chat, lokal kopi eller handover-fil.
 
+## Hobbyfokus ændret 28. oktober 2026
+
+- **Kun Pokémon er aktiv hobby og mål for MasterBot-købs-/restock-notifikationer.** Lorcana er ikke længere udviklingsprioritet.
+- Eksisterende Lorcana-produkter, kilder og pris-/scannerhistorik må ikke slettes eller nulstilles. Eksisterende scannerkilder må fortsat indlæse data, så historisk state ikke migreres i dette trin.
+- `send_discord` og `send_price_watch` afviser eksplicit Lorcana-notifikationer før Discord-POST og før alert-memory ændres. Daglige pris- og historikoversigter viser kun Pokémon, men bagvedliggende prisdata og CSV-historik bevares.
+- Den nyudviklede Lorcana shadow price coverage-audit er stoppet; genoptag ikke Lorcana-købsalarmer uden brugerens nye beslutning. Prioritér Pokémon restocks, reprints, korrekt købbarhed og vintage/Price Watch.
+
 ## Drift og kanaler
 
 - Ekstern scheduler udløser normalt `.github/workflows/restock.yml` cirka hvert 5. minut.
