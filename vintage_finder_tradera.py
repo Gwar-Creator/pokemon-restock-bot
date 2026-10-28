@@ -13,6 +13,7 @@ import json
 import os
 import re
 import unicodedata
+from urllib.parse import urlsplit
 
 import requests
 
@@ -82,6 +83,21 @@ def assess_title(title):
     return {"priority": "SKIP", "reasons": ("no convincing vintage signal",)}
 
 
+def _safe_public_listing_url(value):
+    if not isinstance(value, str) or len(value) > 2048:
+        return ""
+    try:
+        parsed = urlsplit(value)
+    except ValueError:
+        return ""
+    host = (parsed.hostname or "").lower()
+    if parsed.scheme != "https" or not (host == "tradera.com" or host.endswith(".tradera.com")):
+        return ""
+    if parsed.username or parsed.password or not parsed.path:
+        return ""
+    return value
+
+
 def normalize_listing(record):
     """Strict normalized shape; refuse to invent unavailable card metadata."""
     if not isinstance(record, dict):
@@ -98,6 +114,7 @@ def normalize_listing(record):
     return {
         "id": str(item_id),
         "title": title[:250],
+        "url": _safe_public_listing_url(record.get("itemUrl") or record.get("url")),
         "priority": report["priority"],
         "price_sek": record.get("price"),
         "shipping_to_denmark": "UNKNOWN",
