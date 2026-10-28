@@ -66,10 +66,14 @@ def early_radar_event(title, product, detail, preferred_site=None):
     sites = product.get("sites") or {}
     preferred = (sites.get(preferred_site) or {}) if preferred_site else {}
     selected = preferred or next(iter(sites.values()), {})
-    explicitly_hidden = any(
-        site.get("is_exposed") is False
-        for site in sites.values()
-        if isinstance(site, dict) and "is_exposed" in site
+    # A hidden listing in another chain must not make a visible listing
+    # at the preferred retailer appear hidden.
+    explicitly_hidden = (
+        selected.get("is_exposed") is False if preferred_site and selected
+        else bool(sites) and all(
+            isinstance(site, dict) and site.get("is_exposed") is False
+            for site in sites.values()
+        )
     )
     return {
         "source": "SALLING EARLY RADAR",
