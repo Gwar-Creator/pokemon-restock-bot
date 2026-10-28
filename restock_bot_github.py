@@ -1108,8 +1108,7 @@ def restock_channel_alert_allowed(message):
 def send_discord(message):
     # User collection focus: Pokemon only. Do not erase Lorcana from state or
     # source histories; just suppress its explicit tagged restock messages.
-    headline = _discord_message_parts(message)["headline"]
-    if re.search(r"\[\s*LORCANA\s*\]", headline, flags=re.IGNORECASE):
+    if re.search(r"\blorcana\b", str(message), flags=re.IGNORECASE):
         print("RESTOCK CHANNEL: Lorcana muted (Pokémon-only focus)")
         return False
 
@@ -1142,6 +1141,11 @@ def send_discord(message):
 
 
 def send_price_watch(message):
+    # Keep the Price Watch webhook dedicated to Pokemon.
+    if re.search(r"\blorcana\b", str(message), flags=re.IGNORECASE):
+        print("PRICE WATCH: Lorcana muted (Pokémon-only focus)")
+        return False
+
     if not PRICE_WATCH_WEBHOOK_URL:
         print(
             "PRICE_WATCH_WEBHOOK_URL mangler - "
@@ -4573,17 +4577,10 @@ def process_price_history(old_history_state, current_state, fresh_sources):
                 1 for key in active_keys
                 if parse_price_watch_key(key)["game"] == "POKÉMON"
             )
-            lorcana_count = sum(
-                1 for key in active_keys
-                if parse_price_watch_key(key)["game"] == "LORCANA"
-            )
-
             send_price_history_embed(
                 "📊 PRICE HISTORY AKTIVERET",
                 (
-                    f"Baseline gemt for **{len(active_keys)} aktive produkter**.\n\n"
-                    f"⚡ Pokémon: **{pokemon_count}**\n"
-                    f"✨ Lorcana: **{lorcana_count}**\n\n"
+                    f"Pokémon-baseline gemt for **{pokemon_count} produkter**.\n\n"
                     "Fra nu registreres nye historiske lavpunkter. "
                     "En kort signaloversigt sendes én gang dagligt."
                 ),
