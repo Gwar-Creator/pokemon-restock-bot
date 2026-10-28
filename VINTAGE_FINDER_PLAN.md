@@ -9,6 +9,15 @@ Vintage Finder only if it improves discovery of personally relevant WotC, Neo
 Destiny Dark/Light, Gym, e-reader and early EX-era lots. Do **not** sell the
 user on buying more: every candidate is a manual review lead, not a deal.
 
+## First credentials test (read-only, 28 October 2026)
+
+- The user has added `TRADERA_APP_ID` and `TRADERA_APP_KEY` as GitHub Actions repository secrets. Never print, copy, commit, or share them.
+- `.github/workflows/tradera_probe.yml` runs exactly **one live read-only search** for `pokemon samling` during initial deployment to main because its path is new; afterward only explicit `workflow_dispatch` can run it again.
+- The probe has no `schedule`, no Discord/webhook secrets, no write permission, no persisted state, no bid or buy capability.
+- The only live log contains API HTTP status and the JSON field names/array lengths; no seller names, titles, prices, full responses or secret headers.
+- Confirm green CI first, merge the PR, inspect initial diagnostic workflow. A failed/unknown schema should be fixed in a second PR, not by retrying repeatedly.
+- Only after an actual verified Tradera v4 search response should `extract_search_rows` be adapted to the documented structure and a shadow candidate sample collected without notifications.
+
 ## Tradera integration: officially documented path
 
 - Use the official [Tradera Developer Program](https://api.tradera.com/documentation)
