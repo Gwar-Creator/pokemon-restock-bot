@@ -72,6 +72,13 @@ Læs altid de live filer i GitHub. Stol ikke alene på en ældre chat, lokal kop
 - Audit tæller unikke opslag, dubletter, ubrugelige links og tekstbaserede kandidater. Reelle falske positiver og præcision er ukendte, indtil et menneske har kontrolleret annonceindhold, kort, sprog, stand, sælger og dansk samlet pris.
 - `actionable_signal` er en inert fail-closed berettigelseskontrol: kun KØB/BYD med dokumenteret, frisk, menneskeligt verificeret vurdering kan passere. Den er IKKE forbundet til nogen Discord-afsender; der er heller ingen automatisk budfunktion.
 
+## Vintage Finder: konservativt lotbudget (28. oktober 2026)
+
+- Den officielle `GET /v4/items/{itemId}` er undersøgt sikkert for fire konkrete lots via `vintage_tradera_item_probe.py`. API'et indeholder bl.a. `longDescription`, `shippingOptions`, `seller`, `detailedImageLinks` og budfelter, men **verificerer ikke** i sig selv sprog, stand, ægthed, dansk levering eller god markedspris.
+- `vintage_lot_budget.py` er en **offline, manuel, fail-closed** omkostnings-/budgetberegner. Den kræver verificeret dansk fragt, gebyrer, valutakurs, identitet, sælger, stand, billeder, EU-referencer, live pris og tilgængeligt hobbybudget, samt manuelt godkendt personligt maksimalbudget.
+- Beregnet maksimumbud er udelukkende en økonomisk grænse, IKKE et KØB/BYD-signal. Modulet har ingen netværk, notifiering, automatisk køb eller state. Ufuldstændige data giver ingen maksimumbudsberegning.
+- Før automatiske marketplace-alarmer kræves fortsat uafhængig webhook-kanalbekræftelse, reel kvalitetsmåling og krydskørsels-dubletbeskyttelse. Eksisterende `#marketplace-deals` må ikke modtage usikre REVIEW-fund.
+
 ## Forenkling vedtaget 28. oktober 2026: Restock først
 
 - Brugeren vil prioritere funktioner med konkret hobbyværdi; den dyre ældre sealed/reprint-jagt er ikke et udviklingsspor.
