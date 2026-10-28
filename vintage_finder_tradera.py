@@ -129,15 +129,14 @@ def extract_search_rows(response):
     """Fail closed until the current beta response shape is validated."""
     if not isinstance(response, dict):
         raise ValueError("Unexpected Tradera search response (not object)")
-    # The v4 OpenAPI beta describes SearchResult as an opaque object.
-    # Accept common variants only after a real API integration confirms one.
-    for key in ("items", "Items"):
-        value = response.get(key)
-        if isinstance(value, list):
-            return value
-    raise ValueError(
-        "Tradera beta response keys are unverified; inspect schema before live alerts"
-    )
+    # Verified 28 October 2026: errors, items, totalNumberOfItems, totalNumberOfPages.
+    errors = response.get("errors")
+    if errors is not None and (not isinstance(errors, list) or errors):
+        raise ValueError("Tradera search returned API errors")
+    value = response.get("items")
+    if not isinstance(value, list):
+        raise ValueError("Unexpected Tradera REST v4 items shape")
+    return value
 
 
 def fetch_search(query, app_id, app_key, transport=requests.get):
