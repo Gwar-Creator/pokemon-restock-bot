@@ -5,6 +5,9 @@ on:
     paths:
       - "restock_bot_github.py"
       - "vintage_finder_tradera.py"
+      - "vintage_tradera_probe.py"
+      - "test_vintage_tradera_probe.py"
+      - ".github/workflows/tradera_probe.yml"
       - "test_vintage_finder_tradera.py"
       - "test_price_discord_pause.py"
       - "test_pokemon_only_alerts.py"
@@ -96,6 +99,11 @@ jobs:
 
       - name: Test quiet Price Watch and History Discord policy
         run: python -m unittest test_price_discord_pause.py
+
+      - name: Verify read-only Tradera schema probe locally (no network)
+        run: |
+          python -m py_compile vintage_tradera_probe.py test_vintage_tradera_probe.py
+          python -m unittest test_vintage_tradera_probe.py
 
       - name: Test read-only Vintage Finder preview (no API call or Discord)
         run: |
