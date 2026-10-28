@@ -11,10 +11,14 @@ user on buying more: every candidate is a manual review lead, not a deal.
 
 ## Discord destination: existing #marketplace-deals
 
-The existing Discord channel `#marketplace-deals` is the destination for
-**future manually useful** Vintage Finder notifications; do not create a new
-channel. `vintage_marketplace_discord.py` currently builds **offline preview
-embeds only**. It never posts or requires Discord credentials.
+The existing Discord channel `#marketplace-deals` is reserved for
+**verified, actionable KØB or BYD signals only**, as agreed in August 2026.
+Never post ordinary listings, WATCH, OK PRIS, MÅSKE, or unverified REVIEW
+candidates there. Do not create a new channel.
+
+`vintage_marketplace_discord.py` currently builds **offline REVIEW previews
+only**; these are internal diagnostic drafts, **not publishable alerts**.
+It never posts or requires Discord credentials.
 
 Use only verified public Tradera URLs; label candidates **TIL GENNEMGANG**.
 Unknown total cost to Denmark, variant, English language, condition,
@@ -25,9 +29,12 @@ or encourage impulse purchases.
 For a future controlled activation, first validate historical/live listing
 relevance, delivery to Denmark, deduplication and posting frequency; then verify
 the webhook for the **existing** channel, for example a dedicated
-`MARKETPLACE_DEALS_WEBHOOK_URL` GitHub secret. Do not assume the secret already
-exists and never repurpose existing Cardmarket/price webhooks. No live alerts
-are authorized by the preview work.
+`MARKETPLACE_WEBHOOK_URL` GitHub secret (the earlier proposed name). Do not assume the secret already
+exists and never repurpose existing Cardmarket/price webhooks. Before any live posting, require independently verified card identity,
+condition, language, seller credibility, shipping/fees to Denmark and a
+conservative maximum bid/buy price. If anything material is unknown,
+leave the candidate off Discord. No live alerts are authorized by
+this preview work.
 
 ## First official Tradera live result verified
 
