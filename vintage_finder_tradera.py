@@ -29,6 +29,25 @@ SEARCH_TERMS = (
 )
 SEARCH_URL = "https://api.tradera.com/v4/search"
 
+class TraderaResponseFormatError(ValueError):
+    """Safe metadata only; never retain API body, headers, URL or credentials."""
+
+    def __init__(self, status_code, content_type):
+        self.http_status = (
+            status_code if type(status_code) is int and 100 <= status_code <= 599
+            else "unknown"
+        )
+        mime = (content_type.split(";", 1)[0].strip().lower()
+                if isinstance(content_type, str) else "")
+        self.content_kind = (
+            "json" if mime == "application/json" or mime.endswith("+json")
+            else "html" if mime == "text/html"
+            else "plain_text" if mime == "text/plain"
+            else "other"
+        )
+        super().__init__("Tradera response was not valid JSON")
+
+
 # These indicate a card language or fake products, not the language used
 # in the seller's description. A Swedish title is fine for English cards.
 BLOCKED_MARKERS = (
@@ -156,7 +175,16 @@ def fetch_search(query, app_id, app_key, transport=requests.get):
         timeout=20,
     )
     response.raise_for_status()
-    data = response.json()
+    try:
+        data = response.json()
+    except ValueError:
+        # requests.JSONDecodeError is ALSO a RequestException. Convert it
+        # before the audit's transport handler can misclassify it.
+        headers = getattr(response, "headers", {})
+        content_type = headers.get("Content-Type") if hasattr(headers, "get") else None
+        raise TraderaResponseFormatError(
+            getattr(response, "status_code", None), content_type
+        ) from None
     return extract_search_rows(data)
 
 

@@ -1,7 +1,7 @@
 name: Tradera Vintage Finder read-only quality audit
 
 on:
-  # Last one-shot transport-category diagnostic after prior connection failure; Python changes do not trigger API use.
+  # One bounded read-only verification of JSON response handling on this workflow update; no schedule.
   push:
     branches: [main]
     paths:

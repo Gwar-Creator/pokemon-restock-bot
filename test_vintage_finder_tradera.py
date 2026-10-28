@@ -4,7 +4,7 @@ from unittest.mock import Mock
 
 from vintage_finder_tradera import (
     SEARCH_URL, SEARCH_TERMS, assess_title, extract_search_rows,
-    fetch_search, normalize_listing, select_candidates,
+    fetch_search, normalize_listing, select_candidates, TraderaResponseFormatError,
 )
 
 
@@ -72,6 +72,20 @@ class VintageFinderTraderaTests(unittest.TestCase):
         self.assertEqual(kwargs["headers"]["X-App-Key"], "secret")
         self.assertNotIn("secret", str(kwargs["params"]))
         self.assertEqual(kwargs["timeout"], 20)
+
+    def test_requests_json_decode_error_is_normalized_without_response_leak(self):
+        import requests
+        response = Mock(status_code=200, headers={"Content-Type": "text/html; charset=UTF-8"})
+        response.raise_for_status.return_value = None
+        response.json.side_effect = requests.exceptions.JSONDecodeError(
+            "SECRET BODY", "<html>SECRET BODY</html>", 0)
+        client = Mock(return_value=response)
+        with self.assertRaises(TraderaResponseFormatError) as caught:
+            fetch_search("pokemon samling", "APP", "KEY", transport=client)
+        self.assertEqual(caught.exception.http_status, 200)
+        self.assertEqual(caught.exception.content_kind, "html")
+        self.assertNotIn("SECRET", str(caught.exception))
+        self.assertNotIn("SECRET", repr(caught.exception))
 
     def test_unknown_api_schema_rejected_not_silently_read_as_empty(self):
         with self.assertRaises(ValueError):
