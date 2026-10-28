@@ -65,7 +65,7 @@ class TraderaQualityTests(unittest.TestCase):
         self.assertEqual(result["scanned_rows"], 7)
         self.assertEqual(result["unique_valid_listings"], 5)
         self.assertEqual(result["duplicate_search_hits"], 1)
-        self.assertEqual(result["malformed_or_unsafe_links"], 2)
+        self.assertEqual(result["malformed_or_unsafe_links"], 1)
         self.assertEqual(result["title_vintage"], 2)
         self.assertEqual(result["title_uncertain"], 1)
         self.assertEqual(result["title_excluded"], 2)
