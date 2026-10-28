@@ -13,7 +13,8 @@ from datetime import datetime, timedelta, timezone
 import requests
 
 from vintage_finder_tradera import (
-    _norm, _safe_public_listing_url, assess_title, fetch_search,
+    TraderaResponseFormatError, _norm, _safe_public_listing_url,
+    assess_title, fetch_search,
 )
 
 # One page for each targeted search. No schedule, pagination loops or scraping.
@@ -189,6 +190,13 @@ def live_audit(app_id, app_key, transport=requests.get):
     for index, query in enumerate(AUDIT_QUERIES, 1):
         try:
             rows = fetch_search(query, app_id, app_key, transport=transport)
+        except TraderaResponseFormatError as exc:
+            # Report only response status and whitelisted content-type category.
+            # Malformed JSON is not necessarily a network connection failure.
+            raise RuntimeError(
+                f"Official Tradera invalid JSON (HTTP {exc.http_status}, "
+                f"content type {exc.content_kind}) at query #{index}"
+            ) from None
         except requests.HTTPError as exc:
             # Status and query ordinal only: never log URL, body or headers.
             status = getattr(getattr(exc, "response", None), "status_code", None)
