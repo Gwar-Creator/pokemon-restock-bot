@@ -9,6 +9,13 @@ Vintage Finder only if it improves discovery of personally relevant WotC, Neo
 Destiny Dark/Light, Gym, e-reader and early EX-era lots. Do **not** sell the
 user on buying more: every candidate is a manual review lead, not a deal.
 
+## First official Tradera live result verified
+
+- **28 October 2026:** `tradera_probe.yml` returned HTTP 200 and `GET /v4/search?query=pokemon+samling&pageNumber=0` returned exactly 50 rows on the first page, without printing titles, sellers, prices or secrets.
+- Verified outer JSON fields: `errors`, `items`, `totalNumberOfItems`, `totalNumberOfPages`.
+- Verified first item fields include `id`, `shortDescription`, `itemUrl`, `maxBid`, `nextBid`, `hasBids`, `sellerAlias` and others. In `vintage_finder_tradera.py` we now map `shortDescription` as the candidate title and validate public `itemUrl`, with no inference of a total offer price, English card language or shipping to Denmark.
+- These 50 are **search results**, NOT verified vintage cards, bargains or candidate matches. A separate no-Discord quality test is still needed before monitoring can be scheduled.
+
 ## First credentials test (read-only, 28 October 2026)
 
 - The user has added `TRADERA_APP_ID` and `TRADERA_APP_KEY` as GitHub Actions repository secrets. Never print, copy, commit, or share them.
