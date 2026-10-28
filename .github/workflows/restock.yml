@@ -66,6 +66,7 @@ jobs:
           python -m unittest test_restock_v2_runner.py
           python -m unittest test_price_watch_focus_threshold.py
           python -m unittest test_pokemon_only_alerts.py
+          python -m unittest test_price_discord_pause.py
           python -m unittest test_price_watch_lorcana_shadow.py
           python -m unittest test_restock_lane_ownership.py
           python -m unittest test_local_stock_watch.py
@@ -110,6 +111,8 @@ jobs:
           DISCORD_V2_LOCAL_MODE: "on"
           PRICE_WATCH_WEBHOOK_URL: ${{ secrets.PRICE_WATCH_WEBHOOK_URL }}
           PRICE_HISTORY_WEBHOOK_URL: ${{ secrets.PRICE_HISTORY_WEBHOOK_URL }}
+          PRICE_WATCH_DISCORD_ENABLED: "0"  # pause only notifications, preserve prices
+          PRICE_HISTORY_DISCORD_ENABLED: "0"
           RUN_ONCE: "1"
         run: |
           set +e
