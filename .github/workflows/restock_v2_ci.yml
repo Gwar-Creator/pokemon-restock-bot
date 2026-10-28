@@ -5,6 +5,8 @@ on:
     paths:
       - "restock_bot_github.py"
       - "test_price_watch_focus_threshold.py"
+      - "price_watch_lorcana_shadow.py"
+      - "test_price_watch_lorcana_shadow.py"
       - "discord_alert_v2.py"
       - "discord_v2_hot_adapter.py"
       - "discord_v2_salling_adapter.py"
@@ -79,6 +81,11 @@ jobs:
         run: |
           python -m py_compile discord_alert_v2.py test_discord_alert_v2.py discord_v2_hot_adapter.py test_discord_v2_hot_adapter.py discord_v2_salling_adapter.py test_discord_v2_salling_adapter.py
           python -m unittest test_discord_alert_v2.py test_discord_v2_hot_adapter.py test_discord_v2_salling_adapter.py
+
+      - name: Audit Lorcana Price Watch in read-only mode
+        run: |
+          python -m py_compile price_watch_lorcana_shadow.py test_price_watch_lorcana_shadow.py
+          python -m unittest test_price_watch_lorcana_shadow.py
 
       - name: Test focused Price Watch minimum alert thresholds
         run: python -m unittest test_price_watch_focus_threshold.py
