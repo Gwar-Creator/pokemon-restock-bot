@@ -44,6 +44,16 @@ this preview work.
 - The future KØB/BYD gate needs current, listing-specific human evidence for real cards, authenticity, card language, condition, seller, DK shipping/fees, market comparisons and conservative cap. It is not wired into a sender or any automatic bids.
 - This snapshot is the **first step** toward the previously proposed 14-day shadow validation, not evidence that the longer observation is complete. No production activation from this sample.
 
+## First successful live shadow quality sample (28 October 2026)
+
+- The official REST v4 six-query, first-page-only audit finished successfully: **300 search rows**, **297 distinct valid public listing links**, **3 repeated hits**, **0 malformed links**.
+- Earlier failed runs were caused by untrimmed credential header values and Tradera-provided legacy HTTP item links; the client now trims credentials and strictly upgrades only whitelisted Tradera HTTP URLs to HTTPS.
+- Initial *title-only* classes: 159 specific vintage text matches, 97 generic/uncertain leads and 41 excluded listings. These are NOT 159 confirmed vintage cards, NOT good buys and NOT a measured false-positive rate.
+- In a first nonrandom set of 20 TITLE_VINTAGE samples, two titles ("Fossil Egg" and "Fossil Excavation Kit") were clearly not WotC Fossil-set evidence. The remainder primarily described individual vintage-era cards, not necessarily the target collections/lots. Neither photos nor shipping/seller/condition/prices have been independently verified.
+- Follow-up shadow code separately counts **lot/context title signals**, excludes the two observed card-name collisions and takes balanced samples across vintage lots, other vintage singles, uncertain leads and excluded titles. This is still discovery QA, not BUY/BID qualification.
+- The existing `MARKETPLACE_WEBHOOK_URL` secret is **configured**, but its destination remains unverified. No messages have been sent and `#marketplace-deals` remains BUY/BID-only after human verification.
+- Before any activation, measure **manually labeled** relevance and false positives on real listing content and verify seller, DK delivery total, edition/variant, authenticity, condition and a conservative price ceiling. Existing 14-day shadow requirement remains outstanding.
+
 ## First official Tradera live result verified
 
 - **28 October 2026:** `tradera_probe.yml` returned HTTP 200 and `GET /v4/search?query=pokemon+samling&pageNumber=0` returned exactly 50 rows on the first page, without printing titles, sellers, prices or secrets.

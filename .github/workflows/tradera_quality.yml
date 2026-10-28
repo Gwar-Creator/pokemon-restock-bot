@@ -1,7 +1,7 @@
 name: Tradera Vintage Finder read-only quality audit
 
 on:
-  # One bounded six-query read-only quality sample after strict Tradera HTTPS canonicalization; no schedule.
+  # One bounded six-query read-only lot-title quality measurement; no schedule or Discord.
   push:
     branches: [main]
     paths:
