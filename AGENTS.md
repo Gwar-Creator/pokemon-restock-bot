@@ -59,10 +59,18 @@ Læs altid de live filer i GitHub. Stol ikke alene på en ældre chat, lokal kop
 ## Vintage Finder: Tradera forberedelse (28. oktober 2026)
 
 - `vintage_finder_tradera.py` er en **ikke-planlagt, read-only prototype**, ikke en kørende bot. `VINTAGE_FINDER_PLAN.md` beskriver sikkerhedsgates.
-- Tradera REST v4 søgning kræver app-id og app-key; der er endnu ingen bekræftet live API-response, app credentials, scheduler, webhook eller ny automatisk Discord-udsendelse.
+- Tradera REST v4 søgning bruger eksisterende GitHub Actions-app-secrets, og HTTP 200/50 resultater er verificeret. Der er ingen Vintage Finder-scheduler, webhook-post eller automatiske bud/køb.
 - Ingen DBA-scraping: brug DBAs indbyggede annonceagenter eller andet udtrykkeligt tilladt input. Ingen automatiske bud, sniping eller køb.
 - Vintage-tekstmatch er et kvalificeret forslag til **manuel vurdering**, aldrig en påstand om korrekt kortidentitet, stand, sprog eller god pris.
 - Hold brugers opmærksomhed og økonomi som prioritet: ingen køb opfordres på baggrund af uverificerede vintage-matches.
+
+## Vintage Finder: shadow-kvalitet (28. oktober 2026)
+
+- `vintage_tradera_quality.py` måler titelbaserede signaler fra op til seks officielle REST v4-søgninger. Kategorien TITLE_VINTAGE er kun et teksthit; TITLE_UNCERTAIN kræver mere dokumentation. Ingen af delene er en verificeret handel eller kvalificerer automatisk til Discord.
+- `.github/workflows/tradera_quality.yml` kører kun ved første merge af den nye workflow-fil eller manuelt. Det er ikke en planlagt scanner; alle eksisterende restock- og historik-states er uberørte.
+- Workflowet kontrollerer kun, om `MARKETPLACE_WEBHOOK_URL` er sat (ja/nej). Det bekræfter IKKE kanalen, sender aldrig en webhook og må ikke bruges som aktiveringsgodkendelse.
+- Audit tæller unikke opslag, dubletter, ubrugelige links og tekstbaserede kandidater. Reelle falske positiver og præcision er ukendte, indtil et menneske har kontrolleret annonceindhold, kort, sprog, stand, sælger og dansk samlet pris.
+- `actionable_signal` er en inert fail-closed berettigelseskontrol: kun KØB/BYD med dokumenteret, frisk, menneskeligt verificeret vurdering kan passere. Den er IKKE forbundet til nogen Discord-afsender; der er heller ingen automatisk budfunktion.
 
 ## Forenkling vedtaget 28. oktober 2026: Restock først
 
