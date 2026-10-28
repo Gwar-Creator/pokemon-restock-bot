@@ -87,7 +87,7 @@ def normalize_listing(record):
     if not isinstance(record, dict):
         return None
     item_id = record.get("id", record.get("itemId"))
-    title = record.get("title", record.get("name"))
+    title = record.get("shortDescription", record.get("title", record.get("name")))
     if item_id is None or not isinstance(title, str):
         return None
     report = assess_title(title)
