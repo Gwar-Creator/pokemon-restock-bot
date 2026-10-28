@@ -149,7 +149,7 @@
         "price": 249.0,
         "online_count": 0,
         "online_stock": false,
-        "store_count": 24,
+        "store_count": 23,
         "kolding_stock": 2,
         "esbjerg_stock": 2,
         "quantity_limit": 1,
@@ -551,11 +551,11 @@
       "last_success_at": "2026-10-28T17:14:15.571201+00:00"
     },
     "proshop": {
-      "backoff_level": 2,
-      "next_allowed_at": 1793222492.3032944,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-10-28T21:01:11.913480+00:00",
+      "backoff_level": 3,
+      "next_allowed_at": 1793223447.4938874,
+      "generic_failures": 1,
+      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "last_failure_at": "2026-10-28T21:22:27.493849+00:00",
       "last_success_at": "2026-10-28T21:16:32.303278+00:00"
     },
     "br": {
@@ -592,14 +592,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1793222397.5876389,
+      "next_allowed_at": 1793222692.9946897,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-10-28T21:15:57.587618+00:00"
+      "last_success_at": "2026-10-28T21:20:52.994664+00:00"
     }
   },
-  "updated_at": "2026-10-28T21:19:32.469590+00:00",
+  "updated_at": "2026-10-28T21:24:32.313044+00:00",
   "proshop_discovery_version": 4,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -630,11 +630,11 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-10-28T21:15:56.448816+00:00"
+          "last_checked": "2026-10-28T21:20:52.140902+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1793222155.6416247,
+      "last_discovery_epoch": 1793222451.2287033,
       "last_full_discovery_epoch": 1793202071.2234676,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
