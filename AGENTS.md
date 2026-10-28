@@ -33,6 +33,13 @@ Læs altid de live filer i GitHub. Stol ikke alene på en ældre chat, lokal kop
 - `send_discord` og `send_price_watch` afviser eksplicit Lorcana-notifikationer før Discord-POST og før alert-memory ændres. Daglige pris- og historikoversigter viser kun Pokémon, men bagvedliggende prisdata og CSV-historik bevares.
 - Den nyudviklede Lorcana shadow price coverage-audit er stoppet; genoptag ikke Lorcana-købsalarmer uden brugerens nye beslutning. Prioritér Pokémon restocks, reprints, korrekt købbarhed og vintage/Price Watch.
 
+## Tradera credentials og read-only API probe (2026-10-28)
+
+- Brugeren har oprettet Tradera Developer-app og gemt `TRADERA_APP_ID` og `TRADERA_APP_KEY` i GitHub Actions secrets. Vis eller log ALDRIG deres værdier.
+- `.github/workflows/tradera_probe.yml` udfører én enkelt læsebaseret REST v4-søgning ved første merge af workflow-filen, derefter kun manuelt via `workflow_dispatch`; ingen tidsplan, Discord, bud, køb, eller statefiler.
+- `vintage_tradera_probe.py` logger kun ufølsomme JSON-feltnavne og længder. Hvis API-svar er ukendt, stop og undersøg responsens struktur før Vintage Finder-prototypen ændres.
+- Når API-schema er verificeret fra en reel prøve, må en separat PR forbedre læsebaserede vintage-søgninger; ingen live Discord/notifikationer uden dokumenteret kvalitet.
+
 ## Vintage Finder: Tradera forberedelse (28. oktober 2026)
 
 - `vintage_finder_tradera.py` er en **ikke-planlagt, read-only prototype**, ikke en kørende bot. `VINTAGE_FINDER_PLAN.md` beskriver sikkerhedsgates.
