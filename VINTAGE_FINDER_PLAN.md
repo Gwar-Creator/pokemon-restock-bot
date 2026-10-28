@@ -9,6 +9,26 @@ Vintage Finder only if it improves discovery of personally relevant WotC, Neo
 Destiny Dark/Light, Gym, e-reader and early EX-era lots. Do **not** sell the
 user on buying more: every candidate is a manual review lead, not a deal.
 
+## Discord destination: existing #marketplace-deals
+
+The existing Discord channel `#marketplace-deals` is the destination for
+**future manually useful** Vintage Finder notifications; do not create a new
+channel. `vintage_marketplace_discord.py` currently builds **offline preview
+embeds only**. It never posts or requires Discord credentials.
+
+Use only verified public Tradera URLs; label candidates **TIL GENNEMGANG**.
+Unknown total cost to Denmark, variant, English language, condition,
+authenticity and resale value must remain explicitly unverified. Never
+call a listing a confirmed deal, present an unsupported savings amount,
+or encourage impulse purchases.
+
+For a future controlled activation, first validate historical/live listing
+relevance, delivery to Denmark, deduplication and posting frequency; then verify
+the webhook for the **existing** channel, for example a dedicated
+`MARKETPLACE_DEALS_WEBHOOK_URL` GitHub secret. Do not assume the secret already
+exists and never repurpose existing Cardmarket/price webhooks. No live alerts
+are authorized by the preview work.
+
 ## First official Tradera live result verified
 
 - **28 October 2026:** `tradera_probe.yml` returned HTTP 200 and `GET /v4/search?query=pokemon+samling&pageNumber=0` returned exactly 50 rows on the first page, without printing titles, sellers, prices or secrets.
