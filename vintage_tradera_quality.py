@@ -57,7 +57,7 @@ LOT_TITLE_TERMS = (
 
 def _has_lot_title_signal(title):
     clean = _norm(title)
-    return any(re.search(r"(?<!\\w)" + re.escape(term) + r"(?!\\w)", clean)
+    return any(re.search(r"(?<!\w)" + re.escape(term) + r"(?!\w)", clean)
                for term in LOT_TITLE_TERMS)
 
 
@@ -105,10 +105,10 @@ def classify_title(title):
     original = assess_title(title)
     if original["priority"] == "SKIP":
         return "EXCLUDED", original["reasons"][0]
-    if any(re.search(r"(?<!\\w)" + re.escape(name) + r"(?!\\w)", s)
+    if any(re.search(r"(?<!\w)" + re.escape(name) + r"(?!\w)", s)
            for name in FALSE_FOSSIL_CARD_NAMES):
         other_vintage = any(
-            re.search(r"(?<!\\w)" + re.escape(marker) + r"(?!\\w)", s)
+            re.search(r"(?<!\w)" + re.escape(marker) + r"(?!\w)", s)
             for marker in STRONG_VINTAGE if marker != "fossil"
         )
         if not other_vintage:
