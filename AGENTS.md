@@ -114,6 +114,7 @@ Den almindelige restock-scanner har fortsat eksplicit lokal dækning for Kolding
 - Eksisterende pris- og Cardmarket-historik må ikke slettes, nulstilles eller migreres uden udtrykkelig godkendelse.
 - Små prisbevægelser må gerne gemmes i historikken uden at blive Discord-signaler.
 - Price Watch intraday skal kræve mindst 25 kr. OG 5% reel forbedring.
+- Price Watch V1.5 fokuseret prisalarm anvender nu samme samtidige DKK- og procentgrænse før Discord. Mindre ændringer registreres stadig i pris-state, men sendes ikke. Denne rettelse ændrer ikke fokus-sæt, Lorcana-dækning eller prishistorik. (2026-10-28)
 - Price Watch dagsoversigt må højst vise 3 Pokémon + 3 Lorcana-signaler.
 - Price History Discord må højst vise 3 væsentlige signaler i alt pr. dag.
 - Fuld Price History CSV sendes højst ugentligt; data beholdes løbende i state.
