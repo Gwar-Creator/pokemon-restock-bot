@@ -1,7 +1,7 @@
 name: Tradera Vintage Finder read-only quality audit
 
 on:
-  # One safe diagnostic re-run on this workflow update; afterward Python changes do not trigger API use.
+  # Last one-shot transport-category diagnostic after prior connection failure; Python changes do not trigger API use.
   push:
     branches: [main]
     paths:

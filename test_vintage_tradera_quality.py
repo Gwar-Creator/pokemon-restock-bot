@@ -102,6 +102,15 @@ class TraderaQualityTests(unittest.TestCase):
         self.assertNotIn("SECRET", str(caught.exception))
 
         response = Mock()
+        response.raise_for_status.side_effect = requests.ConnectionError(
+            "SECRET REQUEST HOST")
+        with self.assertRaises(RuntimeError) as caught:
+            live_audit("APP", "SECRET", Mock(return_value=response))
+        self.assertEqual(str(caught.exception),
+                         "Official Tradera search transport failure (ConnectionError) at query #1")
+        self.assertNotIn("SECRET", str(caught.exception))
+
+        response = Mock()
         response.raise_for_status.return_value = None
         response.json.side_effect = ValueError("SECRET RAW RESPONSE")
         with self.assertRaises(RuntimeError) as caught:

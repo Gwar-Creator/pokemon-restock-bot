@@ -199,9 +199,14 @@ def live_audit(app_id, app_key, transport=requests.get):
             raise RuntimeError(
                 f"Official Tradera search HTTP failure at query #{index}"
             ) from None
-        except requests.RequestException:
+        except requests.RequestException as exc:
+            # Exception class is safe to log; exception text may contain URLs/headers.
+            name = type(exc).__name__
+            allowed = {"Timeout", "ConnectTimeout", "ReadTimeout",
+                       "ConnectionError", "ProxyError", "SSLError"}
+            category = name if name in allowed else "OtherRequestException"
             raise RuntimeError(
-                f"Official Tradera search transport failure at query #{index}"
+                f"Official Tradera search transport failure ({category}) at query #{index}"
             ) from None
         except ValueError:
             raise RuntimeError(
