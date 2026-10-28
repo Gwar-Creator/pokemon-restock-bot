@@ -18,6 +18,7 @@ import re
 import base64
 import html
 import hashlib
+import math
 import unicodedata
 from alert_policy import abundant_set_signal_allowed
 from pathlib import Path
@@ -2218,6 +2219,29 @@ def collect_price_watch_focus_listings(current_state, fresh_sources=None):
     return listings
 
 
+def price_watch_focus_drop_is_actionable(previous_price, current_price):
+    """Only interrupt Discord for a real, sufficiently large price improvement.
+
+    A 1-kr change is history data, not a purchase alert. Both minimums
+    are required; no amount of percentage drop compensates for a tiny DKK
+    saving and vice versa.
+    """
+    try:
+        previous = float(previous_price)
+        current = float(current_price)
+    except (TypeError, ValueError, OverflowError):
+        return False
+    if not (math.isfinite(previous) and math.isfinite(current)):
+        return False
+    if previous <= 0 or current <= 0 or current >= previous:
+        return False
+    saving = previous - current
+    return (
+        saving + 1e-8 >= PRICE_ALERT_MIN_IMPROVEMENT_DKK
+        and (saving / previous) + 1e-12 >= PRICE_ALERT_MIN_IMPROVEMENT_PCT
+    )
+
+
 def _price_watch_focus_alert(listing, old_price, combo=False):
     new_price = float(listing["price"])
     drop = old_price - new_price
@@ -3516,6 +3540,7 @@ def process_price_watch(
             and current_in_stock
             and price_is_lower
             and old_seen_price is not None
+            and price_watch_focus_drop_is_actionable(old_seen_price, current_price)
         ):
             if _price_watch_focus_alert(
                 listing,
