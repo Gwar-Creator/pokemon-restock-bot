@@ -6,6 +6,8 @@ on:
       - "restock_bot_github.py"
       - "vintage_finder_tradera.py"
       - "vintage_tradera_quality.py"
+      - "vintage_lot_budget.py"
+      - "test_vintage_lot_budget.py"
       - "vintage_tradera_item_probe.py"
       - "test_vintage_tradera_item_probe.py"
       - ".github/workflows/tradera_item_detail_probe.yml"
@@ -133,6 +135,11 @@ jobs:
         run: |
           python -m py_compile vintage_tradera_item_probe.py test_vintage_tradera_item_probe.py
           python -m unittest -q test_vintage_tradera_item_probe.py
+
+      - name: Test conservative vintage manual budget worksheet (offline only)
+        run: |
+          python -m py_compile vintage_lot_budget.py test_vintage_lot_budget.py
+          python -m unittest -q test_vintage_lot_budget.py
 
       - name: Test focused Price Watch minimum alert thresholds
         run: python -m unittest test_price_watch_focus_threshold.py
