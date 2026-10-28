@@ -273,12 +273,21 @@ def send_alert(rows):
         ],
         "footer": {"text": "MasterBot · skjult lager, systemtal – ring til butikken"}
     }
-    response = requests.post(
-        WEBHOOK,
-        json={"username": "MasterBot", "allowed_mentions": {"parse": []},
-              "embeds": [embed]},
-        timeout=15,
-    )
+    payload = {"username": "MasterBot", "allowed_mentions": {"parse": []},
+               "embeds": [embed]}
+    if os.getenv("DISCORD_V2_HIDDEN_MODE", "shadow").strip().lower() == "on":
+        try:
+            from discord_v2_salling_adapter import hidden_stock_event, preview_payload
+            from discord_alert_v2 import classify
+            candidate = hidden_stock_event(locations)
+            if classify(candidate) == "PREPUBLISH":
+                payload = preview_payload(candidate)
+            else:
+                print("DISCORD V2 HIDDEN: usikker status, beholder tidligere embed")
+        except Exception as error:
+            print(f"DISCORD V2 HIDDEN fallback: {type(error).__name__}: {error}")
+
+    response = requests.post(WEBHOOK, json=payload, timeout=15)
     response.raise_for_status()
 
 

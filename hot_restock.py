@@ -366,7 +366,18 @@ def send_hot_alert(source_key, product, event):
         try:
             new_payload, new_status = hot_payload(source_key, product, event)
             if DISCORD_V2_HOT_MODE == "on":
-                embed = new_payload["embeds"][0]
+                # Green is only allowed on two source types with direct online
+                # evidence. Proshop BESTILLINGSVARE is not dispatch stock;
+                # Salling online_count can be a hidden/system-stock signal.
+                safe_online = (
+                    (source_key == "coolshop" and new_status == "BUY_NOW")
+                    or (source_key == "proshop" and new_status == "BUY_NOW"
+                        and product.get("stock") == "PÅ LAGER")
+                )
+                if safe_online:
+                    embed = new_payload["embeds"][0]
+                else:
+                    print(f"HOT V2 LEGACY FALLBACK: {label} | {new_status}")
             else:
                 print(
                     f"HOT V2 SHADOW: {label} | {new_status} | "

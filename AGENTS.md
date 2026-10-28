@@ -135,7 +135,10 @@ Produkter over disse grænser bliver i rå restock-state og kan fortsat give res
 - Kun `DISCORD_V2_HOT_MODE=on` skifter HOT's udsendte embed; det kræver separat vurdering af skyggeresultater og datakvalitet. Udsend aldrig to beskeder for samme event.
 - Systemlager, PRE-PUBLISH og modstridende status må aldrig ophøjes til bekræftet købbarhed. `BESTILLINGSVARE` skal fremstå tydeligt som ordrevare, ikke garanteret øjeblikkelig levering.
 - Local Stock, Hidden Stock og Salling Early Radar anvender `discord_v2_salling_adapter.py` til **shadow-only** klassifikation i loggen ved udsendte legacy-alerts. Ingen ekstra Discord-posts, ændret event-dedupe eller state. Positivt butikslager er `STORE_STOCK`, skjult produkt `PREPUBLISH`; Early Radar kan ikke udlede bekræftet købbarhed af katalog-/systemlagertal.
-- Fortsat ingen live V2-adapter for Local Stock, Hidden Stock, Salling Early Radar, Price Watch eller Cardmarket. Disse bevarer deres eksisterende beskeder.
+- Kontrolleret Discord V2-præsentation aktiveres fra workflowet via tre uafhængige flags: `DISCORD_V2_LOCAL_MODE=on`, `DISCORD_V2_HIDDEN_MODE=on` og `DISCORD_V2_EARLY_MODE=on`. Hver af disse erstatter kun formatteringen af en allerede godkendt alert og sender fortsat præcis ét opslag. Ved klassifikationsfejl bruges legacy.
+- HOT bruger `DISCORD_V2_HOT_MODE=on`, men sender kun V2 ved frisk, eksplicit onlinekøb hos Coolshop eller `PÅ LAGER` hos Proshop (ikke cachede varer). Proshop `BESTILLINGSVARE`, alle BR/Bilka/Føtex HOT-events og usikre statusser bruger fortsat deres gamle embed for ikke at skabe falske grønne købssignaler.
+- Rollback kræver kun at fjerne de fire `DISCORD_V2_*_MODE`-envlinjer eller sætte dem til `shadow` i workflows og merge. Ingen state- eller secretmigration.
+- Price Watch og Cardmarket bruger fortsat eksisterende formater. `RESERVÉR NU` må ikke aktiveres på basis af systemlager alene.
 
 ## Anti-spam
 

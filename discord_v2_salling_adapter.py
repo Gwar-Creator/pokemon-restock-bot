@@ -31,6 +31,11 @@ def local_stock_event(product, transitions):
         "name": product.get("name") or "Ukendt produkt",
         "price": product.get("price"),
         "url": product.get("url"),
+        "sku": product.get("sku") or product.get("id"),
+        "stock_transitions": [
+            f"{row.get('name')}: {row.get('old', '?')} → {row.get('new', '?')} stk."
+            for row in (transitions or []) if isinstance(row, dict)
+        ],
         "stores": _stores_from_transitions(transitions),
         "is_pre_publish": visibility == "PRE-PUBLISH",
         "checked_at": product.get("observed_at") or _utc_checked(),
@@ -50,6 +55,8 @@ def hidden_stock_event(rows):
         "name": first.get("name") or "Ukendt produkt",
         "price": first.get("price"),
         "url": first.get("url"),
+        "sku": f"{first.get('product_id') or '-'} / {first.get('sku') or '-'}",
+        "signal_details": "To på hinanden følgende positive API-aflæsninger. Ikke bekræftet til salg; butikslager kan være reserveret eller historisk.",
         "stores": [
             {"name": row.get("store"), "stock": row.get("stock")}
             for row in rows
@@ -66,16 +73,23 @@ def early_radar_event(title, product, detail, preferred_site=None):
     sites = product.get("sites") or {}
     preferred = (sites.get(preferred_site) or {}) if preferred_site else {}
     selected = preferred or next(iter(sites.values()), {})
-    explicitly_hidden = any(
-        site.get("is_exposed") is False
-        for site in sites.values()
-        if isinstance(site, dict) and "is_exposed" in site
+    # A hidden listing in another chain must not make a visible listing
+    # at the preferred retailer appear hidden.
+    explicitly_hidden = (
+        selected.get("is_exposed") is False if preferred_site and selected
+        else bool(sites) and all(
+            isinstance(site, dict) and site.get("is_exposed") is False
+            for site in sites.values()
+        )
     )
     return {
         "source": "SALLING EARLY RADAR",
         "name": product.get("name") or "Ukendt produkt",
         "price": selected.get("price", product.get("price")),
         "url": selected.get("url") or "",
+        "sku": f"{product.get('id') or '-'} / {product.get('sku') or '-'}",
+        "event_type": str(title or "")[:100],
+        "signal_details": str(detail or "")[:800],
         # Country-wide store_count does not identify a reservable local shop.
         "stores": [],
         "is_pre_publish": explicitly_hidden,

@@ -120,6 +120,29 @@ def render_embed(event):
             "inline": False,
         })
 
+    # Distinguish an actual restock from a new catalog appearance.
+    event_type = str(event.get("event_type") or "").strip()
+    if event_type:
+        fields.append({"name": "HÆNDELSE", "value": event_type[:150], "inline": True})
+
+    change_lines = event.get("stock_transitions") or []
+    if change_lines:
+        lines = [str(item).strip()[:150] for item in change_lines[:10] if str(item).strip()]
+        if lines:
+            fields.append({
+                "name": "NYT BUTIKSLAGER",
+                "value": "\n".join(lines)[:1024],
+                "inline": False,
+            })
+
+    detail = str(event.get("signal_details") or "").strip()
+    if detail:
+        fields.append({"name": "DETALJER", "value": detail[:1024], "inline": False})
+
+    sku = str(event.get("sku") or "").strip()
+    if sku:
+        fields.append({"name": "VARE-ID / SKU", "value": sku[:180], "inline": True})
+
     checked = str(event.get("checked_at") or "").strip()
     if checked:
         fields.append({"name": "SENEST KONTROLLERET", "value": checked[:100], "inline": True})

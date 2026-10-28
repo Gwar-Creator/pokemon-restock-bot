@@ -114,5 +114,65 @@ class SallingV2ShadowTests(unittest.TestCase):
         self.assertIn("content", post.call_args.kwargs["json"])
 
 
+    def test_enabled_local_posts_one_orange_v2_card_with_transition(self):
+        product = {"site": "BR", "name": "Test Collection", "type": "COLLECTION",
+                   "price": 449, "url": URL, "visibility": "EXPOSED", "sku": "ABC"}
+        response = Mock()
+        with patch.dict("os.environ", {"DISCORD_V2_LOCAL_MODE": "on"}), \
+             patch.object(local, "WEBHOOK_URL", "https://example.invalid/webhook"), \
+             patch.object(local, "local_stock_signal_allowed", return_value=True), \
+             patch.object(local.requests, "post", return_value=response) as post:
+            local.send_local_alert(product, [{"name": "BR Kolding", "old": 0, "new": 4}])
+        self.assertEqual(post.call_count, 1)
+        embed = post.call_args.kwargs["json"]["embeds"][0]
+        self.assertEqual(embed["title"], "BUTIKSLAGER · BR")
+        self.assertIn("0 → 4", str(embed["fields"]))
+        self.assertNotIn("url", embed)
+
+    def test_enabled_hidden_posts_one_yellow_card_local_only(self):
+        local_row = {"site": "br", "name": "Test Collection", "store": "BR Kolding",
+                     "stock": 4, "price": 200, "product_id": "1", "sku": "ABC"}
+        remote_row = {**local_row, "store": "BR Viborg", "stock": 9}
+        response = Mock()
+        with patch.dict("os.environ", {"DISCORD_V2_HIDDEN_MODE": "on"}), \
+             patch.object(hidden, "WEBHOOK", "https://example.invalid/webhook"), \
+             patch.object(hidden.requests, "post", return_value=response) as post:
+            hidden.send_alert([remote_row, local_row])
+        self.assertEqual(post.call_count, 1)
+        embed = post.call_args.kwargs["json"]["embeds"][0]
+        self.assertEqual(embed["title"], "KLARGØRES · BR")
+        self.assertNotIn("Viborg", str(embed))
+        self.assertIn("Kolding", str(embed))
+        self.assertIn("To på hinanden", str(embed))
+        self.assertNotIn("url", embed)
+
+    def test_enabled_early_posts_one_yellow_embed_not_plain_text(self):
+        product = {"name": "Test", "price": 225, "id": "123", "sku": "ABC",
+                   "priority": "NORMAL", "sites": {"br": {
+                       "is_exposed": False, "url": URL, "online_count": 1}}}
+        response = Mock()
+        with patch.dict("os.environ", {
+                     "DISCORD_WEBHOOK_URL": "https://example.invalid/webhook",
+                     "DISCORD_V2_EARLY_MODE": "on",
+                 }), patch.object(radar.requests, "post", return_value=response) as post:
+            radar.send_alert("NY SKJULT VARE", product, "Katalogfund", "br")
+        self.assertEqual(post.call_count, 1)
+        data = post.call_args.kwargs["json"]
+        self.assertNotIn("content", data)
+        self.assertEqual(data["embeds"][0]["title"],
+                         "KLARGØRES · SALLING EARLY RADAR")
+        self.assertIn("Katalogfund", str(data["embeds"][0]))
+        self.assertNotIn("url", data["embeds"][0])
+
+    def test_early_exposure_is_from_relevant_retailer(self):
+        data = {"name": "Box", "sites": {
+            "br": {"is_exposed": False, "url": URL},
+            "bilka": {"is_exposed": True, "url": URL},
+        }}
+        self.assertEqual(adapter.classify(
+            adapter.early_radar_event("METADATA", data, "Test", "bilka")),
+            "UNKNOWN")
+
+
 if __name__ == "__main__":
     unittest.main()

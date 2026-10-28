@@ -773,15 +773,24 @@ def send_local_alert(product, transitions):
     if url and not pre_publish:
         embed["url"] = url
 
-    response = requests.post(
-        WEBHOOK_URL,
-        json={
-            "username": "MasterBot",
-            "allowed_mentions": {"parse": []},
-            "embeds": [embed],
-        },
-        timeout=20,
-    )
+    payload = {
+        "username": "MasterBot",
+        "allowed_mentions": {"parse": []},
+        "embeds": [embed],
+    }
+    if os.getenv("DISCORD_V2_LOCAL_MODE", "shadow").strip().lower() == "on":
+        try:
+            from discord_v2_salling_adapter import local_stock_event, preview_payload
+            from discord_alert_v2 import classify
+            candidate = local_stock_event(product, transitions)
+            if classify(candidate) in ("STORE_STOCK", "PREPUBLISH"):
+                payload = preview_payload(candidate)
+            else:
+                print("DISCORD V2 LOCAL: usikker status, beholder tidligere embed")
+        except Exception as error:
+            print(f"DISCORD V2 LOCAL fallback: {type(error).__name__}: {error}")
+
+    response = requests.post(WEBHOOK_URL, json=payload, timeout=20)
     response.raise_for_status()
 
 
