@@ -43,6 +43,9 @@ def candidate_embed(candidate):
 
 def preview_payload(candidates, limit=MAX_EMBEDS):
     """Return a draft payload, NOT a network call or a publishing action."""
+    requested = min(max(int(limit), 0), MAX_EMBEDS)
+    if not requested:
+        return {"username": "MasterBot", "allowed_mentions": {"parse": []}, "embeds": []}
     embeds = []
     used = set()
     for candidate in candidates:
@@ -57,7 +60,7 @@ def preview_payload(candidates, limit=MAX_EMBEDS):
             continue
         used.add(identifier)
         embeds.append(embed)
-        if len(embeds) >= min(max(int(limit), 0), MAX_EMBEDS):
+        if len(embeds) >= requested:
             break
     return {
         "username": "MasterBot",
