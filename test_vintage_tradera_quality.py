@@ -75,6 +75,41 @@ class TraderaQualityTests(unittest.TestCase):
         self.assertNotIn("not-for-output", str(result))
         self.assertLessEqual(len(result["public_review_samples"]), 20)
 
+    def test_real_sample_false_fossil_names_do_not_count_as_vintage(self):
+        for title in (
+            "Pokémon Fossil Egg 72/75",
+            "Pokémon Fossil Excavation Kit 101/124",
+        ):
+            self.assertEqual(classify_title(title)[0], "EXCLUDED")
+        self.assertEqual(classify_title("Kingler 38/62 - Pokémon - Fossil")[0],
+                         "TITLE_VINTAGE")
+        self.assertEqual(classify_title("Pokemon Jungle and Fossil samling")[0],
+                         "TITLE_VINTAGE")
+
+    def test_lot_context_count_and_diverse_sample_are_title_only(self):
+        rows = [
+            row(1, "Pokemon Aquapolis kort samling"),
+            row(2, "Pokemon Fossil binder"),
+            row(3, "Pokemon Gym Heroes Blaine's Gamble 121/132"),
+            row(4, "Pokemon gammal samling"),
+            row(5, "Pokemon vintage album"),
+            row(6, "Pokemon Fossil Egg 72/75"),
+            row(7, "Pokemon VMAX modern kort"),
+        ]
+        report = audit_batches([("mixed", rows)])
+        self.assertEqual(report["title_vintage"], 3)
+        self.assertEqual(report["vintage_lot_title_signals"], 2)
+        self.assertEqual(report["title_uncertain"], 2)
+        self.assertEqual(report["uncertain_lot_title_signals"], 2)
+        self.assertEqual(report["title_excluded"], 2)
+        sample = report["public_review_samples"]
+        self.assertEqual(len(sample), 7)
+        self.assertTrue(any(x["category"] == "EXCLUDED" for x in sample))
+        self.assertTrue(any(x["category"] == "TITLE_UNCERTAIN" for x in sample))
+        self.assertTrue(any(x["lot_title_signal"] for x in sample))
+        self.assertIsNone(report["manual_verified_relevant"])
+        self.assertEqual(report["buy_bid_alerts"], 0)
+
     def test_invalid_field_counts_are_classified_without_echoing_api_values(self):
         rows = [
             {"id": 1, "shortDescription": "Pokemon Fossil", "itemUrl": "/item/1"},
