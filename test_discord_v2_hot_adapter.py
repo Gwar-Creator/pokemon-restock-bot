@@ -81,5 +81,39 @@ class HotDiscordV2AdapterTests(unittest.TestCase):
         self.assertEqual(payload["allowed_mentions"], {"parse": []})
 
 
+    def test_live_mode_keeps_legacy_proshop_order_item(self):
+        product = self._p(stock="BESTILLINGSVARE")
+        with patch.object(hot, "DISCORD_V2_HOT_MODE", "on"), \
+             patch.object(hot, "WEBHOOK_URL", "https://example.invalid/webhook"), \
+             patch.object(hot, "HOT_DRY_RUN", False), \
+             patch.object(hot.requests, "post") as post:
+            self.assertTrue(hot.send_hot_alert("proshop", product, "RESTOCK"))
+        self.assertEqual(post.call_count, 1)
+        self.assertEqual(post.call_args.kwargs["json"]["embeds"][0]["title"],
+                         "RESTOCK · PROSHOP")
+
+    def test_live_mode_keeps_legacy_salling_system_stock(self):
+        product = self._p(online_count=15, kolding_stock=2)
+        with patch.object(hot, "DISCORD_V2_HOT_MODE", "on"), \
+             patch.object(hot, "WEBHOOK_URL", "https://example.invalid/webhook"), \
+             patch.object(hot, "HOT_DRY_RUN", False), \
+             patch.object(hot.requests, "post") as post:
+            self.assertTrue(hot.send_hot_alert("br", product, "RESTOCK"))
+        self.assertEqual(post.call_count, 1)
+        self.assertEqual(post.call_args.kwargs["json"]["embeds"][0]["title"],
+                         "RESTOCK · BR")
+
+    def test_live_proshop_in_stock_requires_fresh_source(self):
+        product = self._p(stock="PÅ LAGER", fetch_via="jina_reader")
+        with patch.object(hot, "DISCORD_V2_HOT_MODE", "on"), \
+             patch.object(hot, "WEBHOOK_URL", "https://example.invalid/webhook"), \
+             patch.object(hot, "HOT_DRY_RUN", False), \
+             patch.object(hot.requests, "post") as post:
+            self.assertTrue(hot.send_hot_alert("proshop", product, "RESTOCK"))
+        embed = post.call_args.kwargs["json"]["embeds"][0]
+        self.assertEqual(embed["title"], "KØB NU · PROSHOP")
+        self.assertIn("HÆNDELSE", [x["name"] for x in embed["fields"]])
+
+
 if __name__ == "__main__":
     unittest.main()
