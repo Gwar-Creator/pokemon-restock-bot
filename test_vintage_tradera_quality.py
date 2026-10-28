@@ -94,7 +94,7 @@ class TraderaQualityTests(unittest.TestCase):
         response.json.return_value = {"errors": [], "items": []}
         response.raise_for_status.return_value = None
         client = Mock(return_value=response)
-        live_audit(" APP_ID \\n", " KEY_VALUE \\n", client)
+        live_audit(" APP_ID \n", " KEY_VALUE \n", client)
         self.assertEqual(client.call_count, len(AUDIT_QUERIES))
         self.assertEqual(client.call_args.kwargs["headers"]["X-App-Id"], "APP_ID")
         self.assertEqual(client.call_args.kwargs["headers"]["X-App-Key"], "KEY_VALUE")
