@@ -128,6 +128,14 @@ Produkter over disse grænser bliver i rå restock-state og kan fortsat give res
 - ETB: 1.500 kr.
 - Booster Box: 1.750 kr.
 
+## Discord V2 sikker udrulning (2026-10-28)
+
+- `discord_alert_v2.py` indeholder ren renderering og seks statusser. `discord_v2_hot_adapter.py` omsætter HOT-kildedata uden at skrive state.
+- HOT bruger `DISCORD_V2_HOT_MODE` med standarden `shadow`: render den nye besked diagnostisk, men send fortsat den eksisterende embed som hidtil.
+- Kun `DISCORD_V2_HOT_MODE=on` skifter HOT's udsendte embed; det kræver separat vurdering af skyggeresultater og datakvalitet. Udsend aldrig to beskeder for samme event.
+- Systemlager, PRE-PUBLISH og modstridende status må aldrig ophøjes til bekræftet købbarhed. `BESTILLINGSVARE` skal fremstå tydeligt som ordrevare, ikke garanteret øjeblikkelig levering.
+- Endnu ingen produktionsadapter for Local Stock, Hidden Stock, Salling Early Radar, Price Watch eller Cardmarket; disse bevarer deres eksisterende beskeder.
+
 ## Anti-spam
 
 - Restock-dubletter har 6 timers cooldown for samme dedupe-identitet.

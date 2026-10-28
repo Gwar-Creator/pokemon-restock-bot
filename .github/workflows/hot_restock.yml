@@ -13,6 +13,9 @@ on:
     paths:
       - "alert_policy.py"
       - "hot_restock.py"
+      - "discord_alert_v2.py"
+      - "discord_v2_hot_adapter.py"
+      - "test_discord_v2_hot_adapter.py"
       - "hot_restock_v4.py"
       - "state_commit_guard.py"
       - "salling_early_radar.py"
@@ -54,8 +57,8 @@ jobs:
 
       - name: Validate Tier A HOT scanner and Salling Early Radar
         run: |
-          python -m py_compile alert_policy.py hot_restock.py hot_restock_v4.py salling_early_radar.py salling_early_radar_runner.py early_intel_shadow.py state_commit_guard.py
-          python -m unittest test_state_commit_guard.py test_alert_policy_v2.py test_restock_lane_ownership.py test_hot_proshop_noise.py test_early_intel_shadow.py test_salling_early_radar.py
+          python -m py_compile alert_policy.py hot_restock.py hot_restock_v4.py discord_alert_v2.py discord_v2_hot_adapter.py test_discord_v2_hot_adapter.py salling_early_radar.py salling_early_radar_runner.py early_intel_shadow.py state_commit_guard.py
+          python -m unittest test_state_commit_guard.py test_alert_policy_v2.py test_restock_lane_ownership.py test_hot_proshop_noise.py test_discord_v2_hot_adapter.py test_early_intel_shadow.py test_salling_early_radar.py
           python - <<'PY'
           import ast
           from pathlib import Path

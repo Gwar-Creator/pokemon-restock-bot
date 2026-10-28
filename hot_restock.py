@@ -11,6 +11,7 @@ from urllib.parse import urljoin
 import requests
 
 from alert_policy import TIER_A_SOURCES
+from discord_v2_hot_adapter import hot_payload
 
 ROOT = Path(__file__).resolve().parent
 SHARED_FILE = ROOT / "restock_bot_github.py"
@@ -20,6 +21,8 @@ FILTER_VERSION = 3
 HOT_ITERATIONS = max(1, int(os.getenv("HOT_ITERATIONS", "1")))
 HOT_INTERVAL_SECONDS = max(30, int(os.getenv("HOT_INTERVAL_SECONDS", "60")))
 HOT_DRY_RUN = os.getenv("HOT_DRY_RUN", "0").strip() == "1"
+# Shadow mode computes V2 cards but sends the unchanged legacy embed.
+DISCORD_V2_HOT_MODE = os.getenv("DISCORD_V2_HOT_MODE", "shadow").strip().lower()
 WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL", "").strip()
 
 PROSHOP_FRONTEND_URL = "https://www.proshop.dk/?s=Pokemon+TCG"
@@ -356,6 +359,23 @@ def send_hot_alert(source_key, product, event):
     }
     if url:
         embed["url"] = url
+
+    # Safe incremental rollout: shadow is the default and does not post V2.
+    # The event/cooldown/lane policy remains exactly the same in both modes.
+    if DISCORD_V2_HOT_MODE in ("shadow", "on"):
+        try:
+            new_payload, new_status = hot_payload(source_key, product, event)
+            if DISCORD_V2_HOT_MODE == "on":
+                embed = new_payload["embeds"][0]
+            else:
+                print(
+                    f"HOT V2 SHADOW: {label} | {new_status} | "
+                    f"{str(product.get('name') or '')[:90]}"
+                )
+        except Exception as error:
+            # Renderer failures must not silently lose a genuine legacy alert.
+            print(f"HOT V2 WARNING: renderer failed ({type(error).__name__}: {error})")
+            # Keep the existing stable embed; never send a second message.
 
     if HOT_DRY_RUN:
         print("HOT DRY RUN:")
