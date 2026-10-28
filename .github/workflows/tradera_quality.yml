@@ -1,0 +1,53 @@
+name: Tradera Vintage Finder read-only quality audit
+
+on:
+  # A one-shot main deployment check. Later Python changes do not trigger API use.
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/tradera_quality.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tradera-shadow-quality-one-shot
+  cancel-in-progress: false
+
+jobs:
+  shadow-quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      TRADERA_APP_ID: ${{ secrets.TRADERA_APP_ID }}
+      TRADERA_APP_KEY: ${{ secrets.TRADERA_APP_KEY }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Install read-only client
+        run: python -m pip install --disable-pip-version-check -q requests
+      - name: Offline guardrail tests before any API request
+        run: |
+          python -m py_compile vintage_finder_tradera.py vintage_tradera_quality.py test_vintage_tradera_quality.py
+          python -m unittest -q test_vintage_finder_tradera.py test_vintage_tradera_quality.py
+      - name: Presence check only for existing marketplace webhook (never print value)
+        env:
+          MARKETPLACE_WEBHOOK_URL: ${{ secrets.MARKETPLACE_WEBHOOK_URL }}
+        shell: bash
+        run: |
+          if [[ -n "$MARKETPLACE_WEBHOOK_URL" ]]; then
+            echo "MARKETPLACE_WEBHOOK_URL: configured (destination NOT verified; alerts DISABLED)"
+          else
+            echo "MARKETPLACE_WEBHOOK_URL: not configured (alerts DISABLED)"
+          fi
+      - name: Official Tradera v4 one-page searches, no publishing
+        run: python vintage_tradera_quality.py --live --output tradera_quality_report.json
+      - name: Archive public-listing quality samples for manual false-positive review
+        uses: actions/upload-artifact@v4
+        with:
+          name: vintage-tradera-quality-sample
+          path: tradera_quality_report.json
+          retention-days: 14
