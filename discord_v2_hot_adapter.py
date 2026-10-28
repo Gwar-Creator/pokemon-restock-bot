@@ -79,6 +79,8 @@ def hot_event(source_key, product, event):
     stores = _stores(source_key, data)
     payload = {
         "source": LABELS.get(source_key, source_key.upper()),
+        "event_type": "RESTOCK" if str(event).upper() == "RESTOCK" else "NYT PRODUKT",
+        "sku": data.get("sku") or "",
         "name": data.get("name") or "Ukendt produkt",
         "price": data.get("price"),
         "url": url,
