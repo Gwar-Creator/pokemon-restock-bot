@@ -184,6 +184,10 @@ def actionable_signal(listing, evidence, now=None):
 
 
 def live_audit(app_id, app_key, transport=requests.get):
+    # Mirror the previously successful read-only probe: trim whitespace from
+    # environment secrets before constructing HTTP header values.
+    app_id = app_id.strip() if isinstance(app_id, str) else ""
+    app_key = app_key.strip() if isinstance(app_key, str) else ""
     if not app_id or not app_key:
         raise ValueError("Tradera application credentials are missing")
     batches = []
