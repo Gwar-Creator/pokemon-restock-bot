@@ -215,26 +215,6 @@
         "sku": "11379493-EA",
         "url": "https://www.bilka.dk/produkter/pokemon-poster-collection-30th/200392205/"
       },
-      "200385295": {
-        "name": "Pokemon First Partner collection box 3 samlekort",
-        "price": 249.0,
-        "online_count": 0,
-        "online_stock": false,
-        "store_count": 12,
-        "local_stocks": {
-          "1662": {
-            "name": "Bilka Kolding",
-            "stock": 0
-          },
-          "1659": {
-            "name": "Bilka Esbjerg",
-            "stock": 0
-          }
-        },
-        "quantity_limit": 1,
-        "sku": "11350615-EA",
-        "url": "https://www.bilka.dk/produkter/pokemon-first-partner-collection-box-3-samlekort/200385295/"
-      },
       "200366277": {
         "name": "Pokémon TCG booster pack samlekort",
         "price": 49.0,
@@ -254,6 +234,26 @@
         "quantity_limit": 6,
         "sku": "11263280-EA",
         "url": "https://www.bilka.dk/produkter/pokemon-tcg-booster-pack-samlekort/200366277/"
+      },
+      "200385295": {
+        "name": "Pokemon First Partner collection box 3 samlekort",
+        "price": 249.0,
+        "online_count": 0,
+        "online_stock": false,
+        "store_count": 12,
+        "local_stocks": {
+          "1662": {
+            "name": "Bilka Kolding",
+            "stock": 0
+          },
+          "1659": {
+            "name": "Bilka Esbjerg",
+            "stock": 0
+          }
+        },
+        "quantity_limit": 1,
+        "sku": "11350615-EA",
+        "url": "https://www.bilka.dk/produkter/pokemon-first-partner-collection-box-3-samlekort/200385295/"
       }
     },
     "foetex": {
@@ -544,11 +544,11 @@
       "last_success_at": "2026-10-28T17:14:15.571201+00:00"
     },
     "proshop": {
-      "backoff_level": 1,
-      "next_allowed_at": 1793207667.593194,
-      "generic_failures": 1,
+      "backoff_level": 2,
+      "next_allowed_at": 1793208040.2332072,
+      "generic_failures": 2,
       "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
-      "last_failure_at": "2026-10-28T17:12:27.593152+00:00",
+      "last_failure_at": "2026-10-28T17:15:40.233166+00:00",
       "last_success_at": "2026-10-28T17:11:31.893609+00:00"
     },
     "br": {
@@ -585,14 +585,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1793207700.3613932,
+      "next_allowed_at": 1793207998.531912,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-10-28T17:11:00.361370+00:00"
+      "last_success_at": "2026-10-28T17:15:58.531888+00:00"
     }
   },
-  "updated_at": "2026-10-28T17:14:31.465962+00:00",
+  "updated_at": "2026-10-28T17:19:32.301030+00:00",
   "proshop_discovery_version": 4,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -623,11 +623,11 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-10-28T17:10:59.442240+00:00"
+          "last_checked": "2026-10-28T17:15:57.503554+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1793207458.6221077,
+      "last_discovery_epoch": 1793207756.545321,
       "last_full_discovery_epoch": 1793202071.2234676,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
