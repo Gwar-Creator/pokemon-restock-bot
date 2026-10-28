@@ -36,6 +36,14 @@ conservative maximum bid/buy price. If anything material is unknown,
 leave the candidate off Discord. No live alerts are authorized by
 this preview work.
 
+## Shadow quality audit — initial one-shot sample
+
+- `vintage_tradera_quality.py` takes one page for each of six Tradera REST v4 vintage-oriented queries, deduplicates by item ID and counts TITLE_VINTAGE, TITLE_UNCERTAIN and EXCLUDED. It never sends Discord or writes persistent state.
+- `.github/workflows/tradera_quality.yml` runs once on its initial deployment to main (and on explicit manual dispatch only). It checks whether `MARKETPLACE_WEBHOOK_URL` is configured without printing its value. It **does not** verify which Discord channel receives that webhook; live alerts remain disabled.
+- Logs/artifact contain at most 20 public title/URL samples for human relevance review, not seller identities. Automated title categories are **not** verified deals or measured true-positive/false-positive counts: precision stays unknown until manual labeling and inspection of photos, language, seller and total DK cost.
+- The future KØB/BYD gate needs current, listing-specific human evidence for real cards, authenticity, card language, condition, seller, DK shipping/fees, market comparisons and conservative cap. It is not wired into a sender or any automatic bids.
+- This snapshot is the **first step** toward the previously proposed 14-day shadow validation, not evidence that the longer observation is complete. No production activation from this sample.
+
 ## First official Tradera live result verified
 
 - **28 October 2026:** `tradera_probe.yml` returned HTTP 200 and `GET /v4/search?query=pokemon+samling&pageNumber=0` returned exactly 50 rows on the first page, without printing titles, sellers, prices or secrets.
