@@ -592,6 +592,16 @@ def send_alert(title, product, detail, preferred_site=None):
     if not webhook:
         raise RuntimeError("DISCORD_WEBHOOK_URL mangler")
 
+    # V2 early-radar classification is log-only until source confidence is
+    # reviewed. Existing Discord content and cooldown remain unchanged.
+    try:
+        from discord_v2_salling_adapter import early_radar_event, shadow_line
+        print(shadow_line(
+            "EARLY", early_radar_event(title, product, detail, preferred_site)
+        ))
+    except Exception as error:
+        print(f"DISCORD V2 SHADOW EARLY failed: {type(error).__name__}: {error}")
+
     price = product.get("price")
     price_text = f"{price} kr." if price is not None else "Pris ikke oplyst"
     updated = record_update_text(product)

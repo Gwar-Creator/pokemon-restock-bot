@@ -240,6 +240,14 @@ def send_alert(rows):
     )
     if not locations:
         raise ValueError("Hidden-stock alert has no approved local stores")
+    # Feed only already location-filtered rows to the V2 shadow classifier.
+    # No second message, no state change, no alteration to PRE-PUBLISH gate.
+    try:
+        from discord_v2_salling_adapter import hidden_stock_event, shadow_line
+        print(shadow_line("HIDDEN", hidden_stock_event(locations)))
+    except Exception as error:
+        print(f"DISCORD V2 SHADOW HIDDEN failed: {type(error).__name__}: {error}")
+
     first = locations[0]
     chain = local.SITES[first["site"]]["label"]
     store_lines = [f"**{r['store']}** · {r['stock']} stk."
