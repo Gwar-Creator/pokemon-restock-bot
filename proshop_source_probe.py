@@ -12,6 +12,9 @@ SOURCES = {
     "pokemon-search": "https://www.proshop.dk/?s=Pokemon+TCG",
     "booster-search": "https://www.proshop.dk/?s=Pokemon+booster",
     "collection-search": "https://www.proshop.dk/?s=Pokemon+Premium+Collection",
+    "detail-greninja": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
+    "detail-chaos-box": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-EvolutionChaos-Rising-Booster-box-with-36-boosters/3447592",
+    "detail-first-partner": "https://www.proshop.dk/Pokemon/Pokemon-TCG-First-Partner-Illustration-Collection-Box-Series-2/3478498",
 }
 PRODUCT_LINK = re.compile(
     r"(?:https?://(?:www\.)?proshop\.dk)?/Pokemon/[^)\s?#\"<>]+/(\d+)",
