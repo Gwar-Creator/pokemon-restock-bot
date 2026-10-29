@@ -224,14 +224,20 @@ def publish(items, state, webhook, now=None,
             verify_transport=requests.get, send_transport=requests.post):
     """After durable state commit only. Exact webhook check before POST."""
     now = now or datetime.now(timezone.utc)
-    if not items:
+    if not isinstance(items, list) or not 0 < len(items) <= 3:
         return 0
-    if verify_webhook_destination(webhook, CHANNEL_ID, verify_transport) != "VERIFIED":
-        raise RuntimeError("Marketplace webhook target not verified; no messages sent")
+    if not isinstance(state, dict) or not isinstance(state.get("seen"), dict):
+        return 0
     seen = state["seen"]
-    posted = 0
+    ready = []
+    used = set()
     for item in items:
-        stamp = seen.get(item["id"])
+        if not isinstance(item, dict):
+            continue
+        ident = str(item.get("id") or "")
+        if ident in used:
+            continue
+        stamp = seen.get(ident)
         if not isinstance(stamp, str):
             continue
         try:
@@ -245,6 +251,14 @@ def publish(items, state, webhook, now=None,
             card = payload(item)
         except (ValueError, KeyError, TypeError):
             continue
+        ready.append(card)
+        used.add(ident)
+    if not ready:
+        return 0
+    if verify_webhook_destination(webhook, CHANNEL_ID, verify_transport) != "VERIFIED":
+        raise RuntimeError("Marketplace webhook target not verified; no messages sent")
+    posted = 0
+    for card in ready:
         try:
             result = send_transport(webhook, json=card, timeout=10,
                                     allow_redirects=False)
