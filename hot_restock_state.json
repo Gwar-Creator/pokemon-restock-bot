@@ -551,12 +551,12 @@
       "last_success_at": "2026-10-29T02:24:12.112052+00:00"
     },
     "proshop": {
-      "backoff_level": 2,
-      "next_allowed_at": 1793249504.4542084,
+      "backoff_level": 1,
+      "next_allowed_at": 1793249670.776181,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-29T04:31:08.677505+00:00",
-      "last_success_at": "2026-10-29T04:46:44.454189+00:00"
+      "last_success_at": "2026-10-29T04:52:30.776163+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -583,23 +583,23 @@
       "last_success_at": "2026-10-27T12:05:35.019533+00:00"
     },
     "boozt": {
-      "backoff_level": 1,
-      "next_allowed_at": 1793249435.3771381,
-      "generic_failures": 1,
-      "last_error": "BOOZT fejlede: Reader: 503 Server Error: Service Unavailable for url: https://r.jina.ai/https://www.boozt.com/dk/da/pokemon-trading-cards/born | direct: 429 Client Error: Too Many Requests for url: https://www.boozt.com/dk/da/pokemon-trading-cards/born",
+      "backoff_level": 0,
+      "next_allowed_at": 0.0,
+      "generic_failures": 0,
+      "last_error": null,
       "last_failure_at": "2026-10-29T04:48:35.377114+00:00",
-      "last_success_at": "2026-10-29T04:47:38.171474+00:00"
+      "last_success_at": "2026-10-29T04:54:37.114999+00:00"
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1793249392.8142047,
+      "next_allowed_at": 1793249701.7143452,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-10-29T04:45:52.814181+00:00"
+      "last_success_at": "2026-10-29T04:51:01.714322+00:00"
     }
   },
-  "updated_at": "2026-10-29T04:49:25.084750+00:00",
+  "updated_at": "2026-10-29T04:54:37.115046+00:00",
   "proshop_discovery_version": 4,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -630,11 +630,11 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-10-29T04:45:51.368786+00:00"
+          "last_checked": "2026-10-29T04:51:00.820206+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1793249150.7247486,
+      "last_discovery_epoch": 1793249460.0911922,
       "last_full_discovery_epoch": 1793245597.395766,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
