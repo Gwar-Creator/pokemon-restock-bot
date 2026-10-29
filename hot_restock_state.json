@@ -151,7 +151,7 @@
         "online_stock": false,
         "store_count": 23,
         "kolding_stock": 2,
-        "esbjerg_stock": 2,
+        "esbjerg_stock": 0,
         "quantity_limit": 1,
         "sku": "11350615-EA",
         "url": "https://www.br.dk/produkter/pokemon-first-partner-collection-box-3-samlekort/200385295/"
@@ -551,12 +551,12 @@
       "last_success_at": "2026-10-29T02:24:12.112052+00:00"
     },
     "proshop": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-10-29T09:20:39.356118+00:00",
-      "last_success_at": "2026-10-29T09:24:17.817794+00:00"
+      "backoff_level": 2,
+      "next_allowed_at": 1793266777.641994,
+      "generic_failures": 2,
+      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "last_failure_at": "2026-10-29T09:34:37.641959+00:00",
+      "last_success_at": "2026-10-29T09:30:55.759219+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -592,14 +592,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1793266194.051366,
+      "next_allowed_at": 1793266515.2173493,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-10-29T09:25:54.051337+00:00"
+      "last_success_at": "2026-10-29T09:31:15.217325+00:00"
     }
   },
-  "updated_at": "2026-10-29T09:29:31.676946+00:00",
+  "updated_at": "2026-10-29T09:34:52.570344+00:00",
   "proshop_discovery_version": 4,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -630,11 +630,11 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-10-29T09:25:52.784281+00:00"
+          "last_checked": "2026-10-29T09:31:13.830003+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1793265952.171715,
+      "last_discovery_epoch": 1793266273.0472107,
       "last_full_discovery_epoch": 1793245597.395766,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
