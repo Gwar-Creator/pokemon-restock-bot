@@ -56,6 +56,10 @@ Læs altid de live filer i GitHub. Stol ikke alene på en ældre chat, lokal kop
 - Nye webhook-opslag skal senere sendes til den eksisterende kanal efter særskilt verifikation af den korrekte kanal/webhook. Genbrug ikke Cardmarket eller Price Watch webhook, og aktiver ikke en varselsstrøm før dokumenteret relevans og dubletbeskyttelse.
 - Manuelt relevante fund er ikke nødvendigvis køb. Fragt til DK, sprog, stand, ægthed og pris holdes uverificerede indtil gennemgang.
 
+## Verificeret marketplace-kanal (29. oktober 2026)
+
+- **Webhook-destination er verificeret 29. oktober 2026:** GitHub Actions [run 40823401471](https://github.com/Gwar-Creator/pokemon-restock-bot/actions/runs/40823401471) sammenlignede den eksisterende `MARKETPLACE_WEBHOOK_URL` med brugerens bekræftede kanal-ID `1540094708439711904` og returnerede `VERIFIED` via read-only GET. Ingen webhook blev vist, og ingen POST blev sendt. **Vintage Finder Discord-alarmer er fortsat slået fra**, fordi uverificerede shortlist-fund ikke er KØB/BYD.
+
 ## Vintage Finder: Tradera forberedelse (28. oktober 2026)
 
 - `vintage_finder_tradera.py` er en **ikke-planlagt, read-only prototype**, ikke en kørende bot. `VINTAGE_FINDER_PLAN.md` beskriver sikkerhedsgates.
