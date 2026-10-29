@@ -1,0 +1,28 @@
+name: Proshop sitemap research (read only)
+
+on:
+  push:
+    branches:
+      - research/proshop-sku-detail-20261029
+    paths:
+      - "proshop_sitemap_probe.py"
+      - ".github/workflows/proshop_sitemap_probe.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Install basic dependency
+        run: python -m pip install requests
+      - name: Compile
+        run: python -m py_compile proshop_sitemap_probe.py
+      - name: Read Proshop public robots and sitemap
+        run: python -u proshop_sitemap_probe.py
