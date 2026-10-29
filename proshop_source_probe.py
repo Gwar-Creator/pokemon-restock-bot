@@ -1,25 +1,26 @@
 #!/usr/bin/env python3
-"""One-shot, read-only Proshop source diagnostics. No Discord, no state writes."""
+"""Read-only Proshop transport coverage probe. No Discord, no state writes."""
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import re
+
 import requests
 
 SOURCES = {
     "cards-category": "https://www.proshop.dk/pokemon-kort",
     "pokemon-brand": "https://www.proshop.dk/Pokemon/Pokemon",
-    "pokemon-tcg-search": "https://www.proshop.dk/?s=Pokemon+TCG",
+    "pokemon-search": "https://www.proshop.dk/?s=Pokemon+TCG",
 }
 PRODUCT_LINK = re.compile(
-    r"(?:https?://(?:www\\.)?proshop\\.dk)?/Pokemon/[^)\\s?#\"<>]+/(\\d+)",
+    r"(?:https?://(?:www\.)?proshop\.dk)?/Pokemon/[^)\s?#\"<>]+/(\d+)",
     re.I,
 )
 MARKDOWN_LINK = re.compile(
-    r"\\[([^\\]]{2,300})\\]\\((?:https?://(?:www\\.)?proshop\\.dk)?"
-    r"(/Pokemon/[^)\\s?#]+/\\d+)(?:[?#][^)]*)?\\)",
+    r"\[([^\]]{2,300})\]\((?:https?://(?:www\.)?proshop\.dk)?"
+    r"(/Pokemon/[^)\s?#]+/\d+)(?:[?#][^)]*)?\)",
     re.I | re.S,
 )
 TCG = re.compile(
-    r"(?i)(?:\\bTCG\\b|booster|elite trainer|\\bETB\\b|"
+    r"(?i)(?:\bTCG\b|booster|elite trainer|\bETB\b|"
     r"premium collection|illustration collection|battle deck|world championships|mini tin)"
 )
 
@@ -32,15 +33,15 @@ def probe(label, url):
             "x-no-cache": "true",
             "x-engine": "browser",
         }, timeout=50)
-        text = response.text
-        ids = set(PRODUCT_LINK.findall(text))
-        md = MARKDOWN_LINK.findall(text)
-        relevant = [(name.strip().replace("\\n", " ")[:110], path) for name, path in md if TCG.search(name)]
+        page = response.text
+        ids = set(PRODUCT_LINK.findall(page))
+        md = MARKDOWN_LINK.findall(page)
+        relevant = [(name.strip().replace("\n", " ")[:110], path) for name, path in md if TCG.search(name)]
         return {
             "source": label, "status": response.status_code,
-            "bytes": len(text), "raw_unique_ids": len(ids),
+            "bytes": len(page), "raw_unique_ids": len(ids),
             "markdown_links": len(md), "tcg_markdown": len(relevant),
-            "tcg_examples": relevant[:12],
+            "tcg_examples": relevant[:15],
             "error_type": None,
         }
     except requests.RequestException as exc:
