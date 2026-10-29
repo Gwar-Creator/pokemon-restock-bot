@@ -60,6 +60,10 @@ on:
       - "indeks_retail_shadow.py"
       - "flinamania_product_probe.py"
       - "hot_restock.py"
+      - "proshop_reader_v2.py"
+      - "test_proshop_reader_v2.py"
+      - "test_proshop_main_health_v2.py"
+      - "scanner_health_audit.py"
       - "hot_restock_v4.py"
       - "test_hot_proshop_noise.py"
       - "state_commit_guard.py"
@@ -185,6 +189,9 @@ jobs:
 
       - name: Test hidden stock cooldown and debouncing
         run: timeout 60s python -m unittest test_hidden_stock_watch.py
+
+      - name: Test Proshop Reader and main source-health regression
+        run: python -m unittest -v test_proshop_reader_v2.py test_proshop_main_health_v2.py
 
       - name: Test Proshop repeated-alert guard
         run: timeout 60s python -m unittest test_hot_proshop_noise.py
