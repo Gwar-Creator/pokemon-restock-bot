@@ -61,6 +61,8 @@ on:
       - "flinamania_product_probe.py"
       - "hot_restock.py"
       - "proshop_reader_v2.py"
+      - "proshop_known_sku_watch.py"
+      - "test_proshop_known_sku_watch.py"
       - "test_proshop_reader_v2.py"
       - "test_proshop_main_health_v2.py"
       - "scanner_health_audit.py"
@@ -191,7 +193,7 @@ jobs:
         run: timeout 60s python -m unittest test_hidden_stock_watch.py
 
       - name: Test Proshop Reader and main source-health regression
-        run: python -m unittest -v test_proshop_reader_v2.py test_proshop_main_health_v2.py
+        run: python -m unittest -v test_proshop_reader_v2.py test_proshop_known_sku_watch.py test_proshop_main_health_v2.py
 
       - name: Test Proshop repeated-alert guard
         run: timeout 60s python -m unittest test_hot_proshop_noise.py
