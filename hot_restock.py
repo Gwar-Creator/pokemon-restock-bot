@@ -13,6 +13,7 @@ import requests
 from alert_policy import TIER_A_SOURCES
 from discord_v2_hot_adapter import hot_payload
 from proshop_reader_v2 import parse_proshop_reader
+from proshop_known_sku_watch import KNOWN_PRODUCTS, is_proshop_tcg_title, extend_with_known_details
 
 ROOT = Path(__file__).resolve().parent
 SHARED_FILE = ROOT / "restock_bot_github.py"
@@ -27,7 +28,7 @@ DISCORD_V2_HOT_MODE = os.getenv("DISCORD_V2_HOT_MODE", "shadow").strip().lower()
 WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL", "").strip()
 
 PROSHOP_FRONTEND_URL = "https://www.proshop.dk/?s=Pokemon+TCG"
-PROSHOP_DISCOVERY_VERSION = 5
+PROSHOP_DISCOVERY_VERSION = 6
 PROSHOP_MIN_FRESH_PRODUCTS = 3
 # One product alert per 24 hours even if Proshop source/parser status flaps.
 PROSHOP_ALERT_COOLDOWN_SECONDS = 24 * 60 * 60
@@ -113,7 +114,9 @@ def load_shared_namespace():
         "__file__": str(SHARED_FILE),
     }
     exec(compile(source.split(marker, 1)[0], str(SHARED_FILE), "exec"), namespace)
-    tcg_check = namespace["_proshop_is_tcg_text"]
+    old_tcg_check = namespace["_proshop_is_tcg_text"]
+    tcg_check = lambda name: is_proshop_tcg_title(name, old_tcg_check)
+    namespace["_proshop_is_tcg_text"] = tcg_check
     namespace["_parse_proshop_reader_markdown"] = (
         lambda markdown: parse_proshop_reader(markdown, tcg_check)
     )
@@ -1625,6 +1628,8 @@ def fetch_source(shared, source_key, old_products, state=None):
         return shared["get_coolshop_products"]()
     if source_key == "proshop":
         current = _fetch_expanded_proshop_products(shared)
+        if state is not None:
+            current = extend_with_known_details(current, old_products, state)
         return _preserve_missing_proshop_products(old_products, current)
     if source_key == "br":
         return shared["get_br_products"](old_products)
@@ -1724,6 +1729,11 @@ def run_scan(shared, state):
 
                 old = old_products.get(product_id)
                 if old is None:
+                    # Known pre-existing SKUs are silently baseline-seeded;
+                    # a previously missed product is not a new launch.
+                    if source_key == "proshop" and product_id in KNOWN_PRODUCTS:
+                        print(f"HOT PROSHOP baseline seeded for known SKU {product_id}")
+                        continue
                     maybe_send_hot_alert(state, source_key, product_id, product, "NYT")
                     continue
 

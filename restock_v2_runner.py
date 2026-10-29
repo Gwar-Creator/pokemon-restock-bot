@@ -19,6 +19,7 @@ from alert_policy import (
 )
 from faraos_parser_v2 import faraos_name_v2
 from proshop_reader_v2 import parse_proshop_reader
+from proshop_known_sku_watch import KNOWN_PRODUCTS, is_proshop_tcg_title, extend_with_known_details
 
 SCANNER_FILE = Path(__file__).resolve().parent / "restock_bot_github.py"
 START_MARKER = (
@@ -606,10 +607,12 @@ def _install_kelz0r_fast_fetch(namespace):
 
 
 def _install_proshop_reader_v2(namespace):
-    """Install tested Proshop parser with degraded-versus-healthy reporting."""
+    """Install tested Proshop parser and conservative verified SKU monitoring."""
     min_accepted = 3
     healthy_target = 6
-    tcg_check = namespace["_proshop_is_tcg_text"]
+    old_tcg = namespace["_proshop_is_tcg_text"]
+    tcg_check = lambda name: is_proshop_tcg_title(name, old_tcg)
+    namespace["_proshop_is_tcg_text"] = tcg_check
     namespace["_parse_proshop_reader_markdown"] = (
         lambda markdown: parse_proshop_reader(markdown, tcg_check)
     )
@@ -617,49 +620,87 @@ def _install_proshop_reader_v2(namespace):
     legacy_changes = namespace["process_proshop_changes"]
     legacy_fetch = namespace["fetch_source_products"]
     legacy_health_send = namespace["send_scanner_health"]
+    category_last_count = {"count": None}
 
     def health_send(message):
-        # The legacy fetcher calls RECOVERY before its caller can classify a
-        # partially parsed snapshot. Do not announce a false green recovery.
+        # A fallback with a handful of verified known SKUs does not prove
+        # category discovery works; avoid false "fully recovered" messages.
         msg = str(message)
         if "SCANNERKILDE KØRER IGEN" in msg and "**PROSHOP**" in msg:
             found = re.search(r"Produkter fundet:\s*(\d+)", msg)
-            if found and int(found.group(1)) < healthy_target:
+            count = int(found.group(1)) if found else 0
+            if count < healthy_target or (
+                category_last_count["count"] is not None
+                and category_last_count["count"] < healthy_target
+            ):
                 print("PROSHOP HEALTH: legacy recovery suppressed for partial coverage")
                 return False
         return legacy_health_send(message)
 
     def monitored_fetch(source_key, old_products, fetcher, state_target):
         previous = dict((state_target.get("_source_health") or {}).get(source_key) or {})
-        products = legacy_fetch(source_key, old_products, fetcher, state_target)
         if source_key != "proshop":
-            return products
+            return legacy_fetch(source_key, old_products, fetcher, state_target)
+
+        category_last_count["count"] = None
+
+        def fetch_with_detail_checks():
+            category = fetcher()
+            category_last_count["count"] = len(category)
+            return extend_with_known_details(category, old_products, state_target)
+
+        products = legacy_fetch(source_key, old_products, fetch_with_detail_checks, state_target)
+        category_count = category_last_count["count"]
         count = len(products)
-        if count < healthy_target:
+        if category_count is None:
+            category_count = 0
+        if category_count < healthy_target:
             namespace["_source_health_update"](
                 state_target, "proshop",
                 status="degraded",
-                last_error=f"Kun {count} aktuelle TCG-produkter; under health-target {healthy_target}",
+                last_error=(
+                    f"Kategori {category_count} aktuelle TCG-produkter, "
+                    f"{count - category_count} bekræftede SKU-detaljer; "
+                    f"health-target for kategori er {healthy_target}"
+                ),
             )
-            print(f"PROSHOP HEALTH: DEGRADED {count} friske; target={healthy_target}")
-            if previous.get("status") not in ("degraded",):
+            print(
+                f"PROSHOP HEALTH: DEGRADED kategori={category_count} "
+                f"+ detaljer={count - category_count}; target={healthy_target}"
+            )
+            if previous.get("status") != "degraded":
                 health_send(
                     "⚠️ **PROSHOP SCANNING ER DELVIST DÆKKENDE**\n"
-                    f"Kun {count} friske TCG-produkter fundet; minimum for fuld dækning "
-                    f"er {healthy_target}. Resten af scanneren kører."
+                    f"Kategori {category_count} friske TCG-produkter; "
+                    f"{count - category_count} særskilt verificeret. "
+                    f"Fuld kategoridækning kræver mindst {healthy_target}."
                 )
         elif previous.get("status") == "degraded":
             health_send(
                 "✅ **PROSHOP DÆKNING GENOPRETTET**\n"
-                f"{count} friske TCG-produkter fundet."
+                f"{category_count} friske produkter i kataloget."
             )
         return products
 
     def migration_safe_changes(old_products, new_products):
+        old_for_alerts = dict(old_products or {})
+        for sku, fresh in new_products.items():
+            if sku not in KNOWN_PRODUCTS:
+                continue
+            previous = old_for_alerts.get(sku)
+            if previous is None or (
+                fresh.get("fetch_via") == "jina_verified_detail"
+                and previous.get("fetch_via") not in (
+                    "jina_reader", "jina_verified_detail", "direct_frontend_search"
+                )
+            ):
+                # Existing known preorders/history require a silent baseline
+                # before a future true out-of-stock -> available transition.
+                old_for_alerts[sku] = dict(fresh)
         if len(old_products or {}) < 4 and len(new_products or {}) >= min_accepted:
-            print("PROSHOP PARSER V2: silent catalog migration without false NEW alerts")
+            print("PROSHOP: silent partial-catalog migration without NEW alerts")
             return
-        return legacy_changes(old_products, new_products)
+        return legacy_changes(old_for_alerts, new_products)
 
     namespace["send_scanner_health"] = health_send
     namespace["fetch_source_products"] = monitored_fetch

@@ -18,6 +18,14 @@ def proshop_product(stock="PÅ LAGER"):
 
 
 class ProshopNoiseTests(unittest.TestCase):
+    def setUp(self):
+        mock = patch.object(
+            hot, "extend_with_known_details",
+            side_effect=lambda current, old, state: current,
+        )
+        mock.start()
+        self.addCleanup(mock.stop)
+
     def test_bestillingsvare_to_in_stock_is_not_restock(self):
         self.assertTrue(hot.product_available("proshop", proshop_product("BESTILLINGSVARE")))
         self.assertTrue(hot.product_available("proshop", proshop_product("PÅ LAGER")))
@@ -72,6 +80,29 @@ class ProshopNoiseTests(unittest.TestCase):
                 hot.run_scan(shared, state)
         self.assertEqual(sender.call_count, 1)
         self.assertIn("proshop:3478496", state["last_hot_alerts"])
+
+    def test_known_two_pack_first_appearance_is_not_a_false_new_launch(self):
+        state = {
+            "sources": {"proshop": {"3421827": proshop_product()}},
+            "source_controls": {},
+            "proshop_discovery_version": hot.PROSHOP_DISCOVERY_VERSION,
+        }
+        known = {
+            "name": "Pokemon TCG 2-pack Booster",
+            "price": None,
+            "stock": "PÅ LAGER",
+            "url": hot.KNOWN_PRODUCTS["3478497"],
+            "game": "POKÉMON",
+        }
+        shared = {"restock_alert_allowed": lambda product, game: True}
+        with patch.object(hot, "SOURCE_LABELS", {"proshop": "PROSHOP"}), \
+             patch.object(hot, "_fetch_expanded_proshop_products",
+                          return_value={"3478497": known}), \
+             patch.object(hot, "save_state"), \
+             patch.object(hot, "send_hot_alert") as sender:
+            hot.run_scan(shared, state)
+        sender.assert_not_called()
+        self.assertIn("3478497", state["sources"]["proshop"])
 
     def test_persisted_cooldown_expires(self):
         state = {"last_hot_alerts": {"proshop:3478496": 1000}}
