@@ -1,0 +1,28 @@
+name: Proshop SKU verification research
+
+on:
+  push:
+    branches:
+      - research/proshop-sku-detail-20261029
+    paths:
+      - "proshop_sku_detail_probe.py"
+      - ".github/workflows/proshop_sku_detail_probe.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  check-sku-pages:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Install lightweight dependency
+        run: python -m pip install requests
+      - name: Compile
+        run: python -m py_compile proshop_sku_detail_probe.py
+      - name: Read known SKU product pages without sending alerts
+        run: python -u proshop_sku_detail_probe.py
