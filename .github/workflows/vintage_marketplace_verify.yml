@@ -16,7 +16,8 @@ jobs:
     timeout-minutes: 3
     env:
       MARKETPLACE_WEBHOOK_URL: ${{ secrets.MARKETPLACE_WEBHOOK_URL }}
-      MARKETPLACE_EXPECTED_CHANNEL_ID: ${{ vars.MARKETPLACE_EXPECTED_CHANNEL_ID }}
+      # User-confirmed existing #marketplace-deals ID. Public ID, not a webhook credential.
+      MARKETPLACE_EXPECTED_CHANNEL_ID: "1540094708439711904"
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
