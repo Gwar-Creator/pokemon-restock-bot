@@ -9,6 +9,8 @@ SOURCES = {
     "cards-category": "https://www.proshop.dk/pokemon-kort",
     "pokemon-brand": "https://www.proshop.dk/Pokemon/Pokemon",
     "pokemon-search": "https://www.proshop.dk/?s=Pokemon+TCG",
+    "booster-search": "https://www.proshop.dk/?s=Pokemon+booster",
+    "collection-search": "https://www.proshop.dk/?s=Pokemon+Premium+Collection",
 }
 PRODUCT_LINK = re.compile(
     r"(?:https?://(?:www\.)?proshop\.dk)?/Pokemon/[^)\s?#\"<>]+/(\d+)",
@@ -36,12 +38,19 @@ def probe(label, url):
         page = response.text
         ids = set(PRODUCT_LINK.findall(page))
         md = MARKDOWN_LINK.findall(page)
+        seen_paths = list(dict.fromkeys(re.findall(r"/Pokemon/[^)\\s?#\\\"<>]+/\\d+", page, re.I)))
         relevant = [(name.strip().replace("\n", " ")[:110], path) for name, path in md if TCG.search(name)]
         return {
             "source": label, "status": response.status_code,
             "bytes": len(page), "raw_unique_ids": len(ids),
             "markdown_links": len(md), "tcg_markdown": len(relevant),
             "tcg_examples": relevant[:15],
+            "all_paths": seen_paths[:70],
+            "sample_text": page[:450].replace("\\n", " "),
+            "product_link_contexts": [
+                page[max(0, m.start() - 105):min(len(page), m.end() + 180)].replace("\\n", " ")
+                for m in list(PRODUCT_LINK.finditer(page))[:8]
+            ],
             "error_type": None,
         }
     except requests.RequestException as exc:
