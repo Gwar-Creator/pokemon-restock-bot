@@ -1,11 +1,18 @@
 """Offline status and migration tests for Proshop in the main restock lane."""
 import unittest
+from unittest.mock import patch
 
 from restock_v2_runner import _install_proshop_reader_v2
 
 
 class ProshopMainHealthTests(unittest.TestCase):
     def setUp(self):
+        mocked = patch(
+            "restock_v2_runner.extend_with_known_details",
+            side_effect=lambda current, old, state: current,
+        )
+        mocked.start()
+        self.addCleanup(mocked.stop)
         self.messages = []
         self.change_calls = []
         self.state = {"_source_health": {}}
@@ -56,6 +63,35 @@ class ProshopMainHealthTests(unittest.TestCase):
         self.assertEqual(self.change_calls, [])
         fn({"old": {}, "1": {}, "2": {}, "3": {}}, {"1": {}, "2": {}, "3": {}, "4": {}})
         self.assertEqual(len(self.change_calls), 1)
+
+    def test_known_old_products_baseline_without_new_alert(self):
+        old = {"3421827": {"stock": "PÅ LAGER", "fetch_via": "jina_reader"}}
+        fresh = {
+            "3421827": {"stock": "PÅ LAGER", "fetch_via": "jina_reader"},
+            "3478497": {"stock": "BESTILLINGSVARE", "fetch_via": "jina_reader"},
+        }
+        self.ns["process_proshop_changes"](old, fresh)
+        prior, current = self.change_calls[-1]
+        self.assertEqual(prior["3478497"]["stock"], "BESTILLINGSVARE")
+        self.assertIn("3478497", current)
+
+    def test_detail_supplement_does_not_make_category_green(self):
+        # Even when a confirmed extra known SKU raises total from 4 to 6,
+        # the category still provides only four fresh catalogue products.
+        with patch(
+            "restock_v2_runner.extend_with_known_details",
+            side_effect=lambda current, old, state: {
+                **current,
+                "3478496": {"stock": "UDSOLGT"},
+                "3478497": {"stock": "UDSOLGT"},
+            },
+        ):
+            self.ns["fetch_source_products"](
+                "proshop", {}, lambda: {str(x): {} for x in range(4)},
+                self.state,
+            )
+        self.assertEqual(self.state["_source_health"]["proshop"]["status"], "degraded")
+        self.assertIn("Kategori 4", self.state["_source_health"]["proshop"]["last_error"])
 
     def test_other_sources_unchanged(self):
         products = self.ns["fetch_source_products"](
