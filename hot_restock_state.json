@@ -551,12 +551,12 @@
       "last_success_at": "2026-10-29T02:24:12.112052+00:00"
     },
     "proshop": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-10-29T14:09:15.279819+00:00",
-      "last_success_at": "2026-10-29T14:14:21.178882+00:00"
+      "backoff_level": 2,
+      "next_allowed_at": 1793284437.811285,
+      "generic_failures": 2,
+      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "last_failure_at": "2026-10-29T14:28:57.811247+00:00",
+      "last_success_at": "2026-10-29T14:25:15.803271+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -592,15 +592,15 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1793283898.4910877,
+      "next_allowed_at": 1793284174.6879573,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-10-29T14:20:58.491065+00:00"
+      "last_success_at": "2026-10-29T14:25:34.687930+00:00"
     }
   },
-  "updated_at": "2026-10-29T14:24:36.877209+00:00",
-  "proshop_discovery_version": 4,
+  "updated_at": "2026-10-29T14:29:14.123413+00:00",
+  "proshop_discovery_version": 5,
   "retail_discovery_versions": {
     "boozt": 4,
     "magasin": 4
@@ -630,11 +630,11 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-10-29T14:20:57.285996+00:00"
+          "last_checked": "2026-10-29T14:25:33.013799+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1793283656.4872024,
+      "last_discovery_epoch": 1793283932.1846278,
       "last_full_discovery_epoch": 1793267456.73177,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
