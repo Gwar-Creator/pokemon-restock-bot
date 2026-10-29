@@ -551,12 +551,12 @@
       "last_success_at": "2026-10-28T22:44:17.048063+00:00"
     },
     "proshop": {
-      "backoff_level": 1,
-      "next_allowed_at": 1793238598.4129753,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-10-29T01:26:29.341386+00:00",
-      "last_success_at": "2026-10-29T01:47:58.412950+00:00"
+      "backoff_level": 2,
+      "next_allowed_at": 1793239185.4891658,
+      "generic_failures": 2,
+      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: 503 Server Error: Service Unavailable for url: https://r.jina.ai/https://www.proshop.dk/pokemon-kort; pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "last_failure_at": "2026-10-29T01:54:45.489131+00:00",
+      "last_success_at": "2026-10-29T01:50:56.076677+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -592,14 +592,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1793238613.362745,
+      "next_allowed_at": 1793238913.7305346,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-10-29T01:46:13.362718+00:00"
+      "last_success_at": "2026-10-29T01:51:13.730486+00:00"
     }
   },
-  "updated_at": "2026-10-29T01:49:46.575501+00:00",
+  "updated_at": "2026-10-29T01:55:00.150805+00:00",
   "proshop_discovery_version": 4,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -630,11 +630,11 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-10-29T01:46:12.452259+00:00"
+          "last_checked": "2026-10-29T01:51:12.596305+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1793238371.6549106,
+      "last_discovery_epoch": 1793238671.5637116,
       "last_full_discovery_epoch": 1793223963.6143696,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
