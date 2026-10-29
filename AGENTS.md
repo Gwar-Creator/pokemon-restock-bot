@@ -241,7 +241,9 @@ Signed Algolia var den foretrukne fulde kilde, men aktiv scanning er senere reti
 
 ## Proshop
 
-Direkte Proshop-parser er førstevalg. Jina Reader er fallback. Den direkte parser skal være link-baseret og finde den nærmeste relevante produktcontainer omkring hvert produktlink; den må ikke afhænge af skiftende CSS-klassenavne. Price-løse kommende produkter må bevares i state.
+Proshop direkte HTML fra GitHub Actions er fortsat blokeret af HTTP 403. Jina Reader er den praktiske produktionskilde; direkte HTML er kun fallback. Parser V2 (`proshop_reader_v2.py`) læser image-led produktkort og knytter pris/lager til den konkrete card-container, fordi den gamle Markdown-heading-regex overså reelle produkter. Parseren deles af hovedscanner og HOT. Produkt-ID'er bevares, og ikke-prissatte kort skal fortsat kunne gemmes i state.
+
+Proshop-vagten skelner nu mellem accepteret delvis dækning (mindst 3 friskparsede TCG-kort; health=degraded ved under 6) og grøn dækning (mindst 6). 6 er en foreløbig konservativ operationel tærskel, IKKE bevis for komplet Proshop-katalog. Baseline ved parser-migration er tavs for at undgå falske NYT-opslag, og HOT har 24-timers dublet-cooldown. Delvist skjulte/bestillingsvarer kan stadig mangle på den offentligt renderede kategoriside; 403 er ikke løst. Bedre officiel feed/produktkatalogvej skal undersøges separat uden omgåelse af adgangskontrol.
 
 ## Sikker ændringsproces
 
