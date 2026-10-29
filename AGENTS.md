@@ -245,6 +245,8 @@ Proshop direkte HTML fra GitHub Actions er fortsat blokeret af HTTP 403. Jina Re
 
 Proshop-vagten skelner nu mellem accepteret delvis dækning (mindst 3 friskparsede TCG-kort; health=degraded ved under 6) og grøn dækning (mindst 6). 6 er en foreløbig konservativ operationel tærskel, IKKE bevis for komplet Proshop-katalog. Baseline ved parser-migration er tavs for at undgå falske NYT-opslag, og HOT har 24-timers dublet-cooldown. Delvist skjulte/bestillingsvarer kan stadig mangle på den offentligt renderede kategoriside; 403 er ikke løst. Bedre officiel feed/produktkatalogvej skal undersøges separat uden omgåelse af adgangskontrol.
 
+Proshop kendte SKU'er: `proshop_known_sku_watch.py` tilføjer `Pokemon TCG 2-pack Booster` til titel-filteret uden at medtage portfolios og sleeves. Hovedscanner og HOT verificerer højst 2 manglende kendte SKU'er pr. scan via Jina med mindst 15 minutters interval pr. SKU. Kun præcis URL + Proshop-varenummer + entydig egen-produktstatus er valide; HTTP 200, generisk omdirigering, generel juridisk tekst og lagerstatus på relaterede produkter er aldrig nok. Uklare svar skal ikke opdatere status. Gamle produkt-ID'er beholdes i state, og kendte produkter får tavs baseline før eventuelle fremtidige restock-alerts. Kategori-dækning måles fortsat særskilt fra detaljekontroller, så få validerede SKU'er ikke skaber falsk grøn driftvagt.
+
 ## Sikker ændringsproces
 
 Før kodeændringer:
