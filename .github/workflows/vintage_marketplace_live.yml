@@ -1,9 +1,13 @@
 name: Pokemon Vintage Finder Light
 
 on:
-  # Twice daily; quiet first run establishes baseline without historic alerts.
+  # GitHub Actions schedules are best-effort and can be delayed or dropped.
+  # Two daily primary checks with separate backup checks; dedup and daily caps
+  # ensure backup executions cannot create extra Discord notification noise.
+  # UTC; in Danish winter time: 09:37, 11:47, 19:37, 21:47.
   schedule:
-    - cron: "17 8,18 * * *"
+    - cron: "37 8,18 * * *"
+    - cron: "47 10,20 * * *"
   workflow_dispatch:
   push:
     branches: [main]
