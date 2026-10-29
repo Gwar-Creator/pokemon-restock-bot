@@ -18,6 +18,7 @@ from alert_policy import (
     tier_b_signal_allowed,
 )
 from faraos_parser_v2 import faraos_name_v2
+from proshop_reader_v2 import parse_proshop_reader
 
 SCANNER_FILE = Path(__file__).resolve().parent / "restock_bot_github.py"
 START_MARKER = (
@@ -604,6 +605,28 @@ def _install_kelz0r_fast_fetch(namespace):
     namespace["get_kelz0r_products"] = fast_kelz0r_products
 
 
+def _install_proshop_reader_v2(namespace):
+    """Use the same tested Reader parser in both restock lanes.
+
+    The first successful migration is a silent catalog baseline. Otherwise
+    previously missed existing SKUs would be announced as newly launched.
+    """
+    tcg_check = namespace["_proshop_is_tcg_text"]
+    namespace["_parse_proshop_reader_markdown"] = (
+        lambda markdown: parse_proshop_reader(markdown, tcg_check)
+    )
+    namespace["SOURCE_MIN_PRODUCTS"]["proshop"] = 5
+    legacy_changes = namespace["process_proshop_changes"]
+
+    def migration_safe_changes(old_products, new_products):
+        if len(old_products or {}) < 5 and len(new_products or {}) >= 5:
+            print("PROSHOP PARSER V2: catalog migration baseline without false NEW alerts")
+            return
+        return legacy_changes(old_products, new_products)
+
+    namespace["process_proshop_changes"] = migration_safe_changes
+
+
 def main():
     definitions, startup = load_scanner_parts()
     namespace = {
@@ -617,6 +640,7 @@ def main():
     _install_price_watch_focus_caps(namespace)
     _install_price_watch_signal_policy(namespace)
     _install_faraos_parser(namespace)
+    _install_proshop_reader_v2(namespace)
     _install_kelz0r_fast_fetch(namespace)
 
     def channel_policy(message):
