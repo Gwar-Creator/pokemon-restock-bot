@@ -606,24 +606,63 @@ def _install_kelz0r_fast_fetch(namespace):
 
 
 def _install_proshop_reader_v2(namespace):
-    """Use the same tested Reader parser in both restock lanes.
-
-    The first successful migration is a silent catalog baseline. Otherwise
-    previously missed existing SKUs would be announced as newly launched.
-    """
+    """Install tested Proshop parser with degraded-versus-healthy reporting."""
+    min_accepted = 3
+    healthy_target = 6
     tcg_check = namespace["_proshop_is_tcg_text"]
     namespace["_parse_proshop_reader_markdown"] = (
         lambda markdown: parse_proshop_reader(markdown, tcg_check)
     )
-    namespace["SOURCE_MIN_PRODUCTS"]["proshop"] = 5
+    namespace["SOURCE_MIN_PRODUCTS"]["proshop"] = min_accepted
     legacy_changes = namespace["process_proshop_changes"]
+    legacy_fetch = namespace["fetch_source_products"]
+    legacy_health_send = namespace["send_scanner_health"]
+
+    def health_send(message):
+        # The legacy fetcher calls RECOVERY before its caller can classify a
+        # partially parsed snapshot. Do not announce a false green recovery.
+        msg = str(message)
+        if "SCANNERKILDE KØRER IGEN" in msg and "**PROSHOP**" in msg:
+            found = re.search(r"Produkter fundet:\s*(\d+)", msg)
+            if found and int(found.group(1)) < healthy_target:
+                print("PROSHOP HEALTH: legacy recovery suppressed for partial coverage")
+                return False
+        return legacy_health_send(message)
+
+    def monitored_fetch(source_key, old_products, fetcher, state_target):
+        previous = dict((state_target.get("_source_health") or {}).get(source_key) or {})
+        products = legacy_fetch(source_key, old_products, fetcher, state_target)
+        if source_key != "proshop":
+            return products
+        count = len(products)
+        if count < healthy_target:
+            namespace["_source_health_update"](
+                state_target, "proshop",
+                status="degraded",
+                last_error=f"Kun {count} aktuelle TCG-produkter; under health-target {healthy_target}",
+            )
+            print(f"PROSHOP HEALTH: DEGRADED {count} friske; target={healthy_target}")
+            if previous.get("status") not in ("degraded",):
+                health_send(
+                    "⚠️ **PROSHOP SCANNING ER DELVIST DÆKKENDE**\n"
+                    f"Kun {count} friske TCG-produkter fundet; minimum for fuld dækning "
+                    f"er {healthy_target}. Resten af scanneren kører."
+                )
+        elif previous.get("status") == "degraded":
+            health_send(
+                "✅ **PROSHOP DÆKNING GENOPRETTET**\n"
+                f"{count} friske TCG-produkter fundet."
+            )
+        return products
 
     def migration_safe_changes(old_products, new_products):
-        if len(old_products or {}) < 5 and len(new_products or {}) >= 5:
-            print("PROSHOP PARSER V2: catalog migration baseline without false NEW alerts")
+        if len(old_products or {}) < 4 and len(new_products or {}) >= min_accepted:
+            print("PROSHOP PARSER V2: silent catalog migration without false NEW alerts")
             return
         return legacy_changes(old_products, new_products)
 
+    namespace["send_scanner_health"] = health_send
+    namespace["fetch_source_products"] = monitored_fetch
     namespace["process_proshop_changes"] = migration_safe_changes
 
 
