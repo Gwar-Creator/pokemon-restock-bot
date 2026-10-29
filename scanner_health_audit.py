@@ -120,7 +120,7 @@ def main():
             issues.append(
                 f"{source}: produktantal {count} er under minimum {minimum}"
             )
-        if failures > 0 or status == "failed":
+        if failures > 0 or status in ("failed", "degraded"):
             issues.append(
                 f"{source}: health={status}, consecutive_failures={failures}"
             )
