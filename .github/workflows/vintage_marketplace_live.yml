@@ -1,0 +1,58 @@
+name: Pokemon Vintage Finder Light
+
+on:
+  # Twice daily; quiet first run establishes baseline without historic alerts.
+  schedule:
+    - cron: "17 8,18 * * *"
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/vintage_marketplace_live.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: vintage-marketplace-light-serialized
+  cancel-in-progress: false
+
+jobs:
+  selected-find:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Install official Tradera HTTP client
+        run: python -m pip install --disable-pip-version-check -q requests
+      - name: Test first-run, dedup and read-only channel gate
+        run: |
+          python -m py_compile vintage_marketplace_live.py
+          python -m unittest -q test_vintage_marketplace_live.py test_vintage_marketplace_shortlist.py test_vintage_marketplace_webhook_check.py
+      - name: Prepare small selection (no Discord)
+        env:
+          TRADERA_APP_ID: ${{ secrets.TRADERA_APP_ID }}
+          TRADERA_APP_KEY: ${{ secrets.TRADERA_APP_KEY }}
+        run: python vintage_marketplace_live.py prepare
+      - name: Commit only the dedicated seen ledger BEFORE any alert
+        id: reserve
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- vintage_marketplace_state_v1.json
+          if git diff --cached --quiet; then
+            echo "committed=false" >> "$GITHUB_OUTPUT"
+          else
+            git commit -m "State: Vintage Finder selected-find dedupe"
+            git push origin HEAD:main
+            echo "committed=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Publish only newly reserved selected finds to verified existing channel
+        if: steps.reserve.outputs.committed == 'true'
+        env:
+          MARKETPLACE_WEBHOOK_URL: ${{ secrets.MARKETPLACE_WEBHOOK_URL }}
+        run: python vintage_marketplace_live.py publish
