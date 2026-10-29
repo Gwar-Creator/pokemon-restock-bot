@@ -4,6 +4,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 import re
 
 import requests
+from proshop_reader_v2 import parse_proshop_reader
 
 SOURCES = {
     "cards-category": "https://www.proshop.dk/pokemon-kort",
@@ -37,6 +38,11 @@ def probe(label, url):
         }, timeout=50)
         page = response.text
         ids = set(PRODUCT_LINK.findall(page))
+        parsed = parse_proshop_reader(page, lambda name: any(word in name.lower() for word in (
+            "booster", "elite trainer", "premium collection",
+            "illustration collection", "battle deck", "world championships",
+            "mini tin", " tin ", "blister", "collection box",
+        )))
         md = MARKDOWN_LINK.findall(page)
         seen_paths = list(dict.fromkeys(re.findall(r"/Pokemon/[^)\\s?#\\\"<>]+/\\d+", page, re.I)))
         relevant = [(name.strip().replace("\n", " ")[:110], path) for name, path in md if TCG.search(name)]
@@ -44,6 +50,8 @@ def probe(label, url):
             "source": label, "status": response.status_code,
             "bytes": len(page), "raw_unique_ids": len(ids),
             "markdown_links": len(md), "tcg_markdown": len(relevant),
+            "v2_tcg_count": len(parsed),
+            "v2_products": [(key, row["name"], row["price"], row["stock"]) for key, row in parsed.items()],
             "tcg_examples": relevant[:15],
             "all_paths": seen_paths[:70],
             "sample_text": page[:450].replace("\\n", " "),
