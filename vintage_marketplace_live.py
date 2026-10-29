@@ -89,6 +89,9 @@ def enrich(candidate, detail, now=None):
     now = now or datetime.now(timezone.utc)
     if not isinstance(detail, dict) or str(detail.get("id")) != candidate["id"]:
         return None
+    if (not isinstance(detail.get("shortDescription"), str)
+            or detail["shortDescription"].strip() != candidate["title"]):
+        return None
     status = detail.get("status")
     if not isinstance(status, dict) or status.get("ended") is not False:
         return None
@@ -160,11 +163,13 @@ def prepare(app_id, app_key, state, now=None,
     ranked = sorted(found.values(),
                     key=lambda x: (x["tier"] != "VINTAGE_LOT", x["id"]))
     seen = state["seen"]
+    checked_count = 0
     for item in ranked:
         if item["id"] in seen:
             continue
-        if len(eligible) >= MAX_DETAIL_CHECKS:
+        if checked_count >= MAX_DETAIL_CHECKS:
             break
+        checked_count += 1
         detail = get_details(item["id"], app_id, app_key, detail_transport)
         checked = enrich(item, detail, now)
         if checked:
@@ -174,6 +179,10 @@ def prepare(app_id, app_key, state, now=None,
             for x in eligible]
     # The existing shortlist policy reserves only up to 3/run, 3/day, 8/week.
     new_state, shortlisted, _ = propose_shortlist(rows, state, now)
+    if (not shortlisted and new_state["seen"] == state["seen"]
+            and new_state["sent_at"] == state["sent_at"]):
+        # Avoid unrelated empty state commits on scheduled checks.
+        return state, [], len(found), False
     selected = {x["id"] for x in shortlisted}
     return new_state, [x for x in eligible if x["id"] in selected], len(found), False
 
