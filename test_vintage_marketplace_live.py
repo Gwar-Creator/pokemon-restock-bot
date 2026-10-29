@@ -19,7 +19,8 @@ def item(i, title="Pokemon Gym Heroes lot 11 st"):
 
 def details(i, price=123):
     return {
-        "id": i, "status": {"ended": False},
+        "id": i, "shortDescription": "Pokemon Gym Heroes lot 11 st",
+        "status": {"ended": False},
         "endDate": (NOW + timedelta(days=1)).isoformat(),
         "numberOfImages": 4,
         "detailedImageLinks": [{"url": "http://img.tradera.net/images/safe.jpeg"}],
@@ -85,7 +86,9 @@ class LightLiveTests(unittest.TestCase):
             {"detailedImageLinks": [{"url": "https://evil.invalid/a.png"}],
              "thumbnailLink": "https://evil.invalid/b.png"},
             {"id": 999},
+            {"shortDescription": "Pokemon unrelated listing"},
             {"numberOfImages": 0},
+            {"endDate": "2026-10-30T07:00:00"},
         ):
             with self.subTest(changed=changed):
                 self.assertIsNone(enrich(candidate, {**details(100), **changed}, NOW))
