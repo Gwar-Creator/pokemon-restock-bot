@@ -28,7 +28,7 @@ WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL", "").strip()
 
 PROSHOP_FRONTEND_URL = "https://www.proshop.dk/?s=Pokemon+TCG"
 PROSHOP_DISCOVERY_VERSION = 5
-PROSHOP_MIN_FRESH_PRODUCTS = 5
+PROSHOP_MIN_FRESH_PRODUCTS = 3
 # One product alert per 24 hours even if Proshop source/parser status flaps.
 PROSHOP_ALERT_COOLDOWN_SECONDS = 24 * 60 * 60
 
