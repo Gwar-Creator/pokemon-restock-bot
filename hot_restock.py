@@ -12,6 +12,7 @@ import requests
 
 from alert_policy import TIER_A_SOURCES
 from discord_v2_hot_adapter import hot_payload
+from proshop_reader_v2 import parse_proshop_reader
 
 ROOT = Path(__file__).resolve().parent
 SHARED_FILE = ROOT / "restock_bot_github.py"
@@ -26,7 +27,8 @@ DISCORD_V2_HOT_MODE = os.getenv("DISCORD_V2_HOT_MODE", "shadow").strip().lower()
 WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL", "").strip()
 
 PROSHOP_FRONTEND_URL = "https://www.proshop.dk/?s=Pokemon+TCG"
-PROSHOP_DISCOVERY_VERSION = 4
+PROSHOP_DISCOVERY_VERSION = 5
+PROSHOP_MIN_FRESH_PRODUCTS = 3
 # One product alert per 24 hours even if Proshop source/parser status flaps.
 PROSHOP_ALERT_COOLDOWN_SECONDS = 24 * 60 * 60
 
@@ -111,6 +113,10 @@ def load_shared_namespace():
         "__file__": str(SHARED_FILE),
     }
     exec(compile(source.split(marker, 1)[0], str(SHARED_FILE), "exec"), namespace)
+    tcg_check = namespace["_proshop_is_tcg_text"]
+    namespace["_parse_proshop_reader_markdown"] = (
+        lambda markdown: parse_proshop_reader(markdown, tcg_check)
+    )
     return namespace
 
 
@@ -543,6 +549,11 @@ def _fetch_expanded_proshop_products(shared):
         print("HOT PROSHOP discovery warning: " + "; ".join(errors))
 
     merged = _merge_proshop_products(curated, frontend)
+    if len(merged) < PROSHOP_MIN_FRESH_PRODUCTS:
+        raise RuntimeError(
+            f"Proshop fresh coverage too low: {len(merged)} "
+            f"< {PROSHOP_MIN_FRESH_PRODUCTS}"
+        )
     curated_ids = set(map(str, curated))
     frontend_ids = set(map(str, frontend))
     frontend_only = len(frontend_ids - curated_ids)
@@ -1737,10 +1748,16 @@ def run_scan(shared, state):
                 time.time() + MAGASIN_DISCOVERY_INTERVAL_SECONDS
             )
 
+        fresh = {
+            product_id: product for product_id, product in current.items()
+            if product.get("fetch_via") != "preserved_previous_scan"
+        } if source_key == "proshop" else current
+        preserved = len(current) - len(fresh)
         print(
             f"HOT {label}: "
-            f"{len(current)} relevante · "
-            f"{sum(product_available(source_key, p) for p in current.values())} på lager"
+            f"{len(fresh)} friske relevante · "
+            f"{sum(product_available(source_key, p) for p in fresh.values())} på lager"
+            + (f" · {preserved} historiske (ikke verificeret)" if preserved else "")
         )
 
     state["filter_version"] = FILTER_VERSION

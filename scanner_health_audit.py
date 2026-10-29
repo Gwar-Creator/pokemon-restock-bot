@@ -5,7 +5,7 @@ STATE_FILE = "restock_state_v2.json"
 
 SOURCE_MINIMUMS = {
     "coolshop": 10,
-    "proshop": 2,
+    "proshop": 3,
     "br": 5,
     "bilka": 5,
     "foetex": 5,
@@ -120,7 +120,7 @@ def main():
             issues.append(
                 f"{source}: produktantal {count} er under minimum {minimum}"
             )
-        if failures > 0 or status == "failed":
+        if failures > 0 or status in ("failed", "degraded"):
             issues.append(
                 f"{source}: health={status}, consecutive_failures={failures}"
             )
