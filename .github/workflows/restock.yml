@@ -110,6 +110,9 @@ jobs:
       - name: Run Restock V2 + Local Stock
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          # Separate operational alerts from product notifications. Optional:
+          # the scanner logs health transitions if this secret is not set.
+          SCANNER_HEALTH_WEBHOOK_URL: ${{ secrets.SCANNER_HEALTH_WEBHOOK_URL }}
           DISCORD_V2_LOCAL_MODE: "on"
           PRICE_WATCH_WEBHOOK_URL: ${{ secrets.PRICE_WATCH_WEBHOOK_URL }}
           PRICE_HISTORY_WEBHOOK_URL: ${{ secrets.PRICE_HISTORY_WEBHOOK_URL }}
