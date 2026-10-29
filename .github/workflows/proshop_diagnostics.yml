@@ -1,0 +1,31 @@
+name: Proshop diagnostics (read only)
+
+on:
+  push:
+    branches:
+      - fix/proshop-diagnostics-20261029
+    paths:
+      - "proshop_source_probe.py"
+      - ".github/workflows/proshop_diagnostics.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  proshop:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - name: Checkout diagnostics branch
+        uses: actions/checkout@v5
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Install read-only dependencies
+        run: python -m pip install requests
+      - name: Compile diagnostics
+        run: python -m py_compile proshop_source_probe.py
+      - name: Compare Proshop Reader catalog surfaces
+        run: python -u proshop_source_probe.py
