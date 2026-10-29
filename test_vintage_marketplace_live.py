@@ -74,7 +74,7 @@ class LightLiveTests(unittest.TestCase):
         self.assertEqual(repeated, [])
 
     def test_prevents_invalid_images_expired_and_unpriced(self):
-        candidate = {"id": "100", "title": "Pokemon Gym Heroes lot",
+        candidate = {"id": "100", "title": "Pokemon Gym Heroes lot 11 st",
                      "url": "https://www.tradera.com/item/1001342/100",
                      "tier": "VINTAGE_LOT", "verification": "UNVERIFIED"}
         self.assertIsNotNone(enrich(candidate, details(100), NOW))
@@ -95,7 +95,7 @@ class LightLiveTests(unittest.TestCase):
         self.assertEqual(image_url("https://img.tradera.net.evil.invalid/a"), "")
 
     def test_discord_requires_verified_destination_and_existing_reservation(self):
-        candidate = {"id": "100", "title": "Pokemon Gym Heroes lot",
+        candidate = {"id": "100", "title": "Pokemon Gym Heroes lot 11 st",
                      "url": "https://www.tradera.com/item/1001342/100",
                      "tier": "VINTAGE_LOT", "verification": "UNVERIFIED"}
         selected = enrich(candidate, details(100), NOW)
@@ -136,7 +136,7 @@ class LightLiveTests(unittest.TestCase):
 
     def test_payload_rejects_unapproved_statuses(self):
         candidate = enrich(
-            {"id": "100", "title": "Pokemon WotC lot",
+            {"id": "100", "title": "Pokemon Gym Heroes lot 11 st",
              "url": "https://www.tradera.com/item/1001342/100",
              "tier": "VINTAGE_LOT", "verification": "UNVERIFIED"},
             details(100), NOW)
