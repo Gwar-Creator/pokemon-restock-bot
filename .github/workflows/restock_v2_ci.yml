@@ -15,6 +15,10 @@ on:
       - ".github/workflows/tradera_quality.yml"
       - "vintage_marketplace_shortlist.py"
       - "test_vintage_marketplace_shortlist.py"
+      - "vintage_marketplace_live.py"
+      - "test_vintage_marketplace_live.py"
+      - ".github/workflows/vintage_marketplace_live.yml"
+      - "vintage_marketplace_state_v1.json"
       - "vintage_marketplace_runner.py"
       - "vintage_marketplace_webhook_check.py"
       - "test_vintage_marketplace_webhook_check.py"
@@ -158,6 +162,11 @@ jobs:
         run: |
           python -m py_compile vintage_marketplace_webhook_check.py test_vintage_marketplace_webhook_check.py
           python -m unittest -q test_vintage_marketplace_webhook_check.py
+
+      - name: Test Vintage Finder Light release gates (mocked, no Discord)
+        run: |
+          python -m py_compile vintage_marketplace_live.py test_vintage_marketplace_live.py
+          python -m unittest -q test_vintage_marketplace_live.py
 
       - name: Test focused Price Watch minimum alert thresholds
         run: python -m unittest test_price_watch_focus_threshold.py

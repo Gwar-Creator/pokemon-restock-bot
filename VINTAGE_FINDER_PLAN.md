@@ -1,5 +1,16 @@
 # Vintage Finder v0: Pokémon lots, not sealed deal hunting
 
+## ACTIVE DECISION — Vintage Finder Light, 29 October 2026
+
+This section **supersedes the historical BUY/BID-only and no-REVIEW rules below**. The user explicitly chose a simpler discovery notification, not automatic card ID, lot valuation or max-bid analysis.
+
+- Use the EXISTING `#marketplace-deals` and verified `MARKETPLACE_WEBHOOK_URL` (channel `1540094708439711904`). Check exact destination again before every POST. Never create a channel or repurpose any restock/price webhook.
+- `vintage_marketplace_live.py` finds potential vintage binders and lots using six official Tradera search pages and a bounded number of item detail GETs. Do not scrape DBA or invent contents. Only open listings with image and real published **next bid or buy-now price** are allowed. Label **UDVALGT FUND — IKKE ET KØBSRÅD**, with Tradera link, image and SEK price. Shipping to Denmark and card condition/language/value remain UNKNOWN.
+- `.github/workflows/vintage_marketplace_live.yml`: first execution establishes a **silent baseline**; later checks run twice daily. Max 3/run and day, 8/week; separate `vintage_marketplace_state_v1.json` deduplicates and is committed before POST. No automated bid, purchase or retry of ambiguous sends. Existing restock, local stock, price state and historical data untouched.
+- Do not use dormant manual BUY/BID calculator as a publication requirement or treat the message as a recommendation. Review individual listing photographs, shipping, language, condition and prices together in ChatGPT before any buying decision.
+- Historical sections below describe previous, superseded approval policy and are kept for continuity only.
+
+
 **Status: independent read-only prototype, NOT a running Discord scanner.**
 
 ## Why

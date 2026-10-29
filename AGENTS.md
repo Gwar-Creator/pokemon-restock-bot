@@ -1,5 +1,17 @@
 # AGENTS.md
 
+## AKTIV BESLUTNING — Vintage Finder Light (29. oktober 2026)
+
+Denne beslutning **erstatter** alle ældre krav nedenfor om kun at sende verificerede KØB/BYD i `#marketplace-deals`. Brugeren valgte eksplicit den enklere version: højst **3 UDVALGT FUND per dag / 8 per uge**, uden vurdering af kort, stand eller maksimumbud i botten.
+
+- **Eksisterende** kanal: `#marketplace-deals`; webhooken er allerede verificeret til kanal-ID `1540094708439711904`. `vintage_marketplace_live.py` checker kanal-ID igen før enhver POST og benytter kun `MARKETPLACE_WEBHOOK_URL`. Ingen ny kanal, ingen anden webhook.
+- Find gamle samlinger og vintage-lots via officiel Tradera REST v4. Ekskludér åbenlyst moderne bulk, kopier, sealed, graded og uinteressante enkeltkort. Svensk annoncetekst siger intet om kortenes sprog.
+- Annoncer skal have aktuelt åbent status, mindst ét billede, læsbart offentligt link, verificerbart API-prisfelt og billed-URL. Discord viser link, billede og **næste bud/køb nu i SEK**, uden påstande om totalpris, stand, ægthed eller besparelse. **UDVALGT FUND er ikke et købsråd**.
+- `.github/workflows/vintage_marketplace_live.yml` kører to gange dagligt og kan også startes manuelt. **Første kørsel er en tavs baseline**: eksisterende annoncer markeres sete uden alert. Derefter højst tre fund per kørsel og dag, otte på en uge.
+- `vintage_marketplace_state_v1.json` er isoleret fra restock-/pris-/historik-state. Workflowet committer reservationen før nogen Discord-POST og stopper ved commitfejl. Ingen automatisk retry af tvivlsomme sends, bud eller køb. Støj/dubletter håndteres uden manuel kortidentifikation.
+- Den gamle manuelle `vintage_lot_budget.py` og BUY/BID-kode beholdes som inaktive hjælperedskaber; de må **ikke** blokere eller påtvinges udvalgte vintage-fund. Den tidligere plan om 14 dages BUY/BID-shadow er ikke en forudsætning for denne eksplicit valgte discovery-version.
+
+
 ## Formål
 
 Dette repository driver en dansk Discord-scanner for Pokémon- og Lorcana-restocks, prisovervågning og Cardmarket-historik. Målet er få, relevante og troværdige notifikationer — ikke flest mulige notifikationer.
