@@ -88,10 +88,13 @@ class LightLiveTests(unittest.TestCase):
             {"id": 999},
             {"shortDescription": "Pokemon unrelated listing"},
             {"numberOfImages": 0},
-            {"endDate": "2026-10-30T07:00:00"},
+            {"endDate": "2026-10-28T07:00:00"},
         ):
             with self.subTest(changed=changed):
                 self.assertIsNone(enrich(candidate, {**details(100), **changed}, NOW))
+        # The Tradera detail API can return endDate without an offset.
+        self.assertIsNotNone(enrich(
+            candidate, {**details(100), "endDate": "2026-10-30T07:00:00"}, NOW))
         self.assertEqual(image_url("https://img.tradera.net.evil.invalid/a"), "")
 
     def test_discord_requires_verified_destination_and_existing_reservation(self):
