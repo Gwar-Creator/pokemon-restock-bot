@@ -6793,19 +6793,6 @@
       "fields": [
         "stock_count_online"
       ],
-      "name": "Pokémon ME05 Pitch Black samlekort",
-      "product_id": "200380910",
-      "sku": "11320907-EA",
-      "source": "bilka",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1792956565.0508695
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "stock_count_online"
-      ],
       "name": "Pokémon Pitch Black Checklane Booster Pack",
       "product_id": "200380911",
       "sku": "11320909-EA",
@@ -21967,12 +21954,25 @@
       "stage_after": "LIVE_STOCK",
       "stage_before": "LIVE_STOCK",
       "ts": 1793373300.1670983
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
+      "product_id": "3447589",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1793373595.1798022
     }
   ],
   "sources": {
     "bilka": {
       "100559056": {
-        "epoch_updated_at": 1793372589,
+        "epoch_updated_at": 1793373487,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -24555,7 +24555,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-elite-trainer-box-zsv10-5/200329218/"
       },
       "200329219": {
-        "epoch_updated_at": 1793372589,
+        "epoch_updated_at": 1793373487,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -25983,7 +25983,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-chaos-rising-premium-checklane/200366282/"
       },
       "200366283": {
-        "epoch_updated_at": 1793372590,
+        "epoch_updated_at": 1793373487,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -26072,7 +26072,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-tcg-premium-ex-box-mega-zygarde-samlekort/200366285/"
       },
       "200371874": {
-        "epoch_updated_at": 1793372590,
+        "epoch_updated_at": 1793373487,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -26298,7 +26298,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-first-partner-collection-box-2-samlekort/200371886/"
       },
       "200380908": {
-        "epoch_updated_at": 1793372590,
+        "epoch_updated_at": 1793373487,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -37075,15 +37075,17 @@
         "stage": "LIVE_STOCK",
         "status": "PÅ LAGER",
         "surface_statuses": {
+          "pokemon-brand": "PÅ LAGER",
           "pokemon-kort": "PÅ LAGER"
         },
         "surfaces": [
+          "pokemon-brand",
           "pokemon-kort"
         ],
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Zygarde-ex-Premium-Collection/3447589"
       }
     }
   },
-  "updated_at": 1793373300.168274,
+  "updated_at": 1793373595.1809835,
   "version": 1
 }
