@@ -194,6 +194,7 @@ def prepare(app_id, app_key, state, now=None,
         if checked:
             eligible.append(checked)
 
+    print(f"Vintage Finder checked {checked_count} details; {len(eligible)} eligible")
     rows = [{"id": x["id"], "shortDescription": x["title"], "itemUrl": x["url"]}
             for x in eligible]
     # The existing shortlist policy reserves only up to 3/run, 3/day, 8/week.
