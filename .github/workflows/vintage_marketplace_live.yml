@@ -1,6 +1,7 @@
 name: Pokemon Vintage Finder Light
 
 on:
+  # Diagnostic re-run: inspect aggregated (non-sensitive) item detail rejection stages.
   # GitHub Actions schedules are best-effort and can be delayed or dropped.
   # Morning-agent style selected vintage finds; backup checks, dedup and caps
   # ensure backup executions cannot create extra Discord notification noise.
