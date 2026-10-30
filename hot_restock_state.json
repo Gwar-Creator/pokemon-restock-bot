@@ -551,12 +551,12 @@
       "last_success_at": "2026-10-30T18:59:07.107206+00:00"
     },
     "proshop": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-10-30T21:03:47.270546+00:00",
-      "last_success_at": "2026-10-30T21:14:15.780991+00:00"
+      "backoff_level": 1,
+      "next_allowed_at": 1793395167.5287414,
+      "generic_failures": 1,
+      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "last_failure_at": "2026-10-30T21:17:27.528676+00:00",
+      "last_success_at": "2026-10-30T21:16:36.090066+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -592,14 +592,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1793394894.31139,
+      "next_allowed_at": 1793395197.3713887,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-10-30T21:10:54.311367+00:00"
+      "last_success_at": "2026-10-30T21:15:57.371362+00:00"
     }
   },
-  "updated_at": "2026-10-30T21:14:28.233101+00:00",
+  "updated_at": "2026-10-30T21:19:30.297927+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -630,11 +630,11 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-10-30T21:10:53.496701+00:00"
+          "last_checked": "2026-10-30T21:15:56.524631+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1793394652.7776837,
+      "last_discovery_epoch": 1793394955.7433498,
       "last_full_discovery_epoch": 1793376389.0533657,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -652,7 +652,7 @@
     "3447592": 1793394560.5176036,
     "3478496": 1793394689.9568741,
     "3478497": 1793394689.9568741,
-    "3478498": 1793394061.5384457,
-    "3519999": 1793394061.5384457
+    "3478498": 1793394992.2747967,
+    "3519999": 1793394992.2747967
   }
 }
