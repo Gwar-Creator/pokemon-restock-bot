@@ -553,10 +553,10 @@
     "proshop": {
       "backoff_level": 0,
       "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-10-30T17:34:33.190478+00:00",
-      "last_success_at": "2026-10-30T17:39:53.466530+00:00"
+      "generic_failures": 1,
+      "last_error": "Proshop fresh coverage too low: 2 < 3",
+      "last_failure_at": "2026-10-30T17:52:13.735727+00:00",
+      "last_success_at": "2026-10-30T17:51:16.580202+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -592,14 +592,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1793382029.2608879,
+      "next_allowed_at": 1793382774.7440138,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-10-30T17:36:29.260861+00:00"
+      "last_success_at": "2026-10-30T17:48:54.743986+00:00"
     }
   },
-  "updated_at": "2026-10-30T17:40:05.094790+00:00",
+  "updated_at": "2026-10-30T17:52:29.370952+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -630,11 +630,11 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-10-30T17:36:28.526967+00:00"
+          "last_checked": "2026-10-30T17:48:53.853512+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1793381787.546644,
+      "last_discovery_epoch": 1793382532.9265933,
       "last_full_discovery_epoch": 1793376389.0533657,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -648,11 +648,11 @@
     "proshop:3519999": 1793093460.6189744
   },
   "proshop_detail_checks": {
-    "3417744": 1793381562.098655,
-    "3447592": 1793381562.098655,
-    "3478496": 1793381617.533091,
-    "3478497": 1793381617.533091,
-    "3478498": 1793381352.016771,
-    "3519999": 1793381352.016771
+    "3417744": 1793382565.2921822,
+    "3447592": 1793382565.2921822,
+    "3478496": 1793382621.2413504,
+    "3478497": 1793382621.2413504,
+    "3478498": 1793382511.0743043,
+    "3519999": 1793382511.0743043
   }
 }
