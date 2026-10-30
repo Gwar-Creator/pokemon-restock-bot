@@ -13,10 +13,10 @@ from vintage_tradera_quality import classify_title
 LOT_WORDS = (
     "samling", "samlingar", "kortsamling", "barndomssamling",
     "collection", "lot", "kortlot", "album", "binder", "mapp",
-    "mappe", "parm", "blandat", "blandade", "kortpaket",
+    "mappe", "parm", "parmar", "blandat", "blandade", "kortpaket",
 )
 OLD_WORDS = (
-    "gammal", "gamla", "aldre", "barndom", "vintage",
+    "gammal", "gamla", "gammel", "gamle", "aldre", "barndom", "barndomen", "vintage",
     "wotc", "ex series", "old cards", "old collection",
     "1999", "2000", "2001", "2002", "2003", "2004",
 )
@@ -24,11 +24,20 @@ EXCLUDE_WORDS = (
     "lorcana", "proxy", "orica", "fake", "replica", "repack",
     "mystery", "sealed", "booster", "etb", "display",
     "graded", "psa", "cgc", "code card", "digital",
-    "bulk only", "bulk kort", "bulk cards", "1000 kort",
+    "bulk", "bulk only", "bulk kort", "bulk cards", "1000 kort",
     "1000 cards", "vmax", "vstar", "prismatic",
     "surging sparks", "destined rivals", "paldea",
     "scarlet", "violet", "pokemon 151", "mega evolution",
+    "pris per kort", "pris per styck", "individuella priser",
 )
+SPECIAL_SINGLE = ("holo", "reverse", "stamped", "gold star", "shining",
+                  "crystal", "1st edition", "first edition", "delta species")
+SPECIAL_SETS = ("expedition", "aquapolis", "skyridge", "neo destiny",
+                "ex ruby", "ex sandstorm", "ex dragon", "gym heroes",
+                "gym challenge", "team rocket")
+BINDER_WORDS = ("album", "binder", "mapp", "mappe", "parm", "parmar")
+TIERS = {"VINTAGE_LOT": 0, "OLD_COLLECTION": 1,
+         "VINTAGE_SINGLE": 2, "POSSIBLE_BINDER": 3}
 MAX_PER_RUN = 3
 MAX_PER_DAY = 3
 MAX_PER_WEEK = 8
@@ -50,19 +59,31 @@ def pick_title(row):
             or not isinstance(title, str) or not url):
         return None
     s = _norm(title)
-    if not has_word(s, LOT_WORDS) or has_word(s, EXCLUDE_WORDS):
+    if "pokemon" not in s or has_word(s, EXCLUDE_WORDS):
         return None
-    category, _ = classify_title(title)
-    if category == "EXCLUDED":
+    category, reason = classify_title(title)
+    if category == "EXCLUDED" and reason != "no convincing vintage signal":
         return None
-    exact_vintage = category == "TITLE_VINTAGE"
-    if not exact_vintage and not has_word(s, OLD_WORDS):
+    lot = has_word(s, LOT_WORDS)
+    old = has_word(s, OLD_WORDS)
+    vintage = category == "TITLE_VINTAGE"
+    if lot and vintage:
+        tier = "VINTAGE_LOT"
+    elif old and (lot or "kort" in s or "cards" in s):
+        tier = "OLD_COLLECTION"
+    elif vintage and (has_word(s, SPECIAL_SINGLE)
+                      or has_word(s, SPECIAL_SETS)
+                      or has_word(s, ("dark", "light"))):
+        tier = "VINTAGE_SINGLE"
+    elif has_word(s, BINDER_WORDS):
+        tier = "POSSIBLE_BINDER"
+    else:
         return None
     return {
         "id": str(ident),
         "title": re.sub(r"[\x00-\x1f\x7f]", " ", title).strip()[:180],
         "url": url,
-        "tier": "VINTAGE_LOT" if exact_vintage else "POSSIBLE_OLD_COLLECTION",
+        "tier": tier,
         "verification": "UNVERIFIED",
     }
 
@@ -107,7 +128,7 @@ def propose_shortlist(rows, state=None, now=None):
     proposed = [] if first_run else sorted(
         new_items,
         key=lambda x: (
-            x["tier"] != "VINTAGE_LOT",
+            TIERS.get(x["tier"], 99),
             hashlib.sha256(x["id"].encode()).hexdigest(),
         )
     )[:cap]
