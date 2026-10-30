@@ -8,6 +8,7 @@ import argparse
 import json
 import os
 from datetime import datetime, timedelta, timezone
+from zoneinfo import ZoneInfo
 from collections import Counter
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
@@ -144,7 +145,9 @@ def enrich(candidate, detail, now=None):
         end_time = datetime.fromisoformat(end.replace("Z", "+00:00"))
     except ValueError:
         return None
-    if end_time.tzinfo is None or end_time <= now:
+    if end_time.tzinfo is None:
+        end_time = end_time.replace(tzinfo=ZoneInfo("Europe/Stockholm"))
+    if end_time <= now:
         return None
     if type(detail.get("numberOfImages")) is not int or detail["numberOfImages"] < 1:
         return None
