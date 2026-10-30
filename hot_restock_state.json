@@ -44,6 +44,13 @@
         "online_stock": true,
         "url": "https://www.coolshop.dk/produkt/pokemon-first-partner-illustration-collection-series-2-pok10395-101/23XF7G/"
       },
+      "https://www.coolshop.dk/produkt/pokemon-30th-celebration-elite-trainer-box-pok10447-101/23Y9WQ/": {
+        "name": "Pokémon - 30th Celebration - Elite Trainer Box (POK10447-101)",
+        "game": "POKÉMON",
+        "price": 1399.95,
+        "online_stock": false,
+        "url": "https://www.coolshop.dk/produkt/pokemon-30th-celebration-elite-trainer-box-pok10447-101/23Y9WQ/"
+      },
       "https://www.coolshop.dk/produkt/pokemon-deck-pro-poke-mega-charizard-y/23UF9A/": {
         "name": "Pokémon - Deck Pro Poke - Mega Charizard Y",
         "game": "POKÉMON",
@@ -64,13 +71,6 @@
         "price": 599.95,
         "online_stock": false,
         "url": "https://www.coolshop.dk/produkt/pokemon-30th-celebration-binder-collection-pok10450-101/23Y9WV/"
-      },
-      "https://www.coolshop.dk/produkt/pokemon-30th-celebration-elite-trainer-box-pok10447-101/23Y9WQ/": {
-        "name": "Pokémon - 30th Celebration - Elite Trainer Box (POK10447-101)",
-        "game": "POKÉMON",
-        "price": 1399.95,
-        "online_stock": false,
-        "url": "https://www.coolshop.dk/produkt/pokemon-30th-celebration-elite-trainer-box-pok10447-101/23Y9WQ/"
       },
       "https://www.coolshop.dk/produkt/pokemon-mega-evolution-me02-5-ascended-heroes-elite-trainer-box-pok10315-101/23V948/": {
         "name": "Pokémon - Mega Evolution ME02.5: Ascended Heroes - Elite Trainer Box (POK10315-101)",
@@ -551,11 +551,11 @@
       "last_success_at": "2026-10-29T19:24:17.042220+00:00"
     },
     "proshop": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-10-30T10:55:33.818446+00:00",
+      "backoff_level": 2,
+      "next_allowed_at": 1793358582.253071,
+      "generic_failures": 3,
+      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "last_failure_at": "2026-10-30T11:04:42.253023+00:00",
       "last_success_at": "2026-10-30T10:59:12.911228+00:00"
     },
     "br": {
@@ -592,14 +592,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1793357991.8264391,
+      "next_allowed_at": 1793358318.6395855,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-10-30T10:55:51.826418+00:00"
+      "last_success_at": "2026-10-30T11:01:18.639559+00:00"
     }
   },
-  "updated_at": "2026-10-30T10:59:28.440429+00:00",
+  "updated_at": "2026-10-30T11:05:05.178186+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -630,11 +630,11 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-10-30T10:55:50.708952+00:00"
+          "last_checked": "2026-10-30T11:01:17.465899+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1793357750.1068153,
+      "last_discovery_epoch": 1793358075.9871483,
       "last_full_discovery_epoch": 1793354752.0693364,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
