@@ -6793,19 +6793,6 @@
       "fields": [
         "foetex"
       ],
-      "name": "Pokémon Mega Evolution pokémonkort",
-      "product_id": "11221186-EA",
-      "sku": "11221186-EA",
-      "source": "cross_salling",
-      "stage_after": null,
-      "stage_before": null,
-      "ts": 1792920286.442542
-    },
-    {
-      "event": "CROSS_CHANGE",
-      "fields": [
-        "foetex"
-      ],
       "name": "Pokémon Pitch Black 1-pak – flere varianter – assorteret",
       "product_id": "11320906-EA",
       "sku": "11320906-EA",
@@ -21837,6 +21824,19 @@
       "stage_after": "LIVE_STOCK",
       "stage_before": "LIVE_STOCK",
       "ts": 1793321072.8631692
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
+      "product_id": "3447589",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1793321388.1560779
     }
   ],
   "sources": {
@@ -24395,7 +24395,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-binder-collection-rsv10-5/200329217/"
       },
       "200329218": {
-        "epoch_updated_at": 1793320364,
+        "epoch_updated_at": 1793321266,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -25027,7 +25027,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-mega-charizard-x-ex-ultra-premium-collection-pakke/200340783/"
       },
       "200340784": {
-        "epoch_updated_at": 1793320364,
+        "epoch_updated_at": 1793321266,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -26229,7 +26229,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-pitch-black-1-pak-flere-varianter-assorteret/200380909/"
       },
       "200380910": {
-        "epoch_updated_at": 1793320366,
+        "epoch_updated_at": 1793321266,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -26807,7 +26807,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-greninja-ex-tin-samlekort/200392809/"
       },
       "200397756": {
-        "epoch_updated_at": 1793320364,
+        "epoch_updated_at": 1793321266,
         "expected_available_from": null,
         "f_campaign_name": [
           "Nyhed"
@@ -36947,15 +36947,17 @@
         "stage": "LIVE_STOCK",
         "status": "PÅ LAGER",
         "surface_statuses": {
+          "pokemon-brand": "PÅ LAGER",
           "pokemon-kort": "PÅ LAGER"
         },
         "surfaces": [
+          "pokemon-brand",
           "pokemon-kort"
         ],
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Zygarde-ex-Premium-Collection/3447589"
       }
     }
   },
-  "updated_at": 1793321072.8643322,
+  "updated_at": 1793321388.1571982,
   "version": 1
 }
