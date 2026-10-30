@@ -58,6 +58,13 @@
         "online_stock": false,
         "url": "https://www.coolshop.dk/produkt/pokemon-sv8-5-prismatic-evolutions-super-premium-collection-pok10106/23PQ9J/"
       },
+      "https://www.coolshop.dk/produkt/pokemon-30th-celebration-booster-pack-bundle-pok10451-101/23Z4NE/": {
+        "name": "Pokémon - 30th Celebration - Booster Pack Bundle (POK10451-101)",
+        "game": "POKÉMON",
+        "price": 699.95,
+        "online_stock": false,
+        "url": "https://www.coolshop.dk/produkt/pokemon-30th-celebration-booster-pack-bundle-pok10451-101/23Z4NE/"
+      },
       "https://www.coolshop.dk/produkt/pokemon-30th-celebration-binder-collection-pok10450-101/23Y9WV/": {
         "name": "Pokémon - 30th Celebration - Binder Collection (POK10450-101)",
         "game": "POKÉMON",
@@ -81,6 +88,13 @@
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
         "fetch_via": "jina_reader"
       },
+      "3478497": {
+        "name": "Pokemon TCG 2-pack Booster",
+        "price": null,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2-pack-Booster/3478497",
+        "fetch_via": "preserved_previous_scan"
+      },
       "3417744": {
         "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
         "price": null,
@@ -93,13 +107,6 @@
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
-        "fetch_via": "preserved_previous_scan"
-      },
-      "3478497": {
-        "name": "Pokemon TCG 2-pack Booster",
-        "price": null,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2-pack-Booster/3478497",
         "fetch_via": "preserved_previous_scan"
       },
       "3447592": {
@@ -544,12 +551,12 @@
       "last_success_at": "2026-10-30T18:59:07.107206+00:00"
     },
     "proshop": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-10-30T20:37:25.526799+00:00",
-      "last_success_at": "2026-10-30T20:44:15.800965+00:00"
+      "backoff_level": 1,
+      "next_allowed_at": 1793393665.9947097,
+      "generic_failures": 1,
+      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "last_failure_at": "2026-10-30T20:52:25.994675+00:00",
+      "last_success_at": "2026-10-30T20:51:30.561549+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -585,14 +592,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1793393391.3170974,
+      "next_allowed_at": 1793393703.3154936,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-10-30T20:45:51.317076+00:00"
+      "last_success_at": "2026-10-30T20:51:03.315470+00:00"
     }
   },
-  "updated_at": "2026-10-30T20:49:29.230948+00:00",
+  "updated_at": "2026-10-30T20:54:28.494473+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -623,11 +630,11 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-10-30T20:45:50.238488+00:00"
+          "last_checked": "2026-10-30T20:51:02.471052+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1793393149.671224,
+      "last_discovery_epoch": 1793393461.790405,
       "last_full_discovery_epoch": 1793376389.0533657,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -643,8 +650,8 @@
   "proshop_detail_checks": {
     "3417744": 1793393189.5447557,
     "3447592": 1793393189.5447557,
-    "3478496": 1793392470.6328695,
-    "3478497": 1793392470.6328695,
+    "3478496": 1793393436.6822977,
+    "3478497": 1793393436.6822977,
     "3478498": 1793392888.7330039,
     "3519999": 1793392888.7330039
   }
