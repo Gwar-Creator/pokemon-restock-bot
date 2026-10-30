@@ -88,13 +88,6 @@
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
         "fetch_via": "jina_reader"
       },
-      "3417744": {
-        "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
-        "price": null,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
-        "fetch_via": "jina_verified_detail"
-      },
       "3478496": {
         "name": "Pokemon TCG Mega Greninja ex Premium Collection",
         "price": null,
@@ -107,6 +100,13 @@
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2-pack-Booster/3478497",
+        "fetch_via": "preserved_previous_scan"
+      },
+      "3417744": {
+        "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
+        "price": null,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
         "fetch_via": "preserved_previous_scan"
       },
       "3447592": {
@@ -551,12 +551,12 @@
       "last_success_at": "2026-10-29T19:24:17.042220+00:00"
     },
     "proshop": {
-      "backoff_level": 1,
-      "next_allowed_at": 1793377873.2247367,
-      "generic_failures": 1,
-      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "backoff_level": 0,
+      "next_allowed_at": 0.0,
+      "generic_failures": 0,
+      "last_error": null,
       "last_failure_at": "2026-10-30T16:29:13.224695+00:00",
-      "last_success_at": "2026-10-30T16:28:30.962287+00:00"
+      "last_success_at": "2026-10-30T16:34:37.418792+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -592,14 +592,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1793377795.0207446,
+      "next_allowed_at": 1793378115.1289234,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-10-30T16:25:55.020722+00:00"
+      "last_success_at": "2026-10-30T16:31:15.128899+00:00"
     }
   },
-  "updated_at": "2026-10-30T16:29:27.643298+00:00",
+  "updated_at": "2026-10-30T16:34:53.757934+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -630,11 +630,11 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-10-30T16:25:54.146155+00:00"
+          "last_checked": "2026-10-30T16:31:13.764759+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1793377553.316766,
+      "last_discovery_epoch": 1793377872.9813542,
       "last_full_discovery_epoch": 1793376389.0533657,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -650,8 +650,8 @@
   "proshop_detail_checks": {
     "3417744": 1793377696.450294,
     "3447592": 1793377696.450294,
-    "3478496": 1793376813.0975647,
-    "3478497": 1793376813.0975647,
+    "3478496": 1793377911.1259897,
+    "3478497": 1793377911.1259897,
     "3478498": 1793377641.8034258,
     "3519999": 1793377641.8034258
   }
