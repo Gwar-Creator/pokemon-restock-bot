@@ -8,6 +8,7 @@ import argparse
 import json
 import os
 from datetime import datetime, timedelta, timezone
+from collections import Counter
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
 from urllib.parse import urlsplit, urlunsplit
@@ -91,6 +92,38 @@ def get_details(item_id, app_id, app_key, transport=requests.get):
         return data if isinstance(data, dict) else None
     except (requests.RequestException, ValueError):
         return None
+
+
+
+def rejection_stage(candidate, detail, now):
+    """Safe diagnostic category only, never log seller content or URLs."""
+    if not isinstance(detail, dict):
+        return "no_http_detail"
+    if str(detail.get("id")) != candidate["id"]:
+        return "id_mismatch"
+    title = detail.get("shortDescription")
+    if not isinstance(title, str) or not title.strip().startswith(candidate["title"]):
+        return "title_mismatch"
+    status = detail.get("status")
+    if not isinstance(status, dict) or status.get("ended") is not False:
+        return "not_open"
+    end = detail.get("endDate")
+    try:
+        expires = datetime.fromisoformat(end.replace("Z", "+00:00"))
+        if expires.tzinfo is None or expires <= now:
+            return "expired_or_naive"
+    except (AttributeError, ValueError):
+        return "missing_end_date"
+    if type(detail.get("numberOfImages")) is not int or detail["numberOfImages"] < 1:
+        return "image_count"
+    if not any(image_url(entry.get("url")) for entry in detail.get("detailedImageLinks", [])
+               if isinstance(entry, dict)) and not image_url(detail.get("thumbnailLink")):
+        return "image_url_missing"
+    if (detail.get("nextBidSpecified") is not True
+            and detail.get("buyItNowPriceSpecified") is not True
+            and detail.get("openingBidSpecified") is not True):
+        return "no_price_flag"
+    return "other"
 
 
 def enrich(candidate, detail, now=None):
@@ -183,6 +216,7 @@ def prepare(app_id, app_key, state, now=None,
                     key=lambda x: (TIERS.get(x["tier"], 99), -int(x["id"])))
     seen = state["seen"]
     checked_count = 0
+    rejected = Counter()
     for item in ranked:
         if item["id"] in seen:
             continue
@@ -193,8 +227,11 @@ def prepare(app_id, app_key, state, now=None,
         checked = enrich(item, detail, now)
         if checked:
             eligible.append(checked)
+        else:
+            rejected[rejection_stage(item, detail, now)] += 1
 
     print(f"Vintage Finder checked {checked_count} details; {len(eligible)} eligible")
+    print("Vintage Finder rejected stages: " + repr(dict(sorted(rejected.items()))))
     rows = [{"id": x["id"], "shortDescription": x["title"], "itemUrl": x["url"]}
             for x in eligible]
     # The existing shortlist policy reserves only up to 3/run, 3/day, 8/week.
