@@ -17,13 +17,22 @@ import requests
 from vintage_finder_tradera import fetch_search
 from vintage_marketplace_shortlist import pick_title, propose_shortlist
 from vintage_marketplace_webhook_check import verify_webhook_destination
-from vintage_tradera_quality import AUDIT_QUERIES
+from vintage_marketplace_shortlist import TIERS
+
+# Searches deliberately mirror the useful categories in the morning discovery agent.
+DISCOVERY_QUERIES = (
+    'pokemon samling', 'gamla pokemon kort', 'pokemon kort lot',
+    'pokemon album', 'pokemon parmar', 'pokemon holo',
+    'pokemon gym heroes', 'pokemon neo destiny',
+    'pokemon expedition', 'pokemon aquapolis', 'pokemon skyridge',
+    'pokemon ex dragon', 'pokemon ex sandstorm',
+)
 
 CHANNEL_ID = "1540094708439711904"
 STATE_PATH = Path("vintage_marketplace_state_v1.json")
 PENDING_PATH = Path("vintage_marketplace_pending.json")
 DETAIL_ROOT = "https://api.tradera.com/v4/items/"
-MAX_DETAIL_CHECKS = 18
+MAX_DETAIL_CHECKS = 30
 
 
 def image_url(raw):
@@ -90,7 +99,7 @@ def enrich(candidate, detail, now=None):
     if not isinstance(detail, dict) or str(detail.get("id")) != candidate["id"]:
         return None
     if (not isinstance(detail.get("shortDescription"), str)
-            or detail["shortDescription"].strip() != candidate["title"]):
+            or not detail["shortDescription"].strip().startswith(candidate["title"])):
         return None
     status = detail.get("status")
     if not isinstance(status, dict) or status.get("ended") is not False:
@@ -116,6 +125,13 @@ def enrich(candidate, detail, now=None):
             if photo:
                 break
     if not photo:
+        raw_links = detail.get("imageLinks")
+        if isinstance(raw_links, list):
+            for raw in raw_links:
+                photo = image_url(raw)
+                if photo:
+                    break
+    if not photo:
         photo = image_url(detail.get("thumbnailLink"))
     if not photo:
         return None
@@ -127,6 +143,9 @@ def enrich(candidate, detail, now=None):
     if price is None and detail.get("buyItNowPriceSpecified") is True:
         price = _positive_price(detail.get("buyItNowPrice"))
         label = "Køb nu" if price else None
+    if price is None and detail.get("openingBidSpecified") is True:
+        price = _positive_price(detail.get("openingBid"))
+        label = "Startbud" if price else None
     if price is None:
         return None
     return {**candidate, "image": photo, "price_sek": price,
@@ -144,7 +163,7 @@ def prepare(app_id, app_key, state, now=None,
         raise ValueError("Tradera credentials unavailable")
 
     found = {}
-    for q in AUDIT_QUERIES:
+    for q in DISCOVERY_QUERIES:
         rows = fetch_search(q, app_id, app_key, transport=search_transport)
         for row in rows:
             candidate = pick_title(row)
@@ -161,7 +180,7 @@ def prepare(app_id, app_key, state, now=None,
 
     eligible = []
     ranked = sorted(found.values(),
-                    key=lambda x: (x["tier"] != "VINTAGE_LOT", x["id"]))
+                    key=lambda x: (TIERS.get(x["tier"], 99), -int(x["id"])))
     seen = state["seen"]
     checked_count = 0
     for item in ranked:
@@ -175,6 +194,7 @@ def prepare(app_id, app_key, state, now=None,
         if checked:
             eligible.append(checked)
 
+    print(f"Vintage Finder checked {checked_count} details; {len(eligible)} eligible")
     rows = [{"id": x["id"], "shortDescription": x["title"], "itemUrl": x["url"]}
             for x in eligible]
     # The existing shortlist policy reserves only up to 3/run, 3/day, 8/week.
@@ -190,7 +210,7 @@ def prepare(app_id, app_key, state, now=None,
 def payload(item):
     if not isinstance(item, dict) or item.get("verification") != "UNVERIFIED":
         raise ValueError("Only honest selected-find titles may be shown")
-    if item.get("tier") not in ("VINTAGE_LOT", "POSSIBLE_OLD_COLLECTION"):
+    if item.get("tier") not in TIERS:
         raise ValueError("Not a selected vintage lot")
     if not item.get("url", "").startswith("https://www.tradera.com/item/"):
         raise ValueError("Untrusted Tradera listing URL")
@@ -201,7 +221,7 @@ def payload(item):
             "title": ("TRADERA · UDVALGT FUND · " + item["title"])[:256],
             "url": item["url"],
             "description": (
-                "Interessant vintage-samling til din egen vurdering – "
+                "Interessant vintageannonce til din egen vurdering – "
                 "**ikke et købsråd**. Kort, stand, sprog og fragt til DK "
                 "er ikke verificeret."
             ),

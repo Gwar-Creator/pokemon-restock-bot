@@ -47,6 +47,31 @@ class VintageShortlistTests(unittest.TestCase):
             with self.subTest(title=title):
                 self.assertIsNone(pick_title(row(index, title)))
 
+    def test_morning_agent_vintage_binders_and_special_singles(self):
+        examples = (
+            ("Pokemon gamla kort i parm", "OLD_COLLECTION"),
+            ("Pokemon binder med blandade kort", "POSSIBLE_BINDER"),
+            ("Pokemon Aquapolis reverse holo", "VINTAGE_SINGLE"),
+            ("Pokemon neo destiny Light Arcanine", "VINTAGE_SINGLE"),
+            ("Pokemon Skyridge crystal holo", "VINTAGE_SINGLE"),
+            ("Pokemon Gym Heroes lot 11 st", "VINTAGE_LOT"),
+        )
+        for idx, (title, tier) in enumerate(examples, 500):
+            with self.subTest(title=title):
+                self.assertEqual(pick_title(row(idx, title))["tier"], tier)
+
+    def test_avoid_individually_priced_or_modern_bulk(self):
+        examples = (
+            "Pokemon Gym Heroes lot pris per styck",
+            "Pokemon gamla kort bulk",
+            "Pokemon Aquapolis PSA 9 holo",
+            "Pokemon Scarlet Violet pärm modern kort",
+            "Pokemon skyridge fake gold star",
+        )
+        for idx, title in enumerate(examples, 600):
+            with self.subTest(title=title):
+                self.assertIsNone(pick_title(row(idx, title)))
+
     def test_invalid_links_and_ids_fail_closed(self):
         self.assertIsNone(pick_title({"id": 1, "shortDescription": "Pokemon Gym Heroes lot",
                                       "itemUrl": "http://tradera.com.evil.invalid/1"}))
