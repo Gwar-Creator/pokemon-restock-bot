@@ -583,23 +583,23 @@
       "last_success_at": "2026-10-27T12:05:35.019533+00:00"
     },
     "boozt": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-10-31T17:18:43.993279+00:00",
-      "last_success_at": "2026-10-31T17:24:23.455448+00:00"
+      "backoff_level": 1,
+      "next_allowed_at": 1793486101.3792865,
+      "generic_failures": 1,
+      "last_error": "BOOZT fejlede: Reader: 422 Client Error: Unprocessable Entity for url: https://r.jina.ai/https://www.boozt.com/dk/da/pokemon-trading-cards/born | direct: 429 Client Error: Too Many Requests for url: https://www.boozt.com/dk/da/pokemon-trading-cards/born",
+      "last_failure_at": "2026-10-31T22:33:01.379259+00:00",
+      "last_success_at": "2026-10-31T22:31:56.914058+00:00"
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1793485780.6101387,
+      "next_allowed_at": 1793486109.4337656,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-10-31T22:25:40.610118+00:00"
+      "last_success_at": "2026-10-31T22:31:09.433719+00:00"
     }
   },
-  "updated_at": "2026-10-31T22:29:18.769253+00:00",
+  "updated_at": "2026-10-31T22:34:36.300942+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -612,30 +612,30 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-10-31T16:25:47.162115+00:00"
+          "last_checked": "2026-10-31T22:31:07.631672+00:00"
         },
         "https://www.magasin.dk/sitemap_1-product.xml": {
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-10-31T16:25:47.647384+00:00"
+          "last_checked": "2026-10-31T22:31:08.066233+00:00"
         },
         "https://www.magasin.dk/sitemap_2-product.xml": {
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-10-31T16:25:48.309285+00:00"
+          "last_checked": "2026-10-31T22:31:08.450397+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-10-31T22:25:39.839105+00:00"
+          "last_checked": "2026-10-31T22:31:08.700233+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1793485539.194123,
-      "last_full_discovery_epoch": 1793463945.0763786,
+      "last_discovery_epoch": 1793485866.4634302,
+      "last_full_discovery_epoch": 1793485866.4634302,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
         "https://www.magasin.dk/sitemap_1-product.xml",
@@ -648,11 +648,11 @@
     "proshop:3519999": 1793093460.6189744
   },
   "proshop_detail_checks": {
-    "3417744": 1793484993.088603,
-    "3447592": 1793484993.088603,
-    "3478496": 1793485102.909304,
-    "3478497": 1793485102.909304,
-    "3478498": 1793484855.295177,
-    "3519999": 1793484855.295177
+    "3417744": 1793485901.3203182,
+    "3447592": 1793485901.3203182,
+    "3478496": 1793486012.059242,
+    "3478497": 1793486012.059242,
+    "3478498": 1793485848.3904614,
+    "3519999": 1793485848.3904614
   }
 }
