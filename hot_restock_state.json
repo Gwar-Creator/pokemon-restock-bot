@@ -551,12 +551,12 @@
       "last_success_at": "2026-10-31T02:24:14.442527+00:00"
     },
     "proshop": {
-      "backoff_level": 2,
-      "next_allowed_at": 1793447956.6832159,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-10-31T11:38:26.742695+00:00",
-      "last_success_at": "2026-10-31T11:54:16.683196+00:00"
+      "backoff_level": 1,
+      "next_allowed_at": 1793448399.657969,
+      "generic_failures": 1,
+      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "last_failure_at": "2026-10-31T12:04:39.657932+00:00",
+      "last_success_at": "2026-10-31T12:03:49.155099+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -592,14 +592,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1793447986.2086112,
+      "next_allowed_at": 1793448321.9203877,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-10-31T11:55:46.208587+00:00"
+      "last_success_at": "2026-10-31T12:01:21.920361+00:00"
     }
   },
-  "updated_at": "2026-10-31T11:59:20.267924+00:00",
+  "updated_at": "2026-10-31T12:04:55.962241+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -630,11 +630,11 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-10-31T11:55:44.830699+00:00"
+          "last_checked": "2026-10-31T12:01:20.329664+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1793447743.9999657,
+      "last_discovery_epoch": 1793448079.4513614,
       "last_full_discovery_epoch": 1793442066.9191847,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -650,9 +650,9 @@
   "proshop_detail_checks": {
     "3417744": 1793447652.1574624,
     "3447592": 1793447652.1574624,
-    "3478496": 1793443698.3389118,
-    "3478497": 1793443698.3389118,
-    "3478498": 1793444346.9268374,
-    "3519999": 1793444346.9268374
+    "3478496": 1793448058.7845767,
+    "3478497": 1793448058.7845767,
+    "3478498": 1793448225.3357935,
+    "3519999": 1793448225.3357935
   }
 }
