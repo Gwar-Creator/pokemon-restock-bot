@@ -86,7 +86,7 @@
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
-        "fetch_via": "jina_verified_detail"
+        "fetch_via": "preserved_previous_scan"
       },
       "3478496": {
         "name": "Pokemon TCG Mega Greninja ex Premium Collection",
@@ -544,12 +544,12 @@
       "last_success_at": "2026-10-31T02:24:14.442527+00:00"
     },
     "proshop": {
-      "backoff_level": 1,
-      "next_allowed_at": 1793428478.928329,
-      "generic_failures": 1,
-      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "backoff_level": 0,
+      "next_allowed_at": 0.0,
+      "generic_failures": 0,
+      "last_error": null,
       "last_failure_at": "2026-10-31T06:32:38.928291+00:00",
-      "last_success_at": "2026-10-31T06:31:48.849733+00:00"
+      "last_success_at": "2026-10-31T06:39:09.702932+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -585,14 +585,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1793428513.306121,
+      "next_allowed_at": 1793428790.236264,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-10-31T06:31:13.306099+00:00"
+      "last_success_at": "2026-10-31T06:35:50.236242+00:00"
     }
   },
-  "updated_at": "2026-10-31T06:34:42.708592+00:00",
+  "updated_at": "2026-10-31T06:39:24.719928+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -623,11 +623,11 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-10-31T06:31:11.561786+00:00"
+          "last_checked": "2026-10-31T06:35:48.912688+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1793428270.6840086,
+      "last_discovery_epoch": 1793428548.2912672,
       "last_full_discovery_epoch": 1793420152.4687052,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
