@@ -71,6 +71,13 @@
         "price": 1399.95,
         "online_stock": false,
         "url": "https://www.coolshop.dk/produkt/pokemon-30th-celebration-elite-trainer-box-pok10447-101/23Y9WQ/"
+      },
+      "https://www.coolshop.dk/produkt/pokemon-mega-evolution-me02-5-ascended-heroes-elite-trainer-box-pok10315-101/23V948/": {
+        "name": "Pokémon - Mega Evolution ME02.5: Ascended Heroes - Elite Trainer Box (POK10315-101)",
+        "game": "POKÉMON",
+        "price": 799.95,
+        "online_stock": false,
+        "url": "https://www.coolshop.dk/produkt/pokemon-mega-evolution-me02-5-ascended-heroes-elite-trainer-box-pok10315-101/23V948/"
       }
     },
     "proshop": {
@@ -86,6 +93,13 @@
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
+        "fetch_via": "jina_verified_detail"
+      },
+      "3417744": {
+        "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
+        "price": null,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
         "fetch_via": "preserved_previous_scan"
       },
       "3478497": {
@@ -93,13 +107,6 @@
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2-pack-Booster/3478497",
-        "fetch_via": "preserved_previous_scan"
-      },
-      "3417744": {
-        "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
-        "price": null,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
         "fetch_via": "preserved_previous_scan"
       },
       "3447592": {
@@ -544,12 +551,12 @@
       "last_success_at": "2026-10-31T02:24:14.442527+00:00"
     },
     "proshop": {
-      "backoff_level": 2,
-      "next_allowed_at": 1793438736.7250998,
-      "generic_failures": 1,
-      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "backoff_level": 0,
+      "next_allowed_at": 0.0,
+      "generic_failures": 0,
+      "last_error": null,
       "last_failure_at": "2026-10-31T09:20:36.725070+00:00",
-      "last_success_at": "2026-10-31T09:18:24.215707+00:00"
+      "last_success_at": "2026-10-31T09:29:12.989900+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -585,14 +592,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1793438697.3031316,
+      "next_allowed_at": 1793438982.2234836,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-10-31T09:20:57.303109+00:00"
+      "last_success_at": "2026-10-31T09:25:42.223466+00:00"
     }
   },
-  "updated_at": "2026-10-31T09:24:31.480959+00:00",
+  "updated_at": "2026-10-31T09:29:26.301916+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -623,11 +630,11 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-10-31T09:20:56.141475+00:00"
+          "last_checked": "2026-10-31T09:25:41.296160+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1793438454.7947376,
+      "last_discovery_epoch": 1793438740.6316698,
       "last_full_discovery_epoch": 1793420152.4687052,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -641,10 +648,10 @@
     "proshop:3519999": 1793093460.6189744
   },
   "proshop_detail_checks": {
-    "3417744": 1793437036.0173044,
-    "3447592": 1793437036.0173044,
-    "3478496": 1793437543.534238,
-    "3478497": 1793437543.534238,
+    "3417744": 1793438780.4057293,
+    "3447592": 1793438780.4057293,
+    "3478496": 1793438945.6459787,
+    "3478497": 1793438945.6459787,
     "3478498": 1793438298.1723716,
     "3519999": 1793438298.1723716
   }
