@@ -6789,20 +6789,6 @@
   },
   "events": [
     {
-      "event": "CROSS_CHANGE",
-      "fields": [
-        "br",
-        "foetex"
-      ],
-      "name": "Pokémon Battle Academy 2024",
-      "product_id": "10791068-EA",
-      "sku": "10791068-EA",
-      "source": "cross_salling",
-      "stage_after": null,
-      "stage_before": null,
-      "ts": 1793059509.3838658
-    },
-    {
       "event": "CHANGE",
       "fields": [
         "stock_count_online"
@@ -22438,6 +22424,19 @@
       "stage_after": null,
       "stage_before": null,
       "ts": 1793554771.6600676
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
+      "product_id": "3447589",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1793555079.5638843
     }
   ],
   "sources": {
@@ -37542,17 +37541,15 @@
         "stage": "LIVE_STOCK",
         "status": "PÅ LAGER",
         "surface_statuses": {
-          "pokemon-brand": "PÅ LAGER",
           "pokemon-kort": "PÅ LAGER"
         },
         "surfaces": [
-          "pokemon-brand",
           "pokemon-kort"
         ],
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Zygarde-ex-Premium-Collection/3447589"
       }
     }
   },
-  "updated_at": 1793554771.6602821,
+  "updated_at": 1793555079.5648768,
   "version": 1
 }
