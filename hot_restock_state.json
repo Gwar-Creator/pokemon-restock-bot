@@ -88,18 +88,18 @@
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
         "fetch_via": "jina_reader"
       },
-      "3417744": {
-        "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
-        "price": null,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
-        "fetch_via": "preserved_previous_scan"
-      },
       "3478496": {
         "name": "Pokemon TCG Mega Greninja ex Premium Collection",
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
+        "fetch_via": "preserved_previous_scan"
+      },
+      "3417744": {
+        "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
+        "price": null,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
         "fetch_via": "preserved_previous_scan"
       },
       "3478497": {
@@ -552,11 +552,11 @@
     },
     "proshop": {
       "backoff_level": 1,
-      "next_allowed_at": 1793572587.0474842,
+      "next_allowed_at": 1793572870.7223575,
       "generic_failures": 1,
       "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
-      "last_failure_at": "2026-11-01T22:34:27.047455+00:00",
-      "last_success_at": "2026-11-01T22:33:32.650495+00:00"
+      "last_failure_at": "2026-11-01T22:39:10.722326+00:00",
+      "last_success_at": "2026-11-01T22:38:14.140138+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -592,14 +592,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1793572509.9591606,
+      "next_allowed_at": 1793572783.818532,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-01T22:31:09.959137+00:00"
+      "last_success_at": "2026-11-01T22:35:43.818511+00:00"
     }
   },
-  "updated_at": "2026-11-01T22:34:40.910123+00:00",
+  "updated_at": "2026-11-01T22:39:23.287092+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -612,30 +612,30 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-01T16:35:41.569362+00:00"
+          "last_checked": "2026-11-01T22:35:42.051092+00:00"
         },
         "https://www.magasin.dk/sitemap_1-product.xml": {
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-01T16:35:42.078073+00:00"
+          "last_checked": "2026-11-01T22:35:42.510345+00:00"
         },
         "https://www.magasin.dk/sitemap_2-product.xml": {
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-01T16:35:42.778298+00:00"
+          "last_checked": "2026-11-01T22:35:42.891979+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-01T22:31:08.704471+00:00"
+          "last_checked": "2026-11-01T22:35:43.091605+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1793572267.9996843,
-      "last_full_discovery_epoch": 1793550940.4709823,
+      "last_discovery_epoch": 1793572541.2131596,
+      "last_full_discovery_epoch": 1793572541.2131596,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
         "https://www.magasin.dk/sitemap_1-product.xml",
@@ -650,8 +650,8 @@
   "proshop_detail_checks": {
     "3417744": 1793572246.7608156,
     "3447592": 1793572246.7608156,
-    "3478496": 1793571560.2173617,
-    "3478497": 1793571560.2173617,
+    "3478496": 1793572638.3252509,
+    "3478497": 1793572638.3252509,
     "3478498": 1793572040.9982738,
     "3519999": 1793572040.9982738
   }
