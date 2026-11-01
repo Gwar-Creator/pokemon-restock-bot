@@ -6791,17 +6791,6 @@
     {
       "event": "NEW",
       "fields": [],
-      "name": "Pokemon TCG Mega Greninja ex Premium Collection",
-      "product_id": "3478496",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": null,
-      "ts": 1793039379.5757384
-    },
-    {
-      "event": "NEW",
-      "fields": [],
       "name": "Pokemon TCG First Partner Illustration Collection Box Series 2",
       "product_id": "3478498",
       "sku": "",
@@ -22313,6 +22302,19 @@
       "stage_after": "LIVE_STOCK",
       "stage_before": "LIVE_STOCK",
       "ts": 1793498974.5825584
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
+      "product_id": "3447589",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1793499282.7659028
     }
   ],
   "sources": {
@@ -37417,15 +37419,17 @@
         "stage": "LIVE_STOCK",
         "status": "PÅ LAGER",
         "surface_statuses": {
+          "pokemon-brand": "PÅ LAGER",
           "pokemon-kort": "PÅ LAGER"
         },
         "surfaces": [
+          "pokemon-brand",
           "pokemon-kort"
         ],
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Zygarde-ex-Premium-Collection/3447589"
       }
     }
   },
-  "updated_at": 1793498974.5837278,
+  "updated_at": 1793499282.7668867,
   "version": 1
 }
