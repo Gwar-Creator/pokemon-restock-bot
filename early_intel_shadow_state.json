@@ -6789,17 +6789,6 @@
   },
   "events": [
     {
-      "event": "REMOVED",
-      "fields": [],
-      "name": "Pokemon TCG First Partner Illustration Collection Box Series 2",
-      "product_id": "3478498",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "INBOUND_UNDATED",
-      "stage_before": null,
-      "ts": 1793045987.435674
-    },
-    {
       "event": "CHANGE",
       "fields": [
         "surface_statuses"
@@ -22336,6 +22325,19 @@
       "stage_after": "LIVE_STOCK",
       "stage_before": "LIVE_STOCK",
       "ts": 1793535579.2906275
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
+      "product_id": "3447589",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1793537397.1420708
     }
   ],
   "sources": {
@@ -24924,7 +24926,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-elite-trainer-box-zsv10-5/200329218/"
       },
       "200329219": {
-        "epoch_updated_at": 1793536340,
+        "epoch_updated_at": 1793537243,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -26552,7 +26554,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-mini-tin-med-samlekort-feraligatr-budew/200371877/"
       },
       "200371882": {
-        "epoch_updated_at": 1793536340,
+        "epoch_updated_at": 1793537244,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -26636,7 +26638,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-tin-summer-ex-med-samlekort-mega-clefable/200371885/"
       },
       "200371886": {
-        "epoch_updated_at": 1793536344,
+        "epoch_updated_at": 1793537243,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -26727,7 +26729,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-pitch-black-1-pak-flere-varianter-assorteret/200380909/"
       },
       "200380910": {
-        "epoch_updated_at": 1793536339,
+        "epoch_updated_at": 1793537244,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -26821,7 +26823,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-pitch-black-premium-checklane-flere-varianter-assorteret/200380917/"
       },
       "200380918": {
-        "epoch_updated_at": 1793536343,
+        "epoch_updated_at": 1793537243,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -37440,17 +37442,15 @@
         "stage": "LIVE_STOCK",
         "status": "PÅ LAGER",
         "surface_statuses": {
-          "pokemon-brand": "PÅ LAGER",
           "pokemon-kort": "PÅ LAGER"
         },
         "surfaces": [
-          "pokemon-brand",
           "pokemon-kort"
         ],
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Zygarde-ex-Premium-Collection/3447589"
       }
     }
   },
-  "updated_at": 1793537074.017928,
+  "updated_at": 1793537397.143061,
   "version": 1
 }
