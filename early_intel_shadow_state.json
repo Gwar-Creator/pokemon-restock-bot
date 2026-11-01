@@ -6789,22 +6789,6 @@
   },
   "events": [
     {
-      "event": "CHANGE",
-      "fields": [
-        "f_stock_availability",
-        "in_stock_stores_count",
-        "is_click_and_collectible",
-        "stage"
-      ],
-      "name": "Pokemon First Partner collection box 3 samlekort",
-      "product_id": "200385295",
-      "sku": "11350615-EA",
-      "source": "bilka",
-      "stage_after": "HIDDEN_STOCK",
-      "stage_before": "DATED_PREP",
-      "ts": 1793078382.8878982
-    },
-    {
       "event": "CROSS_CHANGE",
       "fields": [
         "bilka"
@@ -22476,6 +22460,19 @@
       "stage_after": "LIVE_STOCK",
       "stage_before": "LIVE_STOCK",
       "ts": 1793562886.4513834
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
+      "product_id": "3447589",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1793563171.5365136
     }
   ],
   "sources": {
@@ -37576,19 +37573,21 @@
         "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
         "new_badge": false,
         "price": 529.0,
-        "raw_status_excerpt": " På lager - 1-2 dages levering 529,00 kr.(423,20 kr.) Køb 3447589 * [![Image 29: Pokemon - Pokemon TCG Portfolio 9-P Mega Charizard X & Mega Lopunny - ULT16088](https://www.proshop.dk/Images/174x116/3447426_2681c18713e5.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-Portfolio-9-P-Mega-Charizard-X-Mega-Lopunny/3447426 \"Pokemon TCG Portfolio 9-P Mega Charizard X & Mega Lopunny - ULT16088\")![Image 30: LinkedIn](https://www.proshop.dk/Pokemon/Pokemon) Produktdatablad ## ",
+        "raw_status_excerpt": " På lager - 1-2 dages levering 529,00 kr.(423,20 kr.) 3447589 * [![Image 2: Pokemon - Pokemon TCG Portfolio 9-P Mega Charizard X & Mega Lopunny - ULT16088](https://www.proshop.dk/Images/174x116/3447426_2681c18713e5.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-Portfolio-9-P-Mega-Charizard-X-Mega-Lopunny/3447426 \"Pokemon TCG Portfolio 9-P Mega Charizard X & Mega Lopunny - ULT16088\") ## ",
         "stage": "LIVE_STOCK",
         "status": "PÅ LAGER",
         "surface_statuses": {
-          "pokemon-brand": "PÅ LAGER"
+          "pokemon-brand": "PÅ LAGER",
+          "pokemon-kort": "PÅ LAGER"
         },
         "surfaces": [
-          "pokemon-brand"
+          "pokemon-brand",
+          "pokemon-kort"
         ],
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Zygarde-ex-Premium-Collection/3447589"
       }
     }
   },
-  "updated_at": 1793562886.4524753,
+  "updated_at": 1793563171.537397,
   "version": 1
 }
