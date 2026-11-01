@@ -551,12 +551,12 @@
       "last_success_at": "2026-10-31T23:49:13.307259+00:00"
     },
     "proshop": {
-      "backoff_level": 2,
-      "next_allowed_at": 1793491615.3959715,
-      "generic_failures": 2,
-      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "backoff_level": 1,
+      "next_allowed_at": 1793491792.474,
+      "generic_failures": 0,
+      "last_error": null,
       "last_failure_at": "2026-11-01T00:01:55.395940+00:00",
-      "last_success_at": "2026-10-31T23:58:12.085947+00:00"
+      "last_success_at": "2026-11-01T00:07:52.473980+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -592,14 +592,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1793491525.6512933,
+      "next_allowed_at": 1793491816.8540008,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-01T00:01:25.651272+00:00"
+      "last_success_at": "2026-11-01T00:06:16.853980+00:00"
     }
   },
-  "updated_at": "2026-11-01T00:04:54.461580+00:00",
+  "updated_at": "2026-11-01T00:09:51.570262+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -630,11 +630,11 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-01T00:01:24.545437+00:00"
+          "last_checked": "2026-11-01T00:06:15.915101+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1793491283.8051,
+      "last_discovery_epoch": 1793491575.1045785,
       "last_full_discovery_epoch": 1793485866.4634302,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -652,7 +652,7 @@
     "3447592": 1793490797.1210947,
     "3478496": 1793490981.578913,
     "3478497": 1793490981.578913,
-    "3478498": 1793490741.5098135,
-    "3519999": 1793490741.5098135
+    "3478498": 1793491668.2965527,
+    "3519999": 1793491668.2965527
   }
 }
