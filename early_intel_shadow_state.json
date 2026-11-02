@@ -7072,32 +7072,6 @@
       "source": "proshop",
       "stage_after": "LIVE_STOCK",
       "stage_before": "LIVE_STOCK",
-      "ts": 1793238921.932441
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "surface_statuses"
-      ],
-      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
-      "product_id": "3447589",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1793239205.1164706
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "surface_statuses"
-      ],
-      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
-      "product_id": "3447589",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
       "ts": 1793239804.2769668
     },
     {
@@ -23021,6 +22995,30 @@
       "stage_after": "INBOUND_UNDATED",
       "stage_before": null,
       "ts": 1793663682.182729
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "surface_statuses"
+      ],
+      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
+      "product_id": "3447589",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1793663980.292394
+    },
+    {
+      "event": "NEW",
+      "fields": [],
+      "name": "Pokemon TCG Mega Greninja ex Premium Collection",
+      "product_id": "3478496",
+      "sku": "",
+      "source": "proshop",
+      "stage_after": "INBOUND_UNDATED",
+      "stage_before": null,
+      "ts": 1793663980.292403
     }
   ],
   "sources": {
@@ -38748,19 +38746,39 @@
         "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
         "new_badge": false,
         "price": 529.0,
-        "raw_status_excerpt": " På lager – Levering i morgen (bestil inden kl. 22) 529,00 kr.(423,20 kr.) Køb 3447589 * [![Image 29: Pokemon - Pokemon TCG Portfolio 9-P Mega Charizard X & Mega Lopunny - ULT16088](https://www.proshop.dk/Images/174x116/3447426_2681c18713e5.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-Portfolio-9-P-Mega-Charizard-X-Mega-Lopunny/3447426 \"Pokemon TCG Portfolio 9-P Mega Charizard X & Mega Lopunny - ULT16088\")![Image 30: LinkedIn](https://www.proshop.dk/Pokemon/Pokemon) Produktdatablad ## ",
+        "raw_status_excerpt": " På lager – Levering i morgen (bestil inden kl. 22) 529,00 kr.(423,20 kr.) 3447589 * [![Image 2: Pokemon - Pokemon TCG Portfolio 9-P Mega Charizard X & Mega Lopunny - ULT16088](https://www.proshop.dk/Images/174x116/3447426_2681c18713e5.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-Portfolio-9-P-Mega-Charizard-X-Mega-Lopunny/3447426 \"Pokemon TCG Portfolio 9-P Mega Charizard X & Mega Lopunny - ULT16088\") ## ",
         "stage": "LIVE_STOCK",
         "status": "PÅ LAGER",
         "surface_statuses": {
-          "pokemon-brand": "PÅ LAGER"
+          "pokemon-brand": "PÅ LAGER",
+          "pokemon-kort": "PÅ LAGER"
         },
         "surfaces": [
-          "pokemon-brand"
+          "pokemon-brand",
+          "pokemon-kort"
         ],
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Zygarde-ex-Premium-Collection/3447589"
+      },
+      "3478496": {
+        "expected_stock_date": null,
+        "id": "3478496",
+        "low_stock_badge": false,
+        "name": "Pokemon TCG Mega Greninja ex Premium Collection",
+        "new_badge": false,
+        "price": null,
+        "raw_status_excerpt": " Bestillingsvare, leveringstiden kan ikke oplyses * [![Image 11: Pokemon - Pokemon TCG Portfolio 4-P Ethan's Ho-Oh & Cynthia's Garchomp - ULT16083](https://www.proshop.dk/Images/174x116/3382585_b31a262cc6ee.jpg)](https://www.proshop.dk/Pokemon/Pokemon-TCG-Portfolio-4-P-Ethans-Ho-Oh-Cynthias-Garchomp/3382585 \"Pokemon TCG Portfolio 4-P Ethan's Ho-Oh & Cynthia's Garchomp - ULT16083\") ## ",
+        "stage": "INBOUND_UNDATED",
+        "status": "BESTILLINGSVARE",
+        "surface_statuses": {
+          "pokemon-kort": "BESTILLINGSVARE"
+        },
+        "surfaces": [
+          "pokemon-kort"
+        ],
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496"
       }
     }
   },
-  "updated_at": 1793663682.1839437,
+  "updated_at": 1793663980.293455,
   "version": 1
 }
