@@ -5842,7 +5842,7 @@
         },
         "2020": {
           "name": "BR Fields",
-          "stock": 18
+          "stock": 17
         },
         "2019": {
           "name": "BR Waves",
@@ -5873,7 +5873,7 @@
           "stock": 13
         }
       },
-      "observed_at": "2026-11-02T13:21:26.138345+00:00"
+      "observed_at": "2026-11-02T13:56:16.698632+00:00"
     },
     "br:200371874": {
       "id": "200371874",
@@ -9774,10 +9774,10 @@
       "national_stores": {
         "2003": {
           "name": "BR Rødovre",
-          "stock": 991
+          "stock": 971
         }
       },
-      "observed_at": "2026-11-02T13:31:36.789246+00:00"
+      "observed_at": "2026-11-02T13:56:18.692958+00:00"
     },
     "br:200397054": {
       "id": "200397054",
@@ -9804,10 +9804,10 @@
       "national_stores": {
         "2003": {
           "name": "BR Rødovre",
-          "stock": 362
+          "stock": 350
         }
       },
-      "observed_at": "2026-11-02T13:41:24.487765+00:00"
+      "observed_at": "2026-11-02T13:56:18.909082+00:00"
     },
     "br:200397052": {
       "id": "200397052",
@@ -9834,10 +9834,10 @@
       "national_stores": {
         "2003": {
           "name": "BR Rødovre",
-          "stock": 50
+          "stock": 44
         }
       },
-      "observed_at": "2026-11-02T13:46:27.285291+00:00"
+      "observed_at": "2026-11-02T13:56:19.338831+00:00"
     },
     "br:200397051": {
       "id": "200397051",
@@ -9864,10 +9864,10 @@
       "national_stores": {
         "2003": {
           "name": "BR Rødovre",
-          "stock": 21
+          "stock": 17
         }
       },
-      "observed_at": "2026-11-02T13:41:25.063950+00:00"
+      "observed_at": "2026-11-02T13:56:19.560022+00:00"
     },
     "bilka:200397060": {
       "id": "200397060",
@@ -9998,26 +9998,24 @@
       "observed_at": "2026-11-02T09:21:07.615052+00:00"
     }
   },
-  "last_run": "2026-11-02T13:51:19.268635+00:00",
-  "last_run_errors": 38,
+  "last_run": "2026-11-02T13:56:29.993458+00:00",
+  "last_run_errors": 9,
   "br_hidden_stock_probe": {
     "200291393": {
       "name": "Charizard ex Super-Premium Collection",
       "sku": "10831914-EA",
-      "status": "unavailable",
-      "kolding": null,
+      "status": "ok",
+      "kolding": 0,
       "viborg": null,
-      "positive_stores": {},
-      "error_type": "SSLError"
+      "positive_stores": {}
     },
     "200340038": {
       "name": "Mega Latias ex Box",
       "sku": "11119429-EA",
-      "status": "unavailable",
-      "kolding": null,
+      "status": "ok",
+      "kolding": 0,
       "viborg": null,
-      "positive_stores": {},
-      "error_type": "SSLError"
+      "positive_stores": {}
     }
   }
 }
