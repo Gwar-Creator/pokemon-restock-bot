@@ -6848,7 +6848,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 2,
+          "stock_online": 22,
           "stock_stores": 1
         },
         "foetex": {
@@ -7061,32 +7061,6 @@
     }
   },
   "events": [
-    {
-      "event": "CHANGE",
-      "fields": [
-        "surface_statuses"
-      ],
-      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
-      "product_id": "3447589",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1793203511.060051
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "stock_count_online"
-      ],
-      "name": "Pokémon ME05 Pitch Black samlekort",
-      "product_id": "200380910",
-      "sku": "11320907-EA",
-      "source": "br",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1793204379.4810894
-    },
     {
       "event": "CHANGE",
       "fields": [
@@ -23015,6 +22989,32 @@
       "stage_after": null,
       "stage_before": null,
       "ts": 1793625881.4783397
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokemon Mega Evolution Delta Reign samlekort booster pakke",
+      "product_id": "200397054",
+      "sku": "11398799-EA",
+      "source": "br",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1793627109.0854945
+    },
+    {
+      "event": "CROSS_CHANGE",
+      "fields": [
+        "br"
+      ],
+      "name": "Pokemon Mega Evolution Delta Reign samlekort booster pakke",
+      "product_id": "11398799-EA",
+      "sku": "11398799-EA",
+      "source": "cross_salling",
+      "stage_after": null,
+      "stage_before": null,
+      "ts": 1793627116.0444617
     }
   ],
   "sources": {
@@ -33399,7 +33399,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 2,
+        "stock_count_online": 22,
         "url": "https://www.br.dk/produkter/pokemon-mega-evolution-delta-reign-samlekort-booster-pakke/200397054/"
       },
       "200397058": {
@@ -38772,6 +38772,6 @@
       }
     }
   },
-  "updated_at": 1793626769.6887178,
+  "updated_at": 1793627116.0445035,
   "version": 1
 }
