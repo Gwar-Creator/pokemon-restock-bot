@@ -86,7 +86,7 @@
         "price": 329.0,
         "stock": "PÅ LAGER",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
-        "fetch_via": "jina_reader+direct_frontend_search"
+        "fetch_via": "jina_reader"
       },
       "3478496": {
         "name": "Pokemon TCG Mega Greninja ex Premium Collection",
@@ -551,12 +551,12 @@
       "last_success_at": "2026-11-02T03:24:10.024266+00:00"
     },
     "proshop": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-02T05:18:38.154952+00:00",
-      "last_success_at": "2026-11-02T05:25:29.736291+00:00"
+      "backoff_level": 1,
+      "next_allowed_at": 1793599825.5860322,
+      "generic_failures": 2,
+      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "last_failure_at": "2026-11-02T06:08:25.586000+00:00",
+      "last_success_at": "2026-11-02T06:06:35.815471+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -592,14 +592,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1793599689.600497,
+      "next_allowed_at": 1793599961.7689214,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-02T06:04:09.600476+00:00"
+      "last_success_at": "2026-11-02T06:08:41.768899+00:00"
     }
   },
-  "updated_at": "2026-11-02T06:05:02.703778+00:00",
+  "updated_at": "2026-11-02T06:09:33.237909+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -630,11 +630,11 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-02T06:04:08.689743+00:00"
+          "last_checked": "2026-11-02T06:08:40.935266+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1793599447.7314801,
+      "last_discovery_epoch": 1793599720.2522154,
       "last_full_discovery_epoch": 1793594158.7584414,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
