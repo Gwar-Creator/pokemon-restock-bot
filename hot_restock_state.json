@@ -93,7 +93,7 @@
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
-        "fetch_via": "jina_verified_detail"
+        "fetch_via": "preserved_previous_scan"
       },
       "3417744": {
         "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
@@ -183,7 +183,7 @@
       "200397054": {
         "name": "Pokemon Mega Evolution Delta Reign samlekort booster pakke",
         "price": 49.0,
-        "online_count": 16,
+        "online_count": 4,
         "online_stock": true,
         "store_count": 1,
         "kolding_stock": 0,
@@ -599,12 +599,12 @@
       "last_success_at": "2026-11-02T12:44:23.390496+00:00"
     },
     "proshop": {
-      "backoff_level": 1,
-      "next_allowed_at": 1793627477.515605,
-      "generic_failures": 1,
-      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "backoff_level": 0,
+      "next_allowed_at": 0.0,
+      "generic_failures": 0,
+      "last_error": null,
       "last_failure_at": "2026-11-02T13:49:17.515566+00:00",
-      "last_success_at": "2026-11-02T13:48:26.375933+00:00"
+      "last_success_at": "2026-11-02T13:54:17.837441+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -640,14 +640,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1793627397.9812965,
+      "next_allowed_at": 1793627695.458004,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-02T13:45:57.981271+00:00"
+      "last_success_at": "2026-11-02T13:50:55.457981+00:00"
     }
   },
-  "updated_at": "2026-11-02T13:49:32.610498+00:00",
+  "updated_at": "2026-11-02T13:54:32.653074+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -678,11 +678,11 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-02T13:45:56.628655+00:00"
+          "last_checked": "2026-11-02T13:50:54.691952+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1793627155.8627145,
+      "last_discovery_epoch": 1793627453.9459069,
       "last_full_discovery_epoch": 1793616060.4771223,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
