@@ -100,7 +100,7 @@
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
-        "fetch_via": "jina_verified_detail"
+        "fetch_via": "preserved_previous_scan"
       },
       "3478497": {
         "name": "Pokemon TCG 2-pack Booster",
@@ -599,12 +599,12 @@
       "last_success_at": "2026-11-02T20:54:19.962246+00:00"
     },
     "proshop": {
-      "backoff_level": 1,
-      "next_allowed_at": 1793655569.2377226,
-      "generic_failures": 1,
-      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "backoff_level": 0,
+      "next_allowed_at": 0.0,
+      "generic_failures": 0,
+      "last_error": null,
       "last_failure_at": "2026-11-02T21:37:29.237686+00:00",
-      "last_success_at": "2026-11-02T21:36:34.111480+00:00"
+      "last_success_at": "2026-11-02T21:44:20.355224+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -640,14 +640,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1793655595.4647467,
+      "next_allowed_at": 1793655900.6722164,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-02T21:35:55.464722+00:00"
+      "last_success_at": "2026-11-02T21:41:00.672191+00:00"
     }
   },
-  "updated_at": "2026-11-02T21:39:35.744267+00:00",
+  "updated_at": "2026-11-02T21:44:36.472262+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -678,11 +678,11 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-02T21:35:53.875681+00:00"
+          "last_checked": "2026-11-02T21:40:59.778161+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1793655353.0692558,
+      "last_discovery_epoch": 1793655658.9549544,
       "last_full_discovery_epoch": 1793637661.6347575,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
