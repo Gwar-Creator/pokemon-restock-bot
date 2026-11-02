@@ -86,14 +86,7 @@
         "price": 329.0,
         "stock": "PÅ LAGER",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
-        "fetch_via": "jina_reader+direct_frontend_search"
-      },
-      "3417744": {
-        "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
-        "price": null,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
-        "fetch_via": "jina_verified_detail"
+        "fetch_via": "jina_reader"
       },
       "3478496": {
         "name": "Pokemon TCG Mega Greninja ex Premium Collection",
@@ -107,6 +100,13 @@
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2-pack-Booster/3478497",
+        "fetch_via": "preserved_previous_scan"
+      },
+      "3417744": {
+        "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
+        "price": null,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
         "fetch_via": "preserved_previous_scan"
       },
       "3447592": {
@@ -192,23 +192,11 @@
         "sku": "11399552-EA",
         "url": "https://www.br.dk/produkter/pokemon-mega-evolution-delta-reign-samlekort-boosterpakke/200397060/"
       },
-      "200397052": {
-        "name": "Pokemon Mega Evolution Delta Reign boosterbundle samlekort",
-        "price": 349.0,
-        "online_count": 10,
-        "online_stock": true,
-        "store_count": 1,
-        "kolding_stock": 0,
-        "esbjerg_stock": 0,
-        "quantity_limit": 1,
-        "sku": "11398797-EA",
-        "url": "https://www.br.dk/produkter/pokemon-mega-evolution-delta-reign-boosterbundle-samlekort/200397052/"
-      },
       "200397054": {
         "name": "Pokemon Mega Evolution Delta Reign samlekort booster pakke",
         "price": 49.0,
-        "online_count": 0,
-        "online_stock": false,
+        "online_count": 2,
+        "online_stock": true,
         "store_count": 1,
         "kolding_stock": 0,
         "esbjerg_stock": 0,
@@ -227,6 +215,18 @@
         "quantity_limit": 6,
         "sku": "11398798-EA",
         "url": "https://www.br.dk/produkter/pokemon-mega-evolution-delta-reign-samlekortpakker/200397053/"
+      },
+      "200397052": {
+        "name": "Pokemon Mega Evolution Delta Reign boosterbundle samlekort",
+        "price": 349.0,
+        "online_count": 0,
+        "online_stock": false,
+        "store_count": 1,
+        "kolding_stock": 0,
+        "esbjerg_stock": 0,
+        "quantity_limit": 1,
+        "sku": "11398797-EA",
+        "url": "https://www.br.dk/produkter/pokemon-mega-evolution-delta-reign-boosterbundle-samlekort/200397052/"
       },
       "200397051": {
         "name": "Pokemon Elite Trainer Box: Mega Evolution Delta Reign samlekort box",
@@ -652,14 +652,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1793624401.208371,
+      "next_allowed_at": 1793624731.0840921,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-02T12:56:01.208349+00:00"
+      "last_success_at": "2026-11-02T13:01:31.084065+00:00"
     }
   },
-  "updated_at": "2026-11-02T12:59:43.569252+00:00",
+  "updated_at": "2026-11-02T13:04:58.530707+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -690,11 +690,11 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-02T12:56:00.220863+00:00"
+          "last_checked": "2026-11-02T13:01:29.710712+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1793624159.4113946,
+      "last_discovery_epoch": 1793624489.0758665,
       "last_full_discovery_epoch": 1793616060.4771223,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -710,8 +710,8 @@
   "proshop_detail_checks": {
     "3417744": 1793624359.545059,
     "3447592": 1793624359.545059,
-    "3478496": 1793623544.7382102,
-    "3478497": 1793623544.7382102,
+    "3478496": 1793624465.8338432,
+    "3478497": 1793624465.8338432,
     "3478498": 1793624304.5414217,
     "3519999": 1793624304.5414217
   }
