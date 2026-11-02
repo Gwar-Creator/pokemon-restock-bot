@@ -93,20 +93,20 @@
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
-        "fetch_via": "preserved_previous_scan"
-      },
-      "3417744": {
-        "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
-        "price": null,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
-        "fetch_via": "preserved_previous_scan"
+        "fetch_via": "jina_verified_detail"
       },
       "3478497": {
         "name": "Pokemon TCG 2-pack Booster",
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2-pack-Booster/3478497",
+        "fetch_via": "jina_verified_detail"
+      },
+      "3417744": {
+        "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
+        "price": null,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
         "fetch_via": "preserved_previous_scan"
       },
       "3447592": {
@@ -195,8 +195,8 @@
       "200397054": {
         "name": "Pokemon Mega Evolution Delta Reign samlekort booster pakke",
         "price": 49.0,
-        "online_count": 3,
-        "online_stock": true,
+        "online_count": 0,
+        "online_stock": false,
         "store_count": 1,
         "kolding_stock": 0,
         "esbjerg_stock": 0,
@@ -611,12 +611,12 @@
       "last_success_at": "2026-11-02T12:44:23.390496+00:00"
     },
     "proshop": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-02T12:33:51.956897+00:00",
-      "last_success_at": "2026-11-02T12:39:15.642185+00:00"
+      "backoff_level": 2,
+      "next_allowed_at": 1793624061.7686586,
+      "generic_failures": 2,
+      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "last_failure_at": "2026-11-02T12:49:21.768622+00:00",
+      "last_success_at": "2026-11-02T12:45:48.279354+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -652,14 +652,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1793623506.7399795,
+      "next_allowed_at": 1793623809.161573,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-02T12:41:06.739959+00:00"
+      "last_success_at": "2026-11-02T12:46:09.161550+00:00"
     }
   },
-  "updated_at": "2026-11-02T12:44:43.138361+00:00",
+  "updated_at": "2026-11-02T12:49:36.494317+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -690,11 +690,11 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-02T12:41:05.815307+00:00"
+          "last_checked": "2026-11-02T12:46:08.285095+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1793623265.0544987,
+      "last_discovery_epoch": 1793623567.301149,
       "last_full_discovery_epoch": 1793616060.4771223,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -710,8 +710,8 @@
   "proshop_detail_checks": {
     "3417744": 1793623425.606376,
     "3447592": 1793623425.606376,
-    "3478496": 1793622575.6830158,
-    "3478497": 1793622575.6830158,
+    "3478496": 1793623544.7382102,
+    "3478497": 1793623544.7382102,
     "3478498": 1793623354.9588232,
     "3519999": 1793623354.9588232
   }
