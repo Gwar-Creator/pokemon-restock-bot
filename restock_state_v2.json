@@ -327,7 +327,7 @@
     "200380911": {
       "name": "Pokémon Pitch Black Checklane Booster Pack",
       "price": 79.0,
-      "online_count": 57,
+      "online_count": 54,
       "online_stock": true,
       "store_count": 31,
       "kolding_stock": 89,
@@ -492,18 +492,6 @@
       "sku": "11399552-EA",
       "url": "https://www.br.dk/produkter/pokemon-mega-evolution-delta-reign-samlekort-boosterpakke/200397060/"
     },
-    "200397058": {
-      "name": "Pokemon Mega Evolution Delta Reign samlekort checklane boosterpakke",
-      "price": 69.0,
-      "online_count": 3,
-      "online_stock": true,
-      "store_count": 1,
-      "kolding_stock": 0,
-      "esbjerg_stock": 0,
-      "quantity_limit": 6,
-      "sku": "11399550-EA",
-      "url": "https://www.br.dk/produkter/pokemon-mega-evolution-delta-reign-samlekort-checklane-boosterpakke/200397058/"
-    },
     "200397059": {
       "name": "Pokemon Mega Evolution Delta Reign samlekort checklane boosterpakke",
       "price": 79.0,
@@ -515,6 +503,18 @@
       "quantity_limit": 6,
       "sku": "11399551-EA",
       "url": "https://www.br.dk/produkter/pokemon-mega-evolution-delta-reign-samlekort-checklane-boosterpakke/200397059/"
+    },
+    "200397058": {
+      "name": "Pokemon Mega Evolution Delta Reign samlekort checklane boosterpakke",
+      "price": 69.0,
+      "online_count": 0,
+      "online_stock": false,
+      "store_count": 1,
+      "kolding_stock": 0,
+      "esbjerg_stock": 0,
+      "quantity_limit": 6,
+      "sku": "11399550-EA",
+      "url": "https://www.br.dk/produkter/pokemon-mega-evolution-delta-reign-samlekort-checklane-boosterpakke/200397058/"
     },
     "200397054": {
       "name": "Pokemon Mega Evolution Delta Reign samlekort booster pakke",
@@ -609,7 +609,7 @@
     "200380911": {
       "name": "Pokémon Pitch Black Checklane Booster Pack",
       "price": 79.0,
-      "online_count": 57,
+      "online_count": 54,
       "online_stock": true,
       "store_count": 19,
       "local_stocks": {
@@ -819,7 +819,7 @@
     "200380911": {
       "name": "Pokémon Pitch Black Checklane Booster Pack",
       "price": 79.0,
-      "online_count": 57,
+      "online_count": 54,
       "online_stock": true,
       "store_count": 80,
       "local_stocks": {
@@ -10431,14 +10431,6 @@
         "preorder": false,
         "url": "https://symbizon.dk/products/pokemon-kort-mega-evolution-1"
       },
-      "10567257030922": {
-        "name": "Pokémon Kort Booster Bundle Mega Evolution Pitch Black 6 Booster Packs",
-        "game": "POKÉMON",
-        "price": 369.0,
-        "in_stock": true,
-        "preorder": false,
-        "url": "https://symbizon.dk/products/pokemon-kort-booster-bundle-mega-evolution-pitch-black-6-booster-packs"
-      },
       "10280646312202": {
         "name": "Pokémon Kort Mega Evolution Mega Lucario Ex Figure Collection Box",
         "game": "POKÉMON",
@@ -10446,6 +10438,14 @@
         "in_stock": false,
         "preorder": false,
         "url": "https://symbizon.dk/products/pokemon-kort-mega-evolution-phantasmal-flames-forudbestil"
+      },
+      "10567257030922": {
+        "name": "Pokémon Kort Booster Bundle Mega Evolution Pitch Black 6 Booster Packs",
+        "game": "POKÉMON",
+        "price": 369.0,
+        "in_stock": true,
+        "preorder": false,
+        "url": "https://symbizon.dk/products/pokemon-kort-booster-bundle-mega-evolution-pitch-black-6-booster-packs"
       },
       "10180430135562": {
         "name": "Pokémon Kort Black Bolt & White Flare Mini Tin - 1 Stk",
@@ -85313,7 +85313,7 @@
         "last_seen": "2026-11-02T13:28:55.220449+01:00"
       }
     },
-    "updated_at": "2026-11-02T13:53:47.967636+01:00"
+    "updated_at": "2026-11-02T13:59:02.478792+01:00"
   },
   "_elgiganten_key_cache": {
     "api_key": null,
@@ -98881,8 +98881,8 @@
     },
     "tcgbruus": {
       "status": "failed",
-      "last_attempt": "2026-11-02T12:52:59.202222+00:00",
-      "consecutive_failures": 1976,
+      "last_attempt": "2026-11-02T12:58:10.118311+00:00",
+      "consecutive_failures": 1977,
       "last_error": "mistænkeligt lavt produktantal: 3 < 5",
       "observed_count": 3,
       "last_success": "2026-10-26T15:12:41.350111+00:00",
@@ -98905,13 +98905,13 @@
       "observed_count": 0
     },
     "kelz0r": {
-      "status": "ok",
-      "last_attempt": "2026-11-02T10:13:47.425793+00:00",
+      "status": "failed",
+      "last_attempt": "2026-11-02T12:58:43.419004+00:00",
       "last_success": "2026-11-02T10:13:47.425810+00:00",
       "last_count": 2229,
-      "observed_count": 2229,
-      "consecutive_failures": 0,
-      "last_error": ""
+      "observed_count": null,
+      "consecutive_failures": 1,
+      "last_error": "HTTPSConnectionPool(host='www.kelz0r.dk', port=443): Max retries exceeded with url: /magic/pokemon-boosters-c-187_191.html?currency=DKK (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.kelz0r.dk', port=443) at 0x740b505c3ed0>, 'Connection to www.kelz0r.dk timed out. (connect timeout=30)'))"
     },
     "faraos": {
       "status": "ok",
@@ -110471,10 +110471,10 @@
     "fff940439ebc8fbda0afe0b985ab8c51",
     "fffcef15b6da7fe5087a520dad6f7197"
   ],
-  "_last_full_scan_epoch": 1793624028,
+  "_last_full_scan_epoch": 1793624342,
   "proshop_detail_checks": {
-    "3417744": 1793622986.0943394,
-    "3447592": 1793622986.0943394,
+    "3417744": 1793624173.557237,
+    "3447592": 1793624173.557237,
     "3478496": 1793623278.6874065,
     "3478497": 1793623278.6874065,
     "3478498": 1793623590.1309712,
