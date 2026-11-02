@@ -316,6 +316,13 @@
       "stock": "BESTILLINGSVARE",
       "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
       "fetch_via": "jina_reader"
+    },
+    "3478497": {
+      "name": "Pokemon TCG 2-pack Booster",
+      "price": null,
+      "stock": "UDSOLGT",
+      "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2-pack-Booster/3478497",
+      "fetch_via": "jina_verified_detail"
     }
   },
   "br": {
@@ -326,7 +333,7 @@
       "online_stock": false,
       "store_count": 30,
       "kolding_stock": 57,
-      "esbjerg_stock": 34,
+      "esbjerg_stock": 33,
       "quantity_limit": 1,
       "sku": "11320907-EA",
       "url": "https://www.br.dk/produkter/pokemon-me05-pitch-black-samlekort/200380910/"
@@ -29124,7 +29131,7 @@
       "112851": {
         "name": "Pokémon TCG: 30th Celebration Pokémon Center Elite Trainer Box",
         "game": "POKÉMON",
-        "price": null,
+        "price": 3000.0,
         "in_stock": true,
         "preorder": false,
         "url": "https://www.andcards.dk/vare/pokemon-tcg-30th-celebration-pokemon-center-elite-trainer-box/"
@@ -31983,7 +31990,7 @@
         "name": "Booster Pack – SV09 Journey Together",
         "game": "POKÉMON",
         "price": 59.95,
-        "in_stock": true,
+        "in_stock": false,
         "preorder": false,
         "url": "https://pokecards.dk/vare/booster-pack-sv09-journey-together/"
       },
@@ -38361,7 +38368,7 @@
         "name": "Booster Pack – SV09 Journey Together",
         "game": "POKÉMON",
         "price": 59.95,
-        "in_stock": true,
+        "in_stock": false,
         "preorder": false,
         "url": "https://www.pokemons.dk/product/booster-pack-sv09-journey-together/"
       },
@@ -85246,9 +85253,21 @@
         "in_stock": true,
         "url": "https://www.musenogslottet.dk/products/pokemon-mega-evolution-pitch-black-booster-bundle",
         "last_seen": "2026-11-02T14:04:24.291480+01:00"
+      },
+      "cabab3d2d025b1dd8f2c67c745867420": {
+        "source": "andcards",
+        "shop": "ANDCARDS",
+        "raw_id": "112851",
+        "name": "Pokémon TCG: 30th Celebration Pokémon Center Elite Trainer Box",
+        "set": "30th Anniversary",
+        "type": "ETB",
+        "price": 3000.0,
+        "in_stock": true,
+        "url": "https://www.andcards.dk/vare/pokemon-tcg-30th-celebration-pokemon-center-elite-trainer-box/",
+        "last_seen": "2026-11-02T20:36:21.856369+01:00"
       }
     },
-    "updated_at": "2026-11-02T20:30:26.874984+01:00"
+    "updated_at": "2026-11-02T20:36:21.856369+01:00"
   },
   "_elgiganten_key_cache": {
     "api_key": null,
@@ -85925,13 +85944,12 @@
       },
       "POKÉMON|BOOSTER PACK|EN|journey together": {
         "name": "Journey Together",
-        "current_best": 59.95,
+        "current_best": 60.0,
         "current_shops": [
-          "POKECARDS.DK",
-          "POKEMONS.DK"
+          "ROGERZ"
         ],
-        "current_shop": "POKECARDS.DK",
-        "current_url": "https://pokecards.dk/vare/booster-pack-sv09-journey-together/",
+        "current_shop": "ROGERZ",
+        "current_url": "https://rogerz.dk/products/pokemon-tcg-journey-together-booster-pack",
         "historical_low": 49.0,
         "historical_low_shops": [
           "POKEHULEN"
@@ -85939,13 +85957,13 @@
         "historical_low_date": "2026-08-16",
         "historical_low_url": "https://pokehulen.dk/products/pokemon-tcg-journey-together-booster-pack",
         "first_seen": "2026-08-16T15:27:14.261074+02:00",
-        "last_seen": "2026-11-02T20:16:23.299345+01:00",
+        "last_seen": "2026-11-02T20:36:21.970615+01:00",
         "baseline_price": 49.0,
-        "price_changes": 317,
+        "price_changes": 318,
         "observation_days": 80,
         "last_observation_date": "2026-11-02",
-        "previous_best": 60.0,
-        "last_change_pct": -0.08333333333332416,
+        "previous_best": 59.95,
+        "last_change_pct": 0.08340283569641116,
         "last_change_date": "2026-11-02",
         "last_daily_signal_date": "2026-08-28"
       },
@@ -98505,12 +98523,12 @@
     },
     "proshop": {
       "status": "degraded",
-      "last_attempt": "2026-11-02T19:21:47.770405+00:00",
+      "last_attempt": "2026-11-02T19:31:50.755173+00:00",
       "consecutive_failures": 0,
-      "last_error": "Kategori 4 aktuelle TCG-produkter, 0 bekræftede SKU-detaljer; health-target for kategori er 6",
-      "observed_count": 4,
-      "last_success": "2026-11-02T19:21:47.770421+00:00",
-      "last_count": 4
+      "last_error": "Kategori 4 aktuelle TCG-produkter, 1 bekræftede SKU-detaljer; health-target for kategori er 6",
+      "observed_count": 5,
+      "last_success": "2026-11-02T19:31:50.755188+00:00",
+      "last_count": 5
     },
     "br": {
       "status": "ok",
@@ -98728,11 +98746,11 @@
     },
     "pocketmonster": {
       "status": "failed",
-      "last_attempt": "2026-11-02T19:29:22.820149+00:00",
+      "last_attempt": "2026-11-02T19:35:17.320494+00:00",
       "last_success": "2026-11-02T19:19:34.632415+00:00",
       "last_count": 85,
       "observed_count": null,
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_error": "HTTPSConnectionPool(host='pocketmonster.dk', port=443): Read timed out. (read timeout=30)"
     },
     "cardstorecph": {
@@ -98816,8 +98834,8 @@
     },
     "tcgbruus": {
       "status": "failed",
-      "last_attempt": "2026-11-02T19:29:35.109822+00:00",
-      "consecutive_failures": 2055,
+      "last_attempt": "2026-11-02T19:35:29.001192+00:00",
+      "consecutive_failures": 2056,
       "last_error": "mistænkeligt lavt produktantal: 3 < 5",
       "observed_count": 3,
       "last_success": "2026-10-26T15:12:41.350111+00:00",
@@ -98840,13 +98858,13 @@
       "observed_count": 0
     },
     "kelz0r": {
-      "status": "ok",
-      "last_attempt": "2026-11-02T19:16:04.091664+00:00",
+      "status": "failed",
+      "last_attempt": "2026-11-02T19:36:02.330339+00:00",
       "last_success": "2026-11-02T19:16:04.091681+00:00",
       "last_count": 2229,
-      "observed_count": 2229,
-      "consecutive_failures": 0,
-      "last_error": ""
+      "observed_count": null,
+      "consecutive_failures": 1,
+      "last_error": "HTTPSConnectionPool(host='www.kelz0r.dk', port=443): Max retries exceeded with url: /magic/pokemon-boosters-c-187_191.html?currency=DKK (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.kelz0r.dk', port=443) at 0x714261d35450>, 'Connection to www.kelz0r.dk timed out. (connect timeout=30)'))"
     },
     "faraos": {
       "status": "ok",
@@ -110411,13 +110429,13 @@
     "fff940439ebc8fbda0afe0b985ab8c51",
     "fffcef15b6da7fe5087a520dad6f7197"
   ],
-  "_last_full_scan_epoch": 1793647827,
+  "_last_full_scan_epoch": 1793648182,
   "proshop_detail_checks": {
     "3417744": 1793647055.2779915,
     "3447592": 1793647306.0966523,
     "3478496": 1793642844.1242976,
-    "3478497": 1793646731.6126642,
-    "3478498": 1793646731.6126642,
+    "3478497": 1793647906.7094016,
+    "3478498": 1793647906.7094016,
     "3519999": 1793647055.2779915
   }
 }
