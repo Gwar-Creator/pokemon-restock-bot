@@ -11,7 +11,7 @@ from __future__ import annotations
 
 import json
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -24,6 +24,8 @@ MAIN_STATE_FILE = Path("restock_state_v2.json")
 STATE_FILE = Path("tier_b_wave4_shadow_state.json")
 STATE_VERSION = 2
 MAX_DROP_RATIO = 0.70
+# The owner runs from the previous successful main snapshot (roughly 5 min old).
+MAX_SOURCE_AGE_SECONDS = 20 * 60
 WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL", "").strip()
 
 WAVE4_SOURCES = {
@@ -71,6 +73,38 @@ def _main_products(main_state, source_key):
             f"kilden mangler i restock_state_v2.json under {group or 'top-level'}"
         )
     return products
+
+
+def _require_fresh_main_source(main_state, source_key, now=None):
+    """Never publish an inventory transition from a stale cached catalogue.
+
+    The separate Wave 4 lane reads the main scanner's saved product state.
+    A healthy product count is not evidence that the underlying source fetched
+    successfully. Trust only a recent, explicitly OK main-source observation.
+    """
+    entry = (main_state.get("_source_health") or {}).get(source_key) or {}
+    status = str(entry.get("status") or "").lower()
+    if status != "ok":
+        raise RuntimeError(
+            f"main-source health not OK for {source_key}: {status or 'unknown'}"
+        )
+
+    last_success = entry.get("last_success")
+    try:
+        parsed = datetime.fromisoformat(str(last_success).replace("Z", "+00:00"))
+        if parsed.tzinfo is None:
+            raise ValueError("timezone missing")
+    except (TypeError, ValueError) as error:
+        raise RuntimeError(
+            f"main-source last_success missing/invalid for {source_key}"
+        ) from error
+
+    current = now if now is not None else datetime.now(timezone.utc)
+    age = (current - parsed.astimezone(timezone.utc)).total_seconds()
+    if age < -120 or age > MAX_SOURCE_AGE_SECONDS:
+        raise RuntimeError(
+            f"main-source last_success outside freshness window for {source_key}"
+        )
 
 
 def _validate_snapshot(source_key, products, old_products):
@@ -237,14 +271,23 @@ def run_scan(main_state=None, sender=None):
 
         try:
             products = _main_products(main_state, source_key)
+            _require_fresh_main_source(main_state, source_key)
             _validate_snapshot(source_key, products, old_products)
-            sent_alerts += _emit_live_alerts(
-                source_key,
-                config["label"],
-                old_products,
-                products,
-                sender=sender,
-            )
+            # A failed/unknown prior observation breaks the trusted transition
+            # chain. On recovery, quietly establish a new baseline first.
+            if str(old_health.get("status") or "").lower() == "ok":
+                sent_alerts += _emit_live_alerts(
+                    source_key,
+                    config["label"],
+                    old_products,
+                    products,
+                    sender=sender,
+                )
+            else:
+                print(
+                    f"WAVE4 LIVE {config['label']}: recovered or unknown baseline; "
+                    "suppressing product alerts for this scan"
+                )
             health = _health_success(len(products), now)
             pokemon, lorcana, stock, preorders = _counts(products)
             print(
