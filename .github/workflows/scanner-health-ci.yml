@@ -1,0 +1,29 @@
+name: Scanner health audit tests
+
+on:
+  pull_request:
+    paths:
+      - "scanner_health_audit.py"
+      - "test_scanner_health_audit.py"
+      - ".github/workflows/restock.yml"
+      - ".github/workflows/scanner-health-ci.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit-unit-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v5
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Validate syntax
+        run: python -m py_compile scanner_health_audit.py test_scanner_health_audit.py
+      - name: Run read-only source-health unit tests
+        run: python -m unittest -v test_scanner_health_audit.py

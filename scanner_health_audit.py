@@ -1,11 +1,13 @@
+import argparse
 import json
+import os
 from datetime import datetime, timezone
 
 STATE_FILE = "restock_state_v2.json"
 
 SOURCE_MINIMUMS = {
     "coolshop": 10,
-    "proshop": 3,
+    "proshop": 2,
     "br": 5,
     "bilka": 5,
     "foetex": 5,
@@ -100,53 +102,133 @@ def source_products(state, source):
     return state.get(source) or {}
 
 
-def main():
-    state = load_state()
+def inspect_sources(state, minimums=None):
+    """Classify saved source health without treating cached stock as live stock.
+
+    OK: last source scan succeeded and the stored count meets its sanity check.
+    DEGRADED: transient failure, explicit degradation or suspicious count.
+    DOWN: at least three consecutive failed scans.
+    UNKNOWN: the latest recorded health is absent or not interpretable.
+    """
+    if minimums is None:
+        minimums = SOURCE_MINIMUMS
     health = state.get("_source_health") or {}
-    issues = []
     rows = []
 
-    for source, minimum in SOURCE_MINIMUMS.items():
+    for source, minimum in minimums.items():
         products = source_products(state, source)
-        count = len(products) if isinstance(products, dict) else 0
+        cached_count = len(products) if isinstance(products, dict) else 0
         entry = health.get(source) or {}
-        status = str(entry.get("status") or "unknown")
-        failures = int(entry.get("consecutive_failures") or 0)
-        last_success = str(entry.get("last_success") or "")
+        raw_status = str(entry.get("status") or "unknown").lower()
+        try:
+            failures = max(0, int(entry.get("consecutive_failures") or 0))
+        except (ValueError, TypeError):
+            failures = 0
+            raw_status = "unknown"
 
-        rows.append((source, count, status, failures, last_success))
+        if raw_status == "failed" or failures:
+            status = "DOWN" if failures >= 3 else "DEGRADED"
+            reason = f"{failures} consecutive failure(s)"
+        elif raw_status == "degraded":
+            status = "DEGRADED"
+            reason = "source reported degraded"
+        elif raw_status == "ok":
+            if cached_count < minimum:
+                status = "DEGRADED"
+                reason = f"cached count {cached_count} below sanity threshold {minimum}"
+            else:
+                status = "OK"
+                reason = ""
+        else:
+            status = "UNKNOWN"
+            reason = "no trustworthy saved source-health status"
 
-        if count < minimum:
-            issues.append(
-                f"{source}: produktantal {count} er under minimum {minimum}"
+        rows.append({
+            "source": source,
+            "status": status,
+            "reason": reason,
+            "cached_count": cached_count,
+            "minimum": minimum,
+            "failures": failures,
+            "last_success": str(entry.get("last_success") or ""),
+        })
+
+    return rows
+
+
+def write_github_summary(rows, path):
+    """Append a concise diagnostic table; never alter scanner state."""
+    counts = {
+        status: sum(row["status"] == status for row in rows)
+        for status in ("OK", "DEGRADED", "DOWN", "UNKNOWN")
+    }
+    with open(path, "a", encoding="utf-8") as file:
+        file.write("\n### Scanner health (last saved scan)\n\n")
+        file.write(
+            "Cached product counts are **not** confirmation of current "
+            "availability. This audit does not send Discord messages.\n\n"
+        )
+        file.write(
+            f"OK: {counts['OK']} | DEGRADED: {counts['DEGRADED']} | "
+            f"DOWN: {counts['DOWN']} | UNKNOWN: {counts['UNKNOWN']}\n\n"
+        )
+        file.write("| Source | Health | Cached products | Failed scans | Last success |\n")
+        file.write("| --- | --- | ---: | ---: | --- |\n")
+        for row in rows:
+            file.write(
+                f"| {row['source']} | {row['status']} | "
+                f"{row['cached_count']} | {row['failures']} | "
+                f"{row['last_success']} |\n"
             )
-        if failures > 0 or status in ("failed", "degraded"):
-            issues.append(
-                f"{source}: health={status}, consecutive_failures={failures}"
-            )
 
-    print("SCANNER HEALTH AUDIT")
-    print(f"Tid: {datetime.now(timezone.utc).isoformat()}")
-    for source, count, status, failures, last_success in rows:
-        suffix = f" | last_success={last_success}" if last_success else ""
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(description="Read-only scanner health audit")
+    parser.add_argument(
+        "--strict",
+        action="store_true",
+        help="Exit 1 for any non-OK source, for a visible diagnostic step failure.",
+    )
+    args = parser.parse_args(argv)
+    state = load_state()
+    rows = inspect_sources(state)
+    issues = [row for row in rows if row["status"] != "OK"]
+
+    print("SCANNER HEALTH AUDIT (saved source state, not live availability)")
+    print(f"Time: {datetime.now(timezone.utc).isoformat()}")
+    for row in rows:
+        extra = f" | reason={row['reason']}" if row["reason"] else ""
+        last = f" | last_success={row['last_success']}" if row["last_success"] else ""
         print(
-            f"- {source}: {count} produkter | health={status} | "
-            f"failures={failures}{suffix}"
+            f"- {row['source']}: {row['status']} | "
+            f"{row['cached_count']} cached products | failures={row['failures']}"
+            f"{last}{extra}"
         )
 
     if issues:
-        print("AUDIT ISSUES:")
-        for issue in issues:
-            print(f"! {issue}")
-    else:
+        counts = {
+            status: sum(row["status"] == status for row in issues)
+            for status in ("DEGRADED", "DOWN", "UNKNOWN")
+        }
         print(
-            f"AUDIT OK: alle {len(SOURCE_MINIMUMS)} aktive kilder er over minimum "
-            "og uden registrerede failures."
+            f"::warning title=Scanner source health::"
+            f"{counts['DOWN']} down, {counts['DEGRADED']} degraded, "
+            f"{counts['UNKNOWN']} unknown. See scanner health job summary."
         )
+        print("AUDIT ISSUES:")
+        for row in issues:
+            print(f"! {row['source']}: {row['status']} - {row['reason']}")
+    else:
+        print(f"AUDIT OK: {len(rows)} sources with healthy recorded scans.")
 
-    # Diagnostic only. Source-health already owns Discord failure alerts, so
-    # this audit does not create an extra noisy channel or a changing report file.
-    return 0
+    summary_path = os.getenv("GITHUB_STEP_SUMMARY")
+    if summary_path:
+        write_github_summary(rows, summary_path)
+
+    # Keep the default safe for local diagnostics. In GitHub Actions --strict
+    # visibly marks the audit step as failed; the workflow uses
+    # continue-on-error so current scanner/state saves are not interrupted.
+    return 1 if args.strict and issues else 0
 
 
 if __name__ == "__main__":

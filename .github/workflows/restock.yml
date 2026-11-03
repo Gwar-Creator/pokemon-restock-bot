@@ -84,6 +84,7 @@ jobs:
           python -m unittest test_flinamania_product_probe.py
           python -m unittest test_matraws_single_guard.py
           python -m unittest test_state_commit_guard.py
+          python -m unittest test_scanner_health_audit.py
 
       - name: Keep Discord channels fresh
         continue-on-error: true
@@ -145,7 +146,7 @@ jobs:
 
       - name: Audit scanner health (Actions only)
         continue-on-error: true
-        run: python scanner_health_audit.py
+        run: python scanner_health_audit.py --strict
 
       - name: Compact volatile state fields
         run: python state_commit_guard.py --profile main
