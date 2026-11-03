@@ -132,6 +132,22 @@ def main():
             print("READ_ONLY_PROBE: unavailable; cannot validate coverage")
             return 0
         print(json.dumps(inspect_html(response.text), ensure_ascii=False, indent=2))
+        print("price currency hints:", {
+            "dkk_tokens": len(re.findall(r"\\bDKK\\b|kr\\.", response.text, re.I)),
+            "usd_symbols": response.text.count("$"),
+        })
+        # One alternative public URL, to see if the site's Woo commerce
+        # currency selector can produce reliable Danish DKK on US runners.
+        alternate = BASE + "product-category/pokemon/sealed_produkter/?currency=DKK"
+        alt = session.get(alternate, headers=HEADERS, timeout=35)
+        print("explicit DKK URL HTTP status:", alt.status_code)
+        if alt.status_code == 200:
+            print("explicit DKK URL fingerprint:", hashlib.sha256(alt.content).hexdigest()[:14])
+            print("explicit DKK unique product URLs:", inspect_html(alt.text)["unique_product_urls"])
+            print("explicit DKK currency hints:", {
+                "dkk_tokens": len(re.findall(r"\\bDKK\\b|kr\\.", alt.text, re.I)),
+                "usd_symbols": alt.text.count("$"),
+            })
         print("READ_ONLY_PROBE complete - no alert / purchase / state write")
     except Exception as exc:
         print("sealed category request failed:", type(exc).__name__)
