@@ -37,6 +37,40 @@ def inspect_html(source):
         if "/product/" in parts.path:
             unique_urls.add(parts.path.rstrip("/") + "/")
 
+    product_links = []
+    for a in soup.find_all("a", href=True):
+        full = urljoin(BASE, a["href"])
+        parsed = urlparse(full)
+        if parsed.netloc not in {"tcgbruus.dk", "www.tcgbruus.dk"}:
+            continue
+        if "/product/" not in parsed.path:
+            continue
+        label = " ".join(a.get_text(" ", strip=True).split())[:120]
+        image = a.find("img")
+        if not label and image:
+            label = str(image.get("alt") or "").strip()[:120]
+        parent = a
+        context = ""
+        for _ in range(4):
+            if parent.parent is None:
+                break
+            parent = parent.parent
+            value = " ".join(parent.get_text(" ", strip=True).split())
+            if value and len(value) <= 450:
+                context = value[:180]
+        item = {"path": parsed.path[:130], "anchor_text": label, "nearby_text": context}
+        if item not in product_links:
+            product_links.append(item)
+
+    pagination = []
+    for a in soup.find_all("a", href=True):
+        href = urljoin(BASE, a["href"])
+        if "tcgbruus.dk" not in urlparse(href).netloc:
+            continue
+        if re.search(r"(?:/page/\d+|[?&](?:paged|page|product-page)=\d+)", href):
+            pagination.append({"path": urlparse(href).path[:130], "label": a.get_text(" ", strip=True)[:35]})
+    pagination = pagination[:20]
+
     cards = soup.select("li.product, .products .product, .product-grid-item, .wd-product")
     rows = []
     for card in cards:
@@ -63,6 +97,11 @@ def inspect_html(source):
         "product_card_elements": len(cards),
         "linked_product_cards": len(rows),
         "sample_cards": rows[:24],
+        "sample_unique_product_links": product_links[:18],
+        "pagination_links": pagination,
+        "mentions_product_result_count": bool(soup.select(".woocommerce-result-count")),
+        "mentions_out_of_stock": "outofstock" in source.lower(),
+        "mentions_stock_status": bool(re.search(r"p[aå] lager|udsolgt|add to cart", source, re.I)),
     }
 
 
