@@ -6759,7 +6759,7 @@
           "sold_in_stores": false,
           "sold_online": false,
           "stage": "HIDDEN_STOCK",
-          "stock_online": 34,
+          "stock_online": 32,
           "stock_stores": 0
         },
         "br": {
@@ -6770,7 +6770,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 34,
+          "stock_online": 32,
           "stock_stores": 1
         },
         "foetex": {
@@ -6781,7 +6781,7 @@
           "sold_in_stores": false,
           "sold_online": false,
           "stage": "HIDDEN_STOCK",
-          "stock_online": 34,
+          "stock_online": 32,
           "stock_stores": 0
         }
       }
@@ -6837,7 +6837,7 @@
           "sold_in_stores": false,
           "sold_online": false,
           "stage": "HIDDEN_STOCK",
-          "stock_online": 86,
+          "stock_online": 74,
           "stock_stores": 0
         },
         "br": {
@@ -6848,7 +6848,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 86,
+          "stock_online": 74,
           "stock_stores": 1
         },
         "foetex": {
@@ -6859,7 +6859,7 @@
           "sold_in_stores": false,
           "sold_online": false,
           "stage": "HIDDEN_STOCK",
-          "stock_online": 86,
+          "stock_online": 74,
           "stock_stores": 0
         }
       }
@@ -7061,112 +7061,6 @@
     }
   },
   "events": [
-    {
-      "event": "CHANGE",
-      "fields": [
-        "surface_statuses"
-      ],
-      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
-      "product_id": "3447589",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1793363978.0131931
-    },
-    {
-      "event": "CROSS_CHANGE",
-      "fields": [
-        "bilka",
-        "br",
-        "foetex"
-      ],
-      "name": "Pokémon ME05 Pitch Black samlekort",
-      "product_id": "11320907-EA",
-      "sku": "11320907-EA",
-      "source": "cross_salling",
-      "stage_after": null,
-      "stage_before": null,
-      "ts": 1793363978.0144196
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "surface_statuses"
-      ],
-      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
-      "product_id": "3447589",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1793364881.3026538
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "surface_statuses"
-      ],
-      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
-      "product_id": "3447589",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1793365182.4439638
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "stock_count_online"
-      ],
-      "name": "Pokémon ME05 Pitch Black samlekort",
-      "product_id": "200380910",
-      "sku": "11320907-EA",
-      "source": "br",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1793365512.0985308
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "stock_count_online"
-      ],
-      "name": "Pokémon Pitch Black Checklane Booster Pack",
-      "product_id": "200380911",
-      "sku": "11320909-EA",
-      "source": "br",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1793365512.0985427
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "stock_count_online"
-      ],
-      "name": "Pokémon ME05 Pitch Black samlekort",
-      "product_id": "200380910",
-      "sku": "11320907-EA",
-      "source": "foetex",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1793365515.2954943
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "stock_count_online"
-      ],
-      "name": "Pokémon Pitch Black Checklane Booster Pack",
-      "product_id": "200380911",
-      "sku": "11320909-EA",
-      "source": "foetex",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1793365515.295505
-    },
     {
       "event": "CROSS_CHANGE",
       "fields": [
@@ -23102,6 +22996,114 @@
       "stage_after": null,
       "stage_before": null,
       "ts": 1793694286.8758984
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokemon Mega Evolution Delta Reign boosterbundle samlekort",
+      "product_id": "200397052",
+      "sku": "11398797-EA",
+      "source": "br",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1793694574.745193
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokemon Mega Evolution Delta Reign samlekort booster pakke",
+      "product_id": "200397054",
+      "sku": "11398799-EA",
+      "source": "br",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1793694574.7452085
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokemon Mega Evolution Delta Reign boosterbundle samlekort",
+      "product_id": "200397052",
+      "sku": "11398797-EA",
+      "source": "bilka",
+      "stage_after": "HIDDEN_STOCK",
+      "stage_before": "HIDDEN_STOCK",
+      "ts": 1793694576.837539
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokemon Mega Evolution Delta Reign samlekort booster pakke",
+      "product_id": "200397054",
+      "sku": "11398799-EA",
+      "source": "bilka",
+      "stage_after": "HIDDEN_STOCK",
+      "stage_before": "HIDDEN_STOCK",
+      "ts": 1793694576.8375537
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokemon Mega Evolution Delta Reign boosterbundle samlekort",
+      "product_id": "200397052",
+      "sku": "11398797-EA",
+      "source": "foetex",
+      "stage_after": "HIDDEN_STOCK",
+      "stage_before": "HIDDEN_STOCK",
+      "ts": 1793694578.1232617
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokemon Mega Evolution Delta Reign samlekort booster pakke",
+      "product_id": "200397054",
+      "sku": "11398799-EA",
+      "source": "foetex",
+      "stage_after": "HIDDEN_STOCK",
+      "stage_before": "HIDDEN_STOCK",
+      "ts": 1793694578.123275
+    },
+    {
+      "event": "CROSS_CHANGE",
+      "fields": [
+        "bilka",
+        "br",
+        "foetex"
+      ],
+      "name": "Pokemon Mega Evolution Delta Reign boosterbundle samlekort",
+      "product_id": "11398797-EA",
+      "sku": "11398797-EA",
+      "source": "cross_salling",
+      "stage_after": null,
+      "stage_before": null,
+      "ts": 1793694581.594808
+    },
+    {
+      "event": "CROSS_CHANGE",
+      "fields": [
+        "bilka",
+        "br",
+        "foetex"
+      ],
+      "name": "Pokemon Mega Evolution Delta Reign samlekort booster pakke",
+      "product_id": "11398799-EA",
+      "sku": "11398799-EA",
+      "source": "cross_salling",
+      "stage_after": null,
+      "stage_before": null,
+      "ts": 1793694581.5948157
     }
   ],
   "sources": {
@@ -28122,7 +28124,7 @@
         "sold_in_stores": false,
         "sold_online": false,
         "stage": "HIDDEN_STOCK",
-        "stock_count_online": 34,
+        "stock_count_online": 32,
         "url": "https://www.bilka.dk/produkter/pokemon-mega-evolution-delta-reign-boosterbundle-samlekort/200397052/"
       },
       "200397053": {
@@ -28182,7 +28184,7 @@
         "sold_in_stores": false,
         "sold_online": false,
         "stage": "HIDDEN_STOCK",
-        "stock_count_online": 86,
+        "stock_count_online": 74,
         "url": "https://www.bilka.dk/produkter/pokemon-mega-evolution-delta-reign-samlekort-booster-pakke/200397054/"
       },
       "200397058": {
@@ -33412,7 +33414,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 34,
+        "stock_count_online": 32,
         "url": "https://www.br.dk/produkter/pokemon-mega-evolution-delta-reign-boosterbundle-samlekort/200397052/"
       },
       "200397053": {
@@ -33477,7 +33479,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 86,
+        "stock_count_online": 74,
         "url": "https://www.br.dk/produkter/pokemon-mega-evolution-delta-reign-samlekort-booster-pakke/200397054/"
       },
       "200397058": {
@@ -38640,7 +38642,7 @@
         "sold_in_stores": false,
         "sold_online": false,
         "stage": "HIDDEN_STOCK",
-        "stock_count_online": 34,
+        "stock_count_online": 32,
         "url": "https://www.foetex.dk/produkter/pokemon-mega-evolution-delta-reign-boosterbundle-samlekort/200397052/"
       },
       "200397053": {
@@ -38700,7 +38702,7 @@
         "sold_in_stores": false,
         "sold_online": false,
         "stage": "HIDDEN_STOCK",
-        "stock_count_online": 86,
+        "stock_count_online": 74,
         "url": "https://www.foetex.dk/produkter/pokemon-mega-evolution-delta-reign-samlekort-booster-pakke/200397054/"
       },
       "200397058": {
@@ -38865,6 +38867,6 @@
       }
     }
   },
-  "updated_at": 1793694286.8759282,
+  "updated_at": 1793694581.5948498,
   "version": 1
 }
