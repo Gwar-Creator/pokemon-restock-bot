@@ -37,6 +37,13 @@
         "online_stock": true,
         "url": "https://www.coolshop.dk/produkt/pokemon-first-partner-illustration-collection-series-2-pok10395-101/23XF7G/"
       },
+      "https://www.coolshop.dk/produkt/pokemon-mega-evolution-me02-5-ascended-heroes-elite-trainer-box-pok10315-101/23V948/": {
+        "name": "Pokémon - Mega Evolution ME02.5: Ascended Heroes - Elite Trainer Box (POK10315-101)",
+        "game": "POKÉMON",
+        "price": 799.95,
+        "online_stock": false,
+        "url": "https://www.coolshop.dk/produkt/pokemon-mega-evolution-me02-5-ascended-heroes-elite-trainer-box-pok10315-101/23V948/"
+      },
       "https://www.coolshop.dk/produkt/pokemon-deck-pro-poke-mega-charizard-y/23UF9A/": {
         "name": "Pokémon - Deck Pro Poke - Mega Charizard Y",
         "game": "POKÉMON",
@@ -71,13 +78,6 @@
         "price": 1399.95,
         "online_stock": false,
         "url": "https://www.coolshop.dk/produkt/pokemon-30th-celebration-elite-trainer-box-pok10447-101/23Y9WQ/"
-      },
-      "https://www.coolshop.dk/produkt/pokemon-mega-evolution-me02-5-ascended-heroes-elite-trainer-box-pok10315-101/23V948/": {
-        "name": "Pokémon - Mega Evolution ME02.5: Ascended Heroes - Elite Trainer Box (POK10315-101)",
-        "game": "POKÉMON",
-        "price": 799.95,
-        "online_stock": false,
-        "url": "https://www.coolshop.dk/produkt/pokemon-mega-evolution-me02-5-ascended-heroes-elite-trainer-box-pok10315-101/23V948/"
       }
     },
     "proshop": {
@@ -86,27 +86,27 @@
         "price": 329.0,
         "stock": "PÅ LAGER",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
-        "fetch_via": "jina_reader"
+        "fetch_via": "jina_reader+direct_frontend_search"
       },
       "3478496": {
         "name": "Pokemon TCG Mega Greninja ex Premium Collection",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
-        "fetch_via": "jina_reader"
-      },
-      "3478497": {
-        "name": "Pokemon TCG 2-pack Booster",
-        "price": null,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2-pack-Booster/3478497",
-        "fetch_via": "preserved_previous_scan"
+        "fetch_via": "jina_reader+direct_frontend_search"
       },
       "3417744": {
         "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
+        "fetch_via": "preserved_previous_scan"
+      },
+      "3478497": {
+        "name": "Pokemon TCG 2-pack Booster",
+        "price": null,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2-pack-Booster/3478497",
         "fetch_via": "preserved_previous_scan"
       },
       "3447592": {
@@ -135,7 +135,7 @@
       "200397052": {
         "name": "Pokemon Mega Evolution Delta Reign boosterbundle samlekort",
         "price": 349.0,
-        "online_count": 29,
+        "online_count": 28,
         "online_stock": true,
         "store_count": 1,
         "kolding_stock": 0,
@@ -628,14 +628,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1793708990.5877757,
+      "next_allowed_at": 1793709323.8055007,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-03T12:25:50.587750+00:00"
+      "last_success_at": "2026-11-03T12:31:23.805475+00:00"
     }
   },
-  "updated_at": "2026-11-03T12:29:28.891118+00:00",
+  "updated_at": "2026-11-03T12:34:46.449352+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -666,11 +666,11 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-03T12:25:49.365961+00:00"
+          "last_checked": "2026-11-03T12:31:22.907223+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1793708748.1655283,
+      "last_discovery_epoch": 1793709082.2917843,
       "last_full_discovery_epoch": 1793703054.935954,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -685,11 +685,11 @@
     "proshop:3478496": 1793643400.1144028
   },
   "proshop_detail_checks": {
-    "3417744": 1793708192.73877,
+    "3417744": 1793709105.9383895,
     "3447592": 1793708435.922975,
     "3478496": 1793642580.111834,
     "3478497": 1793708545.0623808,
     "3478498": 1793708545.0623808,
-    "3519999": 1793708192.73877
+    "3519999": 1793709105.9383895
   }
 }
