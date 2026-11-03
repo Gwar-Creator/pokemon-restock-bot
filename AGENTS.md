@@ -12,6 +12,14 @@ Denne beslutning **erstatter** alle ældre krav nedenfor om kun at sende verific
 - Den gamle manuelle `vintage_lot_budget.py` og BUY/BID-kode beholdes som inaktive hjælperedskaber; de må **ikke** blokere eller påtvinges udvalgte vintage-fund. Den tidligere plan om 14 dages BUY/BID-shadow er ikke en forudsætning for denne eksplicit valgte discovery-version.
 
 
+## Kendt kildebegrænsning — TCGBruus og Proshop (3. november 2026)
+
+- **TCGBruus:** Verificeret fra GitHub Actions med samme curl_cffi Chrome-fingerprint som produktionen. Den offentlige sealed-kategori gav HTTP 200 men kun **3 unikke produktlinks**, **ingen normale WooCommerce-kort/pagination**, og priser i **USD** (ikke DKK). `?currency=DKK` hjalp ikke. Læs kun dette som et verificeret problem for GitHub-runnerens respons, ikke som en påstand om butikkens generelle danske lager.
+- Hold derfor `SOURCE_MIN_PRODUCTS["tcgbruus"] = 5`; **sænk ikke til 3** for at få grøn health. Den gamle produktbaseline bevares ved fejl, og både source-health og Wave 4 skal forblive fail-closed, indtil dansk lokaliseret produkt-/lager-/prisdata er dokumenteret med en live test. Undgå at kalde cache for aktuelt lager.
+- En read-only diagnose ligger i `tools/diagnostics/tcgbruus_coverage_probe.py` og kan køres manuelt via `.github/workflows/tcgbruus_coverage_probe.yml` (ingen secrets, køb, Discord eller state-mutation). Resultaterne er dokumenteret i GitHub issue **#62** og PR **#104**.
+- **Proshop:** Hovedkilden viser ofte 3–5 friske kategoriprodukter mod en konservativ health-target på 6. Status **DEGRADED** er derfor tilsigtet, selvom kendte SKU'er kan verificeres separat. Supplerende detailcheck må aldrig gøre katalogdækning kunstigt grøn.
+- P0 driftsovervågning (#62) er **ikke færdig**: missed scheduled-job detection og samlet handlingsklar driftstatus mangler. Prisalarmer forbliver slået fra efter beslutningen 28. oktober, indtil kvaliteten er dokumenteret.
+
 ## Formål
 
 Dette repository driver en dansk Discord-scanner for Pokémon- og Lorcana-restocks, prisovervågning og Cardmarket-historik. Målet er få, relevante og troværdige notifikationer — ikke flest mulige notifikationer.
