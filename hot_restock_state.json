@@ -599,12 +599,12 @@
       "last_success_at": "2026-11-03T03:04:54.504490+00:00"
     },
     "proshop": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-03T05:35:32.105809+00:00",
-      "last_success_at": "2026-11-03T05:39:49.523116+00:00"
+      "backoff_level": 1,
+      "next_allowed_at": 1793685021.891322,
+      "generic_failures": 1,
+      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "last_failure_at": "2026-11-03T05:48:21.891290+00:00",
+      "last_success_at": "2026-11-03T05:47:22.818967+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -640,14 +640,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1793684698.475115,
+      "next_allowed_at": 1793685019.6841729,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-03T05:40:58.475086+00:00"
+      "last_success_at": "2026-11-03T05:46:19.684156+00:00"
     }
   },
-  "updated_at": "2026-11-03T05:44:34.362617+00:00",
+  "updated_at": "2026-11-03T05:49:25.138599+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -678,11 +678,11 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-03T05:40:57.792590+00:00"
+          "last_checked": "2026-11-03T05:46:18.735409+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1793684457.2024753,
+      "last_discovery_epoch": 1793684778.0147638,
       "last_full_discovery_epoch": 1793681164.2125118,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -698,7 +698,7 @@
   },
   "proshop_detail_checks": {
     "3417744": 1793684604.8213296,
-    "3447592": 1793683849.9969535,
+    "3447592": 1793684787.0044456,
     "3478496": 1793642580.111834,
     "3478497": 1793684272.0976977,
     "3478498": 1793684272.0976977,
