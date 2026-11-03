@@ -6770,7 +6770,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 12,
+          "stock_online": 11,
           "stock_stores": 1
         },
         "foetex": {
@@ -7061,32 +7061,6 @@
     }
   },
   "events": [
-    {
-      "event": "CHANGE",
-      "fields": [
-        "surface_statuses"
-      ],
-      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
-      "product_id": "3447589",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1793459371.7583048
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "in_stock_stores_count"
-      ],
-      "name": "Pokemon First Partner collection box 3 samlekort",
-      "product_id": "200385295",
-      "sku": "11350615-EA",
-      "source": "br",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1793460269.9536731
-    },
     {
       "event": "CROSS_CHANGE",
       "fields": [
@@ -23148,6 +23122,32 @@
       "stage_after": null,
       "stage_before": null,
       "ts": 1793713481.8925574
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokemon Mega Evolution Delta Reign boosterbundle samlekort",
+      "product_id": "200397052",
+      "sku": "11398797-EA",
+      "source": "br",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1793713779.7946002
+    },
+    {
+      "event": "CROSS_CHANGE",
+      "fields": [
+        "br"
+      ],
+      "name": "Pokemon Mega Evolution Delta Reign boosterbundle samlekort",
+      "product_id": "11398797-EA",
+      "sku": "11398797-EA",
+      "source": "cross_salling",
+      "stage_after": null,
+      "stage_before": null,
+      "ts": 1793713786.6026258
     }
   ],
   "sources": {
@@ -23611,7 +23611,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-tcg-scarlet-violet151-mini-tin/200215292/"
       },
       "200215319": {
-        "epoch_updated_at": 1793712759,
+        "epoch_updated_at": 1793713662,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -27392,7 +27392,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-mini-tin-med-samlekort-gallade-goomy/200371882/"
       },
       "200371884": {
-        "epoch_updated_at": 1793712759,
+        "epoch_updated_at": 1793713662,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -27602,7 +27602,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-pitch-black-checklane-booster-pack/200380911/"
       },
       "200380917": {
-        "epoch_updated_at": 1793712759,
+        "epoch_updated_at": 1793713662,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -27663,7 +27663,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-tcg-pitch-black-elite-trainer-box/200380918/"
       },
       "200380919": {
-        "epoch_updated_at": 1793712758,
+        "epoch_updated_at": 1793713662,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -28112,7 +28112,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-greninja-ex-tin-samlekort/200392809/"
       },
       "200397051": {
-        "epoch_updated_at": 1793712759,
+        "epoch_updated_at": 1793713662,
         "expected_available_from": null,
         "f_campaign_name": [
           "Nyhed"
@@ -28142,7 +28142,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-elite-trainer-box-mega-evolution-delta-reign-samlekort-box/200397051/"
       },
       "200397052": {
-        "epoch_updated_at": 1793712759,
+        "epoch_updated_at": 1793713662,
         "expected_available_from": null,
         "f_campaign_name": [
           "Nyhed"
@@ -28172,7 +28172,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-mega-evolution-delta-reign-boosterbundle-samlekort/200397052/"
       },
       "200397053": {
-        "epoch_updated_at": 1793712758,
+        "epoch_updated_at": 1793713662,
         "expected_available_from": null,
         "f_campaign_name": [
           "Nyhed"
@@ -28202,7 +28202,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-mega-evolution-delta-reign-samlekortpakker/200397053/"
       },
       "200397054": {
-        "epoch_updated_at": 1793712759,
+        "epoch_updated_at": 1793713662,
         "expected_available_from": null,
         "f_campaign_name": [
           "Nyhed"
@@ -28322,7 +28322,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-mega-evolution-delta-reign-samlekort-boosterpakke/200397060/"
       },
       "200397756": {
-        "epoch_updated_at": 1793712759,
+        "epoch_updated_at": 1793713662,
         "expected_available_from": null,
         "f_campaign_name": [
           "Nyhed"
@@ -33458,7 +33458,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 12,
+        "stock_count_online": 11,
         "url": "https://www.br.dk/produkter/pokemon-mega-evolution-delta-reign-boosterbundle-samlekort/200397052/"
       },
       "200397053": {
@@ -38907,6 +38907,6 @@
       }
     }
   },
-  "updated_at": 1793713481.8926075,
+  "updated_at": 1793713786.6026547,
   "version": 1
 }
