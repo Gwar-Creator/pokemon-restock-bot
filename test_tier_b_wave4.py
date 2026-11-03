@@ -1,4 +1,5 @@
 import json
+from datetime import datetime, timedelta, timezone
 import tempfile
 import unittest
 from pathlib import Path
@@ -23,8 +24,14 @@ class TierBWave4LiveTests(unittest.TestCase):
 
     def _main_state(self):
         state = {"shopify": {}, "woocommerce": {}}
+        state["_source_health"] = {}
         for source_key, config in wave4.WAVE4_SOURCES.items():
             state[config["state_group"]][source_key] = self._products(config["minimum"])
+            state["_source_health"][source_key] = {
+                "status": "ok",
+                "last_success": datetime.now(timezone.utc).isoformat(),
+                "consecutive_failures": 0,
+            }
         return state
 
     def test_wave4_has_expected_live_sources(self):
@@ -131,6 +138,84 @@ class TierBWave4LiveTests(unittest.TestCase):
             state = json.loads(state_path.read_text(encoding="utf-8"))
             self.assertEqual(state["sources"][source_key]["products"], old_products)
             self.assertEqual(state["sources"][source_key]["health"]["status"], "failed")
+
+    def test_cached_products_are_not_live_when_main_source_failed(self):
+        state = self._main_state()
+        state["_source_health"]["tcgbruus"] = {
+            "status": "failed",
+            "last_success": datetime.now(timezone.utc).isoformat(),
+            "consecutive_failures": 2357,
+        }
+        with self.assertRaisesRegex(RuntimeError, "not OK"):
+            wave4._require_fresh_main_source(state, "tcgbruus")
+
+    def test_cached_products_are_not_live_when_last_good_too_old(self):
+        state = self._main_state()
+        state["_source_health"]["tcgbruus"]["last_success"] = (
+            datetime.now(timezone.utc) - timedelta(hours=2)
+        ).isoformat()
+        with self.assertRaisesRegex(RuntimeError, "freshness window"):
+            wave4._require_fresh_main_source(state, "tcgbruus")
+
+    def test_missing_main_source_health_is_unknown_not_green(self):
+        state = self._main_state()
+        state["_source_health"].pop("tcgbruus")
+        with self.assertRaisesRegex(RuntimeError, "not OK"):
+            wave4._require_fresh_main_source(state, "tcgbruus")
+
+    def test_missing_timezone_cannot_pass_freshness_gate(self):
+        state = self._main_state()
+        state["_source_health"]["tcgbruus"]["last_success"] = "2026-11-03T20:00:00"
+        with self.assertRaisesRegex(RuntimeError, "invalid"):
+            wave4._require_fresh_main_source(state, "tcgbruus")
+
+    def test_failed_main_source_preserves_wave4_baseline_without_alerts(self):
+        state = self._main_state()
+        state["_source_health"]["tcgbruus"]["status"] = "failed"
+        old_tcg = self._products(wave4.WAVE4_SOURCES["tcgbruus"]["minimum"], in_stock=False)
+        old_state = {
+            "version": 2, "mode": "live", "sources": {
+                "tcgbruus": {
+                    "label": "TCGBRUUS",
+                    "health": {"status": "ok", "consecutive_failures": 0},
+                    "products": old_tcg,
+                }
+            },
+        }
+        sent = []
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "wave4.json"
+            path.write_text(json.dumps(old_state), encoding="utf-8")
+            with patch.object(wave4, "STATE_FILE", path):
+                failures = wave4.run_scan(main_state=state, sender=sent.append)
+            result = json.loads(path.read_text(encoding="utf-8"))
+        self.assertEqual(failures, 1)
+        self.assertEqual(sent, [])
+        self.assertEqual(result["sources"]["tcgbruus"]["health"]["status"], "failed")
+        self.assertEqual(result["sources"]["tcgbruus"]["products"], old_tcg)
+
+    def test_recovered_source_uses_silent_baseline(self):
+        state = self._main_state()
+        old_tcg = self._products(wave4.WAVE4_SOURCES["tcgbruus"]["minimum"], in_stock=False)
+        old_state = {
+            "version": 2, "mode": "live", "sources": {
+                "tcgbruus": {
+                    "label": "TCGBRUUS",
+                    "health": {"status": "failed", "consecutive_failures": 2},
+                    "products": old_tcg,
+                }
+            },
+        }
+        sent = []
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "wave4.json"
+            path.write_text(json.dumps(old_state), encoding="utf-8")
+            with patch.object(wave4, "STATE_FILE", path):
+                failures = wave4.run_scan(main_state=state, sender=sent.append)
+            result = json.loads(path.read_text(encoding="utf-8"))
+        self.assertEqual(failures, 0)
+        self.assertEqual(sent, [])
+        self.assertEqual(result["sources"]["tcgbruus"]["health"]["status"], "ok")
 
     def test_stock_count_supports_legacy_stock_shapes(self):
         products = {
