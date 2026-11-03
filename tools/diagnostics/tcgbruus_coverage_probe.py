@@ -133,7 +133,7 @@ def main():
             return 0
         print(json.dumps(inspect_html(response.text), ensure_ascii=False, indent=2))
         print("price currency hints:", {
-            "dkk_tokens": len(re.findall(r"\\bDKK\\b|kr\\.", response.text, re.I)),
+            "dkk_tokens": len(re.findall(r"\bDKK\b|kr\.", response.text, re.I)),
             "usd_symbols": response.text.count("$"),
         })
         # One alternative public URL, to see if the site's Woo commerce
@@ -145,7 +145,7 @@ def main():
             print("explicit DKK URL fingerprint:", hashlib.sha256(alt.content).hexdigest()[:14])
             print("explicit DKK unique product URLs:", inspect_html(alt.text)["unique_product_urls"])
             print("explicit DKK currency hints:", {
-                "dkk_tokens": len(re.findall(r"\\bDKK\\b|kr\\.", alt.text, re.I)),
+                "dkk_tokens": len(re.findall(r"\bDKK\b|kr\.", alt.text, re.I)),
                 "usd_symbols": alt.text.count("$"),
             })
         print("READ_ONLY_PROBE complete - no alert / purchase / state write")
