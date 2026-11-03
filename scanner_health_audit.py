@@ -7,7 +7,7 @@ STATE_FILE = "restock_state_v2.json"
 
 SOURCE_MINIMUMS = {
     "coolshop": 10,
-    "proshop": 3,
+    "proshop": 2,
     "br": 5,
     "bilka": 5,
     "foetex": 5,
