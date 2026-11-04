@@ -85,7 +85,7 @@ class HotDiscordV2AdapterTests(unittest.TestCase):
         self.assertEqual(payload["allowed_mentions"], {"parse": []})
 
 
-    def test_live_mode_proshop_order_item_is_neutral_not_restok(self):
+    def test_live_mode_proshop_order_item_is_neutral_not_restock(self):
         product = self._p(stock="BESTILLINGSVARE")
         with patch.object(hot, "DISCORD_V2_HOT_MODE", "on"), \
              patch.object(hot, "WEBHOOK_URL", "https://example.invalid/webhook"), \
@@ -106,10 +106,12 @@ class HotDiscordV2AdapterTests(unittest.TestCase):
 
     def test_order_only_live_mode_does_not_create_second_post(self):
         product = self._p(stock="BESTILLINGSVARE", fetch_via="jina_reader")
-        with patch.object(hot, "DISCORD_V2_HOT_MODE", "on"), \\
-             patch.object(hot, "WEBHOOK_URL", "https://example.invalid/webhook"), \\
-             patch.object(hot, "HOT_DRY_RUN", False), \\
-             patch.object(hot.requests, "post") as post:
+        with (
+            patch.object(hot, "DISCORD_V2_HOT_MODE", "on"),
+            patch.object(hot, "WEBHOOK_URL", "https://example.invalid/webhook"),
+            patch.object(hot, "HOT_DRY_RUN", False),
+            patch.object(hot.requests, "post") as post,
+        ):
             self.assertTrue(hot.send_hot_alert("proshop", product, "NEW"))
         self.assertEqual(post.call_count, 1)
         self.assertEqual(post.call_args.kwargs["json"]["embeds"][0]["title"],
