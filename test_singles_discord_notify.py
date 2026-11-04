@@ -148,6 +148,46 @@ class SinglesDiscordNotifyTests(unittest.TestCase):
             "Umbreon (XYZ 10)",
         )
 
+    def test_radar_only_cardmarket_is_neutral_without_buy_claim(self):
+        product = row()
+        product["alert_reason"] = "NEW_REVIEW"
+        embed = notify.embed_for(product, {})
+        fields = {field["name"]: field["value"] for field in embed["fields"]}
+        self.assertEqual(embed["color"], 0x95A5A6)
+        self.assertIn("RADAR_ONLY", fields["Status"])
+        self.assertIn("ingen verificeret annonce", fields["Status"])
+        self.assertIn("ikke en købsanbefaling", embed["description"])
+        self.assertEqual(fields["Maksbudget – ikke annoncepris"], "75 kr.")
+        self.assertNotIn("KØB NU", str(embed))
+        self.assertNotIn("url", embed)
+
+    def test_exact_listing_review_is_not_green_or_buy_now(self):
+        product = row(listing_signal="LISTING_REVIEW")
+        product.update({"alert_reason": "EXACT_LISTING", "listing_total_dkk": 65.0})
+        embed = notify.embed_for(product, {})
+        fields = {field["name"]: field["value"] for field in embed["fields"]}
+        self.assertEqual(embed["color"], 0x95A5A6)
+        self.assertIn("LISTING_REVIEW", fields["Status"])
+        self.assertIn("kontrollér manuelt", fields["Status"])
+        self.assertIn("Verificeret total", fields)
+        self.assertEqual(fields["Verificeret total"], "65 kr.")
+        self.assertIn("fragt og gebyrer", embed["description"])
+        self.assertNotIn("BUY_NOW", str(embed))
+        self.assertNotIn("url", embed)
+
+    def test_cardmarket_post_remains_single_batch_and_no_mentions(self):
+        from unittest.mock import patch
+        products = [row(str(i)) for i in range(3)]
+        for item in products:
+            item["alert_reason"] = "NEW_REVIEW"
+        with patch.object(notify.requests, "post") as post:
+            notify.post_discord("https://example.invalid/webhook", products, {})
+        self.assertEqual(post.call_count, 1)
+        payload = post.call_args.kwargs["json"]
+        self.assertEqual(len(payload["embeds"]), 3)
+        self.assertEqual(payload["allowed_mentions"], {"parse": []})
+        self.assertTrue(all(item["color"] == 0x95A5A6 for item in payload["embeds"]))
+
     def test_embed_contains_copyable_cardmarket_search_text(self):
         rarity_metadata = {
             "1": {

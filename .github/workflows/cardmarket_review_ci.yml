@@ -1,0 +1,30 @@
+name: Cardmarket personal REVIEW Discord CI
+
+on:
+  pull_request:
+    paths:
+      - "personal/singles_discord_notify.py"
+      - "test_singles_discord_notify.py"
+      - ".github/workflows/cardmarket_review_ci.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  offline-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Install dependencies
+        run: python -m pip install -q -r requirements.txt
+      - name: Compile Cardmarket singles modules
+        run: python -m py_compile personal/singles_discord_notify.py test_singles_discord_notify.py
+      - name: Verify manual-review formatting, delta policy and single Discord batch
+        run: python -m unittest -v test_singles_discord_notify.py

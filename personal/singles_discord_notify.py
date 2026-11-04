@@ -234,15 +234,22 @@ def embed_for(row: dict[str, Any], rarity_metadata: dict[str, dict[str, Any]]) -
     name, card_number = metadata_display(row, rarity_metadata)
     number_suffix = f" #{card_number}" if card_number else ""
     exact_listing = row.get("listing_signal") == "LISTING_REVIEW"
-    manual_status = "LISTING_REVIEW" if exact_listing else "MANUAL LISTING CHECK"
+    manual_status = (
+        "LISTING_REVIEW – konkret annonce, kontrollér manuelt"
+        if exact_listing else
+        "RADAR_ONLY – kun markedsreference, ingen verificeret annonce"
+    )
     description = (
         f"**{row.get('set', 'Ukendt sæt')}** · {row.get('canonical_rarity', 'UNVERIFIED')}\n"
-        f"Cardmarket product ID: `{row.get('id', '')}`"
+        f"Cardmarket product ID: `{row.get('id', '')}`\n"
+        "REVIEW – ikke en købsanbefaling. Bekræft aktuel pris, sprog, "
+        "variant, stand, sælger, fragt og gebyrer før enhver beslutning."
+
     )
     fields = [
         {"name": "Cardmarket-søgning", "value": f"`{cardmarket_search_text(row, rarity_metadata)}`", "inline": False},
         {"name": "Market ref (aggregate)", "value": money(row.get("reference_dkk")), "inline": True},
-        {"name": "Vores budget", "value": money(row.get("purchase_budget_dkk")), "inline": True},
+        {"name": "Maksbudget – ikke annoncepris", "value": money(row.get("purchase_budget_dkk")), "inline": True},
         {"name": "30d", "value": pct(row.get("trend_vs_avg30_pct")), "inline": True},
         {"name": "Score", "value": str(row.get("score", "–")), "inline": True},
         {"name": "Hvorfor nu", "value": reason_text(str(row.get("alert_reason") or "")), "inline": True},
@@ -254,7 +261,9 @@ def embed_for(row: dict[str, Any], rarity_metadata: dict[str, dict[str, Any]]) -
     return {
         "title": f"🔎 SINGLE REVIEW · {name}{number_suffix}"[:256],
         "description": description[:4096],
-        "color": 0xF1C40F if not exact_listing else 0x57F287,
+        # Green is reserved for verified buyability in Discord V2, not
+        # an interesting listing or a Cardmarket aggregate price.
+        "color": 0x95A5A6,
         "fields": fields[:25],
         "footer": {
             "text": "V56.3 · Cardmarket-format: navn (setkode nummer) · Tjek English · NM/MT · EU/EEA · DK-fragt · aldrig BUY"

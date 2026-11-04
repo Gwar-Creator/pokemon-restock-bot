@@ -59,6 +59,13 @@ Denne beslutning **erstatter** alle ældre krav nedenfor om kun at sende verific
 - `test_restock_lane_ownership.py` kontrollerer også manglende/forkerte spilmarkører, alle relevante Tier A-forhandlere og fortsat tilladte katalog-/preorder-beskeder. **Denne rettelse klassificerer ikke en almindelig RESTOCK som dokumenteret købbar; den forhindrer en dublet i at blive vist fra den forkerte lane.**
 - Resterende Discord V2-arbejde i issue #63: Cardmarket og mobilvisninger. Price Watch/History forbliver paused.
 
+## Discord V2: Cardmarket Singles er REVIEW, aldrig KØB NU (4. november 2026)
+
+- Cardmarket-kanalen bruges til `personal/singles_discord_notify.py` med personlige `REVIEW`-deltas. Den brede `cardmarket_chase_watch.py` sender ikke direkte til Discord. Det er vigtigt ikke at forveksle en aggregate markedsreference eller en til gennemgang fundet enkeltannonce med bekræftet købbarhed.
+- Alle personlige Singles-radar-alerts bruger nu **neutral grå** visning (ikke grøn), med klar tekst om, at de er **REVIEW – ikke en købsanbefaling**, og at pris, sprog, variant, stand, sælger, fragt og gebyrer skal kontrolleres. `RADAR_ONLY` er kun markedsreference; `LISTING_REVIEW` er en konkret annonce til manuel kontrol, heller ikke en `BUY_NOW`-anbefaling.
+- Vist `Maksbudget – ikke annoncepris` adskiller budgetloft fra markedsreference. Ingen ændring i evaluering, antal beskeder, deltas, API-kald, prishistorik, Cardmarket-tilstand, Discord-webhook eller automatiske køb. Beskeder sendes stadig i eksisterende batches og `allowed_mentions` er slået fra.
+- Format og regressionskontrol ligger i `test_singles_discord_notify.py` og den særskilte read-only `.github/workflows/cardmarket_review_ci.yml`. Den overordnede Discord V2-opgave #63 er fortsat åben for samlede mobilvisninger og øvrige spor.
+
 ## Formål
 
 Dette repository driver en dansk Discord-scanner for Pokémon- og Lorcana-restocks, prisovervågning og Cardmarket-historik. Målet er få, relevante og troværdige notifikationer — ikke flest mulige notifikationer.
