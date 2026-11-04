@@ -79,27 +79,27 @@
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
-        "fetch_via": "jina_reader+direct_frontend_search"
+        "fetch_via": "jina_reader"
       },
       "3421827": {
         "name": "Pokemon TCG 2024 World Championships Deck",
         "price": 329.0,
         "stock": "PÅ LAGER",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
-        "fetch_via": "jina_reader+direct_frontend_search"
-      },
-      "3478497": {
-        "name": "Pokemon TCG 2-pack Booster",
-        "price": null,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2-pack-Booster/3478497",
-        "fetch_via": "preserved_previous_scan"
+        "fetch_via": "jina_reader"
       },
       "3417744": {
         "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
+        "fetch_via": "preserved_previous_scan"
+      },
+      "3478497": {
+        "name": "Pokemon TCG 2-pack Booster",
+        "price": null,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2-pack-Booster/3478497",
         "fetch_via": "preserved_previous_scan"
       },
       "3447592": {
@@ -568,12 +568,12 @@
       "last_success_at": "2026-11-04T17:39:21.019860+00:00"
     },
     "proshop": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-04T22:24:16.426062+00:00",
-      "last_success_at": "2026-11-04T22:34:42.839086+00:00"
+      "backoff_level": 1,
+      "next_allowed_at": 1793832619.2852516,
+      "generic_failures": 1,
+      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "last_failure_at": "2026-11-04T22:48:19.285218+00:00",
+      "last_success_at": "2026-11-04T22:47:24.448079+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -609,14 +609,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1793832294.2517767,
+      "next_allowed_at": 1793832592.6287868,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-04T22:40:54.251755+00:00"
+      "last_success_at": "2026-11-04T22:45:52.628766+00:00"
     }
   },
-  "updated_at": "2026-11-04T22:44:29.646171+00:00",
+  "updated_at": "2026-11-04T22:49:25.152550+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -647,11 +647,11 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-04T22:40:53.190868+00:00"
+          "last_checked": "2026-11-04T22:45:51.498107+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1793832052.5303297,
+      "last_discovery_epoch": 1793832350.8534894,
       "last_full_discovery_epoch": 1793812266.085884,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -666,11 +666,11 @@
     "proshop:3478496": 1793643400.1144028
   },
   "proshop_detail_checks": {
-    "3417744": 1793831456.8718112,
+    "3417744": 1793832387.847208,
     "3447592": 1793831623.703397,
     "3478496": 1793642580.111834,
     "3478497": 1793831677.8206294,
-    "3478498": 1793831456.8718112,
+    "3478498": 1793832387.847208,
     "3519999": 1793831623.703397
   }
 }
