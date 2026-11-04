@@ -79,6 +79,27 @@ class ProshopKnownSkuTests(unittest.TestCase):
             "3478496", url
         ))
 
+    def test_reader_redirect_to_brand_is_not_verified(self):
+        sku = "3478498"
+        url = KNOWN_PRODUCTS[sku]
+        page = make_page(sku, "På lager\n329,00 kr.")
+        page = page.replace(
+            "Markdown Content:\n",
+            "Final URL: https://www.proshop.dk/Pokemon/Pokemon\n"
+            "Markdown Content:\n",
+        )
+        self.assertIsNone(parse_verified_detail(page, sku, url))
+
+    def test_reader_final_url_same_as_requested_is_permitted(self):
+        sku = "3478496"
+        url = KNOWN_PRODUCTS[sku]
+        page = make_page(sku, "På lager\n529,00 kr.")
+        page = page.replace(
+            "Markdown Content:\n",
+            f"Final URL: {url}\nMarkdown Content:\n",
+        )
+        self.assertEqual(parse_verified_detail(page, sku, url)["stock"], "PÅ LAGER")
+
     def test_price_preservation_and_no_unverified_overwrite(self):
         calls = []
         def fetch(url, **kwargs):
