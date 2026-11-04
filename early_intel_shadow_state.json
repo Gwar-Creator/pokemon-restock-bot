@@ -6018,7 +6018,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 40,
+          "stock_online": 39,
           "stock_stores": 19
         },
         "br": {
@@ -6029,7 +6029,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 40,
+          "stock_online": 39,
           "stock_stores": 31
         },
         "foetex": {
@@ -6040,7 +6040,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 40,
+          "stock_online": 39,
           "stock_stores": 80
         }
       }
@@ -7061,58 +7061,6 @@
     }
   },
   "events": [
-    {
-      "event": "CHANGE",
-      "fields": [
-        "surface_statuses"
-      ],
-      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
-      "product_id": "3447589",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1793487269.2791684
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "surface_statuses"
-      ],
-      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
-      "product_id": "3447589",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1793487913.3103306
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "surface_statuses"
-      ],
-      "name": "Pokemon TCG Mega Zygarde ex Premium Collection",
-      "product_id": "3447589",
-      "sku": "",
-      "source": "proshop",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1793488186.900126
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "quantity_restriction"
-      ],
-      "name": "Pokemon  Mini Tin Kanto Friends samlerkort",
-      "product_id": "200341846",
-      "sku": "11132037-EA",
-      "source": "bilka",
-      "stage_after": "CATALOG_RECORD",
-      "stage_before": "CATALOG_RECORD",
-      "ts": 1793488776.0911455
-    },
     {
       "event": "CHANGE",
       "fields": [
@@ -23172,6 +23120,60 @@
       "stage_after": null,
       "stage_before": null,
       "ts": 1793768379.7123208
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon Pitch Black Checklane Booster Pack",
+      "product_id": "200380911",
+      "sku": "11320909-EA",
+      "source": "br",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1793775564.10514
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon Pitch Black Checklane Booster Pack",
+      "product_id": "200380911",
+      "sku": "11320909-EA",
+      "source": "bilka",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1793775565.1013076
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon Pitch Black Checklane Booster Pack",
+      "product_id": "200380911",
+      "sku": "11320909-EA",
+      "source": "foetex",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1793775566.0978339
+    },
+    {
+      "event": "CROSS_CHANGE",
+      "fields": [
+        "bilka",
+        "br",
+        "foetex"
+      ],
+      "name": "Pokémon Pitch Black Checklane Booster Pack",
+      "product_id": "11320909-EA",
+      "sku": "11320909-EA",
+      "source": "cross_salling",
+      "stage_after": null,
+      "stage_before": null,
+      "ts": 1793775570.8296165
     }
   ],
   "sources": {
@@ -27622,7 +27624,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 40,
+        "stock_count_online": 39,
         "url": "https://www.bilka.dk/produkter/pokemon-pitch-black-checklane-booster-pack/200380911/"
       },
       "200380917": {
@@ -32908,7 +32910,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 40,
+        "stock_count_online": 39,
         "url": "https://www.br.dk/produkter/pokemon-pitch-black-checklane-booster-pack/200380911/"
       },
       "200380917": {
@@ -38137,7 +38139,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 40,
+        "stock_count_online": 39,
         "url": "https://www.foetex.dk/produkter/pokemon-pitch-black-checklane-booster-pack/200380911/"
       },
       "200380917": {
@@ -38910,6 +38912,6 @@
       }
     }
   },
-  "updated_at": 1793775276.6073666,
+  "updated_at": 1793775570.8297055,
   "version": 1
 }
