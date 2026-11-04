@@ -389,7 +389,7 @@ def send_hot_alert(source_key, product, event):
                 proshop_order_only = (
                     source_key == "proshop"
                     and product.get("stock") == "BESTILLINGSVARE"
-                    and new_status == "UNKNOWN"
+                    and new_status in ("UNKNOWN", "PREORDER")
                 )
                 if safe_online or proshop_order_only:
                     embed = new_payload["embeds"][0]
