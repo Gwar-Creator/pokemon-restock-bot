@@ -21,7 +21,8 @@ SALLING_SOURCES = {"br", "bilka", "foetex"}
 
 def _positive_count(value):
     if isinstance(value, bool):
-        return value
+        # An API boolean is not a verified number of stocked units.
+        return False
     try:
         return int(value) > 0
     except (ValueError, TypeError, OverflowError):
@@ -54,6 +55,11 @@ def hot_event(source_key, product, event):
     hidden = data.get("is_exposed") is False
     preserved = "preserved_previous_scan" in str(data.get("fetch_via") or "").split("+")
     preordering = data.get("preorder") is True
+    online_system_signal = (
+        source_key in SALLING_SOURCES
+        and not preserved
+        and _positive_count(data.get("online_count"))
+    )
     url = data.get("url") or ""
     online_buyable = False
     if not hidden and not preserved and not preordering:
@@ -67,17 +73,16 @@ def hot_event(source_key, product, event):
             # An orderable BESTILLINGSVARE is not verified in-stock dispatch.
             online_buyable = data.get("stock") == "PÅ LAGER"
         elif source_key in SALLING_SOURCES:
-            # A positive online count alone confirms system stock, not checkout.
-            # Require an explicit source-side exposed state as well.
-            online_buyable = data.get("is_exposed") is True and _positive_count(
-                data.get("online_count")
-            )
+            # Neither an exposed catalogue entry nor positive online_count
+            # verifies checkout/reservation. It is only a stock-system signal.
+            online_buyable = False
         elif source_key in ("boozt", "magasin"):
             # These sources are data-only in HOT today; retain conservative
             # semantics if the adapter is re-used for their future alerts.
             online_buyable = data.get("in_stock") is True
 
-    stores = _stores(source_key, data)
+    # A preserved snapshot cannot attest current physical store availability.
+    stores = [] if preserved else _stores(source_key, data)
     payload = {
         "source": LABELS.get(source_key, source_key.upper()),
         "event_type": "RESTOCK" if str(event).upper() == "RESTOCK" else "NYT PRODUKT",
@@ -91,14 +96,23 @@ def hot_event(source_key, product, event):
         "is_pre_publish": hidden,
         "preorder_open": preordering and not hidden,
         "stores": stores,
+        "signal_details": (
+            "Data fra en tidligere scanning; aktuel lagerstatus er ikke verificeret."
+            if preserved else
+            "Positivt online systemlager registreret. Køb og reservation er "
+            "ikke verificeret; tjek butikken manuelt."
+            if online_system_signal else ""
+        ),
     }
     # An orderable Proshop 'BESTILLINGSVARE' is not in-stock dispatch.
     # Retain the distinction prominently in the embed.
     if source_key == "proshop" and data.get("stock") == "BESTILLINGSVARE":
         payload["event_type"] = "BESTILLINGSVARE – IKKE LAGER-RESTOCK"
         payload["order_note"] = "BESTILLINGSVARE – ikke bekræftet på lager. Kontrollér bestillingsmulighed og leveringstid hos Proshop."
-    if source_key in SALLING_SOURCES and _positive_count(data.get("online_count")) and not online_buyable:
-        payload["order_note"] = "Online systemlager registreret; køb ikke verificeret"
+    if source_key in SALLING_SOURCES and str(event).upper() == "RESTOCK":
+        payload["event_type"] = "ONLINE LAGERSIGNAL – IKKE VERIFICERET RESTOCK"
+    if online_system_signal:
+        payload["order_note"] = "ONLINE SYSTEMLAGER – køb og reservation ikke bekræftet"
     return payload
 
 
