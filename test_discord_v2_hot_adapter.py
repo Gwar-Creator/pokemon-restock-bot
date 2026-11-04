@@ -29,9 +29,19 @@ class HotDiscordV2AdapterTests(unittest.TestCase):
         preserved = self._p(stock="PÅ LAGER", fetch_via="preserved_previous_scan")
         self.assertEqual(hot_payload("proshop", preserved, "RESTOCK")[1], "UNKNOWN")
 
-    def test_salling_online_stock_needs_explicit_exposure(self):
-        self.assertEqual(hot_payload("br", self._p(online_count=8), "RESTOCK")[1], "UNKNOWN")
-        self.assertEqual(hot_payload("br", self._p(online_count=8, is_exposed=True), "RESTOCK")[1], "BUY_NOW")
+    def test_salling_online_stock_is_never_confirmed_checkout(self):
+        for source in ("br", "bilka", "foetex"):
+            for exposed in (None, True, False):
+                product = self._p(online_count=8, is_exposed=exposed)
+                payload, status = hot_payload(source, product, "RESTOCK")
+                expected = "PREPUBLISH" if exposed is False else "UNKNOWN"
+                with self.subTest(source=source, exposed=exposed):
+                    self.assertEqual(status, expected)
+                    embed = payload["embeds"][0]
+                    self.assertNotIn("url", embed)
+                    self.assertNotIn("KØB NU", embed["title"])
+                    self.assertIn("IKKE VERIFICERET RESTOCK", str(embed["fields"]))
+                    self.assertIn("ikke bekræftet", str(embed["fields"]).lower())
 
     def test_salling_local_stock_only_is_orange(self):
         product = self._p(online_count=0, kolding_stock=4, esbjerg_stock=0)
@@ -131,16 +141,87 @@ class HotDiscordV2AdapterTests(unittest.TestCase):
         embed = post.call_args.kwargs["json"]["embeds"][0]
         self.assertEqual(embed["title"], "FORUDBESTIL · PROSHOP")
 
-    def test_live_mode_keeps_legacy_salling_system_stock(self):
-        product = self._p(online_count=15, kolding_stock=2)
-        with patch.object(hot, "DISCORD_V2_HOT_MODE", "on"), \
-             patch.object(hot, "WEBHOOK_URL", "https://example.invalid/webhook"), \
-             patch.object(hot, "HOT_DRY_RUN", False), \
-             patch.object(hot.requests, "post") as post:
+    def test_live_salling_system_stock_uses_non_green_v2(self):
+        for source in ("br", "bilka", "foetex"):
+            local = (
+                {"kolding_stock": 2} if source == "br"
+                else {"local_stocks": {"1": {"name": "Kolding", "stock": 2}}}
+            )
+            product = self._p(online_count=15, **local)
+            with (
+                patch.object(hot, "DISCORD_V2_HOT_MODE", "on"),
+                patch.object(hot, "WEBHOOK_URL", "https://example.invalid/webhook"),
+                patch.object(hot, "HOT_DRY_RUN", False),
+                patch.object(hot.requests, "post") as post,
+            ):
+                self.assertTrue(hot.send_hot_alert(source, product, "RESTOCK"))
+            with self.subTest(source=source):
+                self.assertEqual(post.call_count, 1)
+                payload = post.call_args.kwargs["json"]
+                embed = payload["embeds"][0]
+                self.assertEqual(embed["title"], f"BUTIKSLAGER · {source.upper() if source != 'foetex' else 'FØTEX'}")
+                self.assertEqual(embed["color"], 0xE67E22)
+                self.assertNotIn("url", embed)
+                self.assertIn("IKKE VERIFICERET RESTOCK", str(embed["fields"]))
+                self.assertEqual(payload["allowed_mentions"], {"parse": []})
+
+    def test_live_salling_system_only_is_neutral_not_green(self):
+        product = self._p(online_count=15, is_exposed=True)
+        with (
+            patch.object(hot, "DISCORD_V2_HOT_MODE", "on"),
+            patch.object(hot, "WEBHOOK_URL", "https://example.invalid/webhook"),
+            patch.object(hot, "HOT_DRY_RUN", False),
+            patch.object(hot.requests, "post") as post,
+        ):
             self.assertTrue(hot.send_hot_alert("br", product, "RESTOCK"))
         self.assertEqual(post.call_count, 1)
-        self.assertEqual(post.call_args.kwargs["json"]["embeds"][0]["title"],
-                         "RESTOCK · BR")
+        embed = post.call_args.kwargs["json"]["embeds"][0]
+        self.assertEqual(embed["title"], "UKENDT · BR")
+        self.assertEqual(embed["color"], 0x95A5A6)
+        self.assertNotIn("url", embed)
+
+    def test_live_hidden_salling_uses_prepublish_yellow(self):
+        product = self._p(online_count=15, is_exposed=False, kolding_stock=3)
+        with (
+            patch.object(hot, "DISCORD_V2_HOT_MODE", "on"),
+            patch.object(hot, "WEBHOOK_URL", "https://example.invalid/webhook"),
+            patch.object(hot, "HOT_DRY_RUN", False),
+            patch.object(hot.requests, "post") as post,
+        ):
+            self.assertTrue(hot.send_hot_alert("br", product, "RESTOCK"))
+        self.assertEqual(post.call_count, 1)
+        embed = post.call_args.kwargs["json"]["embeds"][0]
+        self.assertEqual(embed["title"], "KLARGØRES · BR")
+        self.assertEqual(embed["color"], 0xF1C40F)
+        self.assertNotIn("url", embed)
+
+    def test_live_salling_renderer_failure_stays_neutral(self):
+        product = self._p(online_count=15, is_exposed=True)
+        with (
+            patch.object(hot, "DISCORD_V2_HOT_MODE", "on"),
+            patch.object(hot, "WEBHOOK_URL", "https://example.invalid/webhook"),
+            patch.object(hot, "HOT_DRY_RUN", False),
+            patch.object(hot, "hot_payload", side_effect=ValueError("unexpected")),
+            patch.object(hot.requests, "post") as post,
+        ):
+            self.assertTrue(hot.send_hot_alert("br", product, "RESTOCK"))
+        self.assertEqual(post.call_count, 1)
+        embed = post.call_args.kwargs["json"]["embeds"][0]
+        self.assertEqual(embed["title"], "UKENDT · BR")
+        self.assertEqual(embed["color"], 0x95A5A6)
+        self.assertNotIn("url", embed)
+        self.assertNotIn("Se produkt", str(embed))
+
+    def test_salling_cached_store_counts_are_not_promoted(self):
+        product = self._p(
+            online_count=15, is_exposed=True, kolding_stock=9,
+            fetch_via="jina_reader+preserved_previous_scan",
+        )
+        payload, status = hot_payload("br", product, "RESTOCK")
+        self.assertEqual(status, "UNKNOWN")
+        embed = payload["embeds"][0]
+        self.assertNotIn("REGISTRERET BUTIKSLAGER", str(embed["fields"]))
+        self.assertIn("tidligere scanning", str(embed["fields"]))
 
     def test_live_proshop_in_stock_requires_fresh_source(self):
         product = self._p(stock="PÅ LAGER", fetch_via="jina_reader")
