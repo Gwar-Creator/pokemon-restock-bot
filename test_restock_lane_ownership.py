@@ -25,11 +25,35 @@ class RestockLaneOwnershipTests(unittest.TestCase):
         )
         self.assertTrue(lane.restock_lane_channel_alert_allowed(message))
 
-    def test_main_keeps_tier_a_lorcana_restock(self):
+    def test_main_mutes_tier_a_lorcana_restock(self):
+        # Since 28 October user policy only Pokémon can post. A legacy
+        # Lorcana exception must never bypass Tier A lane ownership.
         message = (
             "🔥 **[LORCANA] COOLSHOP RESTOCK**\n"
             "**Disney Lorcana Shimmering Skies Booster Bundle**\n"
             "✅ På lager online"
+        )
+        self.assertFalse(lane.restock_lane_channel_alert_allowed(message))
+
+    def test_main_mutes_tier_a_restock_with_missing_or_wrong_game_tag(self):
+        for headline in (
+            "🔥 **COOLSHOP RESTOCK**",
+            "🔥 **[TCG] PROSHOP RESTOCK**",
+            "🔥 **[POKEMON] BR ONLINE RESTOCK**",
+            "🏪 **[POKÉMON] BILKA KOLDING RESTOCK**",
+            "🔥 **[POKÉMON] FØTEX RESTOCK**",
+            "🔥 **[POKÉMON] BOOZT RESTOCK**",
+            "🔥 **[POKÉMON] MAGASIN RESTOCK**",
+        ):
+            message = headline + "\n**Pokémon 151 Booster Bundle**\n🌐 Online: 3 stk."
+            with self.subTest(headline=headline):
+                self.assertFalse(lane.restock_lane_channel_alert_allowed(message))
+
+    def test_main_keeps_tier_a_preorder_not_a_restock(self):
+        message = (
+            "🚨 **[POKÉMON] NY FORUDBESTILLING HOS PROSHOP**\n"
+            "**Pokemon Future Illustration Collection**\n"
+            "📅 Forudbestilling"
         )
         self.assertTrue(lane.restock_lane_channel_alert_allowed(message))
 
