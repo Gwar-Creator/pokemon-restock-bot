@@ -212,6 +212,25 @@ class HotDiscordV2AdapterTests(unittest.TestCase):
         self.assertNotIn("url", embed)
         self.assertNotIn("Se produkt", str(embed))
 
+    def test_salling_unexpected_buy_now_renderer_result_is_blocked(self):
+        product = self._p(online_count=15, is_exposed=True)
+        unsafe = {"embeds": [{
+            "title": "KØB NU · BR", "color": 0x57F287,
+            "url": URL, "fields": [],
+        }]}
+        with (
+            patch.object(hot, "DISCORD_V2_HOT_MODE", "on"),
+            patch.object(hot, "WEBHOOK_URL", "https://example.invalid/webhook"),
+            patch.object(hot, "HOT_DRY_RUN", False),
+            patch.object(hot, "hot_payload", return_value=(unsafe, "BUY_NOW")),
+            patch.object(hot.requests, "post") as post,
+        ):
+            self.assertTrue(hot.send_hot_alert("br", product, "RESTOCK"))
+        self.assertEqual(post.call_count, 1)
+        embed = post.call_args.kwargs["json"]["embeds"][0]
+        self.assertEqual(embed["title"], "UKENDT · BR")
+        self.assertNotIn("url", embed)
+
     def test_salling_cached_store_counts_are_not_promoted(self):
         product = self._p(
             online_count=15, is_exposed=True, kolding_stock=9,
