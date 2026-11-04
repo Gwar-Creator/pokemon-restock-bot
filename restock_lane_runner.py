@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Final Restock-channel ownership wrapper.
 
-Tier A Pokemon RESTOCK events are owned by the dedicated fast/local lanes:
+Tier A RESTOCK events are owned by the dedicated fast/local lanes:
 - HOT owns online restocks for Coolshop, Proshop, BR, Bilka, Foetex, Boozt and Magasin.
 - Local Stock owns target-store restocks for BR, Bilka and Foetex.
 
@@ -26,11 +26,6 @@ WAVE4_LABELS = (
 )
 
 
-def _pokemon_headline(headline):
-    upper = str(headline or "").upper().replace("POKÉMON", "POKEMON")
-    return "[POKEMON]" in upper
-
-
 def _wave4_headline(headline):
     upper = str(headline or "").upper().replace("É", "E")
     return any(label in upper for label in WAVE4_LABELS)
@@ -42,16 +37,17 @@ def restock_lane_channel_alert_allowed(message, legacy_policy=None):
         headline = lines[0]
         event = base._event_from_headline(headline)
 
-        if (
-            event == "RESTOCK"
-            and base._is_tier_a_headline(headline)
-            and _pokemon_headline(headline)
-        ):
+        # HOT owns all online Tier A RESTOCK events, and Local Stock owns
+        # selected Salling physical restocks. The main Restock lane must not
+        # create a duplicate or a misleading green legacy embed merely
+        # because a source omitted the [POKÉMON] tag. Lorcana is muted in
+        # send_discord regardless; no need to exempt it here.
+        if event == "RESTOCK" and base._is_tier_a_headline(headline):
             return False
 
         # The main scanner is now data/Price-Watch first. Specialist and backup
         # retail product events stay out of the Restock channel; only Tier A
-        # discovery/Lorcana events can pass through this legacy lane.
+        # discovery and preorders can pass through this legacy lane.
         if (
             event in {"NEW", "PREORDER", "RESTOCK"}
             and not base._is_tier_a_headline(headline)
