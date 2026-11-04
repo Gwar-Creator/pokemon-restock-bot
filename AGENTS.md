@@ -66,6 +66,15 @@ Denne beslutning **erstatter** alle ældre krav nedenfor om kun at sende verific
 - Vist `Maksbudget – ikke annoncepris` adskiller budgetloft fra markedsreference. Ingen ændring i evaluering, antal beskeder, deltas, API-kald, prishistorik, Cardmarket-tilstand, Discord-webhook eller automatiske køb. Beskeder sendes stadig i eksisterende batches og `allowed_mentions` er slået fra.
 - Format og regressionskontrol ligger i `test_singles_discord_notify.py` og den særskilte read-only `.github/workflows/cardmarket_review_ci.yml`. Den overordnede Discord V2-opgave #63 er fortsat åben for samlede mobilvisninger og øvrige spor.
 
+## Discord V2: mobilkvalitet og fælles regression (4. november 2026)
+
+- Den fælles renderer `discord_alert_v2.py` er i brug for HOT og Salling Local/Hidden/Early; main Restock, Cardmarket og Vintage Finder har særskilte formattere. Statusfarver og købsclaims kontrolleres derfor **på tværs** i `test_discord_mobile_contract.py`, ikke ved at ændre et aktivt Discord-flow.
+- `tools/discord_mobile_preview.py` producerer **syntetiske mobilbreddede tekseksempler fra de faktiske renderer-funktioner** for HOT, Local, Hidden, Early, main Restock, Cardmarket og Vintage Finder. Ingen tilbud, priser eller lager er virkelige; der udføres ingen API-/webhook-kald. Eksemplerne skrives i GitHub Actions-jobbets Summary som review-materiale, **ikke som et egentligt Discord-screenshot**.
+- End-to-end QA sikrer højst én embed per eksempel, `allowed_mentions: {"parse": []}`, Discord-grænser (titel, beskrivelse, feltantal og feltlængder), seks statuskategorier, ingen grøn `KØB NU` for `REVIEW` eller systemlager, og ingen clickable købslink for skjulte/usikre lagersignaler.
+- Lange butikslister forkortes nu **ved hele butiksrækker** og viser korrekt antal ikke-viste butikker i stedet for at blive afskåret midt i en butik/lagermængde. Enkeltbutiksnavne begrænses til 96 tegn, så beskeden forbliver læsbar på mobil.
+- En `RESERVÉR NU`-preview er **hypotetisk**, da ingen aktiv kilde påstår verificeret Click & Collect. Dette er kun for at teste standardskemaet, **ikke** en beslutning om at aktivere reservationsalarmer.
+- Ingen ændringer af botkørsler, købssignaler, filtre, antal beskeder, state, prisalarmer eller Discord-destinationer. Fuld aktuel Discord-skærmtest er ikke verificeret og kræver en separat bruger-/testwebhook-gennemgang før #63 kan lukkes.
+
 ## Formål
 
 Dette repository driver en dansk Discord-scanner for Pokémon- og Lorcana-restocks, prisovervågning og Cardmarket-historik. Målet er få, relevante og troværdige notifikationer — ikke flest mulige notifikationer.
