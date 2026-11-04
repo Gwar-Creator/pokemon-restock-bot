@@ -42,6 +42,12 @@ def parse_verified_detail(page, sku, url):
     source = re.search(r"(?m)^URL Source:\s*(\S+)", text)
     if not source or source.group(1).rstrip("/") != url:
         return None
+    # Jina may return HTTP 200 for a requested SKU but redirect the final
+    # page to a generic brand/category. Reject the response even if that
+    # generic page happens to contain the SKU in related items.
+    final = re.search(r"(?m)^Final URL:\s*(\S+)", text)
+    if final and final.group(1).rstrip("/") != url.rstrip("/"):
+        return None
     title = re.search(r"(?m)^Title:\s*([^\n]+)", text)
     if not title or "pokemon tcg" not in title.group(1).lower():
         return None
