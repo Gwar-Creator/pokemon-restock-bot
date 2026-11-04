@@ -18,7 +18,16 @@ Denne beslutning **erstatter** alle ældre krav nedenfor om kun at sende verific
 - Hold derfor `SOURCE_MIN_PRODUCTS["tcgbruus"] = 5`; **sænk ikke til 3** for at få grøn health. Den gamle produktbaseline bevares ved fejl, og både source-health og Wave 4 skal forblive fail-closed, indtil dansk lokaliseret produkt-/lager-/prisdata er dokumenteret med en live test. Undgå at kalde cache for aktuelt lager.
 - En read-only diagnose ligger i `tools/diagnostics/tcgbruus_coverage_probe.py` og kan køres manuelt via `.github/workflows/tcgbruus_coverage_probe.yml` (ingen secrets, køb, Discord eller state-mutation). Resultaterne er dokumenteret i GitHub issue **#62** og PR **#104**.
 - **Proshop:** Hovedkilden viser ofte 3–5 friske kategoriprodukter mod en konservativ health-target på 6. Status **DEGRADED** er derfor tilsigtet, selvom kendte SKU'er kan verificeres separat. Supplerende detailcheck må aldrig gøre katalogdækning kunstigt grøn.
-- P0 driftsovervågning (#62) er **ikke færdig**: missed scheduled-job detection og samlet handlingsklar driftstatus mangler. Prisalarmer forbliver slået fra efter beslutningen 28. oktober, indtil kvaliteten er dokumenteret.
+- P0 driftsovervågning (#62) er **delvist færdig**: kilde-audit og workflow-watchdog findes nu, men TCGBruus og Proshop har stadig kildebegrænsninger, og uafhængig ekstern heartbeat-overvågning er ikke etableret. Prisalarmer forbliver slået fra efter beslutningen 28. oktober, indtil kvaliteten er dokumenteret.
+
+## Aktiv workflow-watchdog — 4. november 2026
+
+- `.github/workflows/workflow_watchdog.yml` er separat fra Restock/HOT og kontrollerer hver halve time seneste **fuldførte succesfulde** GitHub Actions-kørsler via read-only API.
+- Grænser: Restock senest **60 minutter**, HOT senest **75 minutter**, og Card Market Watch senest **36 timer**. For Cardmarket tæller **kun planlagte** runs (manuelle webhook-tests må ikke skjule en manglende daglig kontrol).
+- `tools/workflow_watchdog.py` skriver kun én teknisk **FEJL** og én **GENOPRETTET**-kommentar per statusskifte på eksisterende GitHub-issue **#62**. Kommentarer skrevet af `github-actions[bot]` med skjult marker er den vedvarende dedupe-state. Ingen Discord-, kort- eller købssystemer røres.
+- `workflow_dispatch` er **dry-run som standard**. Planlagt kørsel bruger `--notify`. Der kræves ingen nye GitHub-secrets, men workflowet skal have `actions:read` og `issues:write`.
+- **Kendt begrænsning:** GitHub Actions kan selv forsinke/miste sine cron-jobs; denne selvhostede kontrol kan ikke varsle, hvis al GitHub Actions-planlægning ophører. En bruger modtager kun proaktiv besked, hvis vedkommendes GitHub-notifikationer for issue #62 er aktiveret. `SCANNER_HEALTH_WEBHOOK_URL` er hidtil tomt, og driftsfejl sendes derfor ikke til produkt-alertkanalerne.
+- De tidligere kildefejl ved TCGBruus/Proshop er uafhængige af denne heartbeat og må ikke kaldes løst på baggrund af grønne workflows.
 
 ## Formål
 
