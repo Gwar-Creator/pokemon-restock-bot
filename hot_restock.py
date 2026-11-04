@@ -328,6 +328,24 @@ def maybe_send_hot_alert(state, source_key, product_id, product, event):
     return True
 
 
+def _salling_unverified_embed(label, name):
+    """Fail closed if the V2 renderer cannot safely describe a system signal."""
+    return {
+        "title": f"UKENDT · {label}"[:256],
+        "description": f"**{name}**"[:4096],
+        "color": 0x95A5A6,
+        "fields": [{
+            "name": "STATUS",
+            "value": (
+                "Systemlager/produktændring er ikke bekræftet købbar eller "
+                "reserverbar. Kontrollér manuelt hos forhandleren."
+            ),
+            "inline": False,
+        }],
+        "footer": {"text": "MasterBot · usikkert Salling-systemsignal"},
+    }
+
+
 def send_hot_alert(source_key, product, event):
     label = SOURCE_LABELS[source_key]
 
@@ -391,7 +409,14 @@ def send_hot_alert(source_key, product, event):
                     and product.get("stock") == "BESTILLINGSVARE"
                     and new_status in ("UNKNOWN", "PREORDER")
                 )
-                if safe_online or proshop_order_only:
+                if source_key in ("br", "bilka", "foetex"):
+                    # A Salling system-stock observation does not verify an
+                    # order or Click & Collect, even if it is exposed online.
+                    # Never fall back to a green legacy RESTOCK embed.
+                    if new_status in ("BUY_NOW", "RESERVE_NOW"):
+                        raise ValueError("Salling system stock classified as buyable")
+                    embed = new_payload["embeds"][0]
+                elif safe_online or proshop_order_only:
                     embed = new_payload["embeds"][0]
                 else:
                     print(f"HOT V2 LEGACY FALLBACK: {label} | {new_status}")
@@ -401,9 +426,12 @@ def send_hot_alert(source_key, product, event):
                     f"{str(product.get('name') or '')[:90]}"
                 )
         except Exception as error:
-            # Renderer failures must not silently lose a genuine legacy alert.
             print(f"HOT V2 WARNING: renderer failed ({type(error).__name__}: {error})")
-            # Keep the existing stable embed; never send a second message.
+            if DISCORD_V2_HOT_MODE == "on" and source_key in ("br", "bilka", "foetex"):
+                # Even a broken V2 renderer must not reintroduce green
+                # legacy RESTOCK styling or an unverified purchase link.
+                embed = _salling_unverified_embed(label, name)
+            # Otherwise retain the single existing legacy embed.
 
     if HOT_DRY_RUN:
         print("HOT DRY RUN:")
