@@ -144,6 +144,7 @@ class LightLiveTests(unittest.TestCase):
              "tier": "VINTAGE_LOT", "verification": "UNVERIFIED"},
             details(100), NOW)
         self.assertIn("UDVALGT FUND", payload(candidate)["embeds"][0]["title"])
+        self.assertEqual(payload(candidate)["embeds"][0]["color"], 0x95A5A6)
         with self.assertRaises(ValueError):
             payload({**candidate, "verification": "BUY"})
         with self.assertRaises(ValueError):
