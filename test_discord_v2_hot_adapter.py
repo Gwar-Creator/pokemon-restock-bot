@@ -117,6 +117,20 @@ class HotDiscordV2AdapterTests(unittest.TestCase):
         self.assertEqual(post.call_args.kwargs["json"]["embeds"][0]["title"],
                          "UKENDT · PROSHOP")
 
+    def test_explicit_proshop_preorder_keeps_purple_label(self):
+        product = self._p(stock="BESTILLINGSVARE", preorder=True)
+        self.assertEqual(hot_payload("proshop", product, "NEW")[1], "PREORDER")
+        with (
+            patch.object(hot, "DISCORD_V2_HOT_MODE", "on"),
+            patch.object(hot, "WEBHOOK_URL", "https://example.invalid/webhook"),
+            patch.object(hot, "HOT_DRY_RUN", False),
+            patch.object(hot.requests, "post") as post,
+        ):
+            self.assertTrue(hot.send_hot_alert("proshop", product, "NEW"))
+        self.assertEqual(post.call_count, 1)
+        embed = post.call_args.kwargs["json"]["embeds"][0]
+        self.assertEqual(embed["title"], "FORUDBESTIL · PROSHOP")
+
     def test_live_mode_keeps_legacy_salling_system_stock(self):
         product = self._p(online_count=15, kolding_stock=2)
         with patch.object(hot, "DISCORD_V2_HOT_MODE", "on"), \
