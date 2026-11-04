@@ -96,7 +96,7 @@ def hot_event(source_key, product, event):
     # Retain the distinction prominently in the embed.
     if source_key == "proshop" and data.get("stock") == "BESTILLINGSVARE":
         payload["event_type"] = "BESTILLINGSVARE – IKKE LAGER-RESTOCK"
-        payload["order_note"] = "BESTILLINGSVARE – kan bestilles, men lager og leveringstid er ikke bekræftet"
+        payload["order_note"] = "BESTILLINGSVARE – ikke bekræftet på lager. Kontrollér bestillingsmulighed og leveringstid hos Proshop."
     if source_key in SALLING_SOURCES and _positive_count(data.get("online_count")) and not online_buyable:
         payload["order_note"] = "Online systemlager registreret; køb ikke verificeret"
     return payload
