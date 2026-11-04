@@ -20,8 +20,12 @@ class HotDiscordV2AdapterTests(unittest.TestCase):
 
     def test_proshop_orderable_but_cached_cannot_go_green(self):
         live = hot_payload("proshop", self._p(stock="BESTILLINGSVARE"), "NEW")
-        self.assertEqual(live[1], "BUY_NOW")
-        self.assertIn("BESTILLINGSVARE", str(live[0]["embeds"][0]["fields"]))
+        self.assertEqual(live[1], "UNKNOWN")
+        embed = live[0]["embeds"][0]
+        self.assertEqual(embed["title"], "UKENDT · PROSHOP")
+        self.assertNotIn("url", embed)
+        self.assertIn("BESTILLINGSVARE", str(embed["fields"]))
+        self.assertIn("IKKE LAGER-RESTOCK", str(embed["fields"]))
         preserved = self._p(stock="PÅ LAGER", fetch_via="preserved_previous_scan")
         self.assertEqual(hot_payload("proshop", preserved, "RESTOCK")[1], "UNKNOWN")
 
@@ -81,7 +85,7 @@ class HotDiscordV2AdapterTests(unittest.TestCase):
         self.assertEqual(payload["allowed_mentions"], {"parse": []})
 
 
-    def test_live_mode_keeps_legacy_proshop_order_item(self):
+    def test_live_mode_proshop_order_item_is_neutral_not_restock(self):
         product = self._p(stock="BESTILLINGSVARE")
         with patch.object(hot, "DISCORD_V2_HOT_MODE", "on"), \
              patch.object(hot, "WEBHOOK_URL", "https://example.invalid/webhook"), \
@@ -89,8 +93,43 @@ class HotDiscordV2AdapterTests(unittest.TestCase):
              patch.object(hot.requests, "post") as post:
             self.assertTrue(hot.send_hot_alert("proshop", product, "RESTOCK"))
         self.assertEqual(post.call_count, 1)
+        embed = post.call_args.kwargs["json"]["embeds"][0]
+        self.assertEqual(embed["title"], "UKENDT · PROSHOP")
+        self.assertNotIn("url", embed)
+        self.assertIn("BESTILLINGSVARE", str(embed["fields"]))
+        self.assertIn("IKKE LAGER-RESTOCK", str(embed["fields"]))
+        self.assertEqual(post.call_args.kwargs["json"]["allowed_mentions"], {"parse": []})
+
+    def test_preserved_composite_proshop_source_cannot_go_green(self):
+        product = self._p(stock="PÅ LAGER", fetch_via="jina_reader+preserved_previous_scan")
+        self.assertEqual(hot_payload("proshop", product, "RESTOCK")[1], "UNKNOWN")
+
+    def test_order_only_live_mode_does_not_create_second_post(self):
+        product = self._p(stock="BESTILLINGSVARE", fetch_via="jina_reader")
+        with (
+            patch.object(hot, "DISCORD_V2_HOT_MODE", "on"),
+            patch.object(hot, "WEBHOOK_URL", "https://example.invalid/webhook"),
+            patch.object(hot, "HOT_DRY_RUN", False),
+            patch.object(hot.requests, "post") as post,
+        ):
+            self.assertTrue(hot.send_hot_alert("proshop", product, "NEW"))
+        self.assertEqual(post.call_count, 1)
         self.assertEqual(post.call_args.kwargs["json"]["embeds"][0]["title"],
-                         "RESTOCK · PROSHOP")
+                         "UKENDT · PROSHOP")
+
+    def test_explicit_proshop_preorder_keeps_purple_label(self):
+        product = self._p(stock="BESTILLINGSVARE", preorder=True)
+        self.assertEqual(hot_payload("proshop", product, "NEW")[1], "PREORDER")
+        with (
+            patch.object(hot, "DISCORD_V2_HOT_MODE", "on"),
+            patch.object(hot, "WEBHOOK_URL", "https://example.invalid/webhook"),
+            patch.object(hot, "HOT_DRY_RUN", False),
+            patch.object(hot.requests, "post") as post,
+        ):
+            self.assertTrue(hot.send_hot_alert("proshop", product, "NEW"))
+        self.assertEqual(post.call_count, 1)
+        embed = post.call_args.kwargs["json"]["embeds"][0]
+        self.assertEqual(embed["title"], "FORUDBESTIL · PROSHOP")
 
     def test_live_mode_keeps_legacy_salling_system_stock(self):
         product = self._p(online_count=15, kolding_stock=2)

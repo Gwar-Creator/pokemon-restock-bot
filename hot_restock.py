@@ -383,7 +383,15 @@ def send_hot_alert(source_key, product, event):
                     or (source_key == "proshop" and new_status == "BUY_NOW"
                         and product.get("stock") == "PÅ LAGER")
                 )
-                if safe_online:
+                # BESTILLINGSVARE can be orderable without confirmed
+                # dispatch stock. It must be presented as neutral/uncertain,
+                # never a green RESTOCK. Keep one post and existing cooldown.
+                proshop_order_only = (
+                    source_key == "proshop"
+                    and product.get("stock") == "BESTILLINGSVARE"
+                    and new_status in ("UNKNOWN", "PREORDER")
+                )
+                if safe_online or proshop_order_only:
                     embed = new_payload["embeds"][0]
                 else:
                     print(f"HOT V2 LEGACY FALLBACK: {label} | {new_status}")
