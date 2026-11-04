@@ -44,19 +44,19 @@
         "online_stock": true,
         "url": "https://www.coolshop.dk/produkt/pokemon-deck-pro-poke-mega-charizard-y/23UF9A/"
       },
-      "https://www.coolshop.dk/produkt/pokemon-sv8-5-prismatic-evolutions-super-premium-collection-pok10106/23PQ9J/": {
-        "name": "Pokemon - SV8.5 Prismatic Evolutions - Super-Premium Collection (POK10106)",
-        "game": "POKÉMON",
-        "price": 1999.95,
-        "online_stock": false,
-        "url": "https://www.coolshop.dk/produkt/pokemon-sv8-5-prismatic-evolutions-super-premium-collection-pok10106/23PQ9J/"
-      },
       "https://www.coolshop.dk/produkt/pokemon-30th-celebration-booster-pack-bundle-pok10451-101/23Z4NE/": {
         "name": "Pokémon - 30th Celebration - Booster Pack Bundle (POK10451-101)",
         "game": "POKÉMON",
         "price": 699.95,
         "online_stock": false,
         "url": "https://www.coolshop.dk/produkt/pokemon-30th-celebration-booster-pack-bundle-pok10451-101/23Z4NE/"
+      },
+      "https://www.coolshop.dk/produkt/pokemon-sv8-5-prismatic-evolutions-super-premium-collection-pok10106/23PQ9J/": {
+        "name": "Pokemon - SV8.5 Prismatic Evolutions - Super-Premium Collection (POK10106)",
+        "game": "POKÉMON",
+        "price": 1999.95,
+        "online_stock": false,
+        "url": "https://www.coolshop.dk/produkt/pokemon-sv8-5-prismatic-evolutions-super-premium-collection-pok10106/23PQ9J/"
       },
       "https://www.coolshop.dk/produkt/pokemon-30th-celebration-binder-collection-pok10450-101/23Y9WV/": {
         "name": "Pokémon - 30th Celebration - Binder Collection (POK10450-101)",
@@ -79,14 +79,14 @@
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
-        "fetch_via": "jina_reader"
+        "fetch_via": "jina_reader+direct_frontend_search"
       },
       "3421827": {
         "name": "Pokemon TCG 2024 World Championships Deck",
         "price": 329.0,
         "stock": "PÅ LAGER",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
-        "fetch_via": "jina_reader"
+        "fetch_via": "jina_reader+direct_frontend_search"
       },
       "3478497": {
         "name": "Pokemon TCG 2-pack Booster",
@@ -366,7 +366,7 @@
           },
           "1370": {
             "name": "føtex Kolding Syd",
-            "stock": 2
+            "stock": 0
           },
           "1223": {
             "name": "føtex Esbjerg Broen",
@@ -568,12 +568,12 @@
       "last_success_at": "2026-11-03T16:39:33.952893+00:00"
     },
     "proshop": {
-      "backoff_level": 1,
-      "next_allowed_at": 1793799920.2234714,
-      "generic_failures": 1,
-      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "backoff_level": 0,
+      "next_allowed_at": 0.0,
+      "generic_failures": 0,
+      "last_error": null,
       "last_failure_at": "2026-11-04T13:43:20.223424+00:00",
-      "last_success_at": "2026-11-04T13:42:24.808903+00:00"
+      "last_success_at": "2026-11-04T13:49:17.373200+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -609,14 +609,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1793799899.5175486,
+      "next_allowed_at": 1793800197.0318143,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-04T13:40:59.517523+00:00"
+      "last_success_at": "2026-11-04T13:45:57.031792+00:00"
     }
   },
-  "updated_at": "2026-11-04T13:44:26.036980+00:00",
+  "updated_at": "2026-11-04T13:49:28.147991+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -647,11 +647,11 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-04T13:40:58.540220+00:00"
+          "last_checked": "2026-11-04T13:45:56.052258+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1793799657.001347,
+      "last_discovery_epoch": 1793799955.4287758,
       "last_full_discovery_epoch": 1793790360.5056453,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -666,11 +666,11 @@
     "proshop:3478496": 1793643400.1144028
   },
   "proshop_detail_checks": {
-    "3417744": 1793799052.1828074,
-    "3447592": 1793799106.3524203,
+    "3417744": 1793799991.6359603,
+    "3447592": 1793800048.282551,
     "3478496": 1793642580.111834,
-    "3478497": 1793799161.5392632,
-    "3478498": 1793799052.1828074,
-    "3519999": 1793799106.3524203
+    "3478497": 1793800102.7431312,
+    "3478498": 1793799991.6359603,
+    "3519999": 1793800048.282551
   }
 }
