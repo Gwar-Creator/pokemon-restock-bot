@@ -47,7 +47,7 @@ jobs:
           python -m py_compile tools/workflow_watchdog.py test_workflow_watchdog.py
           python -m unittest -v test_workflow_watchdog.py
       - name: Read-only live workflow check
-        if: github.event_name == 'workflow_dispatch' && inputs.notify != true
+        if: github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && inputs.notify != true)
         run: python tools/workflow_watchdog.py
       - name: Scheduled incident-only notification
         if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.notify == true)
