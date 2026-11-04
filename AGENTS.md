@@ -43,6 +43,14 @@ Denne beslutning **erstatter** alle ældre krav nedenfor om kun at sende verific
 - Gemte `fetch_via=preserved_previous_scan`-records kan ikke bruges som friskt lokalt lager. Ved fejl i V2-rendereren eller en usikker grønt klassificeret Salling-hændelse bruges en neutral fail-closed tekst uden købslink; aldrig det grønne legacy RESTOCK-embed.
 - Ingen flere Discord-POSTs, ingen nye kanaler, ingen nye produktsignaler og ingen ændring af Price Watch/History-pauser. Se issue #63 og Salling HOT PR.
 
+## Discord V2: almindelige Restock-katalogfund (4. november 2026)
+
+- Den almindelige Restock-kanal bliver fortsat filtreret af `restock_lane_runner.py` og deduplikeret af `restock_alert_decision()`. Den nye præsentationsforbedring ændrer **ikke**, hvilke events der udsendes, og skriver ingen ekstra Discord-beskeder.
+- Ved `NYT PÅ BR/BILKA/FØTEX/PROSHOP` eller `NYT FUNDET PÅ COOLSHOP` vises butikkens navn korrekt i embed-titlen. `NYT I KATALOG` adskiller ny opdagelse fra bekræftet lager/købbarhed; nye katalogfund er ikke købssignaler.
+- `NY FORUDBESTILLING HOS …` vises lilla med klar tekst om, at varen ikke er dokumenteret på lager. Den almindelige restock-visning og pausede Price Watch/History-formater ændres ikke i denne omgang.
+- Produktlinks valideres som offentlige HTTP(S)-links før de vises. Et link i et katalogfund er kun et link til varen, ikke verificeret checkout.
+- Koden kvalitetssikres med `test_main_restock_discord_presentation.py` ved hjælp af AST-udtrukne formatteringsfunktioner: ingen adgang til webhook, produktion eller scanner-state. Dette trin fuldfører ikke hele issue #63; live/Restock Restock-semantik samt Cardmarket og øvrige visninger kræver særskilt kontrol.
+
 ## Formål
 
 Dette repository driver en dansk Discord-scanner for Pokémon- og Lorcana-restocks, prisovervågning og Cardmarket-historik. Målet er få, relevante og troværdige notifikationer — ikke flest mulige notifikationer.

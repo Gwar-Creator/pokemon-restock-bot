@@ -918,6 +918,12 @@ def _discord_message_parts(message):
     source = ""
     if " HOS " in upper:
         source = headline[upper.rfind(" HOS ") + 5:].strip()
+    elif event == "NYT PRODUKT":
+        # The ordinary NEW templates say "NYT PÅ BR", "NYT PÅ PROSHOP"
+        # or "NYT FUNDET PÅ COOLSHOP". Previous generic parsing discarded
+        # the whole tail after NYT and lost the retailer in Discord.
+        match = re.search(r"\bNYT(?:\s+FUNDET)?\s+PÅ\s+(.+)$", headline, re.IGNORECASE)
+        source = match.group(1).strip(" ·-") if match else ""
     elif event:
         source_text = re.sub(r"\[[^\]]+\]", "", headline)
         source_text = re.sub(r"^[^\wÆØÅæøå]+", "", source_text).strip()
@@ -930,7 +936,10 @@ def _discord_message_parts(message):
         source = source_text
 
     url_match = re.search(r"https?://\S+", str(message or ""))
-    url = url_match.group(0).rstrip(").,>") if url_match else ""
+    # Public links are informational, not proof of purchase availability.
+    # Reject malformed/non-public links rather than making a fake CTA.
+    from discord_alert_v2 import safe_url
+    url = safe_url(url_match.group(0).rstrip(").,>") if url_match else "")
 
     body_lines = []
     for line in raw_lines[2:]:
@@ -1026,6 +1035,29 @@ def _discord_product_embed(message, kind="restock"):
             )
         },
     }
+
+    # Only change presentation for discovery/preorder messages that already
+    # passed the existing policy and dedupe. New catalogue entry != in stock,
+    # nor does a positive system count verify completed checkout.
+    if kind == "restock" and parts["event"] == "NYT PRODUKT":
+        embed["fields"].append({
+            "name": "STATUS",
+            "value": (
+                "NYT I KATALOG – køb, reservation og aktuel lagerstatus "
+                "er ikke bekræftet. Kontrollér produktet hos forhandleren."
+            ),
+            "inline": False,
+        })
+    elif kind == "restock" and parts["event"] == "FORUDBESTILLING":
+        embed["color"] = 0x9B59B6
+        embed["fields"].append({
+            "name": "STATUS",
+            "value": (
+                "FORUDBESTILLING – ikke dokumenteret på lager. "
+                "Kontrollér mulighed for bestilling og leveringstid."
+            ),
+            "inline": False,
+        })
 
     if price_lines:
         embed["fields"].append({

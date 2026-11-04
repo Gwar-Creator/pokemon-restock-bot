@@ -43,6 +43,7 @@ on:
       - "salling_early_radar.py"
       - "test_discord_v2_hot_adapter.py"
       - "test_discord_alert_v2.py"
+      - "test_main_restock_discord_presentation.py"
       - "local_stock_watch.py"
       - "hidden_stock_watch.py"
       - "test_hidden_stock_watch.py"
@@ -116,6 +117,11 @@ jobs:
         run: |
           python -m py_compile discord_alert_v2.py test_discord_alert_v2.py discord_v2_hot_adapter.py test_discord_v2_hot_adapter.py discord_v2_salling_adapter.py test_discord_v2_salling_adapter.py
           python -m unittest test_discord_alert_v2.py test_discord_v2_hot_adapter.py test_discord_v2_salling_adapter.py
+
+      - name: Check ordinary Restock embeds (offline / no Discord POST)
+        run: |
+          python -m py_compile test_main_restock_discord_presentation.py
+          python -m unittest -v test_main_restock_discord_presentation.py
 
       - name: Audit Lorcana Price Watch in read-only mode
         run: |
