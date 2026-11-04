@@ -43,6 +43,8 @@ on:
       - "salling_early_radar.py"
       - "test_discord_v2_hot_adapter.py"
       - "test_discord_alert_v2.py"
+      - "tools/discord_mobile_preview.py"
+      - "test_discord_mobile_contract.py"
       - "test_main_restock_discord_presentation.py"
       - "local_stock_watch.py"
       - "hidden_stock_watch.py"
@@ -122,6 +124,14 @@ jobs:
         run: |
           python -m py_compile test_main_restock_discord_presentation.py
           python -m unittest -v test_main_restock_discord_presentation.py
+
+      - name: Validate mobile-width Discord embeds across active lanes (offline)
+        run: |
+          python -m py_compile tools/discord_mobile_preview.py test_discord_mobile_contract.py
+          python -m unittest -v test_discord_mobile_contract.py
+
+      - name: Write synthetic mobile preview to this Actions run summary
+        run: python -m tools.discord_mobile_preview > /dev/null
 
       - name: Audit Lorcana Price Watch in read-only mode
         run: |

@@ -55,6 +55,32 @@ def positive_stores(event):
     return found
 
 
+def compact_store_lines(stores):
+    """Keep complete store/count rows and the omitted-count summary on mobile.
+
+    Discord field values are capped at 1024 characters. Hard truncation can
+    hide a store quantity or cut a local shop's name in the middle.
+    """
+    lines = []
+    max_width = 96
+    for name, count in stores[:MAX_STORE_LINES]:
+        label = " ".join(str(name).split())
+        if len(label) > max_width:
+            label = label[: max_width - 1].rstrip() + "…"
+        line = f"{label}: {count} stk."
+        lines.append(line)
+
+    while lines:
+        remaining = len(stores) - len(lines)
+        suffix = [f"… samt {remaining} yderligere butikker"] if remaining else []
+        result = "\n".join(lines + suffix)
+        if len(result) <= 1024:
+            return result
+        lines.pop()
+
+    return f"… samt {len(stores)} yderligere butikker" if stores else ""
+
+
 def classify(event):
     """Choose the strongest *verified* action, never infer purchasing from stock."""
     stores = positive_stores(event)
@@ -107,11 +133,11 @@ def render_embed(event):
         fields.append({"name": "PRIS", "value": price, "inline": True})
 
     if stores:
-        lines = [f"{store}: {count} stk." for store, count in stores[:MAX_STORE_LINES]]
-        remaining = len(stores) - len(lines)
-        if remaining:
-            lines.append(f"… samt {remaining} yderligere butikker")
-        fields.append({"name": "REGISTRERET BUTIKSLAGER", "value": "\n".join(lines)[:1024], "inline": False})
+        fields.append({
+            "name": "REGISTRERET BUTIKSLAGER",
+            "value": compact_store_lines(stores),
+            "inline": False,
+        })
 
     if event.get("is_pre_publish") is True and stores:
         fields.append({

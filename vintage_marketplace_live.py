@@ -274,7 +274,7 @@ def payload(item):
                 {"name": "Fragt til Danmark", "value": "Ikke verificeret",
                  "inline": False},
             ],
-            "color": 10066329,
+            "color": 0x95A5A6,  # shared Discord V2 neutral/REVIEW color
             "footer": {"text": "Vintage Finder Light · kig på billeder og pris før bud"},
         }],
     }
