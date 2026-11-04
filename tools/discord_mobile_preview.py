@@ -9,6 +9,7 @@ from __future__ import annotations
 import os
 import textwrap
 
+from discord_alert_v2 import webhook_payload
 from discord_v2_hot_adapter import hot_payload
 from discord_v2_salling_adapter import (
     early_radar_event, hidden_stock_event, local_stock_event, preview_payload,
@@ -32,6 +33,12 @@ def case_payloads():
     cases = []
     cases.append(("HOT · Coolshop online", "BUY_NOW",
                   hot_payload("coolshop", {**product, "online_stock": True}, "RESTOCK")[0]))
+    cases.append(("V2 · hypotetisk C&C-verifikation (ingen aktiv kilde)", "RESERVE_NOW",
+                  webhook_payload({
+                      "source": "DEMO / TEST", "name": NAME, "price": 299,
+                      "url": URL, "click_collect_reservable": True,
+                      "stores": [{"name": "BR Kolding", "stock": 2}],
+                  })))
     cases.append(("HOT · Proshop bestillingsvare", "UNKNOWN",
                   hot_payload("proshop", {**product, "stock": "BESTILLINGSVARE"}, "RESTOCK")[0]))
     cases.append(("HOT · BR online systemlager", "UNKNOWN",
