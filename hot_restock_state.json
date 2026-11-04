@@ -93,7 +93,7 @@
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2-pack-Booster/3478497",
-        "fetch_via": "jina_verified_detail"
+        "fetch_via": "preserved_previous_scan"
       },
       "3417744": {
         "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
@@ -164,7 +164,7 @@
       "200279925": {
         "name": "Pokémon Battle Academy 2024",
         "price": 299.0,
-        "online_count": 299,
+        "online_count": 298,
         "online_stock": true,
         "store_count": 32,
         "kolding_stock": 16,
@@ -274,7 +274,7 @@
       "200279925": {
         "name": "Pokémon Battle Academy 2024",
         "price": 299.0,
-        "online_count": 299,
+        "online_count": 298,
         "online_stock": true,
         "store_count": 19,
         "local_stocks": {
@@ -296,7 +296,7 @@
       "200279925": {
         "name": "Pokémon Battle Academy 2024",
         "price": 299.0,
-        "online_count": 299,
+        "online_count": 298,
         "online_stock": true,
         "store_count": 1,
         "local_stocks": {
@@ -580,12 +580,12 @@
       "last_success_at": "2026-11-03T16:39:33.952893+00:00"
     },
     "proshop": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-04T04:51:30.284419+00:00",
-      "last_success_at": "2026-11-04T04:54:17.702305+00:00"
+      "backoff_level": 2,
+      "next_allowed_at": 1793768657.3181405,
+      "generic_failures": 2,
+      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "last_failure_at": "2026-11-04T04:59:17.318108+00:00",
+      "last_success_at": "2026-11-04T04:55:35.907680+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -621,14 +621,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1793768100.3188872,
+      "next_allowed_at": 1793768398.8275733,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-04T04:51:00.318865+00:00"
+      "last_success_at": "2026-11-04T04:55:58.827552+00:00"
     }
   },
-  "updated_at": "2026-11-04T04:54:33.412453+00:00",
+  "updated_at": "2026-11-04T04:59:32.088016+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -641,30 +641,30 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-03T22:55:49.135497+00:00"
+          "last_checked": "2026-11-04T04:55:56.312099+00:00"
         },
         "https://www.magasin.dk/sitemap_1-product.xml": {
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-03T22:55:49.800644+00:00"
+          "last_checked": "2026-11-04T04:55:57.219088+00:00"
         },
         "https://www.magasin.dk/sitemap_2-product.xml": {
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-03T22:55:50.204339+00:00"
+          "last_checked": "2026-11-04T04:55:57.728732+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-04T04:50:59.477638+00:00"
+          "last_checked": "2026-11-04T04:55:57.977282+00:00"
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1793767858.8498936,
-      "last_full_discovery_epoch": 1793746547.9508858,
+      "last_discovery_epoch": 1793768155.0133526,
+      "last_full_discovery_epoch": 1793768155.0133526,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
         "https://www.magasin.dk/sitemap_1-product.xml",
