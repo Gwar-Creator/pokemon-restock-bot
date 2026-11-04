@@ -51,6 +51,14 @@ Denne beslutning **erstatter** alle ældre krav nedenfor om kun at sende verific
 - Produktlinks valideres som offentlige HTTP(S)-links før de vises. Et link i et katalogfund er kun et link til varen, ikke verificeret checkout.
 - Koden kvalitetssikres med `test_main_restock_discord_presentation.py` ved hjælp af AST-udtrukne formatteringsfunktioner: ingen adgang til webhook, produktion eller scanner-state. Dette trin fuldfører ikke hele issue #63; live/Restock Restock-semantik samt Cardmarket og øvrige visninger kræver særskilt kontrol.
 
+## Restock-kanal: HOT/Local er eneste ejer af Tier A-lagerrestocks (4. november 2026)
+
+- En gennemgang af `restock_lane_runner.py` viste, at hovedkanalen kun undertrykte Tier A-`RESTOCK` (Coolshop, Proshop, BR, Bilka, Føtex, Boozt, Magasin), når overskriften eksplicit indeholdt `[POKÉMON]`. Forkert eller manglende spilmarkering kunne derfor omgå lane ownership og udsende en **ekstra grøn legacy RESTOCK** uden bekræftet købbarhed.
+- Nu blokeres **alle Tier A-RESTOCK-beskeder** fra hovedkanalen, uanset tag. HOT ejer onlinehændelser og Local Stock ejer relevante Salling-butikker; deres nyere V2-statusser må ikke omgås af den gamle formattering. Wave 4/specialty forbliver på deres nuværende egne lanes.
+- Dette ændrer **ikke** scannerfetch, katalogfund (NYT PRODUKT), forudbestillinger, produkter i state, eksisterende dedupe for tilladte beskeder, pris-data, kanaler eller webhook-konfiguration. Lorcana blev allerede muted af `send_discord`; den tidligere særundtagelse i routing er nu fjernet i overensstemmelse med Pokémon-only-beslutningen 28. oktober.
+- `test_restock_lane_ownership.py` kontrollerer også manglende/forkerte spilmarkører, alle relevante Tier A-forhandlere og fortsat tilladte katalog-/preorder-beskeder. **Denne rettelse klassificerer ikke en almindelig RESTOCK som dokumenteret købbar; den forhindrer en dublet i at blive vist fra den forkerte lane.**
+- Resterende Discord V2-arbejde i issue #63: Cardmarket og mobilvisninger. Price Watch/History forbliver paused.
+
 ## Formål
 
 Dette repository driver en dansk Discord-scanner for Pokémon- og Lorcana-restocks, prisovervågning og Cardmarket-historik. Målet er få, relevante og troværdige notifikationer — ikke flest mulige notifikationer.
