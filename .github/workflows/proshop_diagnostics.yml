@@ -10,6 +10,10 @@ on:
       - "test_proshop_reader_v2.py"
       - ".github/workflows/proshop_diagnostics.yml"
   workflow_dispatch:
+  pull_request:
+    paths:
+      - "proshop_source_probe.py"
+      - ".github/workflows/proshop_diagnostics.yml"
 
 permissions:
   contents: read
