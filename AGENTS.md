@@ -30,6 +30,12 @@ Denne beslutning **erstatter** alle ældre krav nedenfor om kun at sende verific
 - **Kendt begrænsning:** GitHub Actions kan selv forsinke/miste sine cron-jobs; denne selvhostede kontrol kan ikke varsle, hvis al GitHub Actions-planlægning ophører. En bruger modtager kun proaktiv besked, hvis vedkommendes GitHub-notifikationer for issue #62 er aktiveret. `SCANNER_HEALTH_WEBHOOK_URL` er hidtil tomt, og driftsfejl sendes derfor ikke til produkt-alertkanalerne.
 - De tidligere kildefejl ved TCGBruus/Proshop er uafhængige af denne heartbeat og må ikke kaldes løst på baggrund af grønne workflows.
 
+## Discord V2: sikker ordrevare-visning (4. november 2026)
+
+- HOT Proshop `stock=BESTILLINGSVARE` betyder mulig bestilling men **ikke** dokumenteret varen på lager eller kort leveringstid. V2 viser neutral **UKENDT · PROSHOP**, feltet **BESTILLINGSVARE – IKKE LAGER-RESTOCK** og en manuel kontrolnote. Ingen grønt `KØB NU` og intet klikbart købslink på usikkert signal.
+- Kun faktisk frisk `PÅ LAGER` fra Proshop kan opnå `BUY_NOW` i HOT V2, og gemt `fetch_via=preserved_previous_scan` må ikke ophøjes selv i sammensatte kilde-markører. Denne ændring ændrer ikke antal Discord-posts, den eksisterende 24-timers cooldown, lane ownership eller produktfilter.
+- Øvrige Discord V2-spor er fortsat delvist gennemført. Navnlig Salling HOT-fallback og Restock/Cardmarket kræver separat kvalitetssikring. Price Watch/History Discord-alarmer er fortsat deaktiveret.
+
 ## Formål
 
 Dette repository driver en dansk Discord-scanner for Pokémon- og Lorcana-restocks, prisovervågning og Cardmarket-historik. Målet er få, relevante og troværdige notifikationer — ikke flest mulige notifikationer.
@@ -241,7 +247,7 @@ Produkter over disse grænser bliver i rå restock-state og kan fortsat give res
 - Systemlager, PRE-PUBLISH og modstridende status må aldrig ophøjes til bekræftet købbarhed. `BESTILLINGSVARE` skal fremstå tydeligt som ordrevare, ikke garanteret øjeblikkelig levering.
 - Local Stock, Hidden Stock og Salling Early Radar anvender `discord_v2_salling_adapter.py` til **shadow-only** klassifikation i loggen ved udsendte legacy-alerts. Ingen ekstra Discord-posts, ændret event-dedupe eller state. Positivt butikslager er `STORE_STOCK`, skjult produkt `PREPUBLISH`; Early Radar kan ikke udlede bekræftet købbarhed af katalog-/systemlagertal.
 - Kontrolleret Discord V2-præsentation aktiveres fra workflowet via tre uafhængige flags: `DISCORD_V2_LOCAL_MODE=on`, `DISCORD_V2_HIDDEN_MODE=on` og `DISCORD_V2_EARLY_MODE=on`. Hver af disse erstatter kun formatteringen af en allerede godkendt alert og sender fortsat præcis ét opslag. Ved klassifikationsfejl bruges legacy.
-- HOT bruger `DISCORD_V2_HOT_MODE=on`, men sender kun V2 ved frisk, eksplicit onlinekøb hos Coolshop eller `PÅ LAGER` hos Proshop (ikke cachede varer). Proshop `BESTILLINGSVARE`, alle BR/Bilka/Føtex HOT-events og usikre statusser bruger fortsat deres gamle embed for ikke at skabe falske grønne købssignaler.
+- HOT bruger `DISCORD_V2_HOT_MODE=on`, men sender kun V2 ved frisk, eksplicit onlinekøb hos Coolshop eller `PÅ LAGER` hos Proshop (ikke cachede varer). Proshop `BESTILLINGSVARE` bruger nu V2 med neutral **UKENDT** status og tydelig ordrevare-note (aldrig grøn `KØB NU` eller et bekræftet lager-restock); det ændrer **kun visning** og ikke HOT event-gates/dublet-cooldown. BR/Bilka/Føtex HOT-events og øvrige usikre statusser bruger fortsat deres gamle embed, indtil særskilt sikker gennemgang.
 - Rollback kræver kun at fjerne de fire `DISCORD_V2_*_MODE`-envlinjer eller sætte dem til `shadow` i workflows og merge. Ingen state- eller secretmigration.
 - Price Watch og Cardmarket bruger fortsat eksisterende formater. `RESERVÉR NU` må ikke aktiveres på basis af systemlager alene.
 
