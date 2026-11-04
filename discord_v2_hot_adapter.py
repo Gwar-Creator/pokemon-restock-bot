@@ -52,7 +52,7 @@ def hot_event(source_key, product, event):
     """Only use source-specific *fresh* buyability fields for green alerts."""
     data = product if isinstance(product, dict) else {}
     hidden = data.get("is_exposed") is False
-    preserved = data.get("fetch_via") == "preserved_previous_scan"
+    preserved = "preserved_previous_scan" in str(data.get("fetch_via") or "").split("+")
     preordering = data.get("preorder") is True
     url = data.get("url") or ""
     online_buyable = False
@@ -64,7 +64,8 @@ def hot_event(source_key, product, event):
                 and data["online_stock"] > 0
             )
         elif source_key == "proshop":
-            online_buyable = data.get("stock") in ("PÅ LAGER", "BESTILLINGSVARE")
+            # An orderable BESTILLINGSVARE is not verified in-stock dispatch.
+            online_buyable = data.get("stock") == "PÅ LAGER"
         elif source_key in SALLING_SOURCES:
             # A positive online count alone confirms system stock, not checkout.
             # Require an explicit source-side exposed state as well.
@@ -94,7 +95,8 @@ def hot_event(source_key, product, event):
     # An orderable Proshop 'BESTILLINGSVARE' is not in-stock dispatch.
     # Retain the distinction prominently in the embed.
     if source_key == "proshop" and data.get("stock") == "BESTILLINGSVARE":
-        payload["order_note"] = "BESTILLINGSVARE – kan bestilles; leveringstid ukendt"
+        payload["event_type"] = "BESTILLINGSVARE – IKKE LAGER-RESTOCK"
+        payload["order_note"] = "BESTILLINGSVARE – kan bestilles, men lager og leveringstid er ikke bekræftet"
     if source_key in SALLING_SOURCES and _positive_count(data.get("online_count")) and not online_buyable:
         payload["order_note"] = "Online systemlager registreret; køb ikke verificeret"
     return payload
