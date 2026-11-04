@@ -57,6 +57,7 @@ def hot_event(source_key, product, event):
     preordering = data.get("preorder") is True
     online_system_signal = (
         source_key in SALLING_SOURCES
+        and not preserved
         and _positive_count(data.get("online_count"))
     )
     url = data.get("url") or ""
@@ -80,7 +81,8 @@ def hot_event(source_key, product, event):
             # semantics if the adapter is re-used for their future alerts.
             online_buyable = data.get("in_stock") is True
 
-    stores = _stores(source_key, data)
+    # A preserved snapshot cannot attest current physical store availability.
+    stores = [] if preserved else _stores(source_key, data)
     payload = {
         "source": LABELS.get(source_key, source_key.upper()),
         "event_type": "RESTOCK" if str(event).upper() == "RESTOCK" else "NYT PRODUKT",
@@ -95,6 +97,8 @@ def hot_event(source_key, product, event):
         "preorder_open": preordering and not hidden,
         "stores": stores,
         "signal_details": (
+            "Data fra en tidligere scanning; aktuel lagerstatus er ikke verificeret."
+            if preserved else
             "Positivt online systemlager registreret. Køb og reservation er "
             "ikke verificeret; tjek butikken manuelt."
             if online_system_signal else ""
@@ -105,6 +109,8 @@ def hot_event(source_key, product, event):
     if source_key == "proshop" and data.get("stock") == "BESTILLINGSVARE":
         payload["event_type"] = "BESTILLINGSVARE – IKKE LAGER-RESTOCK"
         payload["order_note"] = "BESTILLINGSVARE – ikke bekræftet på lager. Kontrollér bestillingsmulighed og leveringstid hos Proshop."
+    if source_key in SALLING_SOURCES and str(event).upper() == "RESTOCK":
+        payload["event_type"] = "ONLINE LAGERSIGNAL – IKKE VERIFICERET RESTOCK"
     if online_system_signal:
         payload["order_note"] = "ONLINE SYSTEMLAGER – køb og reservation ikke bekræftet"
     return payload
