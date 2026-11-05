@@ -565,6 +565,41 @@ def site_movement_changes(old, current):
     return changes
 
 
+# Early Radar is for pre-release intelligence, not every catalog update.
+# Price, marketing, image and description changes can churn on existing SKUs;
+# they remain stored in the baseline, but don't warrant Discord messages.
+EARLY_ACTIONABLE_FIELDS = (
+    "release_date",
+    "expected_available_from",
+    "online_from",
+    "stock_availability",
+    "is_reservable",
+    "sold_online",
+)
+
+
+def actionable_early_movement(old, current):
+    """Only substantial prelaunch changes on high-priority hidden listings."""
+    if current.get("priority") not in ("WATCH", "HIGH"):
+        return []
+    old_sites = (old or {}).get("sites") or {}
+    changed = []
+    for source, now in ((current.get("sites") or {}).items()):
+        if not isinstance(now, dict) or now.get("is_exposed") is not False:
+            continue
+        prior = old_sites.get(source) or {}
+        for field in EARLY_ACTIONABLE_FIELDS:
+            before, after = prior.get(field), now.get(field)
+            if before == after:
+                continue
+            label = FIELD_LABELS.get(field, field)
+            changed.append(
+                f"{source.upper()} {label}: "
+                f"{display_value(field, before)} → {display_value(field, after)}"
+            )
+    return changed
+
+
 def epoch_only_change(old, current):
     if site_movement_changes(old, current):
         return False
@@ -763,7 +798,11 @@ def main():
             )
             continue
 
-        changes = site_movement_changes(old, product)
+        # The previous implementation posted EARLY MOVEMENT for *every*
+        # price, image, description or campaign edit across all 87 catalog
+        # candidates. Those are not early opportunities and can resemble
+        # HOT/Local messages. Still record the new snapshot silently.
+        changes = actionable_early_movement(old, product)
         if changes:
             detail = " · ".join(changes[:4])
             if len(changes) > 4:
