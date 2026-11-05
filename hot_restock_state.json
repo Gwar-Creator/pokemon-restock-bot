@@ -164,7 +164,7 @@
       "200397060": {
         "name": "Pokémon Mega Evolution Delta Reign samlekort boosterpakke",
         "price": 49.0,
-        "online_count": 23832,
+        "online_count": 27108,
         "online_stock": true,
         "store_count": 0,
         "kolding_stock": 0,
@@ -568,12 +568,12 @@
       "last_success_at": "2026-11-04T17:39:21.019860+00:00"
     },
     "proshop": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-05T03:12:23.872041+00:00",
-      "last_success_at": "2026-11-05T03:19:16.774633+00:00"
+      "backoff_level": 2,
+      "next_allowed_at": 1793850254.111918,
+      "generic_failures": 2,
+      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "last_failure_at": "2026-11-05T03:39:14.111881+00:00",
+      "last_success_at": "2026-11-05T03:35:33.915818+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -609,14 +609,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1793849720.77952,
+      "next_allowed_at": 1793849993.2849061,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-05T03:31:20.779497+00:00"
+      "last_success_at": "2026-11-05T03:35:53.284880+00:00"
     }
   },
-  "updated_at": "2026-11-05T03:34:52.338219+00:00",
+  "updated_at": "2026-11-05T03:39:29.771480+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -641,7 +641,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-05T03:31:19.875585+00:00"
+          "last_checked": "2026-11-05T03:35:52.134872+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -651,7 +651,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1793849478.625769,
+      "last_discovery_epoch": 1793849751.1083767,
       "last_full_discovery_epoch": 1793834153.2137241,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
