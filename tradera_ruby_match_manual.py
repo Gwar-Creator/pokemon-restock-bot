@@ -10,7 +10,7 @@ CARDS = [{"num":16,"name":"Breloom","trend_eur":1.27,"rarity":"Rare"},{"num":17,
 BASE = "https://api.tradera.com/v4/"
 SEARCHES = ["pokemon ruby sapphire", "pokemon ex ruby", "ruby sapphire pokemon"] + [
     f"{c['name']} {c['num']}/109" for c in CARDS]
-MAX_DETAILS = 160
+MAX_DETAILS = 400
 
 def norm(s):
     return "".join(c for c in unicodedata.normalize("NFKD", str(s or "").lower())
@@ -21,10 +21,14 @@ def name_match(t, name):
 
 def matched(title):
     t = norm(title)
-    forbidden = ("reverse holo","reverse-holo","japanese","japanska","german","tyska",
-                 "french","franska","korean","proxy","orica","fake","booster","sealed")
+    forbidden = ("reverse holo","reverse-holo","rev. holo","rev holo","rev.holo",
+                 "world championship","world champ","spanish","spanska","spansk",
+                 "japanese","japanska","jp ","/055","german","tyska",
+                 "french","franska","italian","korean","proxy","orica","fake",
+                 "booster","sealed","psa ","cgc ","bgs ")
     if any(s in t for s in forbidden): return []
     nums = {int(x) for x in re.findall(r"(?<!\d)(\d{1,3})\s*/\s*109(?!\d)",t)}
+    nums.update(int(x) for x in re.findall(r"#\s*0?(\d{1,3})(?!\d)",t))
     set_explicit = "ruby" in t and "sapphire" in t
     hits = []
     for card in CARDS:
@@ -74,14 +78,14 @@ def seller(d,row):
     return str(alias),str(sid) if sid is not None and str(sid).isdigit() else None
 
 def ask_price(d):
-    for flag,col,label in [("nextBidSpecified","nextBid","Næste bud"),
-                           ("buyItNowPriceSpecified","buyItNowPrice","Køb nu"),
-                           ("openingBidSpecified","openingBid","Startbud")]:
-        if d.get(flag) is True:
+    # Tradera REST v4 removed *Specified flags on 04 Nov 2026.
+    for col,label in [("nextBid","Næste bud"),("buyItNowPrice","Køb nu"),
+                      ("openingBid","Startbud")]:
+        if col in d and d[col] is not None:
             try:
                 n=float(d[col])
                 if 0<n<1000000: return round(n,2),label
-            except (KeyError,TypeError,ValueError): pass
+            except (TypeError,ValueError): pass
     return None,"Pris ikke bekræftet"
 
 def main():
