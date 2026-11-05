@@ -16,7 +16,9 @@ import requests
 import local_stock_watch as local
 
 STATE_PATH = Path("hidden_stock_state_v1.json")
-WEBHOOK = os.getenv("DISCORD_WEBHOOK_URL", "").strip()
+# PRE-PUBLISH stock belongs in the existing Early Radar channel, never the
+# normal #restocks channel. No fallback to DISCORD_WEBHOOK_URL.
+WEBHOOK = os.getenv("EARLY_RADAR_SALLING_WEBHOOK_URL", "").strip()
 SITES = ("br", "bilka", "foetex")
 WORKERS = 6
 MAX_ALERTS_PER_RUN = 4
@@ -231,7 +233,7 @@ def merge_site(state, site_key, observations, now):
 
 def send_alert(rows):
     if not WEBHOOK:
-        raise RuntimeError("DISCORD_WEBHOOK_URL mangler")
+        raise RuntimeError("EARLY_RADAR_SALLING_WEBHOOK_URL mangler; PRE-PUBLISH må ikke sendes til #restocks")
     # Final fail-closed guard: even a mixed or stale queue cannot leak
     # remote shops into a Discord message.
     locations = sorted(
