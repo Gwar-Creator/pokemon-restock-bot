@@ -34,6 +34,7 @@ def matched(title):
     hits = []
     for card in CARDS:
         if not name_match(t,card["name"]): continue
+        if ("foil" in t or "stamped" in t) and "Holo" not in card["rarity"]: continue
         if nums and card["num"] not in nums: continue
         if card["num"] in nums:
             confidence = "exact_set_number" if set_explicit else "number_only_check_set"
