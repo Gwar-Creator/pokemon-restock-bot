@@ -125,7 +125,7 @@ class SallingV2ShadowTests(unittest.TestCase):
             local.send_local_alert(product, [{"name": "BR Kolding", "old": 0, "new": 4}])
         self.assertEqual(post.call_count, 1)
         embed = post.call_args.kwargs["json"]["embeds"][0]
-        self.assertEqual(embed["title"], "BUTIKSLAGER · BR")
+        self.assertEqual(embed["title"], "LOKALT LAGER · BUTIKSLAGER · BR")
         self.assertIn("0 → 4", str(embed["fields"]))
         self.assertNotIn("url", embed)
 
@@ -140,7 +140,7 @@ class SallingV2ShadowTests(unittest.TestCase):
             hidden.send_alert([remote_row, local_row])
         self.assertEqual(post.call_count, 1)
         embed = post.call_args.kwargs["json"]["embeds"][0]
-        self.assertEqual(embed["title"], "KLARGØRES · BR")
+        self.assertEqual(embed["title"], "SKJULT LAGER · KLARGØRES · BR")
         self.assertNotIn("Viborg", str(embed))
         self.assertIn("Kolding", str(embed))
         self.assertIn("To på hinanden", str(embed))
@@ -160,9 +160,36 @@ class SallingV2ShadowTests(unittest.TestCase):
         data = post.call_args.kwargs["json"]
         self.assertNotIn("content", data)
         self.assertEqual(data["embeds"][0]["title"],
-                         "KLARGØRES · SALLING EARLY RADAR")
+                         "EARLY RADAR · KLARGØRES · SALLING")
         self.assertIn("Katalogfund", str(data["embeds"][0]))
         self.assertNotIn("url", data["embeds"][0])
+
+    def test_early_hidden_and_local_are_visibly_distinct(self):
+        hidden = adapter.hidden_stock_event([{
+            "site": "br", "name": "Pokemon Box", "store": "BR Kolding",
+            "stock": 2, "sku": "SKU-1",
+        }])
+        early = adapter.early_radar_event(
+            "NY SKJULT VARE",
+            {"id": "123", "name": "Pokemon Box", "sites": {
+                "br": {"is_exposed": False}}},
+            "ny katalognote", "br",
+        )
+        local = adapter.local_stock_event(
+            {"site": "BR", "name": "Pokemon Box", "visibility": "EXPOSED"},
+            [{"name": "BR Kolding", "old": 0, "new": 2}],
+        )
+        expected = [
+            ("SKJULT LAGER", hidden),
+            ("EARLY RADAR", early),
+            ("LOKALT LAGER", local),
+        ]
+        for lane, data in expected:
+            with self.subTest(lane=lane):
+                embed = adapter.preview_payload(data)["embeds"][0]
+                self.assertTrue(embed["title"].startswith(lane + " · "))
+                self.assertNotIn("KØB NU", embed["title"])
+                self.assertNotIn("url", embed)
 
     def test_early_exposure_is_from_relevant_retailer(self):
         data = {"name": "Box", "sites": {

@@ -61,6 +61,48 @@ class SallingEarlyRadarLinkTests(unittest.TestCase):
         )
         self.assertEqual(radar.preferred_site_for_change(old, current), "foetex")
 
+    def test_normal_hidden_product_metadata_movement_is_silent(self):
+        old = {**self._product(), "priority": "NORMAL"}
+        updated = {**old, "sites": {**old["sites"],
+            "bilka": _site(self.bilka_url, release_date="2026-11-20")}}
+        self.assertEqual(radar.actionable_early_movement(old, updated), [])
+
+    def test_high_hidden_image_campaign_and_price_churn_is_silent(self):
+        old = {**self._product(), "priority": "HIGH"}
+        updated = {**old, "sites": {**old["sites"],
+            "bilka": _site(
+                self.bilka_url, price=449, campaign="Demo Campaign",
+                description_hash="changed", image_primary="https://example.org/pic",
+            )}}
+        self.assertTrue(radar.site_movement_changes(old, updated))
+        self.assertEqual(radar.actionable_early_movement(old, updated), [])
+
+    def test_high_hidden_launch_date_change_is_still_alertable(self):
+        old = {**self._product(), "priority": "HIGH"}
+        updated = {**old, "sites": {**old["sites"],
+            "foetex": _site(self.foetex_url, release_date="2026-11-20")}}
+        messages = radar.actionable_early_movement(old, updated)
+        self.assertEqual(len(messages), 1)
+        self.assertIn("FOETEX release", messages[0])
+
+    def test_high_visible_product_is_not_an_early_movement(self):
+        old = {**self._product(), "priority": "HIGH"}
+        updated = {**old, "sites": {**old["sites"],
+            "foetex": _site(
+                self.foetex_url, is_exposed=True, release_date="2026-11-20",
+            )}}
+        self.assertEqual(radar.actionable_early_movement(old, updated), [])
+
+    def test_watch_hidden_preorder_and_stock_transitions_remain(self):
+        old = {**self._product(), "priority": "WATCH"}
+        preorder = {**old, "sites": {**old["sites"],
+            "foetex": _site(self.foetex_url, expected_available_from="2026-11-20")}}
+        self.assertTrue(radar.actionable_early_movement(old, preorder))
+        stocked = {**old, "sites": {**old["sites"],
+            "foetex": _site(self.foetex_url, store_count=2)}}
+        self.assertTrue(radar.became_hidden_stocked(old, stocked))
+        self.assertTrue(radar.became_live(old, stocked))
+
     def test_foetex_epoch_only_movement_selects_foetex_link(self):
         old = self._product()
         current = self._product(
