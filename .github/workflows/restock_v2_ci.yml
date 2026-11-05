@@ -49,6 +49,7 @@ on:
       - "test_discord_mobile_contract.py"
       - "test_main_restock_discord_presentation.py"
       - "local_stock_watch.py"
+      - "test_salling_live_only_routing.py"
       - "hidden_stock_watch.py"
       - "test_hidden_stock_watch.py"
       - "alert_policy.py"
@@ -140,6 +141,9 @@ jobs:
 
       - name: Check Early Radar signal value and mute metadata churn (offline)
         run: python -m unittest -v test_salling_early_radar.py
+
+      - name: Verify hidden/prepublish Salling never posts to Restocks (offline)
+        run: python -m unittest -v test_salling_live_only_routing.py
 
       - name: Audit Lorcana Price Watch in read-only mode
         run: |
