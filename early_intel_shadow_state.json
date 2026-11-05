@@ -6018,7 +6018,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 31,
+          "stock_online": 30,
           "stock_stores": 19
         },
         "br": {
@@ -6029,7 +6029,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 31,
+          "stock_online": 30,
           "stock_stores": 31
         },
         "foetex": {
@@ -6040,7 +6040,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 31,
+          "stock_online": 30,
           "stock_stores": 79
         }
       }
@@ -7061,50 +7061,6 @@
     }
   },
   "events": [
-    {
-      "event": "NEW",
-      "fields": [],
-      "name": "Pokemon Mega Evolution Delta Reign samlekort checklane boosterpakke",
-      "product_id": "200397059",
-      "sku": "11399551-EA",
-      "source": "bilka",
-      "stage_after": "DATED_PREP",
-      "stage_before": null,
-      "ts": 1793610917.8681443
-    },
-    {
-      "event": "NEW",
-      "fields": [],
-      "name": "Pokémon Mega Evolution Delta Reign samlekort boosterpakke",
-      "product_id": "200397060",
-      "sku": "11399552-EA",
-      "source": "bilka",
-      "stage_after": "DATED_PREP",
-      "stage_before": null,
-      "ts": 1793610917.8681479
-    },
-    {
-      "event": "NEW",
-      "fields": [],
-      "name": "Pokemon Elite Trainer Box: Mega Evolution Delta Reign samlekort box",
-      "product_id": "200397051",
-      "sku": "11398796-EA",
-      "source": "foetex",
-      "stage_after": "DATED_PREP",
-      "stage_before": null,
-      "ts": 1793610919.2585554
-    },
-    {
-      "event": "NEW",
-      "fields": [],
-      "name": "Pokemon Mega Evolution Delta Reign boosterbundle samlekort",
-      "product_id": "200397052",
-      "sku": "11398797-EA",
-      "source": "foetex",
-      "stage_after": "DATED_PREP",
-      "stage_before": null,
-      "ts": 1793610919.2585607
-    },
     {
       "event": "NEW",
       "fields": [],
@@ -23243,6 +23199,60 @@
       "stage_after": "HIDDEN_STOCK",
       "stage_before": "HIDDEN_STOCK",
       "ts": 1793885699.2204468
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon Pitch Black Checklane Booster Pack",
+      "product_id": "200380911",
+      "sku": "11320909-EA",
+      "source": "br",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1793890766.0609987
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon Pitch Black Checklane Booster Pack",
+      "product_id": "200380911",
+      "sku": "11320909-EA",
+      "source": "bilka",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1793890766.8593297
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon Pitch Black Checklane Booster Pack",
+      "product_id": "200380911",
+      "sku": "11320909-EA",
+      "source": "foetex",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1793890767.6394982
+    },
+    {
+      "event": "CROSS_CHANGE",
+      "fields": [
+        "bilka",
+        "br",
+        "foetex"
+      ],
+      "name": "Pokémon Pitch Black Checklane Booster Pack",
+      "product_id": "11320909-EA",
+      "sku": "11320909-EA",
+      "source": "cross_salling",
+      "stage_after": null,
+      "stage_before": null,
+      "ts": 1793890770.9034927
     }
   ],
   "sources": {
@@ -27694,7 +27704,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 31,
+        "stock_count_online": 30,
         "url": "https://www.bilka.dk/produkter/pokemon-pitch-black-checklane-booster-pack/200380911/"
       },
       "200380917": {
@@ -32977,7 +32987,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 31,
+        "stock_count_online": 30,
         "url": "https://www.br.dk/produkter/pokemon-pitch-black-checklane-booster-pack/200380911/"
       },
       "200380917": {
@@ -38212,7 +38222,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 31,
+        "stock_count_online": 30,
         "url": "https://www.foetex.dk/produkter/pokemon-pitch-black-checklane-booster-pack/200380911/"
       },
       "200380917": {
@@ -38986,6 +38996,6 @@
       }
     }
   },
-  "updated_at": 1793890477.0116513,
+  "updated_at": 1793890770.903567,
   "version": 1
 }
