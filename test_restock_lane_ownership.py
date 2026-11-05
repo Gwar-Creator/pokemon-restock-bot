@@ -57,6 +57,24 @@ class RestockLaneOwnershipTests(unittest.TestCase):
         )
         self.assertFalse(lane.restock_lane_channel_alert_allowed(message))
 
+    def test_main_suppresses_unrecognized_scanner_messages_too(self):
+        # Broad scanner has historically emitted other headline forms. No
+        # fallback is permitted to the local-only #restocks webhook.
+        for message in (
+            "LAGERSIGNAL: Pokémon 151 hos FØTEX",
+            "KATALOGFUND: Pokémon 151 hos BR",
+            "📈 PRISSTIGNING: Pokémon 151",
+            "SYSTEMSTATUS: kildebesked",
+            "Uklassificeret produktfund",
+            "",
+        ):
+            with self.subTest(message=message):
+                self.assertFalse(
+                    lane.restock_lane_channel_alert_allowed(
+                        message, legacy_policy=lambda text: True
+                    )
+                )
+
     def test_main_suppresses_all_wave4_product_events(self):
         for label in ("VAULTED", "POKEDEXET", "POKEMONPORTALEN", "TCGBRUUS", "POKEMON PLAZA"):
             for event_text in ("RESTOCK", "FORUDBESTILLING", "NYT"):
