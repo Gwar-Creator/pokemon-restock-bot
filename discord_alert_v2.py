@@ -173,8 +173,18 @@ def render_embed(event):
     if checked:
         fields.append({"name": "SENEST KONTROLLERET", "value": checked[:100], "inline": True})
 
+    # Put the originating lane first on phones: KLARGØRES can otherwise
+    # mean either Early Radar, Hidden Stock or Local Stock. A source-side
+    # lane name is accepted only from the fixed whitelist below.
+    lane_labels = {
+        "EARLY": "EARLY RADAR",
+        "HIDDEN": "SKJULT LAGER",
+        "LOCAL": "LOKALT LAGER",
+    }
+    lane = lane_labels.get(str(event.get("lane") or "").upper())
+    heading = f"{lane} · {label} · {source}" if lane else f"{label} · {source}"
     embed = {
-        "title": f"{label} · {source}"[:256],
+        "title": heading[:256],
         "description": f"**{name}**",
         "color": color,
         "fields": fields,
