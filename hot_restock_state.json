@@ -79,27 +79,27 @@
         "price": 329.0,
         "stock": "PÅ LAGER",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
-        "fetch_via": "jina_reader"
+        "fetch_via": "jina_reader+direct_frontend_search"
       },
       "3478496": {
         "name": "Pokemon TCG Mega Greninja ex Premium Collection",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
-        "fetch_via": "jina_reader"
-      },
-      "3417744": {
-        "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
-        "price": null,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
-        "fetch_via": "preserved_previous_scan"
+        "fetch_via": "jina_reader+direct_frontend_search"
       },
       "3478497": {
         "name": "Pokemon TCG 2-pack Booster",
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2-pack-Booster/3478497",
+        "fetch_via": "preserved_previous_scan"
+      },
+      "3417744": {
+        "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
+        "price": null,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
         "fetch_via": "preserved_previous_scan"
       },
       "3447592": {
@@ -144,7 +144,7 @@
         "online_stock": false,
         "store_count": 17,
         "kolding_stock": 0,
-        "esbjerg_stock": 0,
+        "esbjerg_stock": 216,
         "quantity_limit": 6,
         "sku": "11398799-EA",
         "url": "https://www.br.dk/produkter/pokemon-mega-evolution-delta-reign-samlekort-booster-pakke/200397054/"
@@ -152,7 +152,7 @@
       "200279925": {
         "name": "Pokémon Battle Academy 2024",
         "price": 299.0,
-        "online_count": 298,
+        "online_count": 297,
         "online_stock": true,
         "store_count": 32,
         "kolding_stock": 16,
@@ -250,7 +250,7 @@
       "200279925": {
         "name": "Pokémon Battle Academy 2024",
         "price": 299.0,
-        "online_count": 298,
+        "online_count": 297,
         "online_stock": true,
         "store_count": 19,
         "local_stocks": {
@@ -272,7 +272,7 @@
       "200279925": {
         "name": "Pokémon Battle Academy 2024",
         "price": 299.0,
-        "online_count": 298,
+        "online_count": 297,
         "online_stock": true,
         "store_count": 1,
         "local_stocks": {
@@ -597,14 +597,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1793874302.3394501,
+      "next_allowed_at": 1793874599.5076725,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-05T10:21:02.339428+00:00"
+      "last_success_at": "2026-11-05T10:25:59.507648+00:00"
     }
   },
-  "updated_at": "2026-11-05T10:24:32.240675+00:00",
+  "updated_at": "2026-11-05T10:29:31.196689+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -629,7 +629,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-05T10:21:00.546696+00:00"
+          "last_checked": "2026-11-05T10:25:58.686038+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -639,7 +639,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1793874059.0958989,
+      "last_discovery_epoch": 1793874357.7947984,
       "last_full_discovery_epoch": 1793855760.0256436,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -654,10 +654,10 @@
   },
   "proshop_detail_checks": {
     "3417744": 1793873958.9825022,
-    "3447592": 1793873440.2373939,
+    "3447592": 1793874391.683376,
     "3478496": 1793642580.111834,
-    "3478497": 1793873548.7564533,
+    "3478497": 1793874501.757551,
     "3478498": 1793873958.9825022,
-    "3519999": 1793873440.2373939
+    "3519999": 1793874391.683376
   }
 }
