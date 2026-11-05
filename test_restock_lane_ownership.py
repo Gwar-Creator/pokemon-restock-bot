@@ -17,13 +17,13 @@ class RestockLaneOwnershipTests(unittest.TestCase):
         )
         self.assertFalse(lane.restock_lane_channel_alert_allowed(message))
 
-    def test_main_keeps_tier_a_pokemon_new_discovery(self):
+    def test_main_suppresses_tier_a_pokemon_new_discovery(self):
         message = (
             "🆕 **[POKÉMON] NYT PÅ FØTEX**\n"
             "**Pokemon 151 Booster Bundle**\n"
             "📦 Nyt relevant produkt"
         )
-        self.assertTrue(lane.restock_lane_channel_alert_allowed(message))
+        self.assertFalse(lane.restock_lane_channel_alert_allowed(message))
 
     def test_main_mutes_tier_a_lorcana_restock(self):
         # Since 28 October user policy only Pokémon can post. A legacy
@@ -49,13 +49,31 @@ class RestockLaneOwnershipTests(unittest.TestCase):
             with self.subTest(headline=headline):
                 self.assertFalse(lane.restock_lane_channel_alert_allowed(message))
 
-    def test_main_keeps_tier_a_preorder_not_a_restock(self):
+    def test_main_suppresses_tier_a_preorder_not_a_restock(self):
         message = (
             "🚨 **[POKÉMON] NY FORUDBESTILLING HOS PROSHOP**\n"
             "**Pokemon Future Illustration Collection**\n"
             "📅 Forudbestilling"
         )
-        self.assertTrue(lane.restock_lane_channel_alert_allowed(message))
+        self.assertFalse(lane.restock_lane_channel_alert_allowed(message))
+
+    def test_main_suppresses_unrecognized_scanner_messages_too(self):
+        # Broad scanner has historically emitted other headline forms. No
+        # fallback is permitted to the local-only #restocks webhook.
+        for message in (
+            "LAGERSIGNAL: Pokémon 151 hos FØTEX",
+            "KATALOGFUND: Pokémon 151 hos BR",
+            "📈 PRISSTIGNING: Pokémon 151",
+            "SYSTEMSTATUS: kildebesked",
+            "Uklassificeret produktfund",
+            "",
+        ):
+            with self.subTest(message=message):
+                self.assertFalse(
+                    lane.restock_lane_channel_alert_allowed(
+                        message, legacy_policy=lambda text: True
+                    )
+                )
 
     def test_main_suppresses_all_wave4_product_events(self):
         for label in ("VAULTED", "POKEDEXET", "POKEMONPORTALEN", "TCGBRUUS", "POKEMON PLAZA"):
@@ -85,6 +103,7 @@ class RestockLaneOwnershipTests(unittest.TestCase):
         }
         online = {
             "online_count": 3,
+            "is_exposed": True,
             "local_stocks": {
                 "1370": {"name": "føtex Kolding Syd", "stock": 0}
             },
@@ -92,6 +111,40 @@ class RestockLaneOwnershipTests(unittest.TestCase):
         self.assertFalse(hot_v4.online_lane_product_available("foetex", local_only))
         self.assertTrue(hot_v4.online_lane_product_available("foetex", online))
 
+
+    def test_hot_salling_requires_public_fresh_online_data(self):
+        product = {
+            "online_count": 3, "is_exposed": True, "local_stocks": {
+                "1": {"name": "Bilka Kolding", "stock": 99}
+            },
+        }
+        self.assertTrue(hot_v4.online_lane_product_available("bilka", product))
+        for variation in (
+            {**product, "online_count": 0},
+            {**product, "online_count": False},
+            {**product, "online_count": "invalid"},
+            {**product, "is_exposed": False},
+            {**product, "is_exposed": None},
+            {**product, "preorder": True},
+            {**product, "fetch_via": "api+preserved_previous_scan"},
+            {**product, "online_count": 0, "local_stocks": {"1": {"stock": 10}}},
+        ):
+            with self.subTest(variation=variation):
+                self.assertFalse(hot_v4.online_lane_product_available("bilka", variation))
+
+    def test_hot_proshop_requires_fresh_actual_on_hand_stock(self):
+        self.assertTrue(hot_v4.online_lane_product_available(
+            "proshop", {"stock": "PÅ LAGER", "fetch_via": "jina_reader"}))
+        self.assertFalse(hot_v4.online_lane_product_available(
+            "proshop", {"stock": "BESTILLINGSVARE", "fetch_via": "jina_reader"}))
+        self.assertFalse(hot_v4.online_lane_product_available(
+            "proshop", {"stock": "PÅ LAGER", "fetch_via": "jina_reader+preserved_previous_scan"}))
+
+    def test_hot_coolshop_requires_explicit_online_stock(self):
+        self.assertTrue(hot_v4.online_lane_product_available("coolshop", {"online_stock": True}))
+        self.assertTrue(hot_v4.online_lane_product_available("coolshop", {"online_stock": 3}))
+        self.assertFalse(hot_v4.online_lane_product_available("coolshop", {"online_stock": "3"}))
+        self.assertFalse(hot_v4.online_lane_product_available("coolshop", {"online_stock": False}))
 
     def test_hot_broad_retail_sources_use_online_stock_flag(self):
         self.assertTrue(

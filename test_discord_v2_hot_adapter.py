@@ -43,12 +43,14 @@ class HotDiscordV2AdapterTests(unittest.TestCase):
                     self.assertIn("IKKE VERIFICERET RESTOCK", str(embed["fields"]))
                     self.assertIn("ikke bekræftet", str(embed["fields"]).lower())
 
-    def test_salling_local_stock_only_is_orange(self):
+    def test_salling_local_stock_only_is_not_hot(self):
+        # Physical shop counts belong to Local Stock and must not leak into
+        # an online-only HOT embed.
         product = self._p(online_count=0, kolding_stock=4, esbjerg_stock=0)
         payload, status = hot_payload("br", product, "NEW")
-        self.assertEqual(status, "STORE_STOCK")
+        self.assertEqual(status, "UNKNOWN")
         self.assertNotIn("url", payload["embeds"][0])
-        self.assertIn("BR Kolding: 4 stk.", str(payload["embeds"][0]["fields"]))
+        self.assertNotIn("BR Kolding: 4 stk.", str(payload["embeds"][0]["fields"]))
 
     def test_hidden_salling_stock_is_yellow(self):
         product = self._p(is_exposed=False, online_count=10, kolding_stock=6)
@@ -141,13 +143,13 @@ class HotDiscordV2AdapterTests(unittest.TestCase):
         embed = post.call_args.kwargs["json"]["embeds"][0]
         self.assertEqual(embed["title"], "FORUDBESTIL · PROSHOP")
 
-    def test_live_salling_system_stock_uses_non_green_v2(self):
+    def test_live_salling_hot_online_signal_does_not_show_local_stock(self):
         for source in ("br", "bilka", "foetex"):
             local = (
                 {"kolding_stock": 2} if source == "br"
                 else {"local_stocks": {"1": {"name": "Kolding", "stock": 2}}}
             )
-            product = self._p(online_count=15, **local)
+            product = self._p(online_count=15, is_exposed=True, **local)
             with (
                 patch.object(hot, "DISCORD_V2_HOT_MODE", "on"),
                 patch.object(hot, "WEBHOOK_URL", "https://example.invalid/webhook"),
@@ -159,10 +161,12 @@ class HotDiscordV2AdapterTests(unittest.TestCase):
                 self.assertEqual(post.call_count, 1)
                 payload = post.call_args.kwargs["json"]
                 embed = payload["embeds"][0]
-                self.assertEqual(embed["title"], f"BUTIKSLAGER · {source.upper() if source != 'foetex' else 'FØTEX'}")
-                self.assertEqual(embed["color"], 0xE67E22)
+                title_source = source.upper() if source != "foetex" else "FØTEX"
+                self.assertEqual(embed["title"], f"UKENDT · {title_source}")
+                self.assertEqual(embed["color"], 0x95A5A6)
                 self.assertNotIn("url", embed)
-                self.assertIn("IKKE VERIFICERET RESTOCK", str(embed["fields"]))
+                self.assertIn("ONLINE SYSTEMLAGER", str(embed["fields"]))
+                self.assertNotIn("REGISTRERET BUTIKSLAGER", str(embed["fields"]))
                 self.assertEqual(payload["allowed_mentions"], {"parse": []})
 
     def test_live_salling_system_only_is_neutral_not_green(self):

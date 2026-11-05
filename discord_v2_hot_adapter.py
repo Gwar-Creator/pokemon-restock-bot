@@ -81,8 +81,11 @@ def hot_event(source_key, product, event):
             # semantics if the adapter is re-used for their future alerts.
             online_buyable = data.get("in_stock") is True
 
-    # A preserved snapshot cannot attest current physical store availability.
-    stores = [] if preserved else _stores(source_key, data)
+    # HOT is ONLINE-ONLY. Even if the same Algolia product also contains
+    # local counts, those belong to Local Stock and must not appear in HOT.
+    # For Salling, a verified source-system online count stays neutral (not
+    # a confirmed checkout), never presented as physical store inventory.
+    stores = [] if source_key in SALLING_SOURCES or preserved else _stores(source_key, data)
     payload = {
         "source": LABELS.get(source_key, source_key.upper()),
         "event_type": "RESTOCK" if str(event).upper() == "RESTOCK" else "NYT PRODUKT",

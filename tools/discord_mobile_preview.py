@@ -43,8 +43,8 @@ def case_payloads():
                   hot_payload("proshop", {**product, "stock": "BESTILLINGSVARE"}, "RESTOCK")[0]))
     cases.append(("HOT · BR online systemlager", "UNKNOWN",
                   hot_payload("br", {**product, "online_count": 8, "is_exposed": True}, "RESTOCK")[0]))
-    cases.append(("HOT · Bilka butikslager", "STORE_STOCK",
-                  hot_payload("bilka", {**product, "online_count": 3,
+    cases.append(("HOT · Bilka online systemlager", "UNKNOWN",
+                  hot_payload("bilka", {**product, "online_count": 3, "is_exposed": True,
                       "local_stocks": {"123": {"name": "Bilka Kolding", "stock": 2}}}, "RESTOCK")[0]))
     cases.append(("HOT · Proshop forudbestilling", "PREORDER",
                   hot_payload("proshop", {**product, "preorder": True}, "NEW")[0]))
