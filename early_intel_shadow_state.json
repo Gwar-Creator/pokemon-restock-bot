@@ -5941,7 +5941,7 @@
           "sold_online": true,
           "stage": "LIVE_STOCK",
           "stock_online": 0,
-          "stock_stores": 4
+          "stock_stores": 3
         },
         "br": {
           "expected_available_from": null,
@@ -7061,28 +7061,6 @@
     }
   },
   "events": [
-    {
-      "event": "NEW",
-      "fields": [],
-      "name": "Pokemon Mega Evolution Delta Reign samlekortpakker",
-      "product_id": "200397053",
-      "sku": "11398798-EA",
-      "source": "foetex",
-      "stage_after": "DATED_PREP",
-      "stage_before": null,
-      "ts": 1793610919.2585626
-    },
-    {
-      "event": "NEW",
-      "fields": [],
-      "name": "Pokemon Mega Evolution Delta Reign samlekort booster pakke",
-      "product_id": "200397054",
-      "sku": "11398799-EA",
-      "source": "foetex",
-      "stage_after": "DATED_PREP",
-      "stage_before": null,
-      "ts": 1793610919.258564
-    },
     {
       "event": "NEW",
       "fields": [],
@@ -23253,6 +23231,32 @@
       "stage_after": null,
       "stage_before": null,
       "ts": 1793890770.9034927
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "in_stock_stores_count"
+      ],
+      "name": "Pokémon Pitch Black 1-pak – flere varianter – assorteret",
+      "product_id": "200380909",
+      "sku": "11320906-EA",
+      "source": "bilka",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1793891989.3319666
+    },
+    {
+      "event": "CROSS_CHANGE",
+      "fields": [
+        "bilka"
+      ],
+      "name": "Pokémon Pitch Black 1-pak – flere varianter – assorteret",
+      "product_id": "11320906-EA",
+      "sku": "11320906-EA",
+      "source": "cross_salling",
+      "stage_after": null,
+      "stage_before": null,
+      "ts": 1793891994.288741
     }
   ],
   "sources": {
@@ -25048,7 +25052,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-prismatic-tech-klistermaerkekollektion-flere-varianter-assorteret/200308045/"
       },
       "200308076": {
-        "epoch_updated_at": 1793890980,
+        "epoch_updated_at": 1793891886,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -25842,7 +25846,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-elite-trainer-box-zsv10-5/200329218/"
       },
       "200329219": {
-        "epoch_updated_at": 1793890981,
+        "epoch_updated_at": 1793891886,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -26612,7 +26616,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-mini-tin-kanto-powers-assorteret/200341845/"
       },
       "200341846": {
-        "epoch_updated_at": 1793890980,
+        "epoch_updated_at": 1793891885,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -26980,7 +26984,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-tcg-booster-pack-samlekort/200356078/"
       },
       "200356085": {
-        "epoch_updated_at": 1793890980,
+        "epoch_updated_at": 1793891886,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -27414,7 +27418,7 @@
         "url": "https://www.bilka.dk/produkter/pokemin-mini-tin-med-samlekort-meganium-meowstic/200371875/"
       },
       "200371876": {
-        "epoch_updated_at": 1793890982,
+        "epoch_updated_at": 1793891886,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -27470,7 +27474,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-mini-tin-med-samlekort-feraligatr-budew/200371877/"
       },
       "200371882": {
-        "epoch_updated_at": 1793890981,
+        "epoch_updated_at": 1793891886,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [],
@@ -27584,7 +27588,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-first-partner-collection-box-2-samlekort/200371886/"
       },
       "200380908": {
-        "epoch_updated_at": 1793890982,
+        "epoch_updated_at": 1793891886,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -27614,7 +27618,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-pitch-black-booster-bundle-samlekort/200380908/"
       },
       "200380909": {
-        "epoch_updated_at": 1793890981,
+        "epoch_updated_at": 1793891886,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -27624,7 +27628,7 @@
         "has_image": true,
         "id": "200380909",
         "image_primary": "https://digitalassets.sallinggroup.com/image/upload/e_trim/b_white,c_pad,e_sharpen:80,f_auto,q_auto,w_464,h_464/74797cc188f1650628c347cfd5075624",
-        "in_stock_stores_count": 4,
+        "in_stock_stores_count": 3,
         "is_click_and_collectible": true,
         "is_exposed": true,
         "is_reservable": true,
@@ -27645,7 +27649,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-pitch-black-1-pak-flere-varianter-assorteret/200380909/"
       },
       "200380910": {
-        "epoch_updated_at": 1793890981,
+        "epoch_updated_at": 1793891886,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -27676,7 +27680,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-me05-pitch-black-samlekort/200380910/"
       },
       "200380911": {
-        "epoch_updated_at": 1793890980,
+        "epoch_updated_at": 1793891886,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -27738,7 +27742,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-pitch-black-premium-checklane-flere-varianter-assorteret/200380917/"
       },
       "200380918": {
-        "epoch_updated_at": 1793890982,
+        "epoch_updated_at": 1793891886,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -27861,7 +27865,7 @@
         "url": "https://www.bilka.dk/produkter/pokemon-elite-trainer-box-30th-samlekort/200392202/"
       },
       "200392203": {
-        "epoch_updated_at": 1793890981,
+        "epoch_updated_at": 1793891886,
         "expected_available_from": null,
         "f_campaign_name": [],
         "f_stock_availability": [
@@ -38996,6 +39000,6 @@
       }
     }
   },
-  "updated_at": 1793891683.6546783,
+  "updated_at": 1793891994.2888024,
   "version": 1
 }
