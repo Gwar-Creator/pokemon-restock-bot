@@ -1,4 +1,4 @@
-name: Tradera Ruby missing cards - read-only test (v2)
+name: Tradera Ruby - auctions vs fixed price (v3)
 
 on:
   workflow_dispatch:
@@ -30,7 +30,23 @@ jobs:
         run: python -m pip install --disable-pip-version-check -q requests
       - name: Validate matcher syntax
         run: python -m py_compile tradera_ruby_match_manual.py
-      - name: Check active Ruby and Sapphire auctions
+      - name: Test auction vs fixed price classification
+        run: |
+          python - <<'PY'
+          from tradera_ruby_match_manual import listing_pricing
+          cases = [
+            ({"itemType":1,"nextBid":20,"buyItNowPrice":0}, "Ren auktion",20,None),
+            ({"itemType":1,"nextBid":20,"buyItNowPrice":125}, "Auktion + Køb nu",20,125),
+            ({"itemType":3,"nextBid":10,"buyItNowPrice":75}, "Fast pris",None,75),
+            ({"itemType":4,"nextBid":10,"buyItNowPrice":90}, "Butik / fast pris",None,90),
+            ({"itemType":5,"nextBid":20,"buyItNowPrice":90}, "Ukendt format",None,None),
+          ]
+          for raw,label,bid,bin_price in cases:
+              v=listing_pricing(raw)
+              assert (v["listing_type"],v["auction_bid_sek"],v["buy_now_sek"])==(label,bid,bin_price),v
+          print("auction vs fixed price classification tests: OK")
+          PY
+      - name: Scan all active Ruby and Sapphire types, rank pure auctions separately
         run: python tradera_ruby_match_manual.py
       - name: Upload findings for manual review
         if: always()
