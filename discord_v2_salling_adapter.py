@@ -28,6 +28,7 @@ def local_stock_event(product, transitions):
     visibility = str(product.get("visibility") or "UNKNOWN").upper()
     return {
         "source": product.get("site") or "SALLING",
+        "lane": "LOCAL",
         "name": product.get("name") or "Ukendt produkt",
         "price": product.get("price"),
         "url": product.get("url"),
@@ -52,6 +53,7 @@ def hidden_stock_event(rows):
     first = rows[0]
     return {
         "source": SOURCE_LABELS.get(first.get("site"), "SALLING"),
+        "lane": "HIDDEN",
         "name": first.get("name") or "Ukendt produkt",
         "price": first.get("price"),
         "url": first.get("url"),
@@ -83,7 +85,8 @@ def early_radar_event(title, product, detail, preferred_site=None):
         )
     )
     return {
-        "source": "SALLING EARLY RADAR",
+        "source": "SALLING",
+        "lane": "EARLY",
         "name": product.get("name") or "Ukendt produkt",
         "price": selected.get("price", product.get("price")),
         "url": selected.get("url") or "",
