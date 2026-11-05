@@ -582,12 +582,12 @@
   },
   "source_controls": {
     "coolshop": {
-      "backoff_level": 1,
-      "next_allowed_at": 1793907054.7451813,
-      "generic_failures": 2,
-      "last_error": "HTTPSConnectionPool(host='www.coolshop.dk', port=443): Read timed out. (read timeout=20)",
+      "backoff_level": 0,
+      "next_allowed_at": 0.0,
+      "generic_failures": 0,
+      "last_error": null,
       "last_failure_at": "2026-11-05T19:28:54.745145+00:00",
-      "last_success_at": "2026-11-05T19:26:18.437896+00:00"
+      "last_success_at": "2026-11-05T19:34:40.782438+00:00"
     },
     "proshop": {
       "backoff_level": 0,
@@ -631,14 +631,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1793907045.718278,
+      "next_allowed_at": 1793907325.3537328,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-05T19:26:45.718252+00:00"
+      "last_success_at": "2026-11-05T19:31:25.353707+00:00"
     }
   },
-  "updated_at": "2026-11-05T19:30:29.456031+00:00",
+  "updated_at": "2026-11-05T19:35:01.273522+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -663,7 +663,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-05T19:26:44.362928+00:00"
+          "last_checked": "2026-11-05T19:31:24.481627+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -673,7 +673,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1793906803.2831774,
+      "last_discovery_epoch": 1793907083.1402745,
       "last_full_discovery_epoch": 1793899255.2125173,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -688,10 +688,10 @@
   },
   "proshop_detail_checks": {
     "3417744": 1793906781.2372005,
-    "3447592": 1793906229.4751177,
+    "3447592": 1793907173.9676104,
     "3478496": 1793642580.111834,
     "3478497": 1793906781.2372005,
-    "3478498": 1793906229.4751177,
-    "3519999": 1793906290.9790616
+    "3478498": 1793907173.9676104,
+    "3519999": 1793907226.719088
   }
 }
