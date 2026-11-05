@@ -84,6 +84,14 @@ Denne beslutning **erstatter** alle ældre krav nedenfor om kun at sende verific
 - `test_salling_hot_exposed_guard.py` afprøver de **faktiske** BR/Bilka/Føtex-funktioner med en synlig, en skjult og en ubekræftet produktpost i mocked Algolia-svar. Alle tre butikker skal kun returnere den synlige post. Ingen Discord/webhook, lagerstate eller live HTTP i test.
 - **Resterende risici:** Early, Hidden og Local har endnu ikke fælles kanal-/SKU-dedupe; det skal undersøges mod de faktisk afsendte Discord-beskeder, inden en policy ændres. `KLARGØRES` kan være både Early Radar og Hidden Stock og bør få synlig afsender i mobiloverskrift. Ingen nye notification lanes må aktiveres, og Price Watch/History forbliver paused.
 
+## Early Radar: mindre støj og tydelig kanalidentitet (5. november 2026)
+
+- Brugeren rapporterede, at mange Salling RESTOCK-, Early Radar- og butikslager-alerts lignede hinanden. V2 havde ens hovedstatus **KLARGØRES**, selv om hændelserne havde forskellige ejere. Alle 3 V2-Salling-spor har nu en **synlig lane-identitet først i Discord-titlen**: `EARLY RADAR · KLARGØRES · SALLING`, `SKJULT LAGER · KLARGØRES · BR`, `LOKALT LAGER · BUTIKSLAGER · BR`. De fælles farve- og købevidensregler ændres ikke.
+- Den gamle `salling_early_radar.main()` udsendte `EARLY MOVEMENT` for **alle** metadataændringer (pris, kampagne, billede, beskrivelse, lagerstatus og dato) på **alle** relevante produkt-ID'er. Dette var ikke begrænset til skjulte eller interessante produkter og kunne skabe unødvendig støj, selv uden ægte nye varer eller restock.
+- `actionable_early_movement(old, current)` begrænser nu disse særlige metadata-alerts til `HIGH`/`WATCH`-produkter på **skjulte** butiksopslag og faktiske ændringer i væsentlige launch-/tilgængelighedsfelter: release-dato, forventet tilgængelighed, online-fra, lagerstatus, reserverbar og solgt online. Daglige pris-/billed-/beskrivelsesændringer forbliver registreret i state, men sender ikke Discord-posts.
+- **Bevares:** `NY SKJULT VARE`, `NY VARE`, `LAGER FØR LIVE` og `GÅR LIVE` samt aftalt relevansfilter og eksisterende webhook. Dette er en reduktion af lavværdi-`EARLY MOVEMENT`, ikke en aktivering af nye alerts. `test_salling_early_radar.py` og `test_discord_v2_salling_adapter.py` sikrer dette.
+- **Stadig ikke dokumenteret:** Om der konkret blev sendt to beskeder om samme SKU i samme tidsrum 5. november. Et GitHub Actions-job med grønt resultat og offline mockede alerttal er **ikke** dokumentation for faktiske Discord-sends. Gennemgå Discord-beskeders ID/SKU, tidspunkt og webhook-kilde særskilt ved behov; indfør ikke tværgående suppressionsregler uden bevis.
+
 ## Formål
 
 Dette repository driver en dansk Discord-scanner for Pokémon- og Lorcana-restocks, prisovervågning og Cardmarket-historik. Målet er få, relevante og troværdige notifikationer — ikke flest mulige notifikationer.
