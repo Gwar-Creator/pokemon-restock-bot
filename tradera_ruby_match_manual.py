@@ -21,8 +21,9 @@ def name_match(t, name):
 
 def matched(title):
     t = norm(title)
-    forbidden = ("reverse holo","reverse-holo","rev. holo","rev holo","rev.holo",
-                 "world championship","world champ","spanish","spanska","spansk",
+    forbidden = ("reverse","revers","non-holo","non holo","deck exclusive",
+                 "world championship","world champ","team rocket returns","rocket\'s ",
+                 "spanish","spanska","spansk",
                  "japanese","japanska","jp ","/055","german","tyska",
                  "french","franska","italian","korean","proxy","orica","fake",
                  "booster","sealed","psa ","cgc ","bgs ")
@@ -39,7 +40,8 @@ def matched(title):
         elif set_explicit:
             confidence = "set_only_check_number"
         else: continue
-        hits.append(dict(card, confidence=confidence))
+        if confidence == "exact_set_number":
+            hits.append(dict(card, confidence=confidence))
     return hits
 
 def safe_url(value):
