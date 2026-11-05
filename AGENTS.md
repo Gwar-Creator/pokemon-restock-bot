@@ -1,5 +1,16 @@
 # AGENTS.md
 
+## AKTIV KANALOPDELING — godkendt 5. november 2026
+
+Brugeren har præciseret den oprindelige strategi: **#restocks = reelle, dokumenterede butikslagerændringer i udvalgte butikker/byer**; **HOT Restock = friske online-lagersignaler fra de fem udvalgte Tier 1-kæder**, med eksisterende produktfiltre. Alle pre-publish-signaler går til Early Radar (ikke normal Restock).
+
+- `restock_lane_runner.py` er **data-/history-only** for alle `NEW`, `PREORDER`, `RESTOCK` produkthændelser og poster dem ikke i `#restocks`. Den brede scanner fortsætter med kildeindhentning og prishistorik. Dette retter forrige delvise routing, hvor Tier 1-katalogfund og forudbestillinger fortsat kunne få almindelige Restock-beskeder.
+- **Kun `local_stock_watch.py` ejer produkt-POSTs til den almindelige Restock-kanal.** Den kræver publiceret `LIVE` vare, tidligere observeret `0` og efterfølgende positiv butiksmængde, kendt butik og eksisterende produktfiltre. Et API-systemtal er **ikke** garanti for, at varen fysisk kan købes, og må beskrives som `BUTIKSLAGER` / tjek butikkens information, ikke `KØB NU`. Aktuelt viser `TARGET_STORE_MARKERS` kun **Kolding og Esbjerg**; tidligere ønskede Vejen/Fredericia/Brørup er ikke dokumenteret fuldt dækket i denne kode og kræver separat kildedækningstest.
+- **HOT kører kun online.** De fem Discord-aktive butikker er `coolshop`, `proshop`, `br`, `bilka`, `foetex`; `boozt/magasin` er foreløbig data-only. `hot_restock_v4.online_lane_product_available` afviser cached `preserved_previous_scan`, preorders og usikker status. Coolshop kræver eksplicit online-flag; Proshop kræver frisk `PÅ LAGER` (ikke `BESTILLINGSVARE`); Salling kræver **eksponeret produkt og positivt frisk online_count** (aldrig lokale butikstal).
+- **Dokumentationsniveau:** Salling `online_count>0` på et eksponeret produkt er dokumenteret *webshop-systemlager*, men **ikke verificeret checkout/købbarhed**. Disse HOT-statusser vises derfor **neutralt som ONLINE SYSTEMLAGER / UKENDT**, aldrig grønt `KØB NU`. Der kræves kildebevis for faktisk checkout, hvis man senere vil kalde en Salling-alarm dokumenteret online købbar. De fem kilder bliver fortsat scannet; ingen nye alert-kilder aktiveres.
+- Discord HOT V2 må ikke inkludere Bilka/BR/Føtex **fysiske** lagertal eller vise `BUTIKSLAGER` for online-hændelser. Kun Local Stock ejer disse oplysninger. `HOT_FILTER_VERSION` fastholdes på 4, så eksisterende stock-state, baseline og historik **ikke nulstilles**; ændringen er alene en alarmgate. Ældre dokumentationssektioner nedenfor beskriver historiske mellemløsninger og er erstattet på disse punkter.
+- Eksisterende Tier 1 produktfilter (`tier_a_signal_allowed`), Pokémon-only, cooldown, no duplicate message count, Early Radar, Cardmarket, Price Watch/History pause, og alle Discord-webhooks er uændrede. Nye tests i `test_restock_lane_ownership.py` og `test_discord_v2_hot_adapter.py` sikrer de rettede regler.
+
 ## AKTIV BESLUTNING — Vintage Finder Light (29. oktober 2026)
 
 Denne beslutning **erstatter** alle ældre krav nedenfor om kun at sende verificerede KØB/BYD i `#marketplace-deals`. Brugeren valgte eksplicit den enklere version: højst **3 UDVALGT FUND per dag / 8 per uge**, uden vurdering af kort, stand eller maksimumbud i botten.
