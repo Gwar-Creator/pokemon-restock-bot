@@ -5395,9 +5395,9 @@ def get_br_products(old_products=None):
         "filters": (
             'is_exposed:true AND '
             'cfh_nodes:"CFH.CollectionCards" AND '
-            'f_brand:"Pokemon" OR '
+            '(f_brand:"Pokemon" OR '
             'f_brand:"Pokémon" OR '
-            'facets.productSeriesToys:"Pokémon"'
+            'facets.productSeriesToys:"Pokémon")'
         ),
         "distinct": "true",
         "facetingAfterDistinct": "false",
@@ -5441,10 +5441,13 @@ def get_br_products(old_products=None):
     data = response.json()
     all_hits = data["results"][0].get("hits", [])
 
+    # Fail closed: Algolia's OR branches and backend index behaviour must
+    # never let hidden items escape into HOT (Early Radar owns discovery).
     hits = [
         product
         for product in all_hits
         if is_real_pokemon_tcg(product)
+        and product.get("is_exposed") is True
     ]
 
     products = {}
@@ -5550,6 +5553,7 @@ def get_br_products(old_products=None):
             "price": price,
             "online_count": online_count,
             "online_stock": online_count > 0,
+            "is_exposed": True,
             "store_count": store_count,
             "kolding_stock": local_stocks.get("kolding_stock"),
             "esbjerg_stock": local_stocks.get("esbjerg_stock"),
@@ -5799,9 +5803,9 @@ def get_salling_products(
         "filters": (
             'is_exposed:true AND '
             'cfh_nodes:"CFH.CollectionCards" AND '
-            'f_brand:"Pokemon" OR '
+            '(f_brand:"Pokemon" OR '
             'f_brand:"Pokémon" OR '
-            'facets.productSeriesToys:"Pokémon"'
+            'facets.productSeriesToys:"Pokémon")'
         ),
         "distinct": "true",
         "facetingAfterDistinct": "false",
@@ -5847,10 +5851,13 @@ def get_salling_products(
         []
     )
 
+    # Fail closed: Algolia's OR branches and backend index behaviour must
+    # never let hidden items escape into HOT (Early Radar owns discovery).
     hits = [
         product
         for product in all_hits
         if is_real_pokemon_tcg(product)
+        and product.get("is_exposed") is True
     ]
 
     products = {}
@@ -5971,6 +5978,7 @@ def get_salling_products(
             "price": price,
             "online_count": online_count,
             "online_stock": online_count > 0,
+            "is_exposed": True,
             "store_count": store_count,
             "local_stocks": local_stocks,
             "quantity_limit": quantity_limit,
