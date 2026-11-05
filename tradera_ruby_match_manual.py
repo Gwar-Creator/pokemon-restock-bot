@@ -211,9 +211,8 @@ def main():
     print("RESULT",json.dumps({k:out[k] for k in ("checked_at","missing","queries","search_calls","found_candidate_ads","detail_calls","active_ads","sellers_checked","diagnostics")},ensure_ascii=False))
     for s in ranking[:25]:
         print("SELLER",json.dumps(s,ensure_ascii=False))
-    for a in out["listings"]:
-        if a["listing_type"] == "Ren auktion":
-            print("AUCTION",json.dumps({k:a[k] for k in ("id","seller","title","url",
+    for a in [x for x in out["listings"] if x["listing_type"] == "Ren auktion"][:35]:
+        print("AUCTION",json.dumps({k:a[k] for k in ("id","seller","title","url",
                  "auction_bid_sek","end_date","matched_cards")},ensure_ascii=False))
     path=os.getenv("GITHUB_STEP_SUMMARY")
     if path:
