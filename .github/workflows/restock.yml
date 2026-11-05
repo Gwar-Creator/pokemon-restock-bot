@@ -73,6 +73,7 @@ jobs:
           python -m unittest test_restock_lane_ownership.py
           python -m unittest test_salling_hot_exposed_guard.py
           python -m unittest test_local_stock_watch.py
+          python -m unittest test_salling_live_only_routing.py
           python -m unittest test_discord_v2_salling_adapter.py
           python -m unittest test_hidden_stock_watch.py
           python -m unittest test_faraos_parser_v2.py
@@ -102,10 +103,10 @@ jobs:
         continue-on-error: true
         run: python br_hidden_stock_probe.py
 
-      - name: Monitor confirmed hidden BR Bilka Foetex store stock
+      - name: Monitor hidden BR Bilka Foetex store stock (Early Radar only)
         continue-on-error: true
         env:
-          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          EARLY_RADAR_SALLING_WEBHOOK_URL: ${{ secrets.EARLY_RADAR_SALLING_WEBHOOK_URL }}
           DISCORD_V2_HIDDEN_MODE: "on"
         run: python hidden_stock_watch.py
 

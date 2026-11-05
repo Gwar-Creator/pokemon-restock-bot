@@ -604,74 +604,19 @@ def canonical_salling_product_key(product):
 
 
 def send_discovery_alert(products):
-    """Send one clearly separated PRE-PUBLISH discovery alert per Salling SKU."""
-    products = [
-        product for product in products
-        if abundant_set_signal_allowed(
-            product.get("name"),
-            product.get("series"),
+    """Keep local PRE-PUBLISH discovery in state; Early Radar owns those posts.
+
+    Local Stock and Hidden Stock previously shared the normal Restock webhook,
+    so early catalogue events appeared to be orderable inventory in #restocks.
+    Early Radar independently monitors the Salling catalogue, and duplicate
+    discovery sends from this lane would add no decision-useful information.
+    """
+    if products:
+        print(
+            "LOCAL DISCOVERY: undertrykker PRE-PUBLISH katalogbesked "
+            f"for {len(products)} forhandlere (Early Radar ejer discovery)"
         )
-    ]
-    if not WEBHOOK_URL:
-        raise RuntimeError("DISCORD_WEBHOOK_URL mangler")
-    if not products:
-        return
-
-    site_order = {"BR": 0, "BILKA": 1, "FØTEX": 2}
-    products = sorted(
-        products,
-        key=lambda product: site_order.get(product.get("site"), 99),
-    )
-    representative = products[0]
-    series = short_series_name(representative.get("series"))
-    product_name = (
-        f"{series} · {representative['type']}"
-        if series
-        else f"{representative['name']} · {representative['type']}"
-    )
-
-    availability_lines = []
-    for product in products:
-        store_count = max(0, safe_int(product.get("store_count"), 0))
-        availability_lines.append(
-            f"**{product['site']}** · {format_price(product.get('price'))} · "
-            f"{store_count} butikker"
-        )
-
-    embed = {
-        "title": "NY SKJULT VARE · SALLING",
-        "description": f"**{product_name}**",
-        "color": 0x5865F2,
-        "fields": [
-            {
-                "name": "Fundet hos",
-                "value": "\n".join(availability_lines)[:1024],
-                "inline": False,
-            },
-            {
-                "name": "Status",
-                "value": (
-                    "Pre-publish · endnu ikke en lageralarm. "
-                    "Næste signal kommer ved lokal 0 → positiv lagerstatus."
-                ),
-                "inline": False,
-            },
-        ],
-        "footer": {
-            "text": f"MasterBot · Salling Discovery · SKU {representative['sku']}"
-        },
-    }
-
-    response = requests.post(
-        WEBHOOK_URL,
-        json={
-            "username": "MasterBot",
-            "allowed_mentions": {"parse": []},
-            "embeds": [embed],
-        },
-        timeout=20,
-    )
-    response.raise_for_status()
+    return False
 
 
 def national_stock_lines(product, limit=15):
@@ -702,7 +647,20 @@ def national_stock_lines(product, limit=15):
 
 def send_local_alert(product, transitions):
     if not local_stock_signal_allowed(product):
-        return
+        return False
+
+    # Normal #restocks must never contain PRE-PUBLISH or UNKNOWN product
+    # availability. Local hidden-system stock is not a shop restock; it is
+    # preserved in local_stock_state_v1.json and monitored by Early Radar.
+    # Fail closed if Algolia omitted the visibility flag.
+    if product.get("visibility") != "LIVE":
+        print(
+            "LOCAL STOCK: ingen #restocks-besked for skjult/ukendt vare "
+            f"({product.get('site')}, {product.get('sku') or product.get('id')}, "
+            f"{product.get('visibility') or 'UNKNOWN'})"
+        )
+        return False
+
     if not WEBHOOK_URL:
         raise RuntimeError("DISCORD_WEBHOOK_URL mangler")
 
@@ -792,6 +750,7 @@ def send_local_alert(product, transitions):
 
     response = requests.post(WEBHOOK_URL, json=payload, timeout=20)
     response.raise_for_status()
+    return True
 
 
 def scan_site(site_key, old_products):
@@ -936,11 +895,17 @@ def main():
                 new_stock = max(0, safe_int(store.get("stock"), 0))
                 if new_stock <= 0:
                     continue
-                old_stock = max(
-                    0,
-                    safe_int((old_stocks.get(store_id) or {}).get("stock"), 0),
-                )
-                if old_stock <= 0:
+                # Missing historical store data is UNKNOWN, not zero.
+                # Only an explicitly observed zero may form a 0 -> positive
+                # inventory edge; silently baseline newly discovered shops.
+                previous_store = old_stocks.get(store_id)
+                if not isinstance(previous_store, dict):
+                    continue
+                previous_value = previous_store.get("stock")
+                if previous_value is None:
+                    continue
+                old_stock = max(0, safe_int(previous_value, 0))
+                if old_stock == 0:
                     transitions.append(
                         {
                             "id": store_id,

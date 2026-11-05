@@ -15,7 +15,7 @@ class SallingV2ShadowTests(unittest.TestCase):
     def test_local_visible_store_stock_is_orange_not_green(self):
         event = adapter.local_stock_event(
             {"site": "BR", "name": "Booster Bundle", "url": URL,
-             "price": 249, "visibility": "EXPOSED"},
+             "price": 249, "visibility": "LIVE"},
             [{"name": "BR Kolding", "old": 0, "new": 5}],
         )
         self.assertEqual(adapter.classify(event), "STORE_STOCK")
@@ -72,7 +72,7 @@ class SallingV2ShadowTests(unittest.TestCase):
         self.assertEqual(adapter.classify(event), "UNKNOWN")
 
     def test_shadow_does_not_modify_events(self):
-        product = {"site": "BR", "name": "Box", "visibility": "EXPOSED"}
+        product = {"site": "BR", "name": "Box", "visibility": "LIVE"}
         transitions = [{"name": "BR Kolding", "old": 0, "new": 1}]
         original = (dict(product), [dict(x) for x in transitions])
         event = adapter.local_stock_event(product, transitions)
@@ -82,7 +82,7 @@ class SallingV2ShadowTests(unittest.TestCase):
 
     def test_local_sender_unchanged_one_post(self):
         product = {"site": "BR", "name": "Test Collection", "type": "COLLECTION",
-                   "price": 449, "url": URL, "visibility": "EXPOSED"}
+                   "price": 449, "url": URL, "visibility": "LIVE"}
         response = Mock()
         with patch.object(local, "WEBHOOK_URL", "https://example.invalid/webhook"), \
              patch.object(local, "local_stock_signal_allowed", return_value=True), \
@@ -116,7 +116,7 @@ class SallingV2ShadowTests(unittest.TestCase):
 
     def test_enabled_local_posts_one_orange_v2_card_with_transition(self):
         product = {"site": "BR", "name": "Test Collection", "type": "COLLECTION",
-                   "price": 449, "url": URL, "visibility": "EXPOSED", "sku": "ABC"}
+                   "price": 449, "url": URL, "visibility": "LIVE", "sku": "ABC"}
         response = Mock()
         with patch.dict("os.environ", {"DISCORD_V2_LOCAL_MODE": "on"}), \
              patch.object(local, "WEBHOOK_URL", "https://example.invalid/webhook"), \
@@ -176,7 +176,7 @@ class SallingV2ShadowTests(unittest.TestCase):
             "ny katalognote", "br",
         )
         local = adapter.local_stock_event(
-            {"site": "BR", "name": "Pokemon Box", "visibility": "EXPOSED"},
+            {"site": "BR", "name": "Pokemon Box", "visibility": "LIVE"},
             [{"name": "BR Kolding", "old": 0, "new": 2}],
         )
         expected = [
