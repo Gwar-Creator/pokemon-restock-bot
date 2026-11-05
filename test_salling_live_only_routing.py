@@ -76,7 +76,7 @@ class RestocksLiveOnlyRoutingTests(unittest.TestCase):
     def test_live_0_to_9_still_posts_once_to_restocks(self):
         _, posts = scan_state(product("LIVE", 0), product("LIVE", 9))
         self.assertEqual(len(posts), 1)
-        self.assertEqual(posts[0].kwargs["url"], "https://example.test/restocks")
+        self.assertEqual(posts[0].args[0], "https://example.test/restocks")
         title = posts[0].kwargs["json"]["embeds"][0]["title"]
         self.assertIn("LOKALT LAGER", title)
         self.assertIn("BUTIKSLAGER", title)
