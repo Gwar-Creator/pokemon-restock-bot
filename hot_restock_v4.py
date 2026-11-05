@@ -9,8 +9,9 @@ all source data even when product availability is not alertable.
 from alert_policy import tier_a_signal_allowed
 import hot_restock as base
 
-# Changed source evidence rules: silent baseline before HOT alerts resume.
-HOT_FILTER_VERSION = 5
+# Retain the existing saved baseline and price/history data; alert gating only.
+# A fresh transition from BESTILLINGSVARE to PÅ LAGER may be meaningful.
+HOT_FILTER_VERSION = 4
 _SALLING_ONLINE_SOURCES = {"br", "bilka", "foetex"}
 _ORIGINAL_PRODUCT_AVAILABLE = base.product_available
 _ORIGINAL_FILTER_HOT_PRODUCTS = base.filter_hot_products
