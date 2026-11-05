@@ -42,6 +42,7 @@ on:
       - "test_discord_v2_salling_adapter.py"
       - "salling_early_radar.py"
       - "test_discord_v2_hot_adapter.py"
+      - "test_salling_hot_exposed_guard.py"
       - "test_discord_alert_v2.py"
       - "tools/discord_mobile_preview.py"
       - "test_discord_mobile_contract.py"
@@ -132,6 +133,9 @@ jobs:
 
       - name: Write synthetic mobile preview to this Actions run summary
         run: python -m tools.discord_mobile_preview > /dev/null
+
+      - name: Reject hidden Salling products from all HOT sources (offline)
+        run: python -m unittest -v test_salling_hot_exposed_guard.py
 
       - name: Audit Lorcana Price Watch in read-only mode
         run: |

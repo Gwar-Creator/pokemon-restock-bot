@@ -76,6 +76,14 @@ Denne beslutning **erstatter** alle ældre krav nedenfor om kun at sende verific
 - En `RESERVÉR NU`-preview er **hypotetisk**, da ingen aktiv kilde påstår verificeret Click & Collect. Dette er kun for at teste standardskemaet, **ikke** en beslutning om at aktivere reservationsalarmer.
 - Ingen ændringer af botkørsler, købssignaler, filtre, antal beskeder, state, prisalarmer eller Discord-destinationer. Fuld aktuel Discord-skærmtest er ikke verificeret og kræver en separat bruger-/testwebhook-gennemgang før #63 kan lukkes.
 
+## Driftshændelse: ensartede Salling-alerts og mulig kanaloverlap (5. november 2026)
+
+- Brugeren rapporterede mange meget ens HOT/Restock- og Early Radar/Hidden/Local-beskeder. Workflow-run-status dokumenterer **ikke** faktiske Discord-dubletter. Nuvarande indekserede HOT-state har kun 13 Salling-poster; de delte produkt-ID'er med Early Radar er synlige i de relevante butiksposter. Faktisk afsendte dobbeltbeskeder fra i dag er derfor **endnu ikke bekræftet** via Discord-meddelelses-ID'er.
+- Konkrete kodefejl: Hoved-Salling-scanneren i `restock_bot_github.py` brugte Algolia-filteret `is_exposed:true AND cfh_nodes:... AND f_brand:... OR f_brand:... OR facets.productSeriesToys:...` **uden parenteser**. De sidste OR-grene kunne ophæve `is_exposed:true`, og efterbehandlingen filtrerede ikke skjulte hits. Det kunne placere Early/Hidden-lane-produkter i HOT-kataloget og skabe risiko for forvirring/overlap.
+- Filteret kræver nu `is_exposed:true AND cfh_nodes:... AND (f_brand:... OR f_brand:... OR facets.productSeriesToys:...)` for både BR og Bilka/Føtex, og efterbehandlingen afviser alle hits uden eksplicit `is_exposed is True`. Hvert HOT-Salling-produkt gemmer `is_exposed=True` for præsentationskontrol. Den eksisterende online-only HOT-lane, local/hidden/early-state og deres udsendelsespolitik ændres ikke.
+- `test_salling_hot_exposed_guard.py` afprøver de **faktiske** BR/Bilka/Føtex-funktioner med en synlig, en skjult og en ubekræftet produktpost i mocked Algolia-svar. Alle tre butikker skal kun returnere den synlige post. Ingen Discord/webhook, lagerstate eller live HTTP i test.
+- **Resterende risici:** Early, Hidden og Local har endnu ikke fælles kanal-/SKU-dedupe; det skal undersøges mod de faktisk afsendte Discord-beskeder, inden en policy ændres. `KLARGØRES` kan være både Early Radar og Hidden Stock og bør få synlig afsender i mobiloverskrift. Ingen nye notification lanes må aktiveres, og Price Watch/History forbliver paused.
+
 ## Formål
 
 Dette repository driver en dansk Discord-scanner for Pokémon- og Lorcana-restocks, prisovervågning og Cardmarket-historik. Målet er få, relevante og troværdige notifikationer — ikke flest mulige notifikationer.
