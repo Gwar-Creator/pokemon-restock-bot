@@ -79,16 +79,43 @@ def seller(d,row):
     sid=d.get("sellerId") or person.get("id") or person.get("userId") or row.get("sellerId")
     return str(alias),str(sid) if sid is not None and str(sid).isdigit() else None
 
-def ask_price(d):
-    # Tradera REST v4 removed *Specified flags on 04 Nov 2026.
-    for col,label in [("nextBid","Næste bud"),("buyItNowPrice","Køb nu"),
-                      ("openingBid","Startbud")]:
-        if col in d and d[col] is not None:
-            try:
-                n=float(d[col])
-                if 0<n<1000000: return round(n,2),label
-            except (TypeError,ValueError): pass
-    return None,"Pris ikke bekræftet"
+def positive_price(raw):
+    try:
+        value=float(raw)
+        return round(value,2) if 0 < value < 1000000 else None
+    except (TypeError, ValueError):
+        return None
+
+def listing_pricing(d):
+    """Separate item format from prices; nextBid is NOT evidence of an auction."""
+    kind=d.get("itemType")
+    buy=positive_price(d.get("buyItNowPrice"))
+    bid=positive_price(d.get("nextBid")) or positive_price(d.get("openingBid"))
+    if kind == 1:
+        listing_type="Auktion + Køb nu" if buy else "Ren auktion"
+        display=bid
+        label="Næste bud/startbud" if bid is not None else "Ingen budpris"
+    elif kind == 3:
+        listing_type="Fast pris"
+        display=buy
+        label="Fast pris"
+    elif kind == 4:
+        listing_type="Butik / fast pris"
+        display=buy
+        label="Butikspris"
+    else:
+        listing_type="Ukendt format"
+        display=None
+        label="Ukendt"
+    return {
+        "item_type_raw":kind,
+        "listing_type":listing_type,
+        "auction_bid_sek":bid if kind == 1 else None,
+        "buy_now_sek":buy if kind in (1,3,4) else None,
+        "display_price_sek":display,
+        "display_price_label":label,
+        "bid_count":d.get("totalBids") if isinstance(d.get("totalBids"),int) else None
+    }
 
 def main():
     app=os.environ.get("TRADERA_APP_ID","").strip()
@@ -125,10 +152,10 @@ def main():
         link=safe_url(d.get("itemUrl") or row.get("itemUrl") or row.get("url"))
         if not link: issues["missing_url"]+=1; return
         alias,sid=seller(d,row)
-        price,price_kind=ask_price(d)
+        pricing=listing_pricing(d)
         ads[uid]={
             "id":uid,"title":title(d),"url":link,"seller":alias,"seller_id":sid,
-            "price_sek":price,"price_kind":price_kind,"end_date":d.get("endDate"),
+            **pricing,"end_date":d.get("endDate"),
             "language":"English stated" if ("english" in norm(title(d)) or "engelsk" in norm(title(d))) else "Not confirmed",
             "matched_cards":hits,"source":source
         }
@@ -149,14 +176,33 @@ def main():
     for alias,items in grouped.items():
         distinct={(x["num"],x["name"]) for it in items for x in it["matched_cards"]}
         strict={(x["num"],x["name"]) for it in items for x in it["matched_cards"] if x["confidence"]=="exact_set_number"}
+        pure=[a for a in items if a["listing_type"]=="Ren auktion"]
+        mix=[a for a in items if a["listing_type"]=="Auktion + Køb nu"]
+        fixed=[a for a in items if a["listing_type"] in ("Fast pris","Butik / fast pris")]
+        auction_cards={(c["num"],c["name"]) for a in pure for c in a["matched_cards"]}
+        holo_auction_cards={(c["num"],c["name"]) for a in pure for c in a["matched_cards"]
+                            if "Holo" in c["rarity"]}
         ranking.append({"seller":alias,"distinct_matches":len(distinct),"exact_matches":len(strict),
-                        "open_listings":len(items),"cards":[{"number":n,"name":nm} for n,nm in sorted(distinct)]})
-    ranking.sort(key=lambda r:(-r["exact_matches"],-r["distinct_matches"],-r["open_listings"],r["seller"]))
+                        "open_listings":len(items),"pure_auctions":len(pure),
+                        "pure_auction_distinct_cards":len(auction_cards),
+                        "pure_auction_holo_ex_cards":len(holo_auction_cards),
+                        "auction_buy_now":len(mix),"fixed_price":len(fixed),
+                        "pure_auction_cards":[{"number":n,"name":nm} for n,nm in sorted(auction_cards)],
+                        "cards":[{"number":n,"name":nm} for n,nm in sorted(distinct)]})
+    ranking.sort(key=lambda r:(-r["pure_auction_distinct_cards"],-r["pure_auction_holo_ex_cards"],
+                               -r["pure_auctions"],-r["distinct_matches"],r["seller"]))
     out={"checked_at":datetime.now(timezone.utc).isoformat(),"set":"EX Ruby & Sapphire",
          "missing":len(CARDS),"queries":len(set(SEARCHES)),"search_calls":page_calls,
          "found_candidate_ads":len(seen),"detail_calls":details_count,
          "active_ads":len(ads),"sellers_checked":expanded,"seller_rankings":ranking,
-         "listings":list(ads.values()),"diagnostics":dict(issues),
+         "listing_type_counts":dict(Counter(x["listing_type"] for x in ads.values())),
+         "pure_auction_holo_ex_ads":sum(x["listing_type"]=="Ren auktion" and
+             any("Holo" in c["rarity"] for c in x["matched_cards"]) for x in ads.values()),
+         "listings":sorted(ads.values(),key=lambda x:(
+              x["listing_type"]!="Ren auktion",
+              not any("Holo" in c["rarity"] for c in x["matched_cards"]),
+              x["display_price_sek"] if x["display_price_sek"] is not None else 10**9)),
+         "diagnostics":dict(issues),
          "caveats":["Only listings with status.ended=false and future endDate",
                     "Reverse holo excluded","Language, condition, shipping to Denmark require manual check",
                     "No bids/purchases or Discord posts; read only"]}
@@ -165,13 +211,18 @@ def main():
     print("RESULT",json.dumps({k:out[k] for k in ("checked_at","missing","queries","search_calls","found_candidate_ads","detail_calls","active_ads","sellers_checked","diagnostics")},ensure_ascii=False))
     for s in ranking[:25]:
         print("SELLER",json.dumps(s,ensure_ascii=False))
+    for a in out["listings"]:
+        if a["listing_type"] == "Ren auktion":
+            print("AUCTION",json.dumps({k:a[k] for k in ("id","seller","title","url",
+                 "auction_bid_sek","end_date","matched_cards")},ensure_ascii=False))
     path=os.getenv("GITHUB_STEP_SUMMARY")
     if path:
         with open(path,"a",encoding="utf8") as f:
             f.write("## Ruby & Sapphire - open Tradera matches\n")
             f.write(f"{len(ads)} open listings / {len(ranking)} sellers, checked live.\n\n")
-            f.write("| Seller | Distinct cards | Exact | Open listings |\n|---|---:|---:|---:|\n")
+            f.write(f"### Listing types: {out['listing_type_counts']}\\n\\n")
+            f.write("| Seller | Pure auction cards | Holo/EX auction cards | Pure auctions | Fixed |\\n|---|---:|---:|---:|---:|\\n")
             for x in ranking[:20]:
-                f.write(f"| {x['seller'].replace('|','/')} | {x['distinct_matches']} | {x['exact_matches']} | {x['open_listings']} |\n")
+                f.write(f"| {x['seller'].replace('|','/')} | {x['pure_auction_distinct_cards']} | {x['pure_auction_holo_ex_cards']} | {x['pure_auctions']} | {x['fixed_price']} |\\n")
 
 if __name__=="__main__": main()
