@@ -310,7 +310,7 @@ class IndeksRetailShadowTests(unittest.TestCase):
 
             self.assertEqual(status, 0)
             self.assertEqual(state["mode"], "mixed")
-            self.assertEqual(state["version"], 4)
+            self.assertEqual(state["version"], 5)
             self.assertEqual(set(state["sources"]), {"legekaeden", "bogide"})
             self.assertTrue(all(row["mode"] == "shadow" for row in state["sources"].values()))
             self.assertEqual(state["local_sources"], {})
@@ -368,6 +368,38 @@ class IndeksRetailShadowTests(unittest.TestCase):
         self.assertIn("https://www.bog-ide.dk/products/a", sent[0])
         self.assertNotIn("https://www.legekaeden.dk/products/a", sent[0])
 
+    def test_empty_tcg_baseline_can_discover_next_new_product(self):
+        # run_scan requires a recent successful baseline before calling this
+        # event function. Here the previous scan saw zero TCG products.
+        product = {
+            "name": "Pokemon 30th Celebration Ditto Premium Collection",
+            "retailers": {
+                "bogide": {"label": "BOG & IDÉ", "in_stock": True,
+                           "preorder": False, "price": 599,
+                           "url": "https://www.bog-ide.dk/products/ditto"},
+            },
+        }
+        sent = []
+        self.assertEqual(mod._emit_backup_alerts(
+            {}, {"sku:ditto": product}, sender=sent.append), 1)
+        self.assertIn("BOG & IDÉ", sent[0])
+
+    def test_invalid_old_catalog_version_is_quietly_rebuilt(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            state_file = Path(tmp) / "state.json"
+            state_file.write_text(json.dumps({
+                "version": 4,
+                "last_verified_scan": "2026-11-06T12:00:00+00:00",
+                "sources": {"bogide": {"products": {
+                    "old": {"name": "Collecting Pokemon", "in_stock": True},
+                }}},
+            }), encoding="utf-8")
+            with patch.object(mod, "STATE_FILE", state_file):
+                state = mod._load_state()
+            self.assertEqual(state["version"], 5)
+            self.assertEqual(state["sources"], {})
+            self.assertIsNone(state.get("last_verified_scan"))
+
     def test_partial_or_old_baseline_stays_quiet(self):
         old = {"last_verified_scan": "2026-09-27T06:20:29+00:00"}
         self.assertFalse(mod._recent_baseline(old, "2026-11-06T12:00:00+00:00"))
@@ -424,7 +456,7 @@ class IndeksRetailShadowTests(unittest.TestCase):
             state_file = Path(tmp) / "state.json"
             old_product = mod._normalise_product("legekaeden", SAMPLE)[1]
             state_file.write_text(json.dumps({
-                "version": 2,
+                "version": 5,
                 "mode": "shadow",
                 "sources": {
                     "legekaeden": {
