@@ -102,10 +102,24 @@
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Tin-Fall-ex-assorted/3478501",
         "fetch_via": "jina_reader"
       },
+      "3530350": {
+        "name": "Pokemon Mega Evolution Delta reign Elite Trainer Box",
+        "price": 599.0,
+        "stock": "UKENDT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-Mega-Evolution-Delta-reign-Elite-Trainer-Box/3530350",
+        "fetch_via": "jina_reader"
+      },
+      "3530351": {
+        "name": "Pokemon Mega Evolution Delta Reign Booster Bundle",
+        "price": 329.0,
+        "stock": "UKENDT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-Mega-Evolution-Delta-Reign-Booster-Bundle/3530351",
+        "fetch_via": "jina_reader"
+      },
       "3519996": {
         "name": "Pokemon Ultra Premium Collection 30th Celebration assorted",
-        "price": 2199.0,
-        "stock": "UKENDT",
+        "price": null,
+        "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Ultra-Premium-Collection-30th-Celebration-assorted/3519996",
         "fetch_via": "jina_reader"
       },
@@ -121,6 +135,13 @@
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
+        "fetch_via": "jina_reader"
+      },
+      "3530352": {
+        "name": "Pokemon Mega Evolution Delta Reign Blister 3 pack",
+        "price": 199.0,
+        "stock": "UKENDT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-Mega-Evolution-Delta-Reign-Blister-3-pack/3530352",
         "fetch_via": "jina_reader"
       },
       "3417744": {
@@ -862,12 +883,12 @@
       "last_success_at": "2026-11-05T21:09:59.118661+00:00"
     },
     "proshop": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-06T11:34:40.489524+00:00",
-      "last_success_at": "2026-11-06T11:39:15.244548+00:00"
+      "backoff_level": 1,
+      "next_allowed_at": 1793966917.625412,
+      "generic_failures": 1,
+      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "last_failure_at": "2026-11-06T12:06:37.625374+00:00",
+      "last_success_at": "2026-11-06T12:05:42.536688+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -903,14 +924,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1793966622.666209,
+      "next_allowed_at": 1793966906.8775077,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-06T11:59:42.666185+00:00"
+      "last_success_at": "2026-11-06T12:04:26.877479+00:00"
     }
   },
-  "updated_at": "2026-11-06T12:03:16.858381+00:00",
+  "updated_at": "2026-11-06T12:07:49.968322+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -935,7 +956,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-06T11:59:41.754448+00:00"
+          "last_checked": "2026-11-06T12:04:25.776585+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -945,7 +966,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1793966380.8245313,
+      "last_discovery_epoch": 1793966664.8945012,
       "last_full_discovery_epoch": 1793964955.6965122,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -961,10 +982,10 @@
   },
   "proshop_detail_checks": {
     "3417744": 1793966522.3890443,
-    "3447592": 1793965707.6371093,
+    "3447592": 1793966633.43908,
     "3478496": 1793642580.111834,
     "3478497": 1793966522.3890443,
-    "3478498": 1793965707.6371093,
+    "3478498": 1793966633.43908,
     "3519999": 1793965987.1663315
   }
 }
