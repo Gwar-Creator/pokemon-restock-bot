@@ -26,6 +26,7 @@ HOT_DRY_RUN = os.getenv("HOT_DRY_RUN", "0").strip() == "1"
 # Shadow mode computes V2 cards but sends the unchanged legacy embed.
 DISCORD_V2_HOT_MODE = os.getenv("DISCORD_V2_HOT_MODE", "shadow").strip().lower()
 WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL", "").strip()
+PROSHOP_EARLY_WEBHOOK_URL = os.getenv("EARLY_RADAR_SALLING_WEBHOOK_URL", "").strip()
 
 PROSHOP_FRONTEND_URL = "https://www.proshop.dk/?s=Pokemon+TCG"
 # The narrow Pokemon TCG collection misses some new products.
@@ -336,6 +337,77 @@ def maybe_send_hot_alert(state, source_key, product_id, product, event):
         return False
     # Never forget a successful alert after a transient false-zero reading.
     state.setdefault("last_hot_alerts", {})[f"{source_key}:{product_id}"] = time.time()
+    return True
+
+
+def _proshop_radar_event(product_id, current, previous):
+    """Only announce a newly observed catalogue ID or new order-state signal.
+
+    'Added' in a catalogue and 'Bestillingsvare' never imply physical stock.
+    Exact official product URL + fresh fetched data are required.
+    """
+    if not isinstance(current, dict) or "preserved_previous_scan" in str(
+        current.get("fetch_via") or ""
+    ).split("+"):
+        return None
+    link = str(current.get("url") or "").strip()
+    if not re.match(
+        r"^https://www\\.proshop\\.dk/Pokemon/[^\\s?#]+/" +
+        re.escape(str(product_id)) + r"/?(?:[?#].*)?$", link, re.I,
+    ):
+        return None
+    status = current.get("stock")
+    if status not in {"UKENDT", "BESTILLINGSVARE", "FJERNLAGER", "UDSOLGT"}:
+        return None
+    if previous is None:
+        if str(product_id) in KNOWN_PRODUCTS:
+            return None
+        return "KATALOGFUND"
+    old_status = previous.get("stock") if isinstance(previous, dict) else None
+    if status == "BESTILLINGSVARE" and old_status in {"UKENDT", "UDSOLGT"}:
+        return "BESTILLINGSVARE"
+    return None
+
+
+def maybe_send_proshop_early_alert(state, product_id, product, old=None):
+    event = _proshop_radar_event(product_id, product, old)
+    if not event:
+        return False
+    key = f"{product_id}:{event}"
+    now = time.time()
+    try:
+        previous = float((state.get("proshop_radar_alerts") or {}).get(key) or 0)
+    except (ValueError, TypeError):
+        previous = 0
+    if 0 <= now - previous < 24 * 60 * 60:
+        return False
+    if not PROSHOP_EARLY_WEBHOOK_URL:
+        print("HOT PROSHOP radar: dedicated Early Radar webhook missing")
+        return False
+    status = product.get("stock") or "UKENDT"
+    embed = {
+        "title": f"EARLY RADAR · PROSHOP · {event}",
+        "description": f"**{str(product.get('name') or 'Ukendt produkt')[:180]}**",
+        "color": 0x95A5A6,
+        "fields": [
+            {"name": "STATUS HOS PROSHOP", "value": status, "inline": True},
+            {"name": "KILDE", "value": "Offentlig produktregistrering; ikke verificeret restock", "inline": False},
+            {"name": "SKU", "value": str(product_id), "inline": True},
+        ],
+        "url": str(product["url"]),
+        "footer": {"text": "MasterBot · Early Radar · køb/lager ikke bekræftet"},
+    }
+    if HOT_DRY_RUN:
+        print("HOT PROSHOP EARLY DRY RUN:", json.dumps(embed, ensure_ascii=False))
+    else:
+        response = requests.post(
+            PROSHOP_EARLY_WEBHOOK_URL,
+            json={"username": "MasterBot", "allowed_mentions": {"parse": []},
+                  "embeds": [embed]},
+            timeout=15,
+        )
+        response.raise_for_status()
+    state.setdefault("proshop_radar_alerts", {})[key] = now
     return True
 
 
