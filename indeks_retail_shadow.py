@@ -13,6 +13,7 @@ import json
 import os
 import re
 from datetime import datetime
+import time
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -55,6 +56,19 @@ STOREFRONT_BOOTSTRAP_URL = (
     "https://www.legekaeden.dk/products/bogbind-selvklaebende-50cmx3m-531054"
 )
 PREORDER_MARKERS = ("forudbestilling", "preorder", "pre-order")
+MAX_BASELINE_AGE_SECONDS = 2 * 60 * 60
+ALERT_COOLDOWN_SECONDS = 6 * 60 * 60
+
+
+def _recent_baseline(state, now):
+    old = state.get("last_verified_scan")
+    if not old:
+        return False
+    try:
+        age = (datetime.fromisoformat(now) - datetime.fromisoformat(old)).total_seconds()
+        return 0 <= age <= MAX_BASELINE_AGE_SECONDS
+    except (TypeError, ValueError):
+        return False
 
 
 def _now() -> str:
@@ -788,6 +802,9 @@ def run_scan(fetcher=fetch_source, sender=None, local_fetcher=None) -> int:
     successful = 0
     changed = False
     now = _now()
+    baseline_recent = _recent_baseline(old_state, now)
+    if not baseline_recent:
+        print("INDEKS: stille baseline efter pause eller ukendt scan-historik")
 
     for source_key, config in SOURCES.items():
         old_entry = old_sources.get(source_key) or {}
@@ -797,6 +814,8 @@ def run_scan(fetcher=fetch_source, sender=None, local_fetcher=None) -> int:
 
         try:
             products = fetcher(source_key)
+            if old_products and len(products) < max(2, len(old_products) // 2):
+                raise RuntimeError("mistænkeligt lille varekatalog")
             source_changed = products != old_products
             health = _success_health(old_health, len(products), now, source_changed)
             successful += 1
@@ -838,11 +857,10 @@ def run_scan(fetcher=fetch_source, sender=None, local_fetcher=None) -> int:
                 now,
                 local_changed,
             )
-            local_alerts = _emit_local_alerts(
-                old_local_products,
-                local_products,
-                sender=sender,
-            )
+            if baseline_recent and successful == len(SOURCES):
+                local_alerts = _emit_local_alerts(
+                    old_local_products, local_products, sender=sender,
+                )
             changed = changed or local_changed or local_health != old_local_health
             local_in_stock = sum(
                 1
@@ -873,7 +891,11 @@ def run_scan(fetcher=fetch_source, sender=None, local_fetcher=None) -> int:
     changed = changed or comparison != (old_state.get("comparison") or {})
 
     merged_products = _merge_logical_catalogue(new_sources)
-    sent_alerts = _emit_backup_alerts(old_logical, merged_products, sender=sender)
+    sent_alerts = 0
+    if baseline_recent and successful == len(SOURCES):
+        sent_alerts = _emit_backup_alerts(
+            old_logical, merged_products, sender=sender
+        )
     logical_sources = {
         LOGICAL_SOURCE_KEY: {
             "label": LOGICAL_SOURCE_LABEL,
@@ -891,6 +913,8 @@ def run_scan(fetcher=fetch_source, sender=None, local_fetcher=None) -> int:
         "logical_sources": logical_sources,
         "local_sources": local_sources,
         "comparison": comparison,
+        "last_verified_scan": now if successful == len(SOURCES)
+            else old_state.get("last_verified_scan"),
     }
     STATE_FILE.write_text(
         json.dumps(state, ensure_ascii=False, indent=2, sort_keys=True),
