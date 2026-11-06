@@ -75,7 +75,7 @@
       "https://www.coolshop.dk/produkt/pokemon-30th-celebration-ultra-premium-collection-pok10448-101/23Z4NS/": {
         "name": "Pokémon - 30th Celebration - Ultra-Premium Collection (POK10448-101)",
         "game": "POKÉMON",
-        "price": 2699.95,
+        "price": 2799.95,
         "online_stock": false,
         "url": "https://www.coolshop.dk/produkt/pokemon-30th-celebration-ultra-premium-collection-pok10448-101/23Z4NS/"
       },
@@ -855,12 +855,12 @@
       "last_success_at": "2026-11-05T21:09:59.118661+00:00"
     },
     "proshop": {
-      "backoff_level": 1,
-      "next_allowed_at": 1793965000.4895575,
-      "generic_failures": 1,
-      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "backoff_level": 0,
+      "next_allowed_at": 0.0,
+      "generic_failures": 0,
+      "last_error": null,
       "last_failure_at": "2026-11-06T11:34:40.489524+00:00",
-      "last_success_at": "2026-11-06T11:33:43.366429+00:00"
+      "last_success_at": "2026-11-06T11:39:15.244548+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -896,14 +896,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1793964938.319639,
+      "next_allowed_at": 1793965200.5555923,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-06T11:31:38.319611+00:00"
+      "last_success_at": "2026-11-06T11:36:00.555566+00:00"
     }
   },
-  "updated_at": "2026-11-06T11:34:59.763621+00:00",
+  "updated_at": "2026-11-06T11:39:36.391811+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -916,19 +916,19 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-06T05:35:52.319163+00:00"
+          "last_checked": "2026-11-06T11:35:57.192702+00:00"
         },
         "https://www.magasin.dk/sitemap_1-product.xml": {
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-06T05:35:52.769135+00:00"
+          "last_checked": "2026-11-06T11:35:58.294540+00:00"
         },
         "https://www.magasin.dk/sitemap_2-product.xml": {
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-06T11:31:37.074994+00:00"
+          "last_checked": "2026-11-06T11:35:58.967628+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -938,8 +938,8 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1793964695.1895506,
-      "last_full_discovery_epoch": 1793943350.7258902,
+      "last_discovery_epoch": 1793964955.6965122,
+      "last_full_discovery_epoch": 1793964955.6965122,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
         "https://www.magasin.dk/sitemap_1-product.xml",
@@ -958,6 +958,6 @@
     "3478496": 1793642580.111834,
     "3478497": 1793964661.0593104,
     "3478498": 1793964769.8521261,
-    "3519999": 1793964040.108585
+    "3519999": 1793965045.4576056
   }
 }
