@@ -911,12 +911,12 @@
       "last_success_at": "2026-11-06T12:53:52.378353+00:00"
     },
     "proshop": {
-      "backoff_level": 1,
-      "next_allowed_at": 1794000268.41863,
-      "generic_failures": 1,
-      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "backoff_level": 0,
+      "next_allowed_at": 0.0,
+      "generic_failures": 0,
+      "last_error": null,
       "last_failure_at": "2026-11-06T21:22:28.418596+00:00",
-      "last_success_at": "2026-11-06T21:21:30.208302+00:00"
+      "last_success_at": "2026-11-06T21:29:12.743353+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -952,14 +952,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1794000307.3181531,
+      "next_allowed_at": 1794000601.9241614,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-06T21:21:07.318126+00:00"
+      "last_success_at": "2026-11-06T21:26:01.924135+00:00"
     }
   },
-  "updated_at": "2026-11-06T21:24:33.269536+00:00",
+  "updated_at": "2026-11-06T21:29:32.318359+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -984,7 +984,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-06T21:21:06.032899+00:00"
+          "last_checked": "2026-11-06T21:26:00.684148+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -994,7 +994,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1794000064.4841065,
+      "last_discovery_epoch": 1794000359.4565418,
       "last_full_discovery_epoch": 1793994629.9713962,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -1011,14 +1011,14 @@
     "proshop:3530349": 1793969524.4711463
   },
   "proshop_detail_checks": {
-    "3417744": 1793999192.3655574,
-    "3447592": 1793999499.5980546,
+    "3417744": 1794000332.7883646,
+    "3447592": 1794000442.0527236,
     "3478496": 1793642580.111834,
-    "3478497": 1793999499.5980546,
-    "3478498": 1793999609.4747534,
-    "3519999": 1793999192.3655574
+    "3478497": 1794000442.0527236,
+    "3478498": 1794000513.4207811,
+    "3519999": 1794000332.7883646
   },
-  "proshop_broad_attempt_at": 1793999850.341501,
+  "proshop_broad_attempt_at": 1794000497.1661916,
   "proshop_radar_alerts": {
     "3519996:BESTILLINGSVARE": 1793969439.0679424
   },
