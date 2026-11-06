@@ -507,7 +507,7 @@
         "online_count": 0,
         "online_stock": false,
         "is_exposed": true,
-        "store_count": 2,
+        "store_count": 1,
         "local_stocks": {
           "1662": {
             "name": "Bilka Kolding",
@@ -911,12 +911,12 @@
       "last_success_at": "2026-11-06T12:53:52.378353+00:00"
     },
     "proshop": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-06T21:22:28.418596+00:00",
-      "last_success_at": "2026-11-06T21:29:12.743353+00:00"
+      "backoff_level": 1,
+      "next_allowed_at": 1794000936.1228917,
+      "generic_failures": 1,
+      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "last_failure_at": "2026-11-06T21:33:36.122854+00:00",
+      "last_success_at": "2026-11-06T21:32:39.647710+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -952,14 +952,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1794000601.9241614,
+      "next_allowed_at": 1794000912.3209457,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-06T21:26:01.924135+00:00"
+      "last_success_at": "2026-11-06T21:31:12.320915+00:00"
     }
   },
-  "updated_at": "2026-11-06T21:29:32.318359+00:00",
+  "updated_at": "2026-11-06T21:34:48.624600+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -984,7 +984,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-06T21:26:00.684148+00:00"
+          "last_checked": "2026-11-06T21:31:11.203372+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -994,7 +994,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1794000359.4565418,
+      "last_discovery_epoch": 1794000670.3436084,
       "last_full_discovery_epoch": 1793994629.9713962,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
