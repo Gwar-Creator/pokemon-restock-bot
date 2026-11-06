@@ -872,12 +872,12 @@
       "last_success_at": "2026-11-05T21:09:59.118661+00:00"
     },
     "proshop": {
-      "backoff_level": 1,
-      "next_allowed_at": 1793952920.349341,
-      "generic_failures": 1,
-      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: 422 Client Error: Unprocessable Entity for url: https://r.jina.ai/https://www.proshop.dk/pokemon-kort; pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "backoff_level": 0,
+      "next_allowed_at": 0.0,
+      "generic_failures": 0,
+      "last_error": null,
       "last_failure_at": "2026-11-06T08:13:20.349311+00:00",
-      "last_success_at": "2026-11-06T08:12:25.095590+00:00"
+      "last_success_at": "2026-11-06T08:19:17.017940+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -913,14 +913,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1793952907.0211778,
+      "next_allowed_at": 1793953201.3200157,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-06T08:11:07.021152+00:00"
+      "last_success_at": "2026-11-06T08:16:01.319991+00:00"
     }
   },
-  "updated_at": "2026-11-06T08:14:31.488756+00:00",
+  "updated_at": "2026-11-06T08:19:32.679203+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -945,7 +945,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-06T08:11:05.358343+00:00"
+          "last_checked": "2026-11-06T08:16:00.235485+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -955,7 +955,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1793952663.770199,
+      "last_discovery_epoch": 1793952959.2589114,
       "last_full_discovery_epoch": 1793943350.7258902,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
