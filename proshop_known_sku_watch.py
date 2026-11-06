@@ -32,6 +32,14 @@ def is_proshop_tcg_title(value, original):
             name,
         ):
             return True
+    # Newly published 30th Celebration ex Boxes often omit the "TCG"
+    # keyword entirely. These are sealed boxes, not figurines/accessories.
+    if re.search(r"\bpokemon\b", name) and re.search(r"\b(?:ex[\s-]*box|box[\s-]*ex)\b", name):
+        if not re.search(
+            r"\b(figure|figur|bamse|plush|vinyl|funko|sleeve|binder|"
+            r"portfolio|album|storage|display[\s-]*case|toy)\b", name,
+        ):
+            return True
     return bool(original(value))
 
 
