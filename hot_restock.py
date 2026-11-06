@@ -30,8 +30,10 @@ WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL", "").strip()
 PROSHOP_FRONTEND_URL = "https://www.proshop.dk/?s=Pokemon+TCG"
 PROSHOP_DISCOVERY_VERSION = 6
 PROSHOP_MIN_FRESH_PRODUCTS = 3
-# One product alert per 24 hours even if Proshop source/parser status flaps.
-PROSHOP_ALERT_COOLDOWN_SECONDS = 24 * 60 * 60
+# Same-product Discord cooldown across all HOT sources (not only Proshop).
+# Keep the legacy Proshop constant for backward-compatible tests/imports.
+HOT_ALERT_COOLDOWN_SECONDS = 24 * 60 * 60
+PROSHOP_ALERT_COOLDOWN_SECONDS = HOT_ALERT_COOLDOWN_SECONDS
 
 BOOZT_CATEGORY_URL = "https://www.boozt.com/dk/da/pokemon-trading-cards/born"
 MAGASIN_CATEGORY_URL = "https://www.magasin.dk/boern/legetoej/samlekort-og-mapper/pokemon/"
@@ -304,9 +306,7 @@ def format_price(value):
 
 
 def _hot_alert_allowed(state, source_key, product_id, now=None):
-    """Persisted same-product cooldown against duplicate Proshop NEW/RESTOCK."""
-    if source_key != "proshop":
-        return True
+    """Persisted same-product cooldown across all HOT source NEW/RESTOCK posts."""
     key = f"{source_key}:{product_id}"
     raw = (state.get("last_hot_alerts") or {}).get(key)
     try:
@@ -314,7 +314,7 @@ def _hot_alert_allowed(state, source_key, product_id, now=None):
     except (TypeError, ValueError):
         return True
     current = time.time() if now is None else float(now)
-    return current - last_sent >= PROSHOP_ALERT_COOLDOWN_SECONDS
+    return current - last_sent >= HOT_ALERT_COOLDOWN_SECONDS
 
 
 def maybe_send_hot_alert(state, source_key, product_id, product, event):
@@ -323,8 +323,8 @@ def maybe_send_hot_alert(state, source_key, product_id, product, event):
         return False
     if not send_hot_alert(source_key, product, event):
         return False
-    if source_key == "proshop":
-        state.setdefault("last_hot_alerts", {})[f"{source_key}:{product_id}"] = time.time()
+    # Never forget a successful alert after a transient false-zero reading.
+    state.setdefault("last_hot_alerts", {})[f"{source_key}:{product_id}"] = time.time()
     return True
 
 
