@@ -53,7 +53,7 @@ def scan_state(old_product, new_product):
     with patch.object(local, "load_state", return_value=state), \
          patch.object(local, "scan_site", side_effect=observe), \
          patch.object(local, "save_state", side_effect=saved.append), \
-         patch.object(local, "WEBHOOK_URL", "https://example.test/restocks"), \
+         patch.object(local, "EARLY_RADAR_WEBHOOK_URL", "https://example.test/early"), \
          patch.dict(os.environ, {"DISCORD_V2_LOCAL_MODE": "on"}), \
          patch.object(local.requests, "post", return_value=response) as api:
         local.main()
@@ -73,14 +73,15 @@ class RestocksLiveOnlyRoutingTests(unittest.TestCase):
         self.assertEqual(posts, [])
         self.assertEqual(state["products"][KEY]["stocks"]["1662"]["stock"], 9)
 
-    def test_live_0_to_9_still_posts_once_to_restocks(self):
+    def test_live_0_to_9_routes_only_to_early_radar(self):
         _, posts = scan_state(product("LIVE", 0), product("LIVE", 9))
         self.assertEqual(len(posts), 1)
-        self.assertEqual(posts[0].args[0], "https://example.test/restocks")
+        self.assertEqual(posts[0].args[0], "https://example.test/early")
         title = posts[0].kwargs["json"]["embeds"][0]["title"]
         self.assertIn("LOKALT LAGER", title)
         self.assertIn("BUTIKSLAGER", title)
         self.assertNotIn("KLARGØRES", title)
+        self.assertNotIn("KØB NU", title)
 
     def test_missing_old_store_is_not_invented_as_zero(self):
         state, posts = scan_state(
@@ -90,11 +91,20 @@ class RestocksLiveOnlyRoutingTests(unittest.TestCase):
         self.assertEqual(state["products"][KEY]["stocks"]["1662"]["stock"], 9)
 
     def test_duplicate_pre_publish_discovery_is_not_sent_to_restocks(self):
-        with patch.object(local, "WEBHOOK_URL", "https://example.test/restocks"), \
+        with patch.object(local, "EARLY_RADAR_WEBHOOK_URL", "https://example.test/early"), \
              patch.object(local.requests, "post") as api:
             sent = local.send_discovery_alert([product("PRE-PUBLISH", 9)])
         self.assertFalse(sent)
         api.assert_not_called()
+
+    def test_live_0_to_9_does_not_fallback_to_restocks_when_early_missing(self):
+        row = product("LIVE", 9)
+        with patch.object(local, "EARLY_RADAR_WEBHOOK_URL", ""), \
+             patch.object(local, "WEBHOOK_URL", "https://example.test/restocks"), \
+             patch.object(local.requests, "post") as post:
+            self.assertFalse(local.send_local_alert(
+                row, [{"name": "Bilka Kolding", "old": 0, "new": 9}]))
+        post.assert_not_called()
 
     def test_hidden_stock_sends_only_to_existing_early_channel(self):
         row = {
