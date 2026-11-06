@@ -865,12 +865,12 @@
       "last_success_at": "2026-11-05T21:09:59.118661+00:00"
     },
     "proshop": {
-      "backoff_level": 1,
-      "next_allowed_at": 1793950814.902056,
-      "generic_failures": 1,
-      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "backoff_level": 0,
+      "next_allowed_at": 0.0,
+      "generic_failures": 0,
+      "last_error": null,
       "last_failure_at": "2026-11-06T07:38:14.902015+00:00",
-      "last_success_at": "2026-11-06T07:37:23.502990+00:00"
+      "last_success_at": "2026-11-06T07:44:18.746900+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -906,14 +906,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1793950788.4359233,
+      "next_allowed_at": 1793951105.1134472,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-06T07:35:48.435898+00:00"
+      "last_success_at": "2026-11-06T07:41:05.113418+00:00"
     }
   },
-  "updated_at": "2026-11-06T07:39:34.665754+00:00",
+  "updated_at": "2026-11-06T07:44:36.077317+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -938,7 +938,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-06T07:35:47.234357+00:00"
+          "last_checked": "2026-11-06T07:41:03.775537+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -948,7 +948,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1793950545.98727,
+      "last_discovery_epoch": 1793950862.1445694,
       "last_full_discovery_epoch": 1793943350.7258902,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -967,6 +967,6 @@
     "3478496": 1793642580.111834,
     "3478497": 1793950472.9126642,
     "3478498": 1793950638.5752122,
-    "3519999": 1793949642.5907688
+    "3519999": 1793950840.1243582
   }
 }
