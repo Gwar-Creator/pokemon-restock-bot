@@ -790,6 +790,9 @@ def _emit_backup_alerts(old_products, products, *, sender=_post_discord, last_al
             elif not old_offers and old.get("in_stock") is False:
                 changed[retailer] = offer
                 restocked = True
+            elif old_offers and before is None:
+                # A newly listed retailer is discovery (NEW), not RESTOCK.
+                changed[retailer] = offer
         event = ("RESTOCK" if restocked else "NEW") if changed else None
         if not new_offers:
             legacy = _event_for_product(old, product)
