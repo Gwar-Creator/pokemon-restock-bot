@@ -187,6 +187,27 @@ class IndeksRetailShadowTests(unittest.TestCase):
         self.assertIn("ABC2", product["skus"])
         self.assertEqual(product["url"], "https://www.legekaeden.dk/products/pokemon-mega-evolution-etb")
 
+    def test_strict_tcg_filter_does_not_treat_collecting_or_dratini_as_tins(self):
+        for title in (
+            "Collecting Pokemon",
+            "Funko POP Vinyl Pokemon Dratini",
+            "Pokemon Adventures Diamond & Pearl / Platinum Box Setinclude",
+            "Pokemon sletbar gelpen",
+            "Pokemon Creative Collection",
+            "Pokemon Paldea Explorers Collection Gift Box",
+        ):
+            with self.subTest(title=title):
+                self.assertFalse(mod._pokemon_tcg_product(title))
+        for title in (
+            "Pokémon 30th Celebration Ditto Premium Collection",
+            "Pokemon 151 Booster Bundle",
+            "Pokémon Mega Evolution 3 Premium Checklane",
+            "Pokemon Trainer Toolkit 25",
+            "Pokémon TCG Mini Tin",
+        ):
+            with self.subTest(title=title):
+                self.assertTrue(mod._pokemon_tcg_product(title))
+
     def test_fetch_source_reads_narrow_and_broad_pokemon_catalogues(self):
         other = dict(SAMPLE, title="Pokémon 30th Celebration Ditto Premium Collection",
                      handle="pokemon-ditto-premium", variants=SAMPLE["variants"])
