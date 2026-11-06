@@ -124,6 +124,61 @@ class ProshopNoiseTests(unittest.TestCase):
             now=1000 + hot.HOT_ALERT_COOLDOWN_SECONDS,
         ))
 
+    def test_proshop_confirmed_second_restock_can_bypass_24h(self):
+        gone = {**proshop_product("UDSOLGT"),
+                "fetch_via": "jina_verified_detail"}
+        back = {**proshop_product("PÅ LAGER"),
+                "fetch_via": "jina_verified_detail"}
+        self.assertTrue(hot._confirmed_proshop_restock(gone, back))
+        self.assertFalse(hot._confirmed_proshop_restock(
+            {**gone, "fetch_via": "jina_reader"}, back))
+        self.assertFalse(hot._confirmed_proshop_restock(
+            gone, {**back, "fetch_via": "jina_reader"}))
+        self.assertFalse(hot._confirmed_proshop_restock(
+            {**gone, "stock": "UKENDT"}, back))
+        state = {"last_hot_alerts": {"proshop:3478496": time.time()}}
+        with patch.object(hot, "send_hot_alert", return_value=True) as sender:
+            self.assertFalse(hot.maybe_send_hot_alert(
+                state, "proshop", "3478496", back, "RESTOCK"))
+            self.assertTrue(hot.maybe_send_hot_alert(
+                state, "proshop", "3478496", back, "RESTOCK",
+                confirmed_restock=hot._confirmed_proshop_restock(gone, back)))
+            sender.assert_called_once()
+
+    def test_proshop_uses_reader_without_repeating_blocked_direct_403(self):
+        product = proshop_product("PÅ LAGER")
+        state = {"proshop_broad_attempt_at": time.time()}
+        shared = {"get_proshop_products_via_reader":
+                  lambda: {"3478496": product}}
+        with patch.object(
+            hot, "_fetch_proshop_frontend_products",
+            side_effect=AssertionError("No direct GitHub request allowed"),
+        ), patch.object(hot, "_fetch_proshop_broad_reader_products") as broad:
+            found = hot._fetch_expanded_proshop_products(shared, state)
+        self.assertEqual(set(found), {"3478496"})
+        broad.assert_not_called()
+        self.assertEqual(state["proshop_primary_health"]["primary_count"], 1)
+        self.assertEqual(state["proshop_primary_health"]["status"], "degraded")
+
+    def test_proshop_category_failure_can_recover_through_sku_details(self):
+        stock = {**proshop_product("PÅ LAGER"),
+                 "fetch_via": "jina_verified_detail"}
+        old = {"3478496": proshop_product("UDSOLGT")}
+        state = {"proshop_broad_attempt_at": time.time()}
+        shared = {"get_proshop_products_via_reader":
+                  lambda: (_ for _ in ()).throw(RuntimeError("reader down"))}
+        with patch.object(
+            hot, "_fetch_proshop_broad_reader_products", return_value={}
+        ), patch.object(
+            hot, "extend_with_known_details",
+            return_value={"3478496": stock},
+        ):
+            found = hot.fetch_source(shared, "proshop", old, state)
+        self.assertEqual(found["3478496"]["stock"], "PÅ LAGER")
+        self.assertEqual(
+            state["proshop_primary_health"]["status"], "degraded"
+        )
+
     def test_all_sources_save_successful_alert_history(self):
         stock = {"name": "Pokemon TCG", "online_count": 10}
         state = {}
