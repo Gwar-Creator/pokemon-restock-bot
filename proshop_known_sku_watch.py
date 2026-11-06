@@ -57,7 +57,23 @@ def parse_verified_detail(page, sku, url):
     if final and final.group(1).rstrip("/") != url.rstrip("/"):
         return None
     title = re.search(r"(?m)^Title:\s*([^\n]+)", text)
-    if not title or "pokemon tcg" not in title.group(1).lower():
+    # Most recent boxes do not carry the literal "TCG" in their title.
+    # Product URL, exact item number and sealed-card title must all agree.
+    if not title:
+        return None
+    heading = title.group(1).lower().replace("pokémon", "pokemon")
+    if not re.search(r"\bpokemon\b", heading):
+        return None
+    sealed_markers = (
+        "tcg", "booster", "elite trainer box", "etb", "tin", "blister",
+        "premium collection", "ultra-premium collection", "ex box",
+        "collection box", "illustration collection", "battle deck",
+        "trainer toolkit", "display",
+    )
+    if not any(word in heading for word in sealed_markers):
+        return None
+    if re.search(r"\b(funko|figure|figur|bamse|plush|portfolio|"
+                 r"deck box|card case|display case|sleeves?)\b", heading):
         return None
     marker = re.search(r"\bVarenummer:\s*\**\s*(\d{7})\s*\**", text)
     if not marker or marker.group(1) != sku:
@@ -117,31 +133,62 @@ def parse_verified_detail(page, sku, url):
     }
 
 
+def _tracked_sku_urls(current, previous):
+    """Stable public Proshop product IDs, including newly discovered SKUs.
+
+    All input URLs must match the exact numeric SKU. No speculative product
+    pages or accessory discovery. Existing saved IDs survive category gaps.
+    """
+    urls = dict(KNOWN_PRODUCTS)
+    pattern = re.compile(r"^https://www\.proshop\.dk/Pokemon/[^/?#\s]+/(\d+)/?$", re.I)
+    for products in (previous or {}, current or {}):
+        for sku, product in products.items():
+            if not isinstance(product, dict):
+                continue
+            url = str(product.get("url") or "").strip()
+            match = pattern.fullmatch(url)
+            if not match or match.group(1) != str(sku):
+                continue
+            urls[str(sku)] = url
+    return urls
+
+
 def extend_with_known_details(current, old, state, *, get=None, now=None,
                               max_checks=MAX_CHECKS_PER_SCAN):
-    """At most two independent missing-SKU checks per scan, 15min per SKU.
+    """Bounded, rotating per-SKU verification independent of catalogue health.
 
-    Invalid, redirected and ambiguous pages cannot change state. Fresh
-    category data wins. Preserve the original SKU and anti-duplicate state.
+    The old implementation visited six static SKUs only. Priority now goes to
+    stale/unknown/sold-out known catalogue items. A bad/redirected detail page
+    never changes availability, and the same SKU is not re-requested within
+    the 15-minute check window.
     """
     updated = dict(current or {})
+    known_urls = _tracked_sku_urls(updated, old)
     meta = state.setdefault("proshop_detail_checks", {})
     when = time.time() if now is None else float(now)
     fetch = get or requests.get
-    missing = [
-        (sku, url) for sku, url in KNOWN_PRODUCTS.items()
-        if sku not in updated
-        and when - float(meta.get(sku, 0) or 0) >= CHECK_INTERVAL_SECONDS
+
+    def order(item):
+        sku, _url = item
+        current_stock = (updated.get(sku) or old.get(sku) or {}).get("stock")
+        # Unknown and confirmed sold-out products matter most for restocks.
+        priority = 0 if current_stock in ("UDSOLGT", "UKENDT") else 1
+        return (float(meta.get(sku, 0) or 0), priority, sku)
+
+    eligible = [
+        item for item in known_urls.items()
+        if when - float(meta.get(item[0], 0) or 0) >= CHECK_INTERVAL_SECONDS
     ]
-    missing.sort(key=lambda item: (float(meta.get(item[0], 0) or 0), item[0]))
-    for sku, url in missing[:max(0, max_checks)]:
-        meta[sku] = when  # Throttle failures, too.
+    eligible.sort(key=order)
+
+    for sku, url in eligible[:max(0, max_checks)]:
+        meta[sku] = when  # Throttle failures too; never retry-storm blocked pages.
         try:
             response = fetch(
                 "https://r.jina.ai/" + url,
                 headers={
                     "Accept": "text/plain, text/markdown;q=0.9, */*;q=0.5",
-                    "User-Agent": "Pokemon-Restock-Bot/ProshopKnownSku",
+                    "User-Agent": "Pokemon-Restock-Bot/ProshopSkuCheck",
                     "x-no-cache": "true",
                     "x-engine": "browser",
                 },
@@ -156,7 +203,10 @@ def extend_with_known_details(current, old, state, *, get=None, now=None,
             print(f"PROSHOP DETAIL {sku}: ingen verificeret lagerstatus")
             continue
         if item["price"] is None:
-            item["price"] = (old.get(sku) or {}).get("price")
+            item["price"] = (
+                (updated.get(sku) or {}).get("price")
+                or (old.get(sku) or {}).get("price")
+            )
         updated[sku] = item
         print(f"PROSHOP DETAIL {sku}: verificeret {item['stock']}")
     return updated
