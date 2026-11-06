@@ -616,7 +616,7 @@ def _fetch_proshop_broad_reader_products(shared):
     return merged
 
 
-def _fetch_expanded_proshop_products(shared):
+def _fetch_expanded_proshop_products(shared, state=None):
     curated = {}
     frontend = {}
     errors = []
@@ -643,6 +643,14 @@ def _fetch_expanded_proshop_products(shared):
         print("HOT PROSHOP discovery warning: " + "; ".join(errors))
 
     merged = _merge_proshop_products(curated, frontend)
+    if state is not None:
+        now = time.time()
+        last = float(state.get("proshop_broad_attempt_at") or 0)
+        if now - last >= PROSHOP_BROAD_INTERVAL_SECONDS:
+            # Throttle even failed probes. The narrow scanner remains live.
+            state["proshop_broad_attempt_at"] = now
+            extra = _fetch_proshop_broad_reader_products(shared)
+            merged = _merge_proshop_products(merged, extra)
     if len(merged) < PROSHOP_MIN_FRESH_PRODUCTS:
         raise RuntimeError(
             f"Proshop fresh coverage too low: {len(merged)} "
@@ -1718,7 +1726,7 @@ def fetch_source(shared, source_key, old_products, state=None):
     if source_key == "coolshop":
         return shared["get_coolshop_products"]()
     if source_key == "proshop":
-        current = _fetch_expanded_proshop_products(shared)
+        current = _fetch_expanded_proshop_products(shared, state)
         if state is not None:
             current = extend_with_known_details(current, old_products, state)
         return _preserve_missing_proshop_products(old_products, current)
