@@ -911,12 +911,12 @@
       "last_success_at": "2026-11-06T12:53:52.378353+00:00"
     },
     "proshop": {
-      "backoff_level": 1,
-      "next_allowed_at": 1793994931.43247,
-      "generic_failures": 1,
-      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "backoff_level": 0,
+      "next_allowed_at": 0.0,
+      "generic_failures": 0,
+      "last_error": null,
       "last_failure_at": "2026-11-06T19:53:31.432423+00:00",
-      "last_success_at": "2026-11-06T19:52:35.188343+00:00"
+      "last_success_at": "2026-11-06T19:57:59.828381+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -952,14 +952,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1793994874.0381863,
+      "next_allowed_at": 1793995121.1762795,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-06T19:50:34.038159+00:00"
+      "last_success_at": "2026-11-06T19:54:41.176256+00:00"
     }
   },
-  "updated_at": "2026-11-06T19:53:46.550586+00:00",
+  "updated_at": "2026-11-06T19:58:19.975916+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -984,7 +984,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-06T19:50:33.006874+00:00"
+          "last_checked": "2026-11-06T19:54:39.876581+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -994,7 +994,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1793994629.9713962,
+      "last_discovery_epoch": 1793994879.046742,
       "last_full_discovery_epoch": 1793994629.9713962,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
