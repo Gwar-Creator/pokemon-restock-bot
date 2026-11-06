@@ -187,14 +187,24 @@ class IndeksRetailShadowTests(unittest.TestCase):
         self.assertIn("ABC2", product["skus"])
         self.assertEqual(product["url"], "https://www.legekaeden.dk/products/pokemon-mega-evolution-etb")
 
-    def test_fetch_source_reads_shopify_collection_feed(self):
-        session = FakeSession([{"products": [SAMPLE]}])
+    def test_fetch_source_reads_narrow_and_broad_pokemon_catalogues(self):
+        other = dict(SAMPLE, title="Pokémon 30th Celebration Ditto Premium Collection",
+                     handle="pokemon-ditto-premium", variants=SAMPLE["variants"])
+        plush = dict(SAMPLE, title="Pokémon Pikachu bamse", handle="pokemon-bamse")
+        session = FakeSession([
+            {"products": [SAMPLE]},
+            {"products": [other, plush]},
+        ])
         products = mod.fetch_source("bogide", session=session)
         self.assertIn(SAMPLE["handle"], products)
-        self.assertEqual(len(session.calls), 1)
-        url, kwargs = session.calls[0]
-        self.assertEqual(url, "https://www.bog-ide.dk/collections/pokemon-tcg/products.json")
-        self.assertEqual(kwargs["params"]["limit"], 250)
+        self.assertIn(other["handle"], products)
+        self.assertNotIn(plush["handle"], products)
+        self.assertEqual(len(session.calls), 2)
+        self.assertEqual(session.calls[0][0],
+                         "https://www.bog-ide.dk/collections/pokemon-tcg/products.json")
+        self.assertEqual(session.calls[1][0],
+                         "https://www.bog-ide.dk/collections/pokemon/products.json")
+        self.assertEqual(session.calls[0][1]["params"]["limit"], 250)
 
     def test_comparison_detects_shared_catalog_and_stock_difference(self):
         left = mod._normalise_product("legekaeden", SAMPLE)[1]
@@ -313,6 +323,48 @@ class IndeksRetailShadowTests(unittest.TestCase):
         self.assertIn("INDEKS RETAIL", sent[0])
         self.assertIn("RESTOCK", sent[0])
         self.assertIn("Pokemon 151 Booster Bundle", sent[0])
+
+    def test_bogide_restock_alert_even_when_legekaeden_already_stocked(self):
+        old = {
+            "name": "Pokemon 30th Celebration Ultra-Premium Collection",
+            "in_stock": True,
+            "retailers": {
+                "legekaeden": {"in_stock": True, "price": 2499,
+                               "url": "https://www.legekaeden.dk/products/a",
+                               "label": "LEGEKÆDEN"},
+                "bogide": {"in_stock": False, "price": 2599,
+                           "url": "https://www.bog-ide.dk/products/a",
+                           "label": "BOG & IDÉ"},
+            },
+        }
+        updated = json.loads(json.dumps(old))
+        updated["retailers"]["bogide"]["in_stock"] = True
+        sent = []
+        count = mod._emit_backup_alerts({"sku:upc": old},
+                                        {"sku:upc": updated}, sender=sent.append)
+        self.assertEqual(count, 1)
+        self.assertIn("BOG & IDÉ", sent[0])
+        self.assertIn("https://www.bog-ide.dk/products/a", sent[0])
+        self.assertNotIn("https://www.legekaeden.dk/products/a", sent[0])
+
+    def test_partial_or_old_baseline_stays_quiet(self):
+        old = {"last_verified_scan": "2026-09-27T06:20:29+00:00"}
+        self.assertFalse(mod._recent_baseline(old, "2026-11-06T12:00:00+00:00"))
+        self.assertTrue(mod._recent_baseline(
+            {"last_verified_scan": "2026-11-06T11:59:00+00:00"},
+            "2026-11-06T12:00:00+00:00"))
+        self.assertFalse(mod._recent_baseline({}, "2026-11-06T12:00:00+00:00"))
+
+    def test_repeated_indeks_alert_respects_cooldown(self):
+        old = {"name": "Pokemon 151 Booster Bundle", "in_stock": False}
+        new = dict(old, in_stock=True)
+        memory = {}
+        sent = []
+        self.assertEqual(mod._emit_backup_alerts(
+            {"x": old}, {"x": new}, sender=sent.append, last_alerts=memory), 1)
+        self.assertEqual(mod._emit_backup_alerts(
+            {"x": old}, {"x": new}, sender=sent.append, last_alerts=memory), 0)
+        self.assertEqual(len(sent), 1)
 
     def test_local_first_scan_is_baseline_safe(self):
         with tempfile.TemporaryDirectory() as tmp:
