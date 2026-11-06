@@ -40,6 +40,23 @@ class ProshopKnownSkuTests(unittest.TestCase):
         self.assertFalse(is_proshop_tcg_title("Pokemon Battle Figure 2-pack", old))
         self.assertTrue(is_proshop_tcg_title("Pokemon TCG Booster Box", lambda _: True))
 
+    def test_30th_ex_box_titles_without_tcg_are_tcg(self):
+        original = lambda _value: False
+        for name in (
+            "Pokemon ex Box Sylveon 30th Celebration",
+            "Pokemon Ex Box - Greninja 30th Celebration",
+            "Pokemon ex-Box Sylveon 30th Celebration",
+        ):
+            with self.subTest(name=name):
+                self.assertTrue(is_proshop_tcg_title(name, original))
+        for name in (
+            "Pokemon Figure ex Box Greninja",
+            "Pokemon ex Box Sylveon display case",
+            "Pokemon plush toy ex Box",
+        ):
+            with self.subTest(name=name):
+                self.assertFalse(is_proshop_tcg_title(name, original))
+
     def test_verified_product_on_stock_and_real_price(self):
         page = make_page("3478496", "På lager\n529,00 kr.(423,20 kr.)")
         row = parse_verified_detail(page, "3478496", KNOWN_PRODUCTS["3478496"])
