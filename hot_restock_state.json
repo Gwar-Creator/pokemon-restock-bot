@@ -98,9 +98,9 @@
       "3530351": {
         "name": "Pokemon Mega Evolution Delta Reign Booster Bundle",
         "price": 329.0,
-        "stock": "PÅ LAGER",
+        "stock": "UKENDT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Mega-Evolution-Delta-Reign-Booster-Bundle/3530351",
-        "fetch_via": "jina_verified_detail"
+        "fetch_via": "jina_reader"
       },
       "3530353": {
         "name": "Pokemon Mega Evolution Delta Reign Booster box with 36 booster packs",
@@ -142,7 +142,7 @@
         "price": 599.0,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Mega-Evolution-Delta-reign-Elite-Trainer-Box/3530350",
-        "fetch_via": "jina_verified_detail"
+        "fetch_via": "preserved_previous_scan"
       },
       "3478497": {
         "name": "Pokemon TCG 2-pack Booster",
@@ -913,10 +913,10 @@
     "proshop": {
       "backoff_level": 0,
       "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-06T21:45:11.328772+00:00",
-      "last_success_at": "2026-11-06T21:48:51.195603+00:00"
+      "generic_failures": 1,
+      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details",
+      "last_failure_at": "2026-11-06T22:16:26.612930+00:00",
+      "last_success_at": "2026-11-06T22:15:33.430382+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -952,14 +952,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1794003150.6373281,
+      "next_allowed_at": 1794003430.901295,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-06T22:08:30.637302+00:00"
+      "last_success_at": "2026-11-06T22:13:10.901267+00:00"
     }
   },
-  "updated_at": "2026-11-06T22:12:07.719217+00:00",
+  "updated_at": "2026-11-06T22:16:49.194756+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -984,7 +984,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-06T22:08:29.461851+00:00"
+          "last_checked": "2026-11-06T22:13:09.624105+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -994,7 +994,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1794002907.8052728,
+      "last_discovery_epoch": 1794003187.9803638,
       "last_full_discovery_epoch": 1793994629.9713962,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -1016,21 +1016,21 @@
   "proshop_detail_checks": {
     "3417744": 1794002611.2561114,
     "3447592": 1794002666.145492,
-    "3478496": 1794002445.4456813,
+    "3478496": 1794003382.1522965,
     "3478497": 1794002666.145492,
     "3478498": 1794002721.3022249,
     "3519999": 1794002611.2561114,
     "3530350": 1794003103.9551358,
     "3530351": 1794003103.9551358,
-    "3530352": 1794002218.2437446,
-    "3530353": 1794002218.2437446,
-    "3421827": 1794002272.815624,
-    "3447590": 1794002272.815624,
-    "3478501": 1794002332.7106402,
-    "3502023": 1794002332.7106402,
-    "3519996": 1794002403.5909197,
-    "3530348": 1794002403.5909197,
-    "3530349": 1794002445.4456813
+    "3530352": 1794003163.2959957,
+    "3530353": 1794003163.2959957,
+    "3421827": 1794003217.2278068,
+    "3447590": 1794003217.2278068,
+    "3478501": 1794003272.6036549,
+    "3502023": 1794003272.6036549,
+    "3519996": 1794003329.5988858,
+    "3530348": 1794003329.5988858,
+    "3530349": 1794003382.1522965
   },
   "proshop_broad_attempt_at": 1794002993.8637736,
   "proshop_radar_alerts": {
@@ -1041,10 +1041,10 @@
   ],
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
-    "status": "ok",
-    "primary_count": 7,
+    "status": "degraded",
+    "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-06T22:11:43.955081+00:00",
-    "details_or_listings_count": 8
+    "checked_at": "2026-11-06T22:16:22.152233+00:00",
+    "details_or_listings_count": 0
   }
 }
