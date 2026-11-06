@@ -583,12 +583,12 @@
       "last_success_at": "2026-11-05T21:09:59.118661+00:00"
     },
     "proshop": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-06T06:01:00.490831+00:00",
-      "last_success_at": "2026-11-06T06:04:39.730040+00:00"
+      "backoff_level": 1,
+      "next_allowed_at": 1793945363.9514394,
+      "generic_failures": 1,
+      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "last_failure_at": "2026-11-06T06:07:23.951409+00:00",
+      "last_success_at": "2026-11-06T06:06:27.868950+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -624,14 +624,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1793945123.5614376,
+      "next_allowed_at": 1793945392.4895527,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-06T06:01:23.561415+00:00"
+      "last_success_at": "2026-11-06T06:05:52.489529+00:00"
     }
   },
-  "updated_at": "2026-11-06T06:04:56.042920+00:00",
+  "updated_at": "2026-11-06T06:09:26.481328+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -656,7 +656,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-06T06:01:22.743627+00:00"
+          "last_checked": "2026-11-06T06:05:51.686486+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -666,7 +666,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1793944881.0744805,
+      "last_discovery_epoch": 1793945150.2896354,
       "last_full_discovery_epoch": 1793943350.7258902,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
