@@ -15,6 +15,12 @@ HOT_FILTER_VERSION = 4
 _SALLING_ONLINE_SOURCES = {"br", "bilka", "foetex"}
 _ORIGINAL_PRODUCT_AVAILABLE = base.product_available
 _ORIGINAL_FILTER_HOT_PRODUCTS = base.filter_hot_products
+_ORIGINAL_SEND_HOT_ALERT = base.send_hot_alert
+
+# HOT is allowed to POST only genuinely actionable, fresh online stock.
+# Salling (BR/Bilka/Foetex) Algolia online_count is a system-stock signal,
+# NOT an independently confirmed checkout, so it remains data-only.
+VERIFIED_ONLINE_HOT_SOURCES = {"coolshop", "proshop"}
 
 
 def _fresh(product):
@@ -75,10 +81,31 @@ def policy_filtered_hot_products(shared, products):
     }
 
 
+def verified_only_hot_alert(source_key, product, event):
+    """Final fail-closed gate BEFORE the shared #restocks webhook is called."""
+    if source_key not in VERIFIED_ONLINE_HOT_SOURCES:
+        print(f"HOT {str(source_key).upper()}: unverified system/catalog stock; Discord suppressed")
+        return False
+    if str(event or "").strip().upper() not in {"RESTOCK", "NYT"}:
+        return False
+    if not online_lane_product_available(source_key, product):
+        return False
+    try:
+        _payload, status = base.hot_payload(source_key, product, event)
+        if status != "BUY_NOW":
+            print(f"HOT {str(source_key).upper()}: {status}; Discord suppressed")
+            return False
+    except Exception as error:
+        print(f"HOT {str(source_key).upper()}: verification failed ({type(error).__name__}); Discord suppressed")
+        return False
+    return _ORIGINAL_SEND_HOT_ALERT(source_key, product, event)
+
+
 def main():
     base.FILTER_VERSION = HOT_FILTER_VERSION
     base.product_available = online_lane_product_available
     base.filter_hot_products = policy_filtered_hot_products
+    base.send_hot_alert = verified_only_hot_alert
     base.main()
 
 
