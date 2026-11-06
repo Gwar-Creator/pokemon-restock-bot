@@ -84,13 +84,14 @@ class SallingV2ShadowTests(unittest.TestCase):
         product = {"site": "BR", "name": "Test Collection", "type": "COLLECTION",
                    "price": 449, "url": URL, "visibility": "LIVE"}
         response = Mock()
-        with patch.object(local, "WEBHOOK_URL", "https://example.invalid/webhook"), \
+        with patch.object(local, "EARLY_RADAR_WEBHOOK_URL", "https://example.invalid/early"), \
              patch.object(local, "local_stock_signal_allowed", return_value=True), \
              patch.object(local.requests, "post", return_value=response) as post:
             local.send_local_alert(product, [{"name": "BR Kolding", "old": 0, "new": 4}])
         self.assertEqual(post.call_count, 1)
+        self.assertEqual(post.call_args.args[0], "https://example.invalid/early")
         self.assertEqual(post.call_args.kwargs["json"]["embeds"][0]["title"],
-                         "LOKALT LAGER · BR")
+                         "LOKALT LAGER · BUTIKSLAGER · BR")
 
     def test_hidden_sender_unchanged_one_post(self):
         row = {"site": "br", "name": "Test Collection", "store": "BR Kolding",
@@ -107,7 +108,7 @@ class SallingV2ShadowTests(unittest.TestCase):
         sample = {"name": "Test", "price": 225, "id": "123", "sku": "ABC",
                   "priority": "NORMAL", "sites": {"br": {"is_exposed": False,
                   "url": URL, "online_count": 1}}}
-        with patch.dict("os.environ", {"DISCORD_WEBHOOK_URL": "https://example.invalid/webhook"}), \
+        with patch.dict("os.environ", {"EARLY_RADAR_SALLING_WEBHOOK_URL": "https://example.invalid/early"}), \
              patch.object(radar.requests, "post", return_value=response) as post:
             radar.send_alert("NY SKJULT VARE", sample, "Katalogfund", "br")
         self.assertEqual(post.call_count, 1)
@@ -119,7 +120,7 @@ class SallingV2ShadowTests(unittest.TestCase):
                    "price": 449, "url": URL, "visibility": "LIVE", "sku": "ABC"}
         response = Mock()
         with patch.dict("os.environ", {"DISCORD_V2_LOCAL_MODE": "on"}), \
-             patch.object(local, "WEBHOOK_URL", "https://example.invalid/webhook"), \
+             patch.object(local, "EARLY_RADAR_WEBHOOK_URL", "https://example.invalid/early"), \
              patch.object(local, "local_stock_signal_allowed", return_value=True), \
              patch.object(local.requests, "post", return_value=response) as post:
             local.send_local_alert(product, [{"name": "BR Kolding", "old": 0, "new": 4}])
@@ -152,7 +153,7 @@ class SallingV2ShadowTests(unittest.TestCase):
                        "is_exposed": False, "url": URL, "online_count": 1}}}
         response = Mock()
         with patch.dict("os.environ", {
-                     "DISCORD_WEBHOOK_URL": "https://example.invalid/webhook",
+                     "EARLY_RADAR_SALLING_WEBHOOK_URL": "https://example.invalid/early",
                      "DISCORD_V2_EARLY_MODE": "on",
                  }), patch.object(radar.requests, "post", return_value=response) as post:
             radar.send_alert("NY SKJULT VARE", product, "Katalogfund", "br")
