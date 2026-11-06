@@ -623,9 +623,9 @@ def recent_record_update(product, max_age_seconds=1800):
 
 
 def send_alert(title, product, detail, preferred_site=None):
-    webhook = os.getenv("DISCORD_WEBHOOK_URL", "").strip()
+    webhook = os.getenv("EARLY_RADAR_SALLING_WEBHOOK_URL", "").strip()
     if not webhook:
-        raise RuntimeError("DISCORD_WEBHOOK_URL mangler")
+        raise RuntimeError("EARLY_RADAR_SALLING_WEBHOOK_URL mangler")
 
     # V2 early-radar classification is log-only until source confidence is
     # reviewed. Existing Discord content and cooldown remain unchanged.
@@ -687,7 +687,7 @@ def became_hidden_stocked(old, current):
 
 
 def main():
-    if not os.getenv("DISCORD_WEBHOOK_URL"):
+    if not os.getenv("EARLY_RADAR_SALLING_WEBHOOK_URL"):
         raise RuntimeError("DISCORD_WEBHOOK_URL mangler")
 
     shared = load_shared_namespace()
