@@ -148,6 +148,14 @@ jobs:
 
           echo "Tier B/Wave scanners are paused in production; their files and states remain available for later price-gated use."
 
+      - name: Scan Bog & ide and LegeKaeden online inventory
+        # Separate source-owned runner. An inactive or partial retailer feed
+        # cannot create fake NEW or RESTOCK events; first recovery is silent.
+        continue-on-error: true
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: python indeks_retail_shadow.py
+
       - name: Audit scanner health (Actions only)
         continue-on-error: true
         run: python scanner_health_audit.py --strict
