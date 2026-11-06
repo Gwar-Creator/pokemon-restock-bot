@@ -28,6 +28,7 @@ MAX_PAGES = 5
 PAGE_SIZE = 250
 TIMEOUT_SECONDS = 20
 WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL", "").strip()
+EARLY_RADAR_WEBHOOK_URL = os.getenv("EARLY_RADAR_SALLING_WEBHOOK_URL", "").strip()
 
 SOURCES = {
     "legekaeden": {
@@ -760,6 +761,18 @@ def _post_discord(message):
     response.raise_for_status()
 
 
+def _post_local_early_radar(message):
+    # Physical LegeKæden Vejen stock is not proof of online checkout.
+    # Never fall back to #restocks when the Early Radar webhook is unavailable.
+    if not EARLY_RADAR_WEBHOOK_URL:
+        print("INDEKS LOCAL: Early Radar webhook mangler, lokal alert undertrykt")
+        return None
+    response = requests.post(
+        EARLY_RADAR_WEBHOOK_URL, json={"content": message}, timeout=15
+    )
+    response.raise_for_status()
+
+
 def _noop_sender(_message):
     return None
 
@@ -920,7 +933,11 @@ def run_scan(fetcher=fetch_source, sender=None, local_fetcher=None) -> int:
             )
             if baseline_recent and successful == len(SOURCES):
                 local_alerts = _emit_local_alerts(
-                    old_local_products, local_products, sender=sender,
+                    old_local_products, local_products,
+                    sender=(
+                        _post_local_early_radar
+                        if fetcher is fetch_source else sender
+                    ),
                 )
             changed = changed or local_changed or local_health != old_local_health
             local_in_stock = sum(
