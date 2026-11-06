@@ -140,6 +140,66 @@ class ProshopKnownSkuTests(unittest.TestCase):
         self.assertNotEqual(calls[0], calls[2])
         self.assertEqual(CHECK_INTERVAL_SECONDS, 900)
 
+    def test_delta_reign_etb_detail_without_literal_tcg_title(self):
+        sku = "3530350"
+        url = "https://www.proshop.dk/Pokemon/Pokemon-Mega-Evolution-Delta-reign-Elite-Trainer-Box/3530350"
+        page = make_page(sku, "På lager\n599,00 kr.", url=url)
+        result = parse_verified_detail(page, sku, url)
+        self.assertIsNotNone(result)
+        self.assertEqual(result["stock"], "PÅ LAGER")
+        self.assertEqual(result["price"], 599.0)
+        self.assertEqual(result["fetch_via"], "jina_verified_detail")
+
+    def test_newly_discovered_sku_is_checked_when_catalogue_missing(self):
+        sku = "3530350"
+        url = "https://www.proshop.dk/Pokemon/Pokemon-Mega-Evolution-Delta-reign-Elite-Trainer-Box/3530350"
+        state = {"proshop_detail_checks": {key: 1000 for key in KNOWN_PRODUCTS}}
+        old = {sku: {
+            "name": "Pokemon Mega Evolution Delta reign Elite Trainer Box",
+            "stock": "UKENDT", "url": url, "price": 599.0,
+        }}
+        calls = []
+
+        def fetch(reader_url, **_kwargs):
+            calls.append(reader_url)
+            return FakeResponse(make_page(sku, "På lager\n599,00 kr.", url=url))
+
+        found = extend_with_known_details(
+            {}, old, state, get=fetch, now=1001, max_checks=2,
+        )
+        self.assertEqual(calls, ["https://r.jina.ai/" + url])
+        self.assertEqual(found[sku]["stock"], "PÅ LAGER")
+        self.assertEqual(found[sku]["fetch_via"], "jina_verified_detail")
+        self.assertEqual(state["proshop_detail_checks"][sku], 1001)
+
+    def test_bad_detail_does_not_promote_unverified_stock(self):
+        sku = "3530350"
+        url = "https://www.proshop.dk/Pokemon/Pokemon-Mega-Evolution-Delta-reign-Elite-Trainer-Box/3530350"
+        state = {"proshop_detail_checks": {key: 1000 for key in KNOWN_PRODUCTS}}
+        old = {sku: {"name": "Pokemon Delta Reign ETB",
+                     "stock": "UDSOLGT", "url": url}}
+        result = extend_with_known_details(
+            {}, old, state,
+            get=lambda _url, **_kwargs: FakeResponse(
+                make_page(sku, "På lager\n599,00 kr.", url=url).replace(
+                    "Varenummer: **3530350**", "Varenummer: **3530351**"
+                )
+            ),
+            now=1001, max_checks=2,
+        )
+        self.assertNotIn(sku, result)
+        self.assertEqual(old[sku]["stock"], "UDSOLGT")
+
+    def test_url_and_sku_mismatch_cannot_be_added_to_tracker(self):
+        from proshop_known_sku_watch import _tracked_sku_urls
+        url = "https://www.proshop.dk/Pokemon/Pokemon-Delta-Reign/3530351"
+        tracked = _tracked_sku_urls(
+            {"3530350": {"url": url}},
+            {"3530352": {"url": "https://example.com/Pokemon/X/3530352"}},
+        )
+        self.assertNotIn("3530350", tracked)
+        self.assertNotIn("3530352", tracked)
+
     def test_unknown_status_does_not_override_old(self):
         page = make_page("3478498", "Bestillingsvare, vi tager ikke imod bestillinger")
         self.assertIsNone(parse_verified_detail(

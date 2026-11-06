@@ -314,8 +314,11 @@ def format_price(value):
     return f"{price:,.2f} kr.".replace(",", "X").replace(".", ",").replace("X", ".")
 
 
-def _hot_alert_allowed(state, source_key, product_id, now=None):
-    """Persisted same-product cooldown across all HOT source NEW/RESTOCK posts."""
+def _hot_alert_allowed(state, source_key, product_id, now=None,
+                       confirmed_restock=False):
+    """Suppress duplicate alerts unless Proshop explicitly confirms a reset."""
+    if source_key == "proshop" and confirmed_restock:
+        return True
     key = f"{source_key}:{product_id}"
     raw = (state.get("last_hot_alerts") or {}).get(key)
     try:
@@ -330,8 +333,11 @@ def _hot_alert_allowed(state, source_key, product_id, now=None):
     return current - last_sent >= cooldown
 
 
-def maybe_send_hot_alert(state, source_key, product_id, product, event):
-    if not _hot_alert_allowed(state, source_key, product_id):
+def maybe_send_hot_alert(state, source_key, product_id, product, event,
+                         confirmed_restock=False):
+    if not _hot_alert_allowed(
+        state, source_key, product_id, confirmed_restock=confirmed_restock
+    ):
         print(f"HOT {source_key.upper()}: duplikat undertrykt for {product_id}")
         return False
     if not send_hot_alert(source_key, product, event):
@@ -339,6 +345,23 @@ def maybe_send_hot_alert(state, source_key, product_id, product, event):
     # Never forget a successful alert after a transient false-zero reading.
     state.setdefault("last_hot_alerts", {})[f"{source_key}:{product_id}"] = time.time()
     return True
+
+
+def _confirmed_proshop_restock(old, current):
+    """Strong evidence of a distinct second restock inside the cooldown.
+
+    A category card can flip ambiguously between BESTILLINGSVARE and stock.
+    Only successive SKU-matched direct product-page checks can reset the
+    anti-flapping timer safely.
+    """
+    return bool(
+        isinstance(old, dict)
+        and isinstance(current, dict)
+        and old.get("stock") == "UDSOLGT"
+        and old.get("fetch_via") == "jina_verified_detail"
+        and current.get("stock") == "PÅ LAGER"
+        and current.get("fetch_via") == "jina_verified_detail"
+    )
 
 
 def _proshop_radar_event(product_id, current, previous):
@@ -690,74 +713,63 @@ def _fetch_proshop_broad_reader_products(shared):
 
 
 def _fetch_expanded_proshop_products(shared, state=None):
+    """One primary Proshop catalogue transport plus limited product discovery.
+
+    Direct Proshop fetches from GitHub Actions consistently return HTTP 403.
+    Repeating those requests cannot improve coverage. A category failure is
+    not the same as zero inventory: the tracked SKU detail lane still runs.
+    """
     curated = {}
-    frontend = {}
-    errors = []
+    try:
+        curated = shared["get_proshop_products_via_reader"]()
+    except Exception as error:
+        print(f"HOT PROSHOP primary reader degraded: {type(error).__name__}: {error}")
 
-    with ThreadPoolExecutor(max_workers=2) as pool:
-        curated_future = pool.submit(shared["get_proshop_products"])
-        frontend_future = pool.submit(_fetch_proshop_frontend_products, shared)
-
-        try:
-            curated = curated_future.result()
-        except Exception as error:
-            errors.append(f"curated: {error}")
-
-        try:
-            frontend = frontend_future.result()
-        except Exception as error:
-            errors.append(f"frontend: {error}")
-
-    if not curated and not frontend:
-        detail = "; ".join(errors[-4:]) if errors else "ukendt fejl"
-        raise RuntimeError(f"Alle Proshop discovery-ruter fejlede ({detail})")
-
-    if errors:
-        print("HOT PROSHOP discovery warning: " + "; ".join(errors))
-
-    merged = _merge_proshop_products(curated, frontend)
+    merged = dict(curated)
+    broad = {}
     if state is not None:
         now = time.time()
         last = float(state.get("proshop_broad_attempt_at") or 0)
         if now - last >= PROSHOP_BROAD_INTERVAL_SECONDS:
-            # Throttle even failed probes. The narrow scanner remains live.
             state["proshop_broad_attempt_at"] = now
-            extra = _fetch_proshop_broad_reader_products(shared)
-            if extra and state.get("proshop_broad_discovery_version") != PROSHOP_BROAD_DISCOVERY_VERSION:
-                # First expanded discovery is not evidence of today's launch.
-                # Seed known catalogue IDs quietly, then alert on new IDs.
-                state["proshop_broad_first_seen_ids"] = sorted(set(extra) - set(
-                    (state.get("sources") or {}).get("proshop") or {}
-                ))
+            broad = _fetch_proshop_broad_reader_products(shared)
+            if (
+                broad
+                and state.get("proshop_broad_discovery_version")
+                != PROSHOP_BROAD_DISCOVERY_VERSION
+            ):
+                state["proshop_broad_first_seen_ids"] = sorted(
+                    set(broad) - set(
+                        (state.get("sources") or {}).get("proshop") or {}
+                    )
+                )
                 state["proshop_broad_discovery_version"] = PROSHOP_BROAD_DISCOVERY_VERSION
-                print("HOT PROSHOP broad baseline: seed first-seen IDs quietly")
-            for product_id, discovered in extra.items():
-                if product_id not in merged:
-                    merged[product_id] = discovered
-                    continue
-                # The category/search view is supplemental discovery, not
-                # authority to override a known fresh curated stock status.
-                original = merged[product_id]
-                if original.get("stock") in (None, "UKENDT") and discovered.get("stock") not in (None, "UKENDT"):
-                    original["stock"] = discovered["stock"]
-                if original.get("price") is None and discovered.get("price") is not None:
-                    original["price"] = discovered["price"]
-    if len(merged) < PROSHOP_MIN_FRESH_PRODUCTS:
-        raise RuntimeError(
-            f"Proshop fresh coverage too low: {len(merged)} "
-            f"< {PROSHOP_MIN_FRESH_PRODUCTS}"
-        )
-    curated_ids = set(map(str, curated))
-    frontend_ids = set(map(str, frontend))
-    frontend_only = len(frontend_ids - curated_ids)
+                print("HOT PROSHOP broad baseline: initial discoveries muted")
+            # Broad search discovers IDs. A less reliable category card must
+            # never overwrite a concrete status from the primary catalogue.
+            for sku, found in broad.items():
+                if sku not in merged:
+                    merged[sku] = found
+                else:
+                    current = merged[sku]
+                    if current.get("stock") in (None, "UKENDT") and found.get("stock") not in (None, "UKENDT"):
+                        current["stock"] = found["stock"]
+                    if current.get("price") is None and found.get("price") is not None:
+                        current["price"] = found["price"]
 
+    if state is not None:
+        state["proshop_primary_health"] = {
+            "status": "ok" if len(curated) >= PROSHOP_MIN_FRESH_PRODUCTS else "degraded",
+            "primary_count": len(curated),
+            "broad_count": len(broad),
+            "checked_at": _utc_now_iso(),
+        }
     print(
-        f"HOT PROSHOP discovery: curated={len(curated)} · "
-        f"frontend={len(frontend)} · merged={len(merged)} · "
-        f"frontend-only={frontend_only}"
+        f"HOT PROSHOP reader: primary={len(curated)} · "
+        f"broad_added={len(set(broad) - set(curated))} · "
+        f"total={len(merged)}"
     )
     return merged
-
 
 
 def _retail_clean_text(value):
@@ -1818,8 +1830,20 @@ def fetch_source(shared, source_key, old_products, state=None):
         return shared["get_coolshop_products"]()
     if source_key == "proshop":
         current = _fetch_expanded_proshop_products(shared, state)
+        # The detail watcher runs even when a category listing is missing.
+        # Only real, identity-checked detail pages can change a missing SKU.
         if state is not None:
             current = extend_with_known_details(current, old_products, state)
+            health = state.setdefault("proshop_primary_health", {})
+            observed = len(current)
+            health["details_or_listings_count"] = observed
+            if observed < PROSHOP_MIN_FRESH_PRODUCTS:
+                health["status"] = "degraded"
+                print(f"::warning::PROSHOP partial coverage: {observed} fresh product IDs")
+        if not current:
+            raise RuntimeError(
+                "Proshop has neither fresh catalogue cards nor verified SKU details"
+            )
         return _preserve_missing_proshop_products(old_products, current)
     if source_key == "br":
         return shared["get_br_products"](old_products)
@@ -1950,7 +1974,14 @@ def run_scan(shared, state):
                     continue
 
                 if not product_available(source_key, old):
-                    maybe_send_hot_alert(state, source_key, product_id, product, "RESTOCK")
+                    confirmed = (
+                        source_key == "proshop"
+                        and _confirmed_proshop_restock(old, product)
+                    )
+                    maybe_send_hot_alert(
+                        state, source_key, product_id, product, "RESTOCK",
+                        confirmed_restock=confirmed,
+                    )
 
         source_state[source_key] = current
         if source_key == "proshop":

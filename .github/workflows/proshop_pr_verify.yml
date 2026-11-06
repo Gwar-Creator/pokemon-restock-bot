@@ -1,0 +1,39 @@
+name: Proshop isolated regression
+
+on:
+  pull_request:
+    paths:
+      - "hot_restock.py"
+      - "hot_restock_v4.py"
+      - "proshop_reader_v2.py"
+      - "proshop_known_sku_watch.py"
+      - "test_hot_proshop_noise.py"
+      - "test_proshop_known_sku_watch.py"
+      - "test_proshop_reader_v2.py"
+      - "test_proshop_main_health_v2.py"
+      - ".github/workflows/proshop_pr_verify.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  offline-proshop:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout change
+        uses: actions/checkout@v5
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+          cache: pip
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Syntax check
+        run: |
+          python -m py_compile hot_restock.py hot_restock_v4.py proshop_reader_v2.py proshop_known_sku_watch.py
+      - name: Offline Proshop regressions
+        run: |
+          python -m unittest test_proshop_reader_v2.py test_proshop_known_sku_watch.py test_hot_proshop_noise.py test_proshop_main_health_v2.py
