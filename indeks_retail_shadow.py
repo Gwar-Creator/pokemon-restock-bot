@@ -62,21 +62,23 @@ SUPPLEMENTAL_PATH = "/collections/pokemon/products.json"
 
 
 def _pokemon_tcg_product(name):
+    """Never infer TCG from substrings like 'tin' in Dratini or collecting."""
     title = str(name or "").lower().replace("é", "e")
     if "pokemon" not in title:
         return False
-    return any(word in title for word in (
-        "tcg", "samlekort", "booster", "elite trainer", "etb", "tin",
-        "collection", "blister", "display", "trainer toolkit",
-        "checklane", "battle deck", "premium box",
-    )) and not any(word in title for word in (
-        "bamse", "plush", "figure", "figur", "lego", "nøglering",
-        "keychain", "puzzle", "puslespil", "adventskalender",
+    if re.search(
+        r"\b(funko|vinyl|bamse|plush|books?|knitting|adventures|gelpen|"
+        r"pen|puslespil|puzzle|lego|guidebog|calendar|festive|figur)\b",
+        title,
+    ):
+        return False
+    return bool(re.search(
+        r"\b(tcg|samlekort|boosters?|blisters?|checklane|etb|"
+        r"elite trainer box|trainer toolkit|booster bundle|booster box|"
+        r"mini tin|tins?|premium collection|binder collection|"
+        r"poster collection|illustration collection|display)\b",
+        title,
     ))
-
-MAX_BASELINE_AGE_SECONDS = 2 * 60 * 60
-ALERT_COOLDOWN_SECONDS = 6 * 60 * 60
-
 
 def _recent_baseline(state, now):
     old = state.get("last_verified_scan")
