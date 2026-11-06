@@ -911,12 +911,12 @@
       "last_success_at": "2026-11-06T12:53:52.378353+00:00"
     },
     "proshop": {
-      "backoff_level": 1,
-      "next_allowed_at": 1793997974.8803797,
-      "generic_failures": 1,
-      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "backoff_level": 0,
+      "next_allowed_at": 0.0,
+      "generic_failures": 0,
+      "last_error": null,
       "last_failure_at": "2026-11-06T20:44:14.880352+00:00",
-      "last_success_at": "2026-11-06T20:43:19.233160+00:00"
+      "last_success_at": "2026-11-06T20:49:21.147406+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -952,14 +952,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1793997904.0981407,
+      "next_allowed_at": 1793998204.3386478,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-06T20:41:04.098115+00:00"
+      "last_success_at": "2026-11-06T20:46:04.338622+00:00"
     }
   },
-  "updated_at": "2026-11-06T20:44:33.530688+00:00",
+  "updated_at": "2026-11-06T20:49:42.818367+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -984,7 +984,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-06T20:41:03.142914+00:00"
+          "last_checked": "2026-11-06T20:46:03.342752+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -994,7 +994,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1793997662.3566062,
+      "last_discovery_epoch": 1793997961.796931,
       "last_full_discovery_epoch": 1793994629.9713962,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -1018,7 +1018,7 @@
     "3478498": 1793997688.8598518,
     "3519999": 1793997350.522507
   },
-  "proshop_broad_attempt_at": 1793997334.2990165,
+  "proshop_broad_attempt_at": 1793997993.9560192,
   "proshop_radar_alerts": {
     "3519996:BESTILLINGSVARE": 1793969439.0679424
   },
