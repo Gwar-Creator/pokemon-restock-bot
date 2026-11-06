@@ -17,10 +17,10 @@ _ORIGINAL_PRODUCT_AVAILABLE = base.product_available
 _ORIGINAL_FILTER_HOT_PRODUCTS = base.filter_hot_products
 _ORIGINAL_SEND_HOT_ALERT = base.send_hot_alert
 
-# HOT is allowed to POST only genuinely actionable, fresh online stock.
-# Salling (BR/Bilka/Foetex) Algolia online_count is a system-stock signal,
-# NOT an independently confirmed checkout, so it remains data-only.
-VERIFIED_ONLINE_HOT_SOURCES = {"coolshop", "proshop"}
+# HOT posts source-confirmed, current online availability. Salling's published
+# online_count is a verified retailer SYSTEM signal (not proof of checkout),
+# so its Discord card must remain neutral UNKNOWN, never green BUY_NOW.
+VERIFIED_ONLINE_HOT_SOURCES = {"coolshop", "proshop", "br", "bilka", "foetex"}
 
 
 def _fresh(product):
@@ -92,8 +92,16 @@ def verified_only_hot_alert(source_key, product, event):
         return False
     try:
         _payload, status = base.hot_payload(source_key, product, event)
-        if status != "BUY_NOW":
-            print(f"HOT {str(source_key).upper()}: {status}; Discord suppressed")
+        if source_key in _SALLING_ONLINE_SOURCES:
+            # The adapter deliberately classifies Salling as UNKNOWN because
+            # a system stock-count is NOT checkout verification. This is a
+            # legitimate *online stock signal* only after the independent
+            # freshness / exposure / count checks above. Display it neutrally.
+            if status != "UNKNOWN":
+                print(f"HOT {source_key.upper()}: unexpected {status}; Discord suppressed")
+                return False
+        elif status != "BUY_NOW":
+            print(f"HOT {source_key.upper()}: {status}; Discord suppressed")
             return False
     except Exception as error:
         print(f"HOT {str(source_key).upper()}: verification failed ({type(error).__name__}); Discord suppressed")
