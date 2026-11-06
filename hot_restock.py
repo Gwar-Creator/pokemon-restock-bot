@@ -36,6 +36,7 @@ PROSHOP_BROAD_READER_URLS = (
     "https://r.jina.ai/https://www.proshop.dk/?s=Pokemon+30th+Celebration",
 )
 PROSHOP_BROAD_INTERVAL_SECONDS = 10 * 60
+PROSHOP_BROAD_DISCOVERY_VERSION = 1
 PROSHOP_DISCOVERY_VERSION = 6
 PROSHOP_MIN_FRESH_PRODUCTS = 3
 # Source-system availability can briefly flap. Suppress rapid repeats without
@@ -722,6 +723,14 @@ def _fetch_expanded_proshop_products(shared, state=None):
             # Throttle even failed probes. The narrow scanner remains live.
             state["proshop_broad_attempt_at"] = now
             extra = _fetch_proshop_broad_reader_products(shared)
+            if extra and state.get("proshop_broad_discovery_version") != PROSHOP_BROAD_DISCOVERY_VERSION:
+                # First expanded discovery is not evidence of today's launch.
+                # Seed known catalogue IDs quietly, then alert on new IDs.
+                state["proshop_broad_first_seen_ids"] = sorted(set(extra) - set(
+                    (state.get("sources") or {}).get("proshop") or {}
+                ))
+                state["proshop_broad_discovery_version"] = PROSHOP_BROAD_DISCOVERY_VERSION
+                print("HOT PROSHOP broad baseline: seed first-seen IDs quietly")
             merged = _merge_proshop_products(merged, extra)
     if len(merged) < PROSHOP_MIN_FRESH_PRODUCTS:
         raise RuntimeError(
@@ -1898,11 +1907,24 @@ def run_scan(shared, state):
                 old = old_products.get(product_id)
                 # Separate catalogue/orderable detection from real in-stock.
                 # Early Radar is explicitly neutral and has its own webhook.
-                if source_key == "proshop" and not product_available(source_key, product):
+                if (
+                    source_key == "proshop"
+                    and not product_available(source_key, product)
+                    and not (
+                        old is None
+                        and product_id in state.get("proshop_broad_first_seen_ids", [])
+                    )
+                ):
                     maybe_send_proshop_early_alert(state, product_id, product, old)
                 if not product_available(source_key, product):
                     continue
                 if old is None:
+                    if (
+                        source_key == "proshop"
+                        and product_id in state.get("proshop_broad_first_seen_ids", [])
+                    ):
+                        print(f"HOT PROSHOP first broad catalogue baseline: {product_id}")
+                        continue
                     # Known pre-existing SKUs are silently baseline-seeded;
                     # a previously missed product is not a new launch.
                     if source_key == "proshop" and product_id in KNOWN_PRODUCTS:
