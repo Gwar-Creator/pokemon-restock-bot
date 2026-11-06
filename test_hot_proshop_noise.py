@@ -5,6 +5,7 @@ import unittest
 from unittest.mock import patch
 
 import hot_restock as hot
+import hot_restock_v4 as hot_v4
 
 
 def proshop_product(stock="PÅ LAGER"):
@@ -113,7 +114,97 @@ class ProshopNoiseTests(unittest.TestCase):
                 now=1000 + hot.PROSHOP_ALERT_COOLDOWN_SECONDS,
             )
         )
+        # Every source now uses the same persisted duplicate protection.
+        self.assertFalse(hot._hot_alert_allowed(state, "proshop", "3478496", now=1001))
         self.assertTrue(hot._hot_alert_allowed(state, "br", "3478496", now=1001))
+        across = {"last_hot_alerts": {"br:11406758-EA": 1000}}
+        self.assertFalse(hot._hot_alert_allowed(across, "br", "11406758-EA", now=1001))
+        self.assertTrue(hot._hot_alert_allowed(
+            across, "br", "11406758-EA",
+            now=1000 + hot.HOT_ALERT_COOLDOWN_SECONDS,
+        ))
+
+    def test_all_sources_save_successful_alert_history(self):
+        stock = {"name": "Pokemon TCG", "online_count": 10}
+        state = {}
+        with patch.object(hot, "send_hot_alert", return_value=True):
+            self.assertTrue(hot.maybe_send_hot_alert(
+                state, "br", "11406758-EA", stock, "RESTOCK"))
+            self.assertFalse(hot.maybe_send_hot_alert(
+                state, "br", "11406758-EA", stock, "RESTOCK"))
+        self.assertIn("br:11406758-EA", state["last_hot_alerts"])
+
+
+class VerifiedOnlyHotGuardTests(unittest.TestCase):
+    def test_salling_system_stock_never_posts_to_restock(self):
+        product = {
+            "name": "Pokémon 30th Celebration Ultra-Premium Collection",
+            "url": "https://www.br.dk/example",
+            "online_count": 20,
+            "is_exposed": True,
+            "price": 2599,
+        }
+        with patch.object(hot_v4, "_ORIGINAL_SEND_HOT_ALERT") as send:
+            for source in ("br", "bilka", "foetex"):
+                self.assertFalse(hot_v4.verified_only_hot_alert(
+                    source, product, "RESTOCK"))
+            send.assert_not_called()
+
+    def test_verified_fresh_stock_is_allowed(self):
+        cases = (
+            ("coolshop", {"online_stock": True}),
+            ("proshop", {"stock": "PÅ LAGER"}),
+        )
+        for source, attrs in cases:
+            with self.subTest(source=source), patch.object(
+                hot_v4, "_ORIGINAL_SEND_HOT_ALERT", return_value=True
+            ) as send:
+                product = {"name": "Pokemon booster bundle",
+                           "url": "https://example.org/item", **attrs}
+                self.assertTrue(hot_v4.verified_only_hot_alert(
+                    source, product, "RESTOCK"))
+                send.assert_called_once()
+
+    def test_uncertain_or_stale_data_fails_closed(self):
+        cases = (
+            ("coolshop", {"online_stock": True, "preorder": True}),
+            ("coolshop", {"online_stock": True,
+                          "fetch_via": "feed+preserved_previous_scan"}),
+            ("coolshop", {"online_stock": False}),
+            ("proshop", {"stock": "BESTILLINGSVARE"}),
+            ("proshop", {"stock": "PÅ LAGER", "preorder": True}),
+            ("proshop", {"stock": "PÅ LAGER",
+                         "fetch_via": "jina_reader+preserved_previous_scan"}),
+        )
+        with patch.object(hot_v4, "_ORIGINAL_SEND_HOT_ALERT") as send:
+            for source, attrs in cases:
+                with self.subTest(source=source, attrs=attrs):
+                    product = {"name": "Pokemon booster bundle",
+                               "url": "https://example.org/item", **attrs}
+                    self.assertFalse(hot_v4.verified_only_hot_alert(
+                        source, product, "RESTOCK"))
+            send.assert_not_called()
+
+    def test_renderer_error_or_unknown_cannot_fall_back_to_legacy(self):
+        product = {"name": "Pokemon", "url": "https://example.org/item",
+                   "online_stock": True}
+        with patch.object(hot_v4.base, "hot_payload",
+                          side_effect=ValueError("malformed")), patch.object(
+                          hot_v4, "_ORIGINAL_SEND_HOT_ALERT") as send:
+            self.assertFalse(hot_v4.verified_only_hot_alert(
+                "coolshop", product, "RESTOCK"))
+            send.assert_not_called()
+
+    def test_production_entrypoint_installs_final_guard(self):
+        original = hot_v4.base.send_hot_alert
+        try:
+            with patch.object(hot_v4.base, "main") as main:
+                hot_v4.main()
+                main.assert_called_once()
+                self.assertIs(hot_v4.base.send_hot_alert,
+                              hot_v4.verified_only_hot_alert)
+        finally:
+            hot_v4.base.send_hot_alert = original
 
 
 if __name__ == "__main__":
