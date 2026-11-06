@@ -56,6 +56,23 @@ STOREFRONT_BOOTSTRAP_URL = (
     "https://www.legekaeden.dk/products/bogbind-selvklaebende-50cmx3m-531054"
 )
 PREORDER_MARKERS = ("forudbestilling", "preorder", "pre-order")
+# Broad Pokemon collection supplements the unusually small narrow TCG feed.
+SUPPLEMENTAL_PATH = "/collections/pokemon/products.json"
+
+
+def _pokemon_tcg_product(name):
+    title = str(name or "").lower().replace("é", "e")
+    if "pokemon" not in title:
+        return False
+    return any(word in title for word in (
+        "tcg", "samlekort", "booster", "elite trainer", "etb", "tin",
+        "collection", "blister", "display", "trainer toolkit",
+        "checklane", "battle deck", "premium box",
+    )) and not any(word in title for word in (
+        "bamse", "plush", "figure", "figur", "lego", "nøglering",
+        "keychain", "puzzle", "puslespil", "adventskalender",
+    ))
+
 MAX_BASELINE_AGE_SECONDS = 2 * 60 * 60
 ALERT_COOLDOWN_SECONDS = 6 * 60 * 60
 
@@ -456,31 +473,40 @@ def fetch_source(source_key: str, session=None) -> dict:
         ),
     }
 
-    for page in range(1, MAX_PAGES + 1):
-        response = session.get(
-            source["base"] + source["path"],
-            params={"limit": PAGE_SIZE, "page": page},
-            headers=headers,
-            timeout=TIMEOUT_SECONDS,
-        )
-        response.raise_for_status()
-        payload = response.json()
-        raw_products = payload.get("products") if isinstance(payload, dict) else None
-        if not isinstance(raw_products, list):
-            raise RuntimeError("Shopify feed mangler products-listen")
+    for path in (source["path"], SUPPLEMENTAL_PATH):
+        try:
+            for page in range(1, MAX_PAGES + 1):
+                response = session.get(
+                    source["base"] + path,
+                    params={"limit": PAGE_SIZE, "page": page},
+                    headers=headers,
+                    timeout=TIMEOUT_SECONDS,
+                )
+                response.raise_for_status()
+                payload = response.json()
+                raw_products = payload.get("products") if isinstance(payload, dict) else None
+                if not isinstance(raw_products, list):
+                    raise RuntimeError("Shopify feed mangler products-listen")
 
-        for raw in raw_products:
-            if not isinstance(raw, dict):
-                continue
-            normalised = _normalise_product(source_key, raw)
-            if normalised is None:
-                continue
-            product_id, product = normalised
-            products[product_id] = product
+                for raw in raw_products:
+                    if not isinstance(raw, dict):
+                        continue
+                    if not _pokemon_tcg_product(raw.get("title")):
+                        continue
+                    normalised = _normalise_product(source_key, raw)
+                    if normalised is None:
+                        continue
+                    product_id, product = normalised
+                    products[product_id] = product
 
-        if len(raw_products) < PAGE_SIZE:
-            break
-
+                if len(raw_products) < PAGE_SIZE:
+                    break
+        except Exception as error:
+            if path == source["path"]:
+                raise
+            print(f"INDEKS {source_key}: supplemental catalogue failed ({type(error).__name__})")
+    if not products:
+        raise RuntimeError(f"INDEKS {source_key}: ingen Pokémon TCG-produkter")
     return products
 
 
