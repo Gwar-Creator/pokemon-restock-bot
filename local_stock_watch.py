@@ -9,6 +9,9 @@ from bs4 import BeautifulSoup
 from alert_policy import abundant_set_signal_allowed
 
 WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL", "").strip()
+# Observed LIVE store stock is not verified purchase/reservation evidence.
+# Keep it out of #restocks and route the neutral STORE_STOCK event to Early Radar.
+EARLY_RADAR_WEBHOOK_URL = os.getenv("EARLY_RADAR_SALLING_WEBHOOK_URL", "").strip()
 STATE_FILE = "local_stock_state_v1.json"
 SALLING_DISCOVERY_V45 = True
 BROWSER_HEADERS = {
@@ -646,112 +649,41 @@ def national_stock_lines(product, limit=15):
 
 
 def send_local_alert(product, transitions):
+    """Send only neutral source-confirmed STORE_STOCK to Early Radar.
+
+    LIVE Algolia visibility plus a positive system count is not proof of
+    successful checkout or Click & Collect reservation. #restocks is reserved
+    for verified buyable online inventory, owned by the HOT scanner.
+    """
     if not local_stock_signal_allowed(product):
         return False
-
-    # Normal #restocks must never contain PRE-PUBLISH or UNKNOWN product
-    # availability. Local hidden-system stock is not a shop restock; it is
-    # preserved in local_stock_state_v1.json and monitored by Early Radar.
-    # Fail closed if Algolia omitted the visibility flag.
-    if product.get("visibility") != "LIVE":
+    if product.get("visibility") != "LIVE" or not transitions:
         print(
-            "LOCAL STOCK: ingen #restocks-besked for skjult/ukendt vare "
-            f"({product.get('site')}, {product.get('sku') or product.get('id')}, "
-            f"{product.get('visibility') or 'UNKNOWN'})"
+            "LOCAL STOCK: hidden/unknown/unproven observation remains state-only "
+            f"({product.get('site')}, {product.get('sku') or product.get('id')})"
         )
         return False
+    if not EARLY_RADAR_WEBHOOK_URL:
+        print("LOCAL STOCK: dedicated Early Radar webhook missing; no Discord post")
+        return False
 
-    if not WEBHOOK_URL:
-        raise RuntimeError("DISCORD_WEBHOOK_URL mangler")
-
-    # Discord V2 is diagnostic-only here; preserve the existing alert.
     try:
-        from discord_v2_salling_adapter import local_stock_event, shadow_line
-        print(shadow_line("LOCAL", local_stock_event(product, transitions)))
+        from discord_v2_salling_adapter import local_stock_event, preview_payload
+        from discord_alert_v2 import classify
+
+        candidate = local_stock_event(product, transitions)
+        if classify(candidate) != "STORE_STOCK":
+            print("LOCAL STOCK: insufficient store-stock proof; no Discord post")
+            return False
+        payload = preview_payload(candidate)
     except Exception as error:
-        print(f"DISCORD V2 SHADOW LOCAL failed: {type(error).__name__}: {error}")
+        # Never fall back to a green/legacy restock alert on renderer failures.
+        print(f"LOCAL STOCK: neutral Early Radar renderer failed ({type(error).__name__})")
+        return False
 
-    visibility = product.get("visibility") or "UNKNOWN"
-    pre_publish = visibility == "PRE-PUBLISH"
-    color = 0xF1C40F if pre_publish else 0x57F287
-    series = short_series_name(product.get("series"))
-    product_name = (
-        f"{series} · {product['type']}"
-        if series
-        else f"{product['name']} · {product['type']}"
-    )
-
-    transition_lines = [
-        f"**{transition['name']}** · {transition['old']} → {transition['new']} stk."
-        for transition in transitions
-    ]
-
-    url = str(product.get("url") or "").strip()
-    description = f"**{product_name}**"
-    if url and not pre_publish:
-        description += f"\n[Se produkt →]({url})"
-
-    fields = [
-        {
-            "name": "Butikslager",
-            "value": "\n".join(transition_lines)[:1024],
-            "inline": False,
-        },
-        {
-            "name": "Pris",
-            "value": format_price(product.get("price"))[:1024],
-            "inline": True,
-        },
-    ]
-
-    if pre_publish:
-        fields.append({
-            "name": "Status",
-            "value": "Pre-publish · fysisk lager bør bekræftes i butikken.",
-            "inline": True,
-        })
-    elif visibility == "UNKNOWN":
-        fields.append({
-            "name": "Status",
-            "value": "Webshop-status kunne ikke klassificeres sikkert.",
-            "inline": True,
-        })
-
-    embed = {
-        "title": (
-            f"LOKALT LAGER · {product['site']} · PRE-PUBLISH"
-            if pre_publish
-            else f"LOKALT LAGER · {product['site']}"
-        )[:256],
-        "description": description[:4096],
-        "color": color,
-        "fields": fields,
-        "footer": {"text": "MasterBot · Kolding / Esbjerg"},
-    }
-    if url and not pre_publish:
-        embed["url"] = url
-
-    payload = {
-        "username": "MasterBot",
-        "allowed_mentions": {"parse": []},
-        "embeds": [embed],
-    }
-    if os.getenv("DISCORD_V2_LOCAL_MODE", "shadow").strip().lower() == "on":
-        try:
-            from discord_v2_salling_adapter import local_stock_event, preview_payload
-            from discord_alert_v2 import classify
-            candidate = local_stock_event(product, transitions)
-            if classify(candidate) in ("STORE_STOCK", "PREPUBLISH"):
-                payload = preview_payload(candidate)
-            else:
-                print("DISCORD V2 LOCAL: usikker status, beholder tidligere embed")
-        except Exception as error:
-            print(f"DISCORD V2 LOCAL fallback: {type(error).__name__}: {error}")
-
-    response = requests.post(WEBHOOK_URL, json=payload, timeout=20)
+    response = requests.post(EARLY_RADAR_WEBHOOK_URL, json=payload, timeout=20)
     response.raise_for_status()
     return True
-
 
 def scan_site(site_key, old_products):
     site = SITES[site_key]
