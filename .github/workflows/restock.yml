@@ -113,6 +113,8 @@ jobs:
       - name: Run Restock V2 + Local Stock
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          # LIVE store-system counts are neutral Early Radar only, never Restocks.
+          EARLY_RADAR_SALLING_WEBHOOK_URL: ${{ secrets.EARLY_RADAR_SALLING_WEBHOOK_URL }}
           # Separate operational alerts from product notifications. Optional:
           # the scanner logs health transitions if this secret is not set.
           SCANNER_HEALTH_WEBHOOK_URL: ${{ secrets.SCANNER_HEALTH_WEBHOOK_URL }}
