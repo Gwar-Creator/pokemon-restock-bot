@@ -135,6 +135,87 @@ class ProshopNoiseTests(unittest.TestCase):
         self.assertIn("br:11406758-EA", state["last_hot_alerts"])
 
 
+class ProshopDiscoveryRadarTests(unittest.TestCase):
+    @staticmethod
+    def product(sku="3591111", stock="UKENDT", name="Pokemon ex Box Sylveon 30th Celebration"):
+        return {
+            "name": name,
+            "url": f"https://www.proshop.dk/Pokemon/{name.replace(' ', '-')}/{sku}",
+            "stock": stock, "fetch_via": "jina_broad_reader",
+        }
+
+    def test_new_unknown_sylveon_is_radar_not_verified_restock(self):
+        product = self.product()
+        self.assertEqual(hot._proshop_radar_event("3591111", product, None), "KATALOGFUND")
+        self.assertFalse(hot_v4.online_lane_product_available("proshop", product))
+        for stock in ("UKENDT", "BESTILLINGSVARE", "FJERNLAGER", "UDSOLGT"):
+            self.assertEqual(hot._proshop_radar_event(
+                "3591111", {**product, "stock": stock}, None), "KATALOGFUND")
+
+    def test_existing_product_only_radar_if_order_state_changed(self):
+        product = self.product(stock="BESTILLINGSVARE")
+        self.assertEqual(hot._proshop_radar_event(
+            "3591111", product, {"stock": "UDSOLGT"}), "BESTILLINGSVARE")
+        self.assertEqual(hot._proshop_radar_event(
+            "3591111", product, {"stock": "UKENDT"}), "BESTILLINGSVARE")
+        self.assertIsNone(hot._proshop_radar_event(
+            "3591111", product, {"stock": "BESTILLINGSVARE"}))
+        self.assertIsNone(hot._proshop_radar_event(
+            "3591111", product, {"stock": "PÅ LAGER"}))
+
+    def test_early_radar_rejects_preserved_wrong_url_and_known_sku(self):
+        product = self.product()
+        variants = (
+            {**product, "fetch_via": "jina_reader+preserved_previous_scan"},
+            {**product, "url": "https://example.com/Pokemon/slug/3591111"},
+            {**product, "url": "https://www.proshop.dk/Pokemon/X/3591112"},
+        )
+        for bad in variants:
+            with self.subTest(bad=bad):
+                self.assertIsNone(hot._proshop_radar_event("3591111", bad, None))
+        known = self.product(sku="3478496")
+        self.assertIsNone(hot._proshop_radar_event("3478496", known, None))
+
+    def test_early_radar_posts_only_to_dedicated_webhook_with_dedupe(self):
+        product = self.product()
+        response = type("Response", (), {"raise_for_status": lambda self: None})()
+        state = {}
+        with patch.object(hot, "PROSHOP_EARLY_WEBHOOK_URL", "https://example.org/early"), \
+             patch.object(hot, "HOT_DRY_RUN", False), \
+             patch.object(hot.requests, "post", return_value=response) as sender:
+            self.assertTrue(hot.maybe_send_proshop_early_alert(state, "3591111", product))
+            self.assertFalse(hot.maybe_send_proshop_early_alert(state, "3591111", product))
+        self.assertEqual(sender.call_count, 1)
+        self.assertEqual(sender.call_args.args[0], "https://example.org/early")
+        data = sender.call_args.kwargs["json"]
+        self.assertIn("KATALOGFUND", data["embeds"][0]["title"])
+        self.assertIn("ikke verificeret", str(data["embeds"][0]).lower())
+        self.assertEqual(data["allowed_mentions"], {"parse": []})
+
+    def test_expanded_proshop_reader_discovers_two_ex_boxes_offline(self):
+        # Two independent search cards; no real Proshop/Jina/Discord traffic.
+        text = (
+            "* [![Image 1: Sylveon](https://image.test/1.png)]"
+            "(https://www.proshop.dk/Pokemon/Pokemon-ex-Box-Sylveon-30th-Celebration/3591111)\\n"
+            "Pokemon ex Box Sylveon 30th Celebration\\n"
+            "Bestillingsvare\\n"
+            "* [![Image 2: Greninja](https://image.test/2.png)]"
+            "(https://www.proshop.dk/Pokemon/Pokemon-Ex-Box-Greninja-30th-Celebration/3591112)\\n"
+            "Pokemon Ex Box Greninja 30th Celebration\\n"
+            "På lager\\n599,00 kr.\\n"
+        )
+        response = type("Response", (), {
+            "text": text, "raise_for_status": lambda self: None,
+        })()
+        with patch.object(hot.requests, "get", return_value=response):
+            found = hot._fetch_proshop_broad_reader_products(
+                {"_proshop_is_tcg_text": lambda _value: False})
+        self.assertEqual(set(found), {"3591111", "3591112"})
+        self.assertEqual(found["3591111"]["stock"], "BESTILLINGSVARE")
+        self.assertEqual(found["3591112"]["stock"], "PÅ LAGER")
+
+
+
 class VerifiedOnlyHotGuardTests(unittest.TestCase):
     def test_salling_fresh_published_online_stock_is_alerted_neutrally(self):
         product = {
