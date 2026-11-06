@@ -314,8 +314,11 @@ def format_price(value):
     return f"{price:,.2f} kr.".replace(",", "X").replace(".", ",").replace("X", ".")
 
 
-def _hot_alert_allowed(state, source_key, product_id, now=None):
-    """Persisted same-product cooldown across all HOT source NEW/RESTOCK posts."""
+def _hot_alert_allowed(state, source_key, product_id, now=None,
+                       confirmed_restock=False):
+    """Suppress duplicate alerts unless Proshop explicitly confirms a reset."""
+    if source_key == "proshop" and confirmed_restock:
+        return True
     key = f"{source_key}:{product_id}"
     raw = (state.get("last_hot_alerts") or {}).get(key)
     try:
@@ -330,8 +333,11 @@ def _hot_alert_allowed(state, source_key, product_id, now=None):
     return current - last_sent >= cooldown
 
 
-def maybe_send_hot_alert(state, source_key, product_id, product, event):
-    if not _hot_alert_allowed(state, source_key, product_id):
+def maybe_send_hot_alert(state, source_key, product_id, product, event,
+                         confirmed_restock=False):
+    if not _hot_alert_allowed(
+        state, source_key, product_id, confirmed_restock=confirmed_restock
+    ):
         print(f"HOT {source_key.upper()}: duplikat undertrykt for {product_id}")
         return False
     if not send_hot_alert(source_key, product, event):
@@ -339,6 +345,23 @@ def maybe_send_hot_alert(state, source_key, product_id, product, event):
     # Never forget a successful alert after a transient false-zero reading.
     state.setdefault("last_hot_alerts", {})[f"{source_key}:{product_id}"] = time.time()
     return True
+
+
+def _confirmed_proshop_restock(old, current):
+    """Strong evidence of a distinct second restock inside the cooldown.
+
+    A category card can flip ambiguously between BESTILLINGSVARE and stock.
+    Only successive SKU-matched direct product-page checks can reset the
+    anti-flapping timer safely.
+    """
+    return bool(
+        isinstance(old, dict)
+        and isinstance(current, dict)
+        and old.get("stock") == "UDSOLGT"
+        and old.get("fetch_via") == "jina_verified_detail"
+        and current.get("stock") == "PÅ LAGER"
+        and current.get("fetch_via") == "jina_verified_detail"
+    )
 
 
 def _proshop_radar_event(product_id, current, previous):
@@ -1951,7 +1974,14 @@ def run_scan(shared, state):
                     continue
 
                 if not product_available(source_key, old):
-                    maybe_send_hot_alert(state, source_key, product_id, product, "RESTOCK")
+                    confirmed = (
+                        source_key == "proshop"
+                        and _confirmed_proshop_restock(old, product)
+                    )
+                    maybe_send_hot_alert(
+                        state, source_key, product_id, product, "RESTOCK",
+                        confirmed_restock=confirmed,
+                    )
 
         source_state[source_key] = current
         if source_key == "proshop":
