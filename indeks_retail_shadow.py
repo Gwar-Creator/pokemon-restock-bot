@@ -895,6 +895,17 @@ def run_scan(fetcher=fetch_source, sender=None, local_fetcher=None) -> int:
                 raise RuntimeError("mistænkeligt lille varekatalog")
             source_changed = products != old_products
             health = _success_health(old_health, len(products), now, source_changed)
+            if not products:
+                # The source can be reachable yet hide all actual TCG products.
+                # Zero coverage must not be displayed as a healthy scanner.
+                health = {
+                    **health, "status": "degraded",
+                    "last_error": "0 matchende Pokémon TCG-produkter i officielle Shopify-feeds",
+                }
+                print(
+                    f"::warning::INDEKS {source_key}: 0 Pokémon TCG-produkter "
+                    "– scanner kører, men dækningen er ikke verificeret"
+                )
             successful += 1
             changed = changed or source_changed or health != old_health
             stock = sum(1 for product in products.values() if product.get("in_stock") is True)
