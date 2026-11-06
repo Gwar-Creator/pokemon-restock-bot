@@ -136,7 +136,7 @@ class ProshopNoiseTests(unittest.TestCase):
 
 
 class VerifiedOnlyHotGuardTests(unittest.TestCase):
-    def test_salling_system_stock_never_posts_to_restock(self):
+    def test_salling_fresh_published_online_stock_is_alerted_neutrally(self):
         product = {
             "name": "Pokémon 30th Celebration Ultra-Premium Collection",
             "url": "https://www.br.dk/example",
@@ -144,10 +144,31 @@ class VerifiedOnlyHotGuardTests(unittest.TestCase):
             "is_exposed": True,
             "price": 2599,
         }
-        with patch.object(hot_v4, "_ORIGINAL_SEND_HOT_ALERT") as send:
+        with patch.object(hot_v4, "_ORIGINAL_SEND_HOT_ALERT", return_value=True) as send:
             for source in ("br", "bilka", "foetex"):
-                self.assertFalse(hot_v4.verified_only_hot_alert(
+                self.assertTrue(hot_v4.verified_only_hot_alert(
                     source, product, "RESTOCK"))
+            self.assertEqual(send.call_count, 3)
+
+    def test_salling_hidden_stale_or_zero_never_posts(self):
+        source = "br"
+        product = {
+            "name": "Pokémon 30th Celebration Ultra-Premium Collection",
+            "url": "https://www.br.dk/example",
+            "online_count": 20, "is_exposed": True,
+        }
+        with patch.object(hot_v4, "_ORIGINAL_SEND_HOT_ALERT") as send:
+            for change in (
+                {"is_exposed": False},
+                {"is_exposed": None},
+                {"online_count": 0},
+                {"online_count": False},
+                {"preorder": True},
+                {"fetch_via": "feed+preserved_previous_scan"},
+            ):
+                with self.subTest(change=change):
+                    self.assertFalse(hot_v4.verified_only_hot_alert(
+                        source, {**product, **change}, "RESTOCK"))
             send.assert_not_called()
 
     def test_verified_fresh_stock_is_allowed(self):
