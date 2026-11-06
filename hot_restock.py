@@ -30,10 +30,10 @@ WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL", "").strip()
 PROSHOP_FRONTEND_URL = "https://www.proshop.dk/?s=Pokemon+TCG"
 PROSHOP_DISCOVERY_VERSION = 6
 PROSHOP_MIN_FRESH_PRODUCTS = 3
-# Same-product Discord cooldown across all HOT sources (not only Proshop).
-# Keep the legacy Proshop constant for backward-compatible tests/imports.
-HOT_ALERT_COOLDOWN_SECONDS = 24 * 60 * 60
-PROSHOP_ALERT_COOLDOWN_SECONDS = HOT_ALERT_COOLDOWN_SECONDS
+# Source-system availability can briefly flap. Suppress rapid repeats without
+# hiding genuine later restocks for an entire day. Proshop remains 24 hours.
+HOT_ALERT_COOLDOWN_SECONDS = 2 * 60 * 60
+PROSHOP_ALERT_COOLDOWN_SECONDS = 24 * 60 * 60
 
 BOOZT_CATEGORY_URL = "https://www.boozt.com/dk/da/pokemon-trading-cards/born"
 MAGASIN_CATEGORY_URL = "https://www.magasin.dk/boern/legetoej/samlekort-og-mapper/pokemon/"
@@ -314,7 +314,11 @@ def _hot_alert_allowed(state, source_key, product_id, now=None):
     except (TypeError, ValueError):
         return True
     current = time.time() if now is None else float(now)
-    return current - last_sent >= HOT_ALERT_COOLDOWN_SECONDS
+    cooldown = (
+        PROSHOP_ALERT_COOLDOWN_SECONDS
+        if source_key == "proshop" else HOT_ALERT_COOLDOWN_SECONDS
+    )
+    return current - last_sent >= cooldown
 
 
 def maybe_send_hot_alert(state, source_key, product_id, product, event):
