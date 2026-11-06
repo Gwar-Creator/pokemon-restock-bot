@@ -196,13 +196,13 @@ class ProshopDiscoveryRadarTests(unittest.TestCase):
         # Two independent search cards; no real Proshop/Jina/Discord traffic.
         text = (
             "* [![Image 1: Sylveon](https://image.test/1.png)]"
-            "(https://www.proshop.dk/Pokemon/Pokemon-ex-Box-Sylveon-30th-Celebration/3591111)\\n"
-            "Pokemon ex Box Sylveon 30th Celebration\\n"
-            "Bestillingsvare\\n"
+            "(https://www.proshop.dk/Pokemon/Pokemon-ex-Box-Sylveon-30th-Celebration/3591111)\n"
+            "Pokemon ex Box Sylveon 30th Celebration\n"
+            "Bestillingsvare\n"
             "* [![Image 2: Greninja](https://image.test/2.png)]"
-            "(https://www.proshop.dk/Pokemon/Pokemon-Ex-Box-Greninja-30th-Celebration/3591112)\\n"
-            "Pokemon Ex Box Greninja 30th Celebration\\n"
-            "På lager\\n599,00 kr.\\n"
+            "(https://www.proshop.dk/Pokemon/Pokemon-Ex-Box-Greninja-30th-Celebration/3591112)\n"
+            "Pokemon Ex Box Greninja 30th Celebration\n"
+            "På lager\n599,00 kr.\n"
         )
         response = type("Response", (), {
             "text": text, "raise_for_status": lambda self: None,
