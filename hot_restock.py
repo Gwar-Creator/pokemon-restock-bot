@@ -12,7 +12,7 @@ import requests
 
 from alert_policy import TIER_A_SOURCES
 from discord_v2_hot_adapter import hot_payload
-from proshop_reader_v2 import parse_proshop_reader
+from proshop_reader_v2 import parse_proshop_reader, raw_product_id_count
 from proshop_known_sku_watch import KNOWN_PRODUCTS, is_proshop_tcg_title, extend_with_known_details
 
 ROOT = Path(__file__).resolve().parent
@@ -28,6 +28,13 @@ DISCORD_V2_HOT_MODE = os.getenv("DISCORD_V2_HOT_MODE", "shadow").strip().lower()
 WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL", "").strip()
 
 PROSHOP_FRONTEND_URL = "https://www.proshop.dk/?s=Pokemon+TCG"
+# The narrow Pokemon TCG collection misses some new products.
+PROSHOP_BROAD_READER_URLS = (
+    "https://r.jina.ai/https://www.proshop.dk/Pokemon/Pokemon",
+    "https://r.jina.ai/https://www.proshop.dk/Pokemon/Pokemon?pn=2",
+    "https://r.jina.ai/https://www.proshop.dk/?s=Pokemon+30th+Celebration",
+)
+PROSHOP_BROAD_INTERVAL_SECONDS = 10 * 60
 PROSHOP_DISCOVERY_VERSION = 6
 PROSHOP_MIN_FRESH_PRODUCTS = 3
 # Source-system availability can briefly flap. Suppress rapid repeats without
@@ -562,6 +569,50 @@ def _merge_proshop_products(*product_sets):
 
             merged[product_id] = combined
 
+    return merged
+
+
+
+def _fetch_proshop_broad_reader_products(shared):
+    """Supplement narrowly curated Proshop TCG with public category/search.
+
+    Parse only official /Pokemon/<slug>/<SKU> product cards. Never infer an
+    online-stock value from a category listing without an explicit status.
+    """
+    classifier = lambda title: is_proshop_tcg_title(
+        title, shared["_proshop_is_tcg_text"]
+    )
+
+    def one_page(url):
+        response = requests.get(
+            url,
+            headers={
+                "Accept": "text/plain, text/markdown;q=0.9",
+                "User-Agent": "Pokemon-Restock-Bot/ExpandedDiscovery",
+                "x-no-cache": "true",
+                "x-engine": "browser",
+            },
+            timeout=35,
+        )
+        response.raise_for_status()
+        raw_count = raw_product_id_count(response.text)
+        if raw_count < 2:
+            raise RuntimeError("insufficient raw product cards")
+        found = parse_proshop_reader(response.text, classifier)
+        for product in found.values():
+            product["fetch_via"] = "jina_broad_reader"
+        return found
+
+    merged = {}
+    with ThreadPoolExecutor(max_workers=3) as pool:
+        futures = [pool.submit(one_page, url) for url in PROSHOP_BROAD_READER_URLS]
+        for future in futures:
+            try:
+                found = future.result()
+                merged = _merge_proshop_products(merged, found)
+                print(f"HOT PROSHOP expanded discovery: {len(found)} TCG products")
+            except Exception as error:
+                print(f"HOT PROSHOP expanded warning: {type(error).__name__}")
     return merged
 
 
