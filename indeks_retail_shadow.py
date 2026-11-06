@@ -23,7 +23,7 @@ from alert_policy import backup_retail_signal_allowed
 
 
 STATE_FILE = Path("indeks_retail_shadow_state.json")
-STATE_VERSION = 4
+STATE_VERSION = 5
 MAX_PAGES = 5
 PAGE_SIZE = 250
 TIMEOUT_SECONDS = 20
@@ -112,7 +112,9 @@ def _load_state() -> dict:
         value = json.loads(STATE_FILE.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
         return _empty_state()
-    if not isinstance(value, dict):
+    if not isinstance(value, dict) or value.get("version") != STATE_VERSION:
+        # Old v4 baseline contained false Pokemon book/figurine hits.
+        # A one-time quiet rebuild is safer than comparing against bad state.
         return _empty_state()
     value.setdefault("sources", {})
     value.setdefault("logical_sources", {})
@@ -509,7 +511,7 @@ def fetch_source(source_key: str, session=None) -> dict:
                 raise
             print(f"INDEKS {source_key}: supplemental catalogue failed ({type(error).__name__})")
     if not products:
-        raise RuntimeError(f"INDEKS {source_key}: ingen Pokémon TCG-produkter")
+        print(f"INDEKS {source_key}: katalog gyldigt, men 0 aktuelle TCG-kortprodukter")
     return products
 
 
@@ -781,9 +783,8 @@ def _noop_sender(_message):
 
 def _emit_backup_alerts(old_products, products, *, sender=_post_discord, last_alerts=None):
     """Catch shop-specific stock transitions even if the sister shop is stocked."""
-    if not old_products:
-        print("INDEKS LIVE: ingen historisk baseline, ingen Discord")
-        return 0
+    # Caller verifies a recent completed baseline; empty catalogues are valid.
+    # A newly added TCG product after an empty baseline must be discoverable.
     sent = 0
     for product_id, product in products.items():
         old = old_products.get(product_id)
