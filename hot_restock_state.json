@@ -72,6 +72,13 @@
         "online_stock": false,
         "url": "https://www.coolshop.dk/produkt/pokemon-30th-celebration-binder-collection-pok10450-101/23Y9WV/"
       },
+      "https://www.coolshop.dk/produkt/pokemon-30th-celebration-ultra-premium-collection-pok10448-101/23Z4NS/": {
+        "name": "Pokémon - 30th Celebration - Ultra-Premium Collection (POK10448-101)",
+        "game": "POKÉMON",
+        "price": null,
+        "online_stock": false,
+        "url": "https://www.coolshop.dk/produkt/pokemon-30th-celebration-ultra-premium-collection-pok10448-101/23Z4NS/"
+      },
       "https://www.coolshop.dk/produkt/pokemon-mega-evolution-me06-delta-reign-elite-trainer-box-pok10438-101/23Z8YK/": {
         "name": "Pokémon - Mega Evolution ME06: Delta Reign - Elite Trainer Box (POK10438-101)",
         "game": "POKÉMON",
@@ -107,14 +114,14 @@
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
-        "fetch_via": "jina_verified_detail"
+        "fetch_via": "preserved_previous_scan"
       },
       "3478497": {
         "name": "Pokemon TCG 2-pack Booster",
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2-pack-Booster/3478497",
-        "fetch_via": "jina_verified_detail"
+        "fetch_via": "preserved_previous_scan"
       },
       "3447592": {
         "name": "Pokemon TCG Mega EvolutionChaos Rising Booster box with 36 boosters",
@@ -159,7 +166,7 @@
         "online_stock": false,
         "is_exposed": true,
         "store_count": 32,
-        "kolding_stock": 408,
+        "kolding_stock": 396,
         "esbjerg_stock": 216,
         "quantity_limit": 6,
         "sku": "11398799-EA",
@@ -865,12 +872,12 @@
       "last_success_at": "2026-11-05T21:09:59.118661+00:00"
     },
     "proshop": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-06T08:31:45.010827+00:00",
-      "last_success_at": "2026-11-06T08:34:30.097365+00:00"
+      "backoff_level": 1,
+      "next_allowed_at": 1793958409.7610931,
+      "generic_failures": 1,
+      "last_error": "Alle Proshop discovery-ruter fejlede (curated: Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403); frontend: HTTP Error 403: )",
+      "last_failure_at": "2026-11-06T09:44:49.761073+00:00",
+      "last_success_at": "2026-11-06T09:43:59.878606+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -906,14 +913,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1793957990.5936453,
+      "next_allowed_at": 1793958332.8628092,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-06T09:35:50.593618+00:00"
+      "last_success_at": "2026-11-06T09:41:32.862782+00:00"
     }
   },
-  "updated_at": "2026-11-06T09:39:39.631017+00:00",
+  "updated_at": "2026-11-06T09:45:05.651593+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -938,7 +945,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-06T09:35:49.784973+00:00"
+          "last_checked": "2026-11-06T09:41:32.056620+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -948,7 +955,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1793957748.781583,
+      "last_discovery_epoch": 1793958090.987672,
       "last_full_discovery_epoch": 1793943350.7258902,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -963,10 +970,10 @@
   },
   "proshop_detail_checks": {
     "3417744": 1793957951.6032352,
-    "3447592": 1793957298.431558,
+    "3447592": 1793958236.1688905,
     "3478496": 1793642580.111834,
     "3478497": 1793957951.6032352,
-    "3478498": 1793957298.431558,
+    "3478498": 1793958236.1688905,
     "3519999": 1793957354.4409177
   }
 }
