@@ -731,7 +731,17 @@ def _fetch_expanded_proshop_products(shared, state=None):
                 ))
                 state["proshop_broad_discovery_version"] = PROSHOP_BROAD_DISCOVERY_VERSION
                 print("HOT PROSHOP broad baseline: seed first-seen IDs quietly")
-            merged = _merge_proshop_products(merged, extra)
+            for product_id, discovered in extra.items():
+                if product_id not in merged:
+                    merged[product_id] = discovered
+                    continue
+                # The category/search view is supplemental discovery, not
+                # authority to override a known fresh curated stock status.
+                original = merged[product_id]
+                if original.get("stock") in (None, "UKENDT") and discovered.get("stock") not in (None, "UKENDT"):
+                    original["stock"] = discovered["stock"]
+                if original.get("price") is None and discovered.get("price") is not None:
+                    original["price"] = discovered["price"]
     if len(merged) < PROSHOP_MIN_FRESH_PRODUCTS:
         raise RuntimeError(
             f"Proshop fresh coverage too low: {len(merged)} "
