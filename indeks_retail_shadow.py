@@ -703,24 +703,29 @@ def _format_price(value):
     return f"{price:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".") + " kr."
 
 
-def _discord_message(product, event):
-    headline = {
-        "NEW": "🆕 NYT",
-        "PREORDER": "📅 FORUDBESTILLING",
-        "RESTOCK": "🚨 RESTOCK",
-    }.get(str(event or "").upper(), "🚨 RESTOCK")
+def _discord_message(product, event, changed_retailers=None):
+    headline = "NYT ONLINEPRODUKT" if event == "NEW" else "ONLINE RESTOCK"
     lines = [
         f"**{headline} — {LOGICAL_SOURCE_LABEL}**",
         f"**{product.get('name') or 'Ukendt produkt'}**",
+        "Tilgængelig variant i butikkens onlinekatalog. Køb er ikke garanteret.",
     ]
-    price = _format_price(product.get("price"))
-    if price:
-        lines.append(f"Pris: {price}")
-    url = str(product.get("url") or "").strip()
-    if url:
-        lines.append(f"<{url}>")
+    if changed_retailers:
+        for retailer, offer in sorted(changed_retailers.items()):
+            label = offer.get("label") or SOURCES.get(retailer, {}).get("label", retailer)
+            price = _format_price(offer.get("price"))
+            lines.append(f"**{label}**" + (f" · {price}" if price else ""))
+            url = str(offer.get("url") or "").strip()
+            if url:
+                lines.append(f"<{url}>")
+    else:
+        price = _format_price(product.get("price"))
+        if price:
+            lines.append(f"Pris: {price}")
+        url = str(product.get("url") or "").strip()
+        if url:
+            lines.append(f"<{url}>")
     return "\n".join(lines)
-
 
 def _post_discord(message):
     if not WEBHOOK_URL:
@@ -733,24 +738,51 @@ def _noop_sender(_message):
     return None
 
 
-def _emit_backup_alerts(old_products, products, *, sender=_post_discord):
-    # A missing logical baseline must never replay the current catalogue.
+def _emit_backup_alerts(old_products, products, *, sender=_post_discord, last_alerts=None):
+    """Catch shop-specific stock transitions even if the sister shop is stocked."""
     if not old_products:
-        print("INDEKS LIVE: ingen tidligere logisk baseline; alerts undertrykt denne kørsel")
+        print("INDEKS LIVE: ingen historisk baseline, ingen Discord")
         return 0
-
     sent = 0
     for product_id, product in products.items():
-        event = _event_for_product(old_products.get(product_id), product)
-        if event is None:
+        old = old_products.get(product_id)
+        new_offers = product.get("retailers") or {}
+        old_offers = (old or {}).get("retailers") or {}
+        changed = {}
+        restocked = False
+        for retailer, offer in new_offers.items():
+            if not isinstance(offer, dict) or offer.get("in_stock") is not True:
+                continue
+            if offer.get("preorder") is True:
+                continue
+            before = old_offers.get(retailer)
+            if isinstance(before, dict) and before.get("in_stock") is False:
+                changed[retailer] = offer
+                restocked = True
+            elif old is None:
+                changed[retailer] = offer
+            elif not old_offers and old.get("in_stock") is False:
+                changed[retailer] = offer
+                restocked = True
+        event = ("RESTOCK" if restocked else "NEW") if changed else None
+        if not new_offers:
+            legacy = _event_for_product(old, product)
+            event = legacy if legacy in ("RESTOCK", "NEW") else None
+        if event is None or not backup_retail_signal_allowed(
+            str(product.get("name") or ""), event=event
+        ):
             continue
-        name = str(product.get("name") or "").strip()
-        if not backup_retail_signal_allowed(name, event=event):
-            continue
-        sender(_discord_message(product, event))
+        key = str(product_id) + "|" + ",".join(sorted(changed))
+        now_epoch = time.time()
+        if last_alerts is not None:
+            previous = float(last_alerts.get(key) or 0)
+            if 0 <= now_epoch - previous < ALERT_COOLDOWN_SECONDS:
+                continue
+        sender(_discord_message(product, event, changed))
+        if last_alerts is not None:
+            last_alerts[key] = now_epoch
         sent += 1
     return sent
-
 
 def _success_health(old_health: dict, count: int, now: str, changed: bool) -> dict:
     if (
@@ -891,10 +923,11 @@ def run_scan(fetcher=fetch_source, sender=None, local_fetcher=None) -> int:
     changed = changed or comparison != (old_state.get("comparison") or {})
 
     merged_products = _merge_logical_catalogue(new_sources)
+    alert_memory = dict(old_state.get("last_alerts") or {})
     sent_alerts = 0
     if baseline_recent and successful == len(SOURCES):
         sent_alerts = _emit_backup_alerts(
-            old_logical, merged_products, sender=sender
+            old_logical, merged_products, sender=sender, last_alerts=alert_memory
         )
     logical_sources = {
         LOGICAL_SOURCE_KEY: {
@@ -915,6 +948,7 @@ def run_scan(fetcher=fetch_source, sender=None, local_fetcher=None) -> int:
         "comparison": comparison,
         "last_verified_scan": now if successful == len(SOURCES)
             else old_state.get("last_verified_scan"),
+        "last_alerts": alert_memory,
     }
     STATE_FILE.write_text(
         json.dumps(state, ensure_ascii=False, indent=2, sort_keys=True),
