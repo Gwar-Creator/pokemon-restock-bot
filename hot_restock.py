@@ -352,7 +352,7 @@ def _proshop_radar_event(product_id, current, previous):
         return None
     link = str(current.get("url") or "").strip()
     if not re.match(
-        r"^https://www\\.proshop\\.dk/Pokemon/[^\\s?#]+/" +
+        r"^https://www\.proshop\.dk/Pokemon/[^\s?#]+/" +
         re.escape(str(product_id)) + r"/?(?:[?#].*)?$", link, re.I,
     ):
         return None
@@ -1895,10 +1895,13 @@ def run_scan(shared, state):
             )
         else:
             for product_id, product in current.items():
+                old = old_products.get(product_id)
+                # Separate catalogue/orderable detection from real in-stock.
+                # Early Radar is explicitly neutral and has its own webhook.
+                if source_key == "proshop" and not product_available(source_key, product):
+                    maybe_send_proshop_early_alert(state, product_id, product, old)
                 if not product_available(source_key, product):
                     continue
-
-                old = old_products.get(product_id)
                 if old is None:
                     # Known pre-existing SKUs are silently baseline-seeded;
                     # a previously missed product is not a new launch.
