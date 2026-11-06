@@ -57,6 +57,8 @@ STOREFRONT_BOOTSTRAP_URL = (
     "https://www.legekaeden.dk/products/bogbind-selvklaebende-50cmx3m-531054"
 )
 PREORDER_MARKERS = ("forudbestilling", "preorder", "pre-order")
+MAX_BASELINE_AGE_SECONDS = 2 * 60 * 60
+ALERT_COOLDOWN_SECONDS = 6 * 60 * 60
 # Broad Pokemon collection supplements the unusually small narrow TCG feed.
 SUPPLEMENTAL_PATH = "/collections/pokemon/products.json"
 
