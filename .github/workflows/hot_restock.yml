@@ -111,7 +111,7 @@ jobs:
             for iteration in 1 2 3 4 5; do
               echo "SALLING Early Radar scan $iteration/5"
 
-              if ! DISCORD_WEBHOOK_URL="$EARLY_RADAR_SALLING_WEBHOOK_URL" python salling_early_radar_runner.py; then
+              if ! python salling_early_radar_runner.py; then
                 echo "::warning::Salling Early Radar failed transiently on iteration $iteration; HOT run continues"
               fi
 
