@@ -6018,7 +6018,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 27,
+          "stock_online": 25,
           "stock_stores": 19
         },
         "br": {
@@ -6029,7 +6029,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 27,
+          "stock_online": 25,
           "stock_stores": 30
         },
         "foetex": {
@@ -6040,7 +6040,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 27,
+          "stock_online": 25,
           "stock_stores": 79
         }
       }
@@ -7148,8 +7148,8 @@
           "price": 2599.0,
           "sold_in_stores": false,
           "sold_online": false,
-          "stage": "HIDDEN_STOCK",
-          "stock_online": 99,
+          "stage": "DATED_PREP",
+          "stock_online": 0,
           "stock_stores": 0
         },
         "br": {
@@ -7159,8 +7159,8 @@
           "price": 2599.0,
           "sold_in_stores": true,
           "sold_online": true,
-          "stage": "LIVE_STOCK",
-          "stock_online": 99,
+          "stage": "EXPOSED_NO_STOCK",
+          "stock_online": 0,
           "stock_stores": 0
         },
         "foetex": {
@@ -7170,8 +7170,8 @@
           "price": 2599.0,
           "sold_in_stores": false,
           "sold_online": false,
-          "stage": "HIDDEN_STOCK",
-          "stock_online": 99,
+          "stage": "DATED_PREP",
+          "stock_online": 0,
           "stock_stores": 0
         }
       }
@@ -7256,118 +7256,6 @@
     }
   },
   "events": [
-    {
-      "event": "CROSS_CHANGE",
-      "fields": [
-        "bilka",
-        "br",
-        "foetex"
-      ],
-      "name": "Pokemon Mega Evolution Delta Reign samlekortpakker",
-      "product_id": "11398798-EA",
-      "sku": "11398798-EA",
-      "source": "cross_salling",
-      "stage_after": null,
-      "stage_before": null,
-      "ts": 1793622330.4386976
-    },
-    {
-      "event": "CROSS_CHANGE",
-      "fields": [
-        "bilka",
-        "br",
-        "foetex"
-      ],
-      "name": "Pokemon Mega Evolution Delta Reign samlekort booster pakke",
-      "product_id": "11398799-EA",
-      "sku": "11398799-EA",
-      "source": "cross_salling",
-      "stage_after": null,
-      "stage_before": null,
-      "ts": 1793622330.4387002
-    },
-    {
-      "event": "CROSS_CHANGE",
-      "fields": [
-        "bilka",
-        "br",
-        "foetex"
-      ],
-      "name": "Pokemon Mega Evolution Delta Reign samlekort checklane boosterpakke",
-      "product_id": "11399550-EA",
-      "sku": "11399550-EA",
-      "source": "cross_salling",
-      "stage_after": null,
-      "stage_before": null,
-      "ts": 1793622330.438703
-    },
-    {
-      "event": "CROSS_CHANGE",
-      "fields": [
-        "bilka",
-        "br",
-        "foetex"
-      ],
-      "name": "Pokemon Mega Evolution Delta Reign samlekort checklane boosterpakke",
-      "product_id": "11399551-EA",
-      "sku": "11399551-EA",
-      "source": "cross_salling",
-      "stage_after": null,
-      "stage_before": null,
-      "ts": 1793622330.4387052
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "stock_count_online"
-      ],
-      "name": "Pokemon Mega Evolution Delta Reign boosterbundle samlekort",
-      "product_id": "200397052",
-      "sku": "11398797-EA",
-      "source": "br",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1793622605.7440968
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "stock_count_online"
-      ],
-      "name": "Pokemon Mega Evolution Delta Reign samlekortpakker",
-      "product_id": "200397053",
-      "sku": "11398798-EA",
-      "source": "br",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1793622605.7441094
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "stock_count_online"
-      ],
-      "name": "Pokemon Mega Evolution Delta Reign samlekort booster pakke",
-      "product_id": "200397054",
-      "sku": "11398799-EA",
-      "source": "br",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1793622605.744119
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "stock_count_online"
-      ],
-      "name": "Pokemon Mega Evolution Delta Reign samlekort checklane boosterpakke",
-      "product_id": "200397058",
-      "sku": "11399550-EA",
-      "source": "br",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1793622605.7441275
-    },
     {
       "event": "CHANGE",
       "fields": [
@@ -23366,6 +23254,117 @@
       "stage_after": null,
       "stage_before": null,
       "ts": 1793949884.6285493
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon Pitch Black Checklane Booster Pack",
+      "product_id": "200380911",
+      "sku": "11320909-EA",
+      "source": "br",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1793950171.7885602
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stage",
+        "stock_count_online"
+      ],
+      "name": "Pokémon 30th Celebration Ultra-Premium Collection",
+      "product_id": "200397763",
+      "sku": "11406759-EA",
+      "source": "br",
+      "stage_after": "EXPOSED_NO_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1793950171.7886693
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon Pitch Black Checklane Booster Pack",
+      "product_id": "200380911",
+      "sku": "11320909-EA",
+      "source": "bilka",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1793950173.1322591
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stage",
+        "stock_count_online"
+      ],
+      "name": "Pokémon 30th Celebration Ultra-Premium Collection",
+      "product_id": "200397763",
+      "sku": "11406759-EA",
+      "source": "bilka",
+      "stage_after": "DATED_PREP",
+      "stage_before": "HIDDEN_STOCK",
+      "ts": 1793950173.13237
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon Pitch Black Checklane Booster Pack",
+      "product_id": "200380911",
+      "sku": "11320909-EA",
+      "source": "foetex",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1793950174.3432975
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stage",
+        "stock_count_online"
+      ],
+      "name": "Pokémon 30th Celebration Ultra-Premium Collection",
+      "product_id": "200397763",
+      "sku": "11406759-EA",
+      "source": "foetex",
+      "stage_after": "DATED_PREP",
+      "stage_before": "HIDDEN_STOCK",
+      "ts": 1793950174.343406
+    },
+    {
+      "event": "CROSS_CHANGE",
+      "fields": [
+        "bilka",
+        "br",
+        "foetex"
+      ],
+      "name": "Pokémon Pitch Black Checklane Booster Pack",
+      "product_id": "11320909-EA",
+      "sku": "11320909-EA",
+      "source": "cross_salling",
+      "stage_after": null,
+      "stage_before": null,
+      "ts": 1793950177.5322056
+    },
+    {
+      "event": "CROSS_CHANGE",
+      "fields": [
+        "bilka",
+        "br",
+        "foetex"
+      ],
+      "name": "Pokémon 30th Celebration Ultra-Premium Collection",
+      "product_id": "11406759-EA",
+      "sku": "11406759-EA",
+      "source": "cross_salling",
+      "stage_after": null,
+      "stage_before": null,
+      "ts": 1793950177.532233
     }
   ],
   "sources": {
@@ -27817,7 +27816,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 27,
+        "stock_count_online": 25,
         "url": "https://www.bilka.dk/produkter/pokemon-pitch-black-checklane-booster-pack/200380911/"
       },
       "200380917": {
@@ -28727,8 +28726,8 @@
         "sku": "11406759-EA",
         "sold_in_stores": false,
         "sold_online": false,
-        "stage": "HIDDEN_STOCK",
-        "stock_count_online": 99,
+        "stage": "DATED_PREP",
+        "stock_count_online": 0,
         "url": "https://www.bilka.dk/produkter/pokemon-30th-celebration-ultra-premium-collection/200397763/"
       }
     },
@@ -33261,7 +33260,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 27,
+        "stock_count_online": 25,
         "url": "https://www.br.dk/produkter/pokemon-pitch-black-checklane-booster-pack/200380911/"
       },
       "200380917": {
@@ -34180,8 +34179,8 @@
         "sku": "11406759-EA",
         "sold_in_stores": true,
         "sold_online": true,
-        "stage": "LIVE_STOCK",
-        "stock_count_online": 99,
+        "stage": "EXPOSED_NO_STOCK",
+        "stock_count_online": 0,
         "url": "https://www.br.dk/produkter/pokemon-30th-celebration-ultra-premium-collection/200397763/"
       }
     },
@@ -38650,7 +38649,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 27,
+        "stock_count_online": 25,
         "url": "https://www.foetex.dk/produkter/pokemon-pitch-black-checklane-booster-pack/200380911/"
       },
       "200380917": {
@@ -39552,8 +39551,8 @@
         "sku": "11406759-EA",
         "sold_in_stores": false,
         "sold_online": false,
-        "stage": "HIDDEN_STOCK",
-        "stock_count_online": 99,
+        "stage": "DATED_PREP",
+        "stock_count_online": 0,
         "url": "https://www.foetex.dk/produkter/pokemon-30th-celebration-ultra-premium-collection/200397763/"
       }
     },
@@ -39578,6 +39577,6 @@
       }
     }
   },
-  "updated_at": 1793949884.6285965,
+  "updated_at": 1793950177.532262,
   "version": 1
 }
