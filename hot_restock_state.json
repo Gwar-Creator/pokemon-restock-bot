@@ -103,11 +103,11 @@
         "fetch_via": "jina_reader"
       },
       "3530352": {
-        "name": "Pokemon Mega Evolution Delta Reign Blister 3 pack",
+        "name": "Pokemon Mega Evolution Delta Reign Blister 3-pack",
         "price": 199.0,
         "stock": "PÅ LAGER",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Mega-Evolution-Delta-Reign-Blister-3-pack/3530352",
-        "fetch_via": "jina_reader"
+        "fetch_via": "jina_verified_detail"
       },
       "3478496": {
         "name": "Pokemon TCG Mega Greninja ex Premium Collection",
@@ -878,12 +878,12 @@
       "last_success_at": "2026-11-06T12:53:52.378353+00:00"
     },
     "proshop": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-07T22:48:26.694276+00:00",
-      "last_success_at": "2026-11-07T22:49:18.992601+00:00"
+      "backoff_level": 1,
+      "next_allowed_at": 1794092068.513104,
+      "generic_failures": 2,
+      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details",
+      "last_failure_at": "2026-11-07T22:52:28.513085+00:00",
+      "last_success_at": "2026-11-07T22:50:36.216077+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -919,14 +919,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1794091800.4368675,
+      "next_allowed_at": 1794092095.1576467,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-07T22:46:00.436840+00:00"
+      "last_success_at": "2026-11-07T22:50:55.157616+00:00"
     }
   },
-  "updated_at": "2026-11-07T22:49:35.565345+00:00",
+  "updated_at": "2026-11-07T22:54:26.615828+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -951,7 +951,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-07T22:45:59.074808+00:00"
+          "last_checked": "2026-11-07T22:50:54.478162+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -961,7 +961,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1794091558.2317007,
+      "last_discovery_epoch": 1794091853.1030765,
       "last_full_discovery_epoch": 1794081345.1871226,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -987,21 +987,21 @@
     "3447592": 1794091587.707152,
     "3478496": 1794091753.316211,
     "3478497": 1794091455.3683686,
-    "3478498": 1794090982.6680748,
+    "3478498": 1794091886.2240653,
     "3519999": 1794091643.6509883,
     "3530350": 1794091643.6509883,
     "3530351": 1794091533.7265995,
-    "3530352": 1794090774.9920049,
+    "3530352": 1794091832.9037573,
     "3530353": 1794091455.3683686,
     "3421827": 1794091699.3166778,
     "3447590": 1794091291.9993765,
     "3478501": 1794091699.3166778,
     "3502023": 1794091753.316211,
-    "3519996": 1794090705.3911114,
+    "3519996": 1794091832.9037573,
     "3530348": 1794091533.7265995,
     "3530349": 1794091587.707152
   },
-  "proshop_broad_attempt_at": 1794091288.8429055,
+  "proshop_broad_attempt_at": 1794091942.3242044,
   "proshop_radar_alerts": {
     "3519996:BESTILLINGSVARE": 1793969439.0679424
   },
@@ -1010,12 +1010,12 @@
   ],
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
-    "status": "ok",
-    "primary_count": 6,
+    "status": "degraded",
+    "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-07T22:49:13.316166+00:00",
-    "details_or_listings_count": 6
+    "checked_at": "2026-11-07T22:52:28.512950+00:00",
+    "details_or_listings_count": 0
   },
   "proshop_last_usable_count": 6,
-  "proshop_last_usable_at": "2026-11-07T22:49:18.992620+00:00"
+  "proshop_last_usable_at": "2026-11-07T22:50:36.216114+00:00"
 }
