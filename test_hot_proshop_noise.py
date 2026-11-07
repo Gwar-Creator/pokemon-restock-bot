@@ -164,7 +164,9 @@ class ProshopNoiseTests(unittest.TestCase):
             self.assertIsNotNone(good_stamp)
             self.assertEqual(state["proshop_last_usable_count"], 1)
             with patch.object(hot, "_fetch_expanded_proshop_products",
-                              return_value={}):
+                              return_value={
+                                  "3478496": {**stock, "stock": "UKENDT"}
+                              }):
                 hot.run_scan(shared, state)
             self.assertEqual(state.get("proshop_last_usable_at"), good_stamp)
             self.assertEqual(state["proshop_last_usable_count"], 0)
