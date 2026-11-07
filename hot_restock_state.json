@@ -911,11 +911,11 @@
       "last_success_at": "2026-11-06T12:53:52.378353+00:00"
     },
     "proshop": {
-      "backoff_level": 1,
-      "next_allowed_at": 1794020173.6255503,
-      "generic_failures": 2,
+      "backoff_level": 2,
+      "next_allowed_at": 1794020496.33496,
+      "generic_failures": 3,
       "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details",
-      "last_failure_at": "2026-11-07T02:54:13.625533+00:00",
+      "last_failure_at": "2026-11-07T02:56:36.334948+00:00",
       "last_success_at": "2026-11-07T02:52:28.969549+00:00"
     },
     "br": {
@@ -952,14 +952,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1794020167.2779117,
+      "next_allowed_at": 1794020456.099663,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-07T02:52:07.277883+00:00"
+      "last_success_at": "2026-11-07T02:56:56.099643+00:00"
     }
   },
-  "updated_at": "2026-11-07T02:54:31.885558+00:00",
+  "updated_at": "2026-11-07T02:59:24.203689+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -984,7 +984,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-07T02:52:06.050869+00:00"
+          "last_checked": "2026-11-07T02:56:54.911433+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -994,7 +994,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1794019924.5296335,
+      "last_discovery_epoch": 1794020213.5639265,
       "last_full_discovery_epoch": 1794016255.9362972,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -1045,7 +1045,7 @@
     "status": "degraded",
     "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-07T02:54:13.625448+00:00",
+    "checked_at": "2026-11-07T02:56:36.334740+00:00",
     "details_or_listings_count": 0
   }
 }
