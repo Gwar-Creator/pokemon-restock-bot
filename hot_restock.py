@@ -1856,6 +1856,27 @@ def fetch_source(shared, source_key, old_products, state=None):
     raise KeyError(source_key)
 
 
+def _proshop_usable_observations(products):
+    """Count current, actionable source observations (never cached rows).
+
+    This is a health signal only, not a change to HOT alert qualification.
+    An explicit current Proshop stock/order status is useful even if the
+    product is currently sold out.
+    """
+    return sum(
+        1
+        for sku, product in (products or {}).items()
+        if isinstance(product, dict)
+        and str(sku).isdigit()
+        and str(product.get("fetch_via") or "") not in ("", "preserved_previous_scan")
+        and "preserved_previous_scan" not in str(product.get("fetch_via") or "").split("+")
+        and product.get("stock") in (
+            "PÅ LAGER", "UDSOLGT", "BESTILLINGSVARE", "FJERNLAGER"
+        )
+        and str(product.get("url") or "").startswith("https://www.proshop.dk/Pokemon/")
+    )
+
+
 def run_scan(shared, state):
     source_state = state.setdefault("sources", {})
     successful = 0
@@ -1930,6 +1951,16 @@ def run_scan(shared, state):
                 print(f"HOT {label} RECOVERY: tilbage på normal 1-minuts frekvens")
 
         successful += 1
+
+        if source_key == "proshop":
+            usable = _proshop_usable_observations(fetched)
+            state["proshop_last_usable_count"] = usable
+            if usable:
+                # Persist independently of source_controls.last_success_at:
+                # state_commit_guard may compact the latter on no-op scans.
+                state["proshop_last_usable_at"] = _utc_now_iso()
+            else:
+                print("::warning::PROSHOP: 0 friske varer med brugbar lagerstatus")
 
         if source_baseline:
             print(
