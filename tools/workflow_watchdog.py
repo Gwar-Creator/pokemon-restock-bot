@@ -7,6 +7,9 @@ last notification via bot-authored issue comments.
 from __future__ import annotations
 
 import argparse
+import base64
+import binascii
+import json
 import os
 import re
 from dataclasses import dataclass
@@ -15,6 +18,8 @@ from urllib.parse import quote
 import requests
 
 ISSUE_NUMBER = 62
+# Check the source itself, not merely the successful GitHub Actions workflow.
+PROSHOP_MAX_AGE_MINUTES = 10
 MARKER_RE = re.compile(r"<!-- masterbot-watchdog:v1:([a-z-]+):(DOWN|OK) -->")
 BOT_AUTHOR = "github-actions[bot]"
 
@@ -26,6 +31,14 @@ class WatchedWorkflow:
     filename: str
     stale_after_minutes: int
     allowed_events: tuple[str, ...] = ()
+
+
+# Proshop data is checked from committed HOT state, independently of the
+# workflow heartbeat. A green HOT run may still have zero usable Proshop data.
+PROSHOP_DATA = WatchedWorkflow(
+    "proshop-data", "Proshop (friske lagerdata)",
+    "hot_restock.yml", PROSHOP_MAX_AGE_MINUTES,
+)
 
 
 WORKFLOWS = (
@@ -78,6 +91,34 @@ def check_runs(workflow, runs, now=None):
         "age_minutes": age,
         "url": last_run.get("html_url"),
         "detail": f"Last successful run {age} min ago, limit {workflow.stale_after_minutes} min",
+    }
+
+
+def check_proshop_source(state, now=None):
+    """Alert when there have been no usable fresh Proshop observations for 10m.
+
+    An Actions success, a historical product card, or a recent failed scan
+    must not reset the timer. Ignore compacted source_controls.last_success_at.
+    """
+    current = now or datetime.now(timezone.utc)
+    stamp = parse_utc((state or {}).get("proshop_last_usable_at"))
+    if stamp is None or stamp > current:
+        return {
+            "workflow": PROSHOP_DATA, "state": "DOWN", "age_minutes": None,
+            "url": None,
+            "detail": "No valid persisted timestamp for usable Proshop source data",
+        }
+    age_seconds = max(0, (current - stamp).total_seconds())
+    age_minutes = int(age_seconds // 60)
+    return {
+        "workflow": PROSHOP_DATA,
+        "state": "DOWN" if age_seconds >= PROSHOP_MAX_AGE_MINUTES * 60 else "OK",
+        "age_minutes": age_minutes,
+        "url": None,
+        "detail": (
+            f"Last usable Proshop source observation {age_minutes} min ago; "
+            f"limit {PROSHOP_MAX_AGE_MINUTES} min"
+        ),
     }
 
 
@@ -151,6 +192,22 @@ class GitHubApi:
             raise RuntimeError(f"Invalid GitHub runs API for {filename}")
         return rows
 
+    def proshop_state(self):
+        """Load the current *committed* HOT state, not current workflow status."""
+        response = self.get("/contents/hot_restock_state.json", {"ref": "main"})
+        if not isinstance(response, dict) or response.get("encoding") != "base64":
+            raise RuntimeError("Invalid GitHub API state payload for Proshop")
+        try:
+            raw = base64.b64decode(
+                str(response.get("content") or ""), validate=False
+            )
+            state = json.loads(raw.decode("utf-8"))
+        except (binascii.Error, UnicodeDecodeError, json.JSONDecodeError, ValueError) as error:
+            raise RuntimeError("Invalid committed Proshop HOT state") from error
+        if not isinstance(state, dict):
+            raise RuntimeError("Proshop HOT state must be a JSON object")
+        return state
+
     def recent_issue_comments(self):
         issue = self.get(f"/issues/{ISSUE_NUMBER}")
         if issue.get("state") != "open":
@@ -212,6 +269,7 @@ def main(argv=None):
     now = datetime.now(timezone.utc)
     # Complete all reads before posting any notification: fail-closed on API errors.
     results = [check_runs(wf, api.runs(wf.filename), now) for wf in WORKFLOWS]
+    results.append(check_proshop_source(api.proshop_state(), now))
     previous = last_notified_states(api.recent_issue_comments())
     transitions = changed_incidents(results, previous)
     write_summary(results, transitions, args.notify)

@@ -124,6 +124,53 @@ class ProshopNoiseTests(unittest.TestCase):
             now=1000 + hot.HOT_ALERT_COOLDOWN_SECONDS,
         ))
 
+    def test_usable_proshop_data_requires_fresh_explicit_stock_status(self):
+        stock = {
+            "name": "Pokemon Mega Evolution Delta Reign Booster Bundle",
+            "url": "https://www.proshop.dk/Pokemon/Pokemon-Delta-Reign/3530351",
+            "stock": "PÅ LAGER",
+            "fetch_via": "jina_reader",
+        }
+        candidates = {
+            "3530351": stock,
+            "3530352": {**stock, "stock": "UKENDT"},
+            "3530353": {**stock, "fetch_via": "preserved_previous_scan"},
+            "3530354": {**stock, "fetch_via": "jina_reader+preserved_previous_scan"},
+            "3530355": {**stock, "url": "https://example.org/Pokemon/Other/3530355"},
+        }
+        self.assertEqual(hot._proshop_usable_observations(candidates), 1)
+        self.assertEqual(hot._proshop_usable_observations({}), 0)
+        self.assertEqual(hot._proshop_usable_observations(
+            {"3530351": {**stock, "stock": "UDSOLGT"}}
+        ), 1)
+
+    def test_usable_heartbeat_persisted_only_with_fresh_stock_data(self):
+        state = {
+            "sources": {"proshop": {"3530351": proshop_product("UKENDT")}},
+            "source_controls": {},
+            "proshop_discovery_version": hot.PROSHOP_DISCOVERY_VERSION,
+        }
+        stock = {**proshop_product("PÅ LAGER"),
+                 "fetch_via": "jina_reader"}
+        stock["url"] = hot.KNOWN_PRODUCTS["3478496"]
+        shared = {"restock_alert_allowed": lambda product, game: True}
+        with patch.object(hot, "SOURCE_LABELS", {"proshop": "PROSHOP"}), \
+             patch.object(hot, "_fetch_expanded_proshop_products",
+                          return_value={"3478496": stock}), \
+             patch.object(hot, "save_state"), \
+             patch.object(hot, "send_hot_alert", return_value=True):
+            hot.run_scan(shared, state)
+            good_stamp = state.get("proshop_last_usable_at")
+            self.assertIsNotNone(good_stamp)
+            self.assertEqual(state["proshop_last_usable_count"], 1)
+            with patch.object(hot, "_fetch_expanded_proshop_products",
+                              return_value={
+                                  "3478496": {**stock, "stock": "UKENDT"}
+                              }):
+                hot.run_scan(shared, state)
+            self.assertEqual(state.get("proshop_last_usable_at"), good_stamp)
+            self.assertEqual(state["proshop_last_usable_count"], 0)
+
     def test_proshop_confirmed_second_restock_can_bypass_24h(self):
         gone = {**proshop_product("UDSOLGT"),
                 "fetch_via": "jina_verified_detail"}

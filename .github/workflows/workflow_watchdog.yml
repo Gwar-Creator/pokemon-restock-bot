@@ -2,8 +2,9 @@ name: MasterBot Workflow Watchdog
 
 on:
   schedule:
-    # Independent from Restock and HOT. Times are UTC; schedules can be delayed.
-    - cron: "17,47 * * * *"
+    # Independent from Restock and HOT; UTC. Inspect Proshop every 5m
+    # with a 10m data-freshness threshold. GitHub cron can be delayed.
+    - cron: "3-58/5 * * * *"
   workflow_dispatch:
     inputs:
       notify:
