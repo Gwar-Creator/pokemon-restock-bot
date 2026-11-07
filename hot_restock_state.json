@@ -123,13 +123,6 @@
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Mega-Evolution-Delta-Reign-Blister-3-pack/3530352",
         "fetch_via": "jina_reader"
       },
-      "3530350": {
-        "name": "Pokemon Mega Evolution Delta reign Elite Trainer Box",
-        "price": null,
-        "stock": "BESTILLINGSVARE",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-Mega-Evolution-Delta-reign-Elite-Trainer-Box/3530350",
-        "fetch_via": "jina_reader"
-      },
       "3478496": {
         "name": "Pokemon TCG Mega Greninja ex Premium Collection",
         "price": null,
@@ -143,6 +136,13 @@
         "stock": "PÅ LAGER",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
         "fetch_via": "jina_reader"
+      },
+      "3530350": {
+        "name": "Pokemon Mega Evolution Delta reign Elite Trainer Box",
+        "price": null,
+        "stock": "BESTILLINGSVARE",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-Mega-Evolution-Delta-reign-Elite-Trainer-Box/3530350",
+        "fetch_via": "preserved_previous_scan"
       },
       "3478497": {
         "name": "Pokemon TCG 2-pack Booster",
@@ -913,10 +913,10 @@
     "proshop": {
       "backoff_level": 0,
       "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-07T11:49:32.894465+00:00",
-      "last_success_at": "2026-11-07T11:54:16.871080+00:00"
+      "generic_failures": 1,
+      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details",
+      "last_failure_at": "2026-11-07T12:19:15.376092+00:00",
+      "last_success_at": "2026-11-07T12:18:20.342038+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -952,14 +952,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1794053691.9022672,
+      "next_allowed_at": 1794054003.5799725,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-07T12:10:51.902242+00:00"
+      "last_success_at": "2026-11-07T12:16:03.579946+00:00"
     }
   },
-  "updated_at": "2026-11-07T12:14:28.376898+00:00",
+  "updated_at": "2026-11-07T12:19:32.777252+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -984,7 +984,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-07T12:10:51.048809+00:00"
+          "last_checked": "2026-11-07T12:16:02.290391+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -994,7 +994,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1794053450.0960388,
+      "last_discovery_epoch": 1794053760.4821367,
       "last_full_discovery_epoch": 1794037938.7143352,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -1020,14 +1020,14 @@
     "3447592": 1794053539.2004557,
     "3478496": 1794053611.7220874,
     "3478497": 1794053368.1067355,
-    "3478498": 1794052915.4354138,
-    "3519999": 1794052750.0666842,
+    "3478498": 1794053844.9424033,
+    "3519999": 1794053735.5957174,
     "3530350": 1794053611.7220874,
     "3530351": 1794053149.421193,
     "3530352": 1794053203.4060822,
     "3530353": 1794053313.4719205,
-    "3421827": 1794052915.4354138,
-    "3447590": 1794052750.0666842,
+    "3421827": 1794053844.9424033,
+    "3447590": 1794053735.5957174,
     "3478501": 1794053149.421193,
     "3502023": 1794053203.4060822,
     "3519996": 1794053368.1067355,
@@ -1043,12 +1043,12 @@
   ],
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
-    "status": "ok",
-    "primary_count": 8,
+    "status": "degraded",
+    "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-07T12:14:09.672979+00:00",
-    "details_or_listings_count": 8
+    "checked_at": "2026-11-07T12:19:15.376011+00:00",
+    "details_or_listings_count": 0
   },
-  "proshop_last_usable_count": 8,
-  "proshop_last_usable_at": "2026-11-07T12:14:12.343618+00:00"
+  "proshop_last_usable_count": 7,
+  "proshop_last_usable_at": "2026-11-07T12:18:20.342052+00:00"
 }
