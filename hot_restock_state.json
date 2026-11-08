@@ -275,7 +275,7 @@
         "is_exposed": true,
         "store_count": 32,
         "kolding_stock": 339,
-        "esbjerg_stock": 217,
+        "esbjerg_stock": 216,
         "quantity_limit": 6,
         "sku": "11399552-EA",
         "url": "https://www.br.dk/produkter/pokemon-mega-evolution-delta-reign-samlekort-boosterpakke/200397060/"
@@ -440,7 +440,7 @@
           },
           "1659": {
             "name": "Bilka Esbjerg",
-            "stock": 156
+            "stock": 151
           }
         },
         "quantity_limit": 6,
@@ -878,12 +878,12 @@
       "last_success_at": "2026-11-08T01:49:11.900132+00:00"
     },
     "proshop": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-08T11:25:29.439210+00:00",
-      "last_success_at": "2026-11-08T11:29:11.196547+00:00"
+      "backoff_level": 1,
+      "next_allowed_at": 1794138324.5289829,
+      "generic_failures": 2,
+      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details",
+      "last_failure_at": "2026-11-08T11:43:24.528967+00:00",
+      "last_success_at": "2026-11-08T11:41:29.458008+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -919,14 +919,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1794137993.9053447,
+      "next_allowed_at": 1794138297.5458772,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-08T11:35:53.905319+00:00"
+      "last_success_at": "2026-11-08T11:40:57.545848+00:00"
     }
   },
-  "updated_at": "2026-11-08T11:39:31.598742+00:00",
+  "updated_at": "2026-11-08T11:44:31.055165+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -951,7 +951,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-08T11:35:52.349951+00:00"
+          "last_checked": "2026-11-08T11:40:56.686698+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -961,7 +961,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1794137750.865223,
+      "last_discovery_epoch": 1794138055.681032,
       "last_full_discovery_epoch": 1794124882.7201617,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -1001,7 +1001,7 @@
     "3530348": 1794137838.6845715,
     "3530349": 1794137949.5095532
   },
-  "proshop_broad_attempt_at": 1794137560.2348104,
+  "proshop_broad_attempt_at": 1794138201.5013213,
   "proshop_radar_alerts": {
     "3519996:BESTILLINGSVARE": 1793969439.0679424
   },
@@ -1010,12 +1010,12 @@
   ],
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
-    "status": "ok",
-    "primary_count": 6,
+    "status": "degraded",
+    "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-08T11:39:09.509491+00:00",
-    "details_or_listings_count": 6
+    "checked_at": "2026-11-08T11:43:24.528848+00:00",
+    "details_or_listings_count": 0
   },
   "proshop_last_usable_count": 6,
-  "proshop_last_usable_at": "2026-11-08T11:39:13.599410+00:00"
+  "proshop_last_usable_at": "2026-11-08T11:41:29.458023+00:00"
 }
