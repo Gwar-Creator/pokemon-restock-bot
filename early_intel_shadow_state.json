@@ -1611,7 +1611,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 297,
+          "stock_online": 296,
           "stock_stores": 17
         },
         "br": {
@@ -1622,7 +1622,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 297,
+          "stock_online": 296,
           "stock_stores": 32
         },
         "foetex": {
@@ -1633,7 +1633,7 @@
           "sold_in_stores": true,
           "sold_online": true,
           "stage": "LIVE_STOCK",
-          "stock_online": 297,
+          "stock_online": 296,
           "stock_stores": 1
         }
       }
@@ -7256,65 +7256,6 @@
     }
   },
   "events": [
-    {
-      "event": "CROSS_CHANGE",
-      "fields": [
-        "bilka",
-        "br",
-        "foetex"
-      ],
-      "name": "Pokemon Elite Trainer Box: Mega Evolution Delta Reign samlekort box",
-      "product_id": "11398796-EA",
-      "sku": "11398796-EA",
-      "source": "cross_salling",
-      "stage_after": null,
-      "stage_before": null,
-      "ts": 1793686777.1124313
-    },
-    {
-      "event": "CROSS_CHANGE",
-      "fields": [
-        "bilka",
-        "br",
-        "foetex"
-      ],
-      "name": "Pokemon Mega Evolution Delta Reign boosterbundle samlekort",
-      "product_id": "11398797-EA",
-      "sku": "11398797-EA",
-      "source": "cross_salling",
-      "stage_after": null,
-      "stage_before": null,
-      "ts": 1793686777.112436
-    },
-    {
-      "event": "CROSS_CHANGE",
-      "fields": [
-        "bilka",
-        "br",
-        "foetex"
-      ],
-      "name": "Pokemon Mega Evolution Delta Reign samlekort booster pakke",
-      "product_id": "11398799-EA",
-      "sku": "11398799-EA",
-      "source": "cross_salling",
-      "stage_after": null,
-      "stage_before": null,
-      "ts": 1793686777.1124415
-    },
-    {
-      "event": "CHANGE",
-      "fields": [
-        "f_stock_availability",
-        "stock_count_online"
-      ],
-      "name": "Pokemon Mega Evolution Delta Reign boosterbundle samlekort",
-      "product_id": "200397052",
-      "sku": "11398797-EA",
-      "source": "br",
-      "stage_after": "LIVE_STOCK",
-      "stage_before": "LIVE_STOCK",
-      "ts": 1793687084.9757154
-    },
     {
       "event": "CHANGE",
       "fields": [
@@ -23352,6 +23293,60 @@
       "stage_after": null,
       "stage_before": null,
       "ts": 1794144284.8946667
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon Battle Academy 2024",
+      "product_id": "200279925",
+      "sku": "10791068-EA",
+      "source": "br",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1794149074.1423652
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon Battle Academy 2024",
+      "product_id": "200279925",
+      "sku": "10791068-EA",
+      "source": "bilka",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1794149075.3582213
+    },
+    {
+      "event": "CHANGE",
+      "fields": [
+        "stock_count_online"
+      ],
+      "name": "Pokémon Battle Academy 2024",
+      "product_id": "200279925",
+      "sku": "10791068-EA",
+      "source": "foetex",
+      "stage_after": "LIVE_STOCK",
+      "stage_before": "LIVE_STOCK",
+      "ts": 1794149076.5908837
+    },
+    {
+      "event": "CROSS_CHANGE",
+      "fields": [
+        "bilka",
+        "br",
+        "foetex"
+      ],
+      "name": "Pokémon Battle Academy 2024",
+      "product_id": "10791068-EA",
+      "sku": "10791068-EA",
+      "source": "cross_salling",
+      "stage_after": null,
+      "stage_before": null,
+      "ts": 1794149080.6740553
     }
   ],
   "sources": {
@@ -24581,7 +24576,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 297,
+        "stock_count_online": 296,
         "url": "https://www.bilka.dk/produkter/pokemon-battle-academy-2024/200279925/"
       },
       "200285707": {
@@ -29989,7 +29984,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 297,
+        "stock_count_online": 296,
         "url": "https://www.br.dk/produkter/pokemon-battle-academy-2024/200279925/"
       },
       "200285707": {
@@ -35396,7 +35391,7 @@
         "sold_in_stores": true,
         "sold_online": true,
         "stage": "LIVE_STOCK",
-        "stock_count_online": 297,
+        "stock_count_online": 296,
         "url": "https://www.foetex.dk/produkter/pokemon-battle-academy-2024/200279925/"
       },
       "200285707": {
@@ -39556,6 +39551,6 @@
       }
     }
   },
-  "updated_at": 1794148781.7613873,
+  "updated_at": 1794149080.6742897,
   "version": 1
 }
