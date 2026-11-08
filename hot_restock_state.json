@@ -123,13 +123,6 @@
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
         "fetch_via": "jina_reader"
       },
-      "3417744": {
-        "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
-        "price": null,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
-        "fetch_via": "preserved_previous_scan"
-      },
       "3530350": {
         "name": "Pokemon Mega Evolution Delta reign Elite Trainer Box",
         "price": null,
@@ -142,6 +135,13 @@
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Mega-Evolution-Delta-Reign-Booster-Bundle/3530351",
+        "fetch_via": "preserved_previous_scan"
+      },
+      "3417744": {
+        "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
+        "price": null,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
         "fetch_via": "preserved_previous_scan"
       },
       "3478497": {
@@ -910,23 +910,23 @@
       "last_success_at": "2026-11-02T05:19:46.731199+00:00"
     },
     "boozt": {
-      "backoff_level": 1,
-      "next_allowed_at": 1794126590.3426087,
-      "generic_failures": 1,
-      "last_error": "BOOZT fejlede: Reader: 422 Client Error: Unprocessable Entity for url: https://r.jina.ai/https://www.boozt.com/dk/da/pokemon-trading-cards/born | direct: 429 Client Error: Too Many Requests for url: https://www.boozt.com/dk/da/pokemon-trading-cards/born",
+      "backoff_level": 0,
+      "next_allowed_at": 0.0,
+      "generic_failures": 0,
+      "last_error": null,
       "last_failure_at": "2026-11-08T08:27:50.342589+00:00",
-      "last_success_at": "2026-11-08T08:26:42.418349+00:00"
+      "last_success_at": "2026-11-08T08:34:55.146327+00:00"
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1794126604.5927904,
+      "next_allowed_at": 1794126916.0468118,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-08T08:26:04.592763+00:00"
+      "last_success_at": "2026-11-08T08:31:16.046783+00:00"
     }
   },
-  "updated_at": "2026-11-08T08:29:22.624011+00:00",
+  "updated_at": "2026-11-08T08:34:55.146391+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -951,7 +951,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-08T08:26:03.451859+00:00"
+          "last_checked": "2026-11-08T08:31:15.086622+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -961,7 +961,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1794126362.0660436,
+      "last_discovery_epoch": 1794126673.8099418,
       "last_full_discovery_epoch": 1794124882.7201617,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -984,21 +984,21 @@
   },
   "proshop_detail_checks": {
     "3417744": 1794126204.0521722,
-    "3447592": 1794125956.8343742,
+    "3447592": 1794126872.0646088,
     "3478496": 1794126094.880089,
     "3478497": 1794126512.9892135,
     "3478498": 1794126151.3888097,
     "3519999": 1794126259.4711459,
-    "3530350": 1794125900.737821,
-    "3530351": 1794125791.0674238,
-    "3530352": 1794125900.737821,
+    "3530350": 1794126817.1544766,
+    "3530351": 1794126707.381952,
+    "3530352": 1794126817.1544766,
     "3530353": 1794126041.0928326,
     "3421827": 1794126041.0928326,
     "3447590": 1794126204.0521722,
     "3478501": 1794126094.880089,
     "3502023": 1794126512.9892135,
-    "3519996": 1794125791.0674238,
-    "3530348": 1794125956.8343742,
+    "3519996": 1794126707.381952,
+    "3530348": 1794126872.0646088,
     "3530349": 1794126151.3888097
   },
   "proshop_broad_attempt_at": 1794126496.652687,
@@ -1013,9 +1013,9 @@
     "status": "ok",
     "primary_count": 6,
     "broad_count": 0,
-    "checked_at": "2026-11-08T08:29:09.520086+00:00",
+    "checked_at": "2026-11-08T08:34:32.064536+00:00",
     "details_or_listings_count": 6
   },
   "proshop_last_usable_count": 6,
-  "proshop_last_usable_at": "2026-11-08T08:29:09.520875+00:00"
+  "proshop_last_usable_at": "2026-11-08T08:34:35.804758+00:00"
 }
