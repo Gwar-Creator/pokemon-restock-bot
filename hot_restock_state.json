@@ -103,11 +103,11 @@
         "fetch_via": "jina_reader"
       },
       "3530352": {
-        "name": "Pokemon Mega Evolution Delta Reign Blister 3 pack",
+        "name": "Pokemon Mega Evolution Delta Reign Blister 3-pack",
         "price": 199.0,
         "stock": "PÅ LAGER",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Mega-Evolution-Delta-Reign-Blister-3-pack/3530352",
-        "fetch_via": "jina_reader"
+        "fetch_via": "jina_verified_detail"
       },
       "3478496": {
         "name": "Pokemon TCG Mega Greninja ex Premium Collection",
@@ -123,20 +123,6 @@
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
         "fetch_via": "jina_reader"
       },
-      "3530350": {
-        "name": "Pokemon Mega Evolution Delta reign Elite Trainer Box",
-        "price": null,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-Mega-Evolution-Delta-reign-Elite-Trainer-Box/3530350",
-        "fetch_via": "preserved_previous_scan"
-      },
-      "3530351": {
-        "name": "Pokemon Mega Evolution Delta Reign Booster Bundle",
-        "price": null,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-Mega-Evolution-Delta-Reign-Booster-Bundle/3530351",
-        "fetch_via": "preserved_previous_scan"
-      },
       "3478497": {
         "name": "Pokemon TCG 2-pack Booster",
         "price": null,
@@ -149,6 +135,20 @@
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
+        "fetch_via": "preserved_previous_scan"
+      },
+      "3530350": {
+        "name": "Pokemon Mega Evolution Delta reign Elite Trainer Box",
+        "price": null,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-Mega-Evolution-Delta-reign-Elite-Trainer-Box/3530350",
+        "fetch_via": "preserved_previous_scan"
+      },
+      "3530351": {
+        "name": "Pokemon Mega Evolution Delta Reign Booster Bundle",
+        "price": null,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-Mega-Evolution-Delta-Reign-Booster-Bundle/3530351",
         "fetch_via": "preserved_previous_scan"
       },
       "3530349": {
@@ -878,12 +878,12 @@
       "last_success_at": "2026-11-08T01:49:11.900132+00:00"
     },
     "proshop": {
-      "backoff_level": 1,
-      "next_allowed_at": 1794114866.415786,
-      "generic_failures": 2,
+      "backoff_level": 0,
+      "next_allowed_at": 0.0,
+      "generic_failures": 1,
       "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details",
-      "last_failure_at": "2026-11-08T05:12:26.415768+00:00",
-      "last_success_at": "2026-11-08T05:10:36.468274+00:00"
+      "last_failure_at": "2026-11-08T05:19:24.302546+00:00",
+      "last_success_at": "2026-11-08T05:18:28.203292+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -919,14 +919,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1794114895.3874848,
+      "next_allowed_at": 1794115206.9033039,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-08T05:10:55.387456+00:00"
+      "last_success_at": "2026-11-08T05:16:06.903275+00:00"
     }
   },
-  "updated_at": "2026-11-08T05:14:31.780517+00:00",
+  "updated_at": "2026-11-08T05:19:43.278183+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -951,7 +951,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-08T05:10:54.371544+00:00"
+          "last_checked": "2026-11-08T05:16:05.277981+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -961,7 +961,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1794114653.5735064,
+      "last_discovery_epoch": 1794114964.17253,
       "last_full_discovery_epoch": 1794102955.6806257,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -983,25 +983,25 @@
     "proshop:3530350": 1794049587.192688
   },
   "proshop_detail_checks": {
-    "3417744": 1794113854.1405358,
-    "3447592": 1794114112.471568,
+    "3417744": 1794114939.3564546,
+    "3447592": 1794115162.5146852,
     "3478496": 1794114460.1703172,
-    "3478497": 1794113893.6861506,
+    "3478497": 1794114992.7449656,
     "3478498": 1794114690.8233101,
-    "3519999": 1794113854.1405358,
-    "3530350": 1794114058.7099593,
-    "3530351": 1794113949.2013366,
-    "3530352": 1794114058.7099593,
+    "3519999": 1794114939.3564546,
+    "3530350": 1794115103.2229419,
+    "3530351": 1794115064.905917,
+    "3530352": 1794115103.2229419,
     "3530353": 1794114388.677743,
     "3421827": 1794114460.1703172,
     "3447590": 1794114555.3703437,
     "3478501": 1794114555.3703437,
-    "3502023": 1794113893.6861506,
-    "3519996": 1794113949.2013366,
+    "3502023": 1794114992.7449656,
+    "3519996": 1794115064.905917,
     "3530348": 1794114388.677743,
     "3530349": 1794114690.8233101
   },
-  "proshop_broad_attempt_at": 1794114443.8264174,
+  "proshop_broad_attempt_at": 1794115048.72178,
   "proshop_radar_alerts": {
     "3519996:BESTILLINGSVARE": 1793969439.0679424
   },
@@ -1013,9 +1013,9 @@
     "status": "degraded",
     "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-08T05:12:26.415681+00:00",
+    "checked_at": "2026-11-08T05:19:22.514617+00:00",
     "details_or_listings_count": 0
   },
   "proshop_last_usable_count": 6,
-  "proshop_last_usable_at": "2026-11-08T05:10:36.468297+00:00"
+  "proshop_last_usable_at": "2026-11-08T05:18:28.203332+00:00"
 }
