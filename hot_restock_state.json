@@ -123,18 +123,18 @@
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
         "fetch_via": "jina_reader"
       },
-      "3478497": {
-        "name": "Pokemon TCG 2-pack Booster",
-        "price": null,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2-pack-Booster/3478497",
-        "fetch_via": "preserved_previous_scan"
-      },
       "3417744": {
         "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
+        "fetch_via": "jina_verified_detail"
+      },
+      "3478497": {
+        "name": "Pokemon TCG 2-pack Booster",
+        "price": null,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2-pack-Booster/3478497",
         "fetch_via": "preserved_previous_scan"
       },
       "3530350": {
@@ -878,12 +878,12 @@
       "last_success_at": "2026-11-08T01:49:11.900132+00:00"
     },
     "proshop": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-08T05:26:25.728309+00:00",
-      "last_success_at": "2026-11-08T05:29:10.422946+00:00"
+      "backoff_level": 1,
+      "next_allowed_at": 1794116081.5773365,
+      "generic_failures": 2,
+      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details",
+      "last_failure_at": "2026-11-08T05:32:41.577320+00:00",
+      "last_success_at": "2026-11-08T05:30:58.515517+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -919,14 +919,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1794115799.727301,
+      "next_allowed_at": 1794116123.227809,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-08T05:25:59.727269+00:00"
+      "last_success_at": "2026-11-08T05:31:23.227779+00:00"
     }
   },
-  "updated_at": "2026-11-08T05:29:29.462194+00:00",
+  "updated_at": "2026-11-08T05:34:48.831845+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -951,7 +951,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-08T05:25:58.022597+00:00"
+          "last_checked": "2026-11-08T05:31:21.675578+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -961,7 +961,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1794115556.5883152,
+      "last_discovery_epoch": 1794115880.3183908,
       "last_full_discovery_epoch": 1794102955.6806257,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -983,12 +983,12 @@
     "proshop:3530350": 1794049587.192688
   },
   "proshop_detail_checks": {
-    "3417744": 1794114939.3564546,
+    "3417744": 1794115851.3653767,
     "3447592": 1794115162.5146852,
     "3478496": 1794115400.7050343,
-    "3478497": 1794114992.7449656,
+    "3478497": 1794115905.8558438,
     "3478498": 1794115640.113524,
-    "3519999": 1794114939.3564546,
+    "3519999": 1794115851.3653767,
     "3530350": 1794115103.2229419,
     "3530351": 1794115064.905917,
     "3530352": 1794115103.2229419,
@@ -996,7 +996,7 @@
     "3421827": 1794115400.7050343,
     "3447590": 1794115532.6029534,
     "3478501": 1794115456.8408933,
-    "3502023": 1794114992.7449656,
+    "3502023": 1794115905.8558438,
     "3519996": 1794115064.905917,
     "3530348": 1794115290.965947,
     "3530349": 1794115640.113524
@@ -1010,12 +1010,12 @@
   ],
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
-    "status": "ok",
-    "primary_count": 6,
+    "status": "degraded",
+    "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-08T05:29:10.421994+00:00",
-    "details_or_listings_count": 6
+    "checked_at": "2026-11-08T05:32:41.577236+00:00",
+    "details_or_listings_count": 0
   },
-  "proshop_last_usable_count": 6,
-  "proshop_last_usable_at": "2026-11-08T05:29:10.422965+00:00"
+  "proshop_last_usable_count": 7,
+  "proshop_last_usable_at": "2026-11-08T05:30:58.515549+00:00"
 }
