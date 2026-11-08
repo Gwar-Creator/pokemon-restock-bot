@@ -121,7 +121,7 @@
         "price": 329.0,
         "stock": "PÅ LAGER",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
-        "fetch_via": "jina_verified_detail"
+        "fetch_via": "jina_reader"
       },
       "3530350": {
         "name": "Pokemon Mega Evolution Delta reign Elite Trainer Box",
@@ -878,12 +878,12 @@
       "last_success_at": "2026-11-08T16:34:26.118151+00:00"
     },
     "proshop": {
-      "backoff_level": 1,
-      "next_allowed_at": 1794156971.948097,
-      "generic_failures": 2,
-      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details",
+      "backoff_level": 0,
+      "next_allowed_at": 0.0,
+      "generic_failures": 0,
+      "last_error": null,
       "last_failure_at": "2026-11-08T16:54:11.948077+00:00",
-      "last_success_at": "2026-11-08T16:52:20.998955+00:00"
+      "last_success_at": "2026-11-08T16:59:08.786140+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -919,14 +919,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1794157068.7603362,
+      "next_allowed_at": 1794157357.1194365,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-08T16:53:48.760308+00:00"
+      "last_success_at": "2026-11-08T16:58:37.119406+00:00"
     }
   },
-  "updated_at": "2026-11-08T16:54:29.062678+00:00",
+  "updated_at": "2026-11-08T16:59:26.350138+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -951,7 +951,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-08T16:53:47.574137+00:00"
+          "last_checked": "2026-11-08T16:58:35.534288+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -961,7 +961,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1794156826.4623516,
+      "last_discovery_epoch": 1794157114.5094922,
       "last_full_discovery_epoch": 1794146484.6443772,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -985,23 +985,23 @@
   "proshop_detail_checks": {
     "3417744": 1794156557.6548872,
     "3447592": 1794156797.022746,
-    "3478496": 1794156091.8109534,
+    "3478496": 1794157005.0656538,
     "3478497": 1794156632.3868587,
     "3478498": 1794156354.6771533,
-    "3519999": 1794156091.8109534,
+    "3519999": 1794157005.0656538,
     "3530350": 1794156684.3989432,
     "3530351": 1794156684.3989432,
     "3530352": 1794156501.8844163,
     "3530353": 1794156632.3868587,
     "3421827": 1794156739.570707,
     "3447590": 1794156557.6548872,
-    "3478501": 1794156145.910606,
-    "3502023": 1794156145.910606,
+    "3478501": 1794157093.822519,
+    "3502023": 1794157093.822519,
     "3519996": 1794156259.9945083,
     "3530348": 1794156354.6771533,
     "3530349": 1794156797.022746
   },
-  "proshop_broad_attempt_at": 1794156338.7407773,
+  "proshop_broad_attempt_at": 1794156984.0090492,
   "proshop_radar_alerts": {
     "3519996:BESTILLINGSVARE": 1793969439.0679424
   },
@@ -1010,12 +1010,12 @@
   ],
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
-    "status": "degraded",
-    "primary_count": 0,
+    "status": "ok",
+    "primary_count": 6,
     "broad_count": 0,
-    "checked_at": "2026-11-08T16:54:11.947978+00:00",
-    "details_or_listings_count": 0
+    "checked_at": "2026-11-08T16:59:08.785565+00:00",
+    "details_or_listings_count": 6
   },
   "proshop_last_usable_count": 6,
-  "proshop_last_usable_at": "2026-11-08T16:52:20.998982+00:00"
+  "proshop_last_usable_at": "2026-11-08T16:59:08.786151+00:00"
 }
