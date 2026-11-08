@@ -93,41 +93,41 @@
         "price": 1749.0,
         "stock": "PÅ LAGER",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Mega-Evolution-Delta-Reign-Booster-box-with-36-booster-packs/3530353",
-        "fetch_via": "jina_reader"
+        "fetch_via": "jina_broad_reader"
       },
       "3478501": {
         "name": "Pokemon Tin Fall ex assorted",
         "price": 299.0,
         "stock": "PÅ LAGER",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Tin-Fall-ex-assorted/3478501",
-        "fetch_via": "jina_reader"
+        "fetch_via": "jina_broad_reader"
       },
       "3530352": {
         "name": "Pokemon Mega Evolution Delta Reign Blister 3 pack",
         "price": 199.0,
         "stock": "PÅ LAGER",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Mega-Evolution-Delta-Reign-Blister-3-pack/3530352",
-        "fetch_via": "jina_reader"
-      },
-      "3478496": {
-        "name": "Pokemon TCG Mega Greninja ex Premium Collection",
-        "price": null,
-        "stock": "BESTILLINGSVARE",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
-        "fetch_via": "jina_reader"
-      },
-      "3421827": {
-        "name": "Pokemon TCG 2024 World Championships Deck",
-        "price": 329.0,
-        "stock": "PÅ LAGER",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
-        "fetch_via": "jina_reader"
+        "fetch_via": "jina_broad_reader"
       },
       "3417744": {
         "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
+        "fetch_via": "jina_verified_detail"
+      },
+      "3478496": {
+        "name": "Pokemon TCG Mega Greninja ex Premium Collection",
+        "price": null,
+        "stock": "BESTILLINGSVARE",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
+        "fetch_via": "preserved_previous_scan"
+      },
+      "3421827": {
+        "name": "Pokemon TCG 2024 World Championships Deck",
+        "price": 329.0,
+        "stock": "PÅ LAGER",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
         "fetch_via": "preserved_previous_scan"
       },
       "3530351": {
@@ -878,12 +878,12 @@
       "last_success_at": "2026-11-08T01:49:11.900132+00:00"
     },
     "proshop": {
-      "backoff_level": 2,
-      "next_allowed_at": 1794141989.0839496,
-      "generic_failures": 3,
-      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details",
+      "backoff_level": 1,
+      "next_allowed_at": 1794142183.5755806,
+      "generic_failures": 0,
+      "last_error": null,
       "last_failure_at": "2026-11-08T12:41:29.083915+00:00",
-      "last_success_at": "2026-11-08T12:37:24.459086+00:00"
+      "last_success_at": "2026-11-08T12:47:43.575563+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -919,14 +919,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1794141889.6046686,
+      "next_allowed_at": 1794142195.809372,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-08T12:40:49.604641+00:00"
+      "last_success_at": "2026-11-08T12:45:55.809350+00:00"
     }
   },
-  "updated_at": "2026-11-08T12:44:25.449320+00:00",
+  "updated_at": "2026-11-08T12:49:32.683523+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -951,7 +951,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-08T12:40:48.904455+00:00"
+          "last_checked": "2026-11-08T12:45:54.873782+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -961,7 +961,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1794141647.9755044,
+      "last_discovery_epoch": 1794141953.9943342,
       "last_full_discovery_epoch": 1794124882.7201617,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -983,7 +983,7 @@
     "proshop:3530350": 1794049587.192688
   },
   "proshop_detail_checks": {
-    "3417744": 1794140948.0090454,
+    "3417744": 1794142060.6853132,
     "3447592": 1794141155.6922061,
     "3478496": 1794141401.7385976,
     "3478497": 1794141046.8886828,
@@ -994,14 +994,14 @@
     "3530352": 1794141401.7385976,
     "3530353": 1794141496.7149365,
     "3421827": 1794141331.2030206,
-    "3447590": 1794140785.2315361,
+    "3447590": 1794142060.6853132,
     "3478501": 1794141440.7516952,
     "3502023": 1794141155.6922061,
     "3519996": 1794141331.2030206,
     "3530348": 1794141440.7516952,
     "3530349": 1794140948.0090454
   },
-  "proshop_broad_attempt_at": 1794141385.7317858,
+  "proshop_broad_attempt_at": 1794142044.5514529,
   "proshop_radar_alerts": {
     "3519996:BESTILLINGSVARE": 1793969439.0679424
   },
@@ -1012,10 +1012,10 @@
   "proshop_primary_health": {
     "status": "degraded",
     "primary_count": 0,
-    "broad_count": 0,
-    "checked_at": "2026-11-08T12:41:26.899512+00:00",
-    "details_or_listings_count": 0
+    "broad_count": 4,
+    "checked_at": "2026-11-08T12:47:40.685072+00:00",
+    "details_or_listings_count": 5
   },
-  "proshop_last_usable_count": 6,
-  "proshop_last_usable_at": "2026-11-08T12:37:24.459111+00:00"
+  "proshop_last_usable_count": 5,
+  "proshop_last_usable_at": "2026-11-08T12:47:43.575598+00:00"
 }
