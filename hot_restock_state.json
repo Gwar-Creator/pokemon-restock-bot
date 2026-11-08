@@ -415,7 +415,7 @@
         "local_stocks": {
           "1662": {
             "name": "Bilka Kolding",
-            "stock": 394
+            "stock": 392
           },
           "1659": {
             "name": "Bilka Esbjerg",
@@ -878,12 +878,12 @@
       "last_success_at": "2026-11-08T01:49:11.900132+00:00"
     },
     "proshop": {
-      "backoff_level": 1,
-      "next_allowed_at": 1794136828.8832936,
-      "generic_failures": 2,
-      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details",
+      "backoff_level": 0,
+      "next_allowed_at": 0.0,
+      "generic_failures": 0,
+      "last_error": null,
       "last_failure_at": "2026-11-08T11:18:28.883267+00:00",
-      "last_success_at": "2026-11-08T11:16:35.464704+00:00"
+      "last_success_at": "2026-11-08T11:24:13.077202+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -919,14 +919,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1794136802.7634256,
+      "next_allowed_at": 1794137099.947323,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-08T11:16:02.763401+00:00"
+      "last_success_at": "2026-11-08T11:20:59.947298+00:00"
     }
   },
-  "updated_at": "2026-11-08T11:19:35.798157+00:00",
+  "updated_at": "2026-11-08T11:24:31.447595+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -951,7 +951,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-08T11:16:01.379097+00:00"
+          "last_checked": "2026-11-08T11:20:58.863094+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -961,7 +961,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1794136559.78559,
+      "last_discovery_epoch": 1794136857.6973836,
       "last_full_discovery_epoch": 1794124882.7201617,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -985,23 +985,23 @@
   "proshop_detail_checks": {
     "3417744": 1794136396.3742309,
     "3447592": 1794136705.0801153,
-    "3478496": 1794135877.1766696,
+    "3478496": 1794136889.1542487,
     "3478497": 1794136452.5437543,
-    "3478498": 1794135984.1894374,
+    "3478498": 1794136998.1252255,
     "3519999": 1794136396.3742309,
     "3530350": 1794136647.6113634,
     "3530351": 1794136592.18344,
-    "3530352": 1794135823.2794826,
-    "3530353": 1794135929.7212555,
-    "3421827": 1794135823.2794826,
+    "3530352": 1794136834.831512,
+    "3530353": 1794136944.8425329,
+    "3421827": 1794136834.831512,
     "3447590": 1794136592.18344,
-    "3478501": 1794135929.7212555,
+    "3478501": 1794136944.8425329,
     "3502023": 1794136647.6113634,
     "3519996": 1794136705.0801153,
-    "3530348": 1794135877.1766696,
-    "3530349": 1794135984.1894374
+    "3530348": 1794136889.1542487,
+    "3530349": 1794136998.1252255
   },
-  "proshop_broad_attempt_at": 1794136340.8049383,
+  "proshop_broad_attempt_at": 1794136942.4414327,
   "proshop_radar_alerts": {
     "3519996:BESTILLINGSVARE": 1793969439.0679424
   },
@@ -1010,12 +1010,12 @@
   ],
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
-    "status": "degraded",
-    "primary_count": 0,
+    "status": "ok",
+    "primary_count": 6,
     "broad_count": 0,
-    "checked_at": "2026-11-08T11:18:25.080048+00:00",
-    "details_or_listings_count": 0
+    "checked_at": "2026-11-08T11:24:13.076539+00:00",
+    "details_or_listings_count": 6
   },
   "proshop_last_usable_count": 6,
-  "proshop_last_usable_at": "2026-11-08T11:16:35.464730+00:00"
+  "proshop_last_usable_at": "2026-11-08T11:24:13.077216+00:00"
 }
