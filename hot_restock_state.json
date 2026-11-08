@@ -93,41 +93,41 @@
         "price": 1749.0,
         "stock": "PÅ LAGER",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Mega-Evolution-Delta-Reign-Booster-box-with-36-booster-packs/3530353",
-        "fetch_via": "jina_broad_reader"
+        "fetch_via": "jina_reader"
       },
       "3478501": {
-        "name": "Pokemon Tin Fall ex assorted",
+        "name": "Pokemon Tin Fall ex - assorted",
         "price": 299.0,
         "stock": "PÅ LAGER",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Tin-Fall-ex-assorted/3478501",
-        "fetch_via": "jina_broad_reader"
+        "fetch_via": "jina_verified_detail"
       },
       "3530352": {
         "name": "Pokemon Mega Evolution Delta Reign Blister 3 pack",
         "price": 199.0,
         "stock": "PÅ LAGER",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Mega-Evolution-Delta-Reign-Blister-3-pack/3530352",
-        "fetch_via": "jina_broad_reader"
-      },
-      "3530351": {
-        "name": "Pokemon Mega Evolution Delta Reign Booster Bundle",
-        "price": null,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-Mega-Evolution-Delta-Reign-Booster-Bundle/3530351",
-        "fetch_via": "jina_verified_detail"
+        "fetch_via": "jina_reader"
       },
       "3478496": {
         "name": "Pokemon TCG Mega Greninja ex Premium Collection",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
-        "fetch_via": "preserved_previous_scan"
+        "fetch_via": "jina_reader"
       },
       "3421827": {
         "name": "Pokemon TCG 2024 World Championships Deck",
         "price": 329.0,
         "stock": "PÅ LAGER",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
+        "fetch_via": "jina_reader"
+      },
+      "3530351": {
+        "name": "Pokemon Mega Evolution Delta Reign Booster Bundle",
+        "price": null,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-Mega-Evolution-Delta-Reign-Booster-Bundle/3530351",
         "fetch_via": "preserved_previous_scan"
       },
       "3478497": {
@@ -275,7 +275,7 @@
         "is_exposed": true,
         "store_count": 32,
         "kolding_stock": 328,
-        "esbjerg_stock": 194,
+        "esbjerg_stock": 191,
         "quantity_limit": 6,
         "sku": "11399552-EA",
         "url": "https://www.br.dk/produkter/pokemon-mega-evolution-delta-reign-samlekort-boosterpakke/200397060/"
@@ -878,12 +878,12 @@
       "last_success_at": "2026-11-08T01:49:11.900132+00:00"
     },
     "proshop": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-08T13:04:40.403083+00:00",
-      "last_success_at": "2026-11-08T13:09:29.348900+00:00"
+      "backoff_level": 1,
+      "next_allowed_at": 1794143778.500839,
+      "generic_failures": 2,
+      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details",
+      "last_failure_at": "2026-11-08T13:14:18.500808+00:00",
+      "last_success_at": "2026-11-08T13:12:27.406992+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -919,14 +919,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1794143390.2235131,
+      "next_allowed_at": 1794143700.236226,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-08T13:05:50.223486+00:00"
+      "last_success_at": "2026-11-08T13:11:00.236199+00:00"
     }
   },
-  "updated_at": "2026-11-08T13:09:47.487555+00:00",
+  "updated_at": "2026-11-08T13:14:34.662768+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -951,7 +951,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-08T13:05:48.660746+00:00"
+          "last_checked": "2026-11-08T13:10:59.078507+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -961,7 +961,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1794143147.5830612,
+      "last_discovery_epoch": 1794143458.2206287,
       "last_full_discovery_epoch": 1794124882.7201617,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -984,21 +984,21 @@
   },
   "proshop_detail_checks": {
     "3417744": 1794142970.8528013,
-    "3447592": 1794142344.4747627,
-    "3478496": 1794142455.8264616,
+    "3447592": 1794143433.0978372,
+    "3478496": 1794143488.3666415,
     "3478497": 1794143238.1236048,
-    "3478498": 1794142641.1326907,
+    "3478498": 1794143653.8228328,
     "3519999": 1794143365.6224742,
     "3530350": 1794143293.6700554,
     "3530351": 1794143365.6224742,
-    "3530352": 1794142530.9238675,
-    "3530353": 1794142585.2257168,
-    "3421827": 1794142400.5548348,
+    "3530352": 1794143598.5284333,
+    "3530353": 1794143653.8228328,
+    "3421827": 1794143433.0978372,
     "3447590": 1794143238.1236048,
-    "3478501": 1794142530.9238675,
-    "3502023": 1794142400.5548348,
-    "3519996": 1794142455.8264616,
-    "3530348": 1794142585.2257168,
+    "3478501": 1794143542.4097,
+    "3502023": 1794143488.3666415,
+    "3519996": 1794143542.4097,
+    "3530348": 1794143598.5284333,
     "3530349": 1794143293.6700554
   },
   "proshop_broad_attempt_at": 1794143349.3609793,
@@ -1012,10 +1012,10 @@
   "proshop_primary_health": {
     "status": "degraded",
     "primary_count": 0,
-    "broad_count": 4,
-    "checked_at": "2026-11-08T13:09:25.622375+00:00",
-    "details_or_listings_count": 5
+    "broad_count": 0,
+    "checked_at": "2026-11-08T13:14:13.822774+00:00",
+    "details_or_listings_count": 0
   },
-  "proshop_last_usable_count": 5,
-  "proshop_last_usable_at": "2026-11-08T13:09:29.348926+00:00"
+  "proshop_last_usable_count": 6,
+  "proshop_last_usable_at": "2026-11-08T13:12:27.407017+00:00"
 }
