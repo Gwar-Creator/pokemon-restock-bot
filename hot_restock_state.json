@@ -419,7 +419,7 @@
           },
           "1659": {
             "name": "Bilka Esbjerg",
-            "stock": 325
+            "stock": 319
           }
         },
         "quantity_limit": 6,
@@ -878,11 +878,11 @@
       "last_success_at": "2026-11-08T01:49:11.900132+00:00"
     },
     "proshop": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-08T10:27:28.520956+00:00",
+      "backoff_level": 2,
+      "next_allowed_at": 1794134370.8924828,
+      "generic_failures": 3,
+      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details",
+      "last_failure_at": "2026-11-08T10:34:30.892454+00:00",
       "last_success_at": "2026-11-08T10:29:11.241841+00:00"
     },
     "br": {
@@ -919,14 +919,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1794133794.3312247,
+      "next_allowed_at": 1794134109.640336,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-08T10:25:54.331199+00:00"
+      "last_success_at": "2026-11-08T10:31:09.640309+00:00"
     }
   },
-  "updated_at": "2026-11-08T10:29:32.178566+00:00",
+  "updated_at": "2026-11-08T10:34:47.185828+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -951,7 +951,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-08T10:25:52.864841+00:00"
+          "last_checked": "2026-11-08T10:31:08.536749+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -961,7 +961,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1794133551.9223883,
+      "last_discovery_epoch": 1794133867.553431,
       "last_full_discovery_epoch": 1794124882.7201617,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -985,9 +985,9 @@
   "proshop_detail_checks": {
     "3417744": 1794133046.6464884,
     "3447592": 1794133642.7301505,
-    "3478496": 1794132953.9055986,
+    "3478496": 1794133901.8969755,
     "3478497": 1794133237.7214692,
-    "3478498": 1794132992.1725535,
+    "3478498": 1794134065.9323926,
     "3519999": 1794133046.6464884,
     "3530350": 1794133591.910296,
     "3530351": 1794133291.6176512,
@@ -995,11 +995,11 @@
     "3530353": 1794133697.2809541,
     "3421827": 1794133697.2809541,
     "3447590": 1794133237.7214692,
-    "3478501": 1794132953.9055986,
+    "3478501": 1794133901.8969755,
     "3502023": 1794133291.6176512,
     "3519996": 1794133347.080352,
     "3530348": 1794133642.7301505,
-    "3530349": 1794132992.1725535
+    "3530349": 1794134065.9323926
   },
   "proshop_broad_attempt_at": 1794133587.645186,
   "proshop_radar_alerts": {
@@ -1010,11 +1010,11 @@
   ],
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
-    "status": "ok",
-    "primary_count": 6,
+    "status": "degraded",
+    "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-08T10:29:11.241041+00:00",
-    "details_or_listings_count": 6
+    "checked_at": "2026-11-08T10:34:25.932337+00:00",
+    "details_or_listings_count": 0
   },
   "proshop_last_usable_count": 6,
   "proshop_last_usable_at": "2026-11-08T10:29:11.241858+00:00"
