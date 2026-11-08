@@ -89,11 +89,11 @@
     },
     "proshop": {
       "3530353": {
-        "name": "Pokemon Mega Evolution Delta Reign Booster (box with 36 booster packs)",
+        "name": "Pokemon Mega Evolution Delta Reign Booster box with 36 booster packs",
         "price": 1749.0,
         "stock": "PÅ LAGER",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Mega-Evolution-Delta-Reign-Booster-box-with-36-booster-packs/3530353",
-        "fetch_via": "jina_verified_detail"
+        "fetch_via": "jina_reader"
       },
       "3478501": {
         "name": "Pokemon Tin Fall ex assorted",
@@ -128,7 +128,7 @@
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Mega-Evolution-Delta-reign-Elite-Trainer-Box/3530350",
-        "fetch_via": "jina_verified_detail"
+        "fetch_via": "preserved_previous_scan"
       },
       "3530351": {
         "name": "Pokemon Mega Evolution Delta Reign Booster Bundle",
@@ -880,10 +880,10 @@
     "proshop": {
       "backoff_level": 0,
       "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-08T02:19:15.538790+00:00",
-      "last_success_at": "2026-11-08T02:29:20.496093+00:00"
+      "generic_failures": 1,
+      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details",
+      "last_failure_at": "2026-11-08T02:39:06.239231+00:00",
+      "last_success_at": "2026-11-08T02:38:10.543996+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -919,14 +919,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1794105315.4109793,
+      "next_allowed_at": 1794105595.032475,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-08T02:31:15.410950+00:00"
+      "last_success_at": "2026-11-08T02:35:55.032454+00:00"
     }
   },
-  "updated_at": "2026-11-08T02:34:49.494204+00:00",
+  "updated_at": "2026-11-08T02:39:23.664433+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -951,7 +951,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-08T02:31:14.668940+00:00"
+          "last_checked": "2026-11-08T02:35:53.694288+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -961,7 +961,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1794105073.831911,
+      "last_discovery_epoch": 1794105352.6425447,
       "last_full_discovery_epoch": 1794102955.6806257,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -998,10 +998,10 @@
     "3478501": 1794104957.1910503,
     "3502023": 1794105051.304595,
     "3519996": 1794105104.2878098,
-    "3530348": 1794104188.0431595,
+    "3530348": 1794105328.9707015,
     "3530349": 1794104901.7943904
   },
-  "proshop_broad_attempt_at": 1794104731.675361,
+  "proshop_broad_attempt_at": 1794105379.9399211,
   "proshop_radar_alerts": {
     "3519996:BESTILLINGSVARE": 1793969439.0679424
   },
@@ -1010,12 +1010,12 @@
   ],
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
-    "status": "ok",
-    "primary_count": 6,
+    "status": "degraded",
+    "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-08T02:34:30.047094+00:00",
-    "details_or_listings_count": 7
+    "checked_at": "2026-11-08T02:39:06.239155+00:00",
+    "details_or_listings_count": 0
   },
-  "proshop_last_usable_count": 7,
-  "proshop_last_usable_at": "2026-11-08T02:34:32.949211+00:00"
+  "proshop_last_usable_count": 6,
+  "proshop_last_usable_at": "2026-11-08T02:38:10.544009+00:00"
 }
