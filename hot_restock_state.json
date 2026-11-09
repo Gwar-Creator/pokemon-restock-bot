@@ -123,6 +123,13 @@
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Figure-Collection-30th-Celebration-assorted/3519993",
         "fetch_via": "jina_reader"
       },
+      "3519997": {
+        "name": "Pokemon Ditto Premium Collection 30th Celebration",
+        "price": null,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-Ditto-Premium-Collection-30th-Celebration/3519997",
+        "fetch_via": "preserved_previous_scan"
+      },
       "3417744": {
         "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
         "price": null,
@@ -135,13 +142,6 @@
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2-pack-Booster/3478497",
-        "fetch_via": "preserved_previous_scan"
-      },
-      "3519997": {
-        "name": "Pokemon Ditto Premium Collection 30th Celebration",
-        "price": null,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-Ditto-Premium-Collection-30th-Celebration/3519997",
         "fetch_via": "preserved_previous_scan"
       },
       "3519996": {
@@ -719,12 +719,12 @@
       "last_success_at": "2026-11-09T07:19:13.117880+00:00"
     },
     "proshop": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-09T16:22:33.354510+00:00",
-      "last_success_at": "2026-11-09T16:24:43.508053+00:00"
+      "backoff_level": 1,
+      "next_allowed_at": 1794241820.7590518,
+      "generic_failures": 2,
+      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details",
+      "last_failure_at": "2026-11-09T16:28:20.759035+00:00",
+      "last_success_at": "2026-11-09T16:26:31.928502+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -760,14 +760,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1794241521.7429168,
+      "next_allowed_at": 1794241803.272126,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-09T16:21:21.742890+00:00"
+      "last_success_at": "2026-11-09T16:26:03.272099+00:00"
     }
   },
-  "updated_at": "2026-11-09T16:25:01.937355+00:00",
+  "updated_at": "2026-11-09T16:29:31.451542+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -792,7 +792,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-09T16:21:20.565506+00:00"
+          "last_checked": "2026-11-09T16:26:01.887541+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -802,7 +802,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1794241279.0795352,
+      "last_discovery_epoch": 1794241560.583865,
       "last_full_discovery_epoch": 1794234070.7323449,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -843,10 +843,10 @@
     "3478501": 1794241429.4153388,
     "3502023": 1794241429.4153388,
     "3519996": 1794241466.1300147,
-    "3530348": 1794240689.4690502,
+    "3530348": 1794241589.6180842,
     "3530349": 1794241466.1300147,
-    "3519993": 1794240567.5932624,
-    "3519997": 1794240567.5932624
+    "3519993": 1794241537.4587724,
+    "3519997": 1794241537.4587724
   },
   "proshop_broad_attempt_at": 1794241413.6725245,
   "proshop_radar_alerts": {
@@ -858,12 +858,12 @@
   ],
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
-    "status": "ok",
-    "primary_count": 6,
+    "status": "degraded",
+    "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-09T16:24:26.129941+00:00",
-    "details_or_listings_count": 6
+    "checked_at": "2026-11-09T16:28:20.758952+00:00",
+    "details_or_listings_count": 0
   },
   "proshop_last_usable_count": 6,
-  "proshop_last_usable_at": "2026-11-09T16:24:43.508080+00:00"
+  "proshop_last_usable_at": "2026-11-09T16:26:31.928540+00:00"
 }
