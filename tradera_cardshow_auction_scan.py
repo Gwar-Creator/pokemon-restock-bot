@@ -31,8 +31,8 @@ DISCOVERY = (
     "pokemon ex ruby sapphire", "pokemon sandstorm", "pokemon ex dragon",
     "pokemon vintage cards", "pokemon gamla kort",
 )
-MAX_DETAILS = 260
-MAX_SELLERS = 20
+MAX_DETAILS = 320
+MAX_SELLERS = 25
 
 def normalized(value):
     value = unicodedata.normalize("NFKD", str(value or "").lower())
@@ -45,6 +45,7 @@ def phrase(text, word):
 
 def is_excluded(text, card):
     bad = ("proxy", "orica", "fake", "replica", "reprint", "booster", "sealed",
+           "celebrations", "classic collection", "25th", "base set 2",
            "psa ", "cgc ", "bgs ", "graded", "japanese", "japanska", "german",
            "tyska", "deutsch", "french", "franska", "italian", "italiano",
            "spanish", "spanska", "korean", "world championship")
@@ -166,8 +167,47 @@ def main():
                   "source":source, "language":"not verified",
                   "condition":"not verified",
                   "shipping_to_denmark":"not verified"}
+    # Allocate details across all six sets, rather than stopping after the
+    # Base Set results. Reserve remaining detail budget for seller expansion.
+    pools={set_name:[] for set_name in TOTALS}
     for row in discovered.values():
-        inspect(row,"card_search")
+        row_hits=matches(title(row),cards)
+        if not row_hits:
+            continue
+        set_name=next((h["set"] for h in row_hits
+                       if h["priority"]=="complete_set"),row_hits[0]["set"])
+        pools[set_name].append(row)
+    for set_name,arr in pools.items():
+        arr.sort(key=lambda row:(
+            not any(h["confidence"]=="set_and_number"
+                    for h in matches(title(row),cards)),
+            -len(matches(title(row),cards))))
+    initial_quotas={"Base":65,"Jungle":32,"Fossil":32,
+                    "Ruby":25,"Sandstorm":24,"Dragon":22}
+    selected=[]
+    added=set()
+    for set_name,quota in initial_quotas.items():
+        for row in pools[set_name][:quota]:
+            uid=str(row.get("id") or row.get("itemId") or "")
+            if uid not in added:
+                selected.append(row)
+                added.add(uid)
+    # Fill unused quotas round-robin by all remaining set pools.
+    if len(selected)<200:
+        remaining={s:[r for r in rows if str(r.get("id") or r.get("itemId") or "") not in added]
+                   for s,rows in pools.items()}
+        while len(selected)<200 and any(remaining.values()):
+            for set_name in TOTALS:
+                if remaining[set_name]:
+                    row=remaining[set_name].pop(0)
+                    uid=str(row.get("id") or row.get("itemId") or "")
+                    if uid not in added:
+                        selected.append(row)
+                        added.add(uid)
+                    if len(selected)>=200:
+                        break
+    for row in selected:
+        inspect(row,"balanced_card_search")
     # Expand the sellers of matched auctions, maximizing multi-card opportunities.
     grouped_before=defaultdict(set)
     for a in ads.values():
