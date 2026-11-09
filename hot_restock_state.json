@@ -719,12 +719,12 @@
       "last_success_at": "2026-11-09T07:19:13.117880+00:00"
     },
     "proshop": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-09T23:01:24.395706+00:00",
-      "last_success_at": "2026-11-09T23:29:18.819381+00:00"
+      "backoff_level": 1,
+      "next_allowed_at": 1794267560.4710426,
+      "generic_failures": 2,
+      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details",
+      "last_failure_at": "2026-11-09T23:37:20.471027+00:00",
+      "last_success_at": "2026-11-09T23:35:30.770337+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -760,14 +760,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1794267319.8909705,
+      "next_allowed_at": 1794267590.3462465,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-09T23:31:19.890943+00:00"
+      "last_success_at": "2026-11-09T23:35:50.346219+00:00"
     }
   },
-  "updated_at": "2026-11-09T23:34:42.432328+00:00",
+  "updated_at": "2026-11-09T23:39:25.990105+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -792,7 +792,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-09T23:31:19.124252+00:00"
+          "last_checked": "2026-11-09T23:35:49.154321+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -802,7 +802,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1794267077.883281,
+      "last_discovery_epoch": 1794267348.2182615,
       "last_full_discovery_epoch": 1794255952.431208,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -858,12 +858,12 @@
   ],
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
-    "status": "ok",
-    "primary_count": 6,
+    "status": "degraded",
+    "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-09T23:34:29.685545+00:00",
-    "details_or_listings_count": 6
+    "checked_at": "2026-11-09T23:37:20.470946+00:00",
+    "details_or_listings_count": 0
   },
   "proshop_last_usable_count": 6,
-  "proshop_last_usable_at": "2026-11-09T23:34:29.686426+00:00"
+  "proshop_last_usable_at": "2026-11-09T23:35:30.770356+00:00"
 }
