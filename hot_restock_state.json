@@ -128,7 +128,7 @@
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2-pack-Booster/3478497",
-        "fetch_via": "jina_verified_detail"
+        "fetch_via": "preserved_previous_scan"
       },
       "3417744": {
         "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
@@ -721,10 +721,10 @@
     "proshop": {
       "backoff_level": 0,
       "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-09T22:28:29.042679+00:00",
-      "last_success_at": "2026-11-09T22:29:26.778918+00:00"
+      "generic_failures": 1,
+      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details",
+      "last_failure_at": "2026-11-09T22:34:48.781643+00:00",
+      "last_success_at": "2026-11-09T22:33:36.009757+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -760,14 +760,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1794263396.9652555,
+      "next_allowed_at": 1794263715.2816725,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-09T22:25:56.965229+00:00"
+      "last_success_at": "2026-11-09T22:31:15.281642+00:00"
     }
   },
-  "updated_at": "2026-11-09T22:29:44.878976+00:00",
+  "updated_at": "2026-11-09T22:35:06.820451+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -792,7 +792,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-09T22:25:55.401971+00:00"
+          "last_checked": "2026-11-09T22:31:14.097861+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -802,7 +802,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1794263153.7813778,
+      "last_discovery_epoch": 1794263472.8512695,
       "last_full_discovery_epoch": 1794255952.431208,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -840,15 +840,15 @@
     "3530353": 1794263074.7865307,
     "3421827": 1794263074.7865307,
     "3447590": 1794262757.7889068,
-    "3478501": 1794262457.7540553,
-    "3502023": 1794262757.7889068,
+    "3478501": 1794263452.8772798,
+    "3502023": 1794263686.4316933,
     "3519996": 1794263243.4273782,
     "3530348": 1794262948.717896,
     "3530349": 1794262948.717896,
     "3519993": 1794262893.839942,
     "3519997": 1794263304.7203715
   },
-  "proshop_broad_attempt_at": 1794263059.0872576,
+  "proshop_broad_attempt_at": 1794263670.7874372,
   "proshop_radar_alerts": {
     "3519996:BESTILLINGSVARE": 1793969439.0679424,
     "3519997:BESTILLINGSVARE": 1794234274.0313218
@@ -858,12 +858,12 @@
   ],
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
-    "status": "ok",
-    "primary_count": 6,
+    "status": "degraded",
+    "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-09T22:29:13.463107+00:00",
-    "details_or_listings_count": 7
+    "checked_at": "2026-11-09T22:34:46.431575+00:00",
+    "details_or_listings_count": 0
   },
-  "proshop_last_usable_count": 7,
-  "proshop_last_usable_at": "2026-11-09T22:29:26.778943+00:00"
+  "proshop_last_usable_count": 6,
+  "proshop_last_usable_at": "2026-11-09T22:33:36.009777+00:00"
 }
