@@ -1,0 +1,37 @@
+name: BR Hidden Stock Diagnostic (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: br-hidden-stock-diagnostic-manual
+  cancel-in-progress: false
+
+jobs:
+  inspect-br:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+          cache: pip
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+      - name: Verify diagnostic syntax (offline)
+        run: python -m py_compile br_hidden_stock_probe.py local_stock_watch.py
+      - name: Inspect BR hidden stock (no Discord, no commits)
+        run: python br_hidden_stock_probe.py
+      - name: Archive diagnostic snapshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: br-hidden-stock-manual-diagnostic
+          path: br_hidden_stock_probe_state.json
+          retention-days: 14
+          if-no-files-found: error
