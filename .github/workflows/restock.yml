@@ -99,10 +99,6 @@ jobs:
           DISCORD_RETENTION_HOURS: "24"
         run: python discord_cleanup.py
 
-      - name: Probe hidden BR inventory (no alerts)
-        continue-on-error: true
-        run: python br_hidden_stock_probe.py
-
       - name: Monitor hidden BR Bilka Foetex store stock (Early Radar only)
         continue-on-error: true
         env:
@@ -174,7 +170,6 @@ jobs:
           git add -- \
             restock_state_v2.json \
             local_stock_state_v1.json \
-            br_hidden_stock_probe_state.json \
             hidden_stock_state_v1.json \
             tier_b_wave1_shadow_state.json \
             tier_b_wave2_shadow_state.json \
