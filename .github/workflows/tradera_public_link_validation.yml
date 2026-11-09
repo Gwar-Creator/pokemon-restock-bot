@@ -30,3 +30,31 @@ jobs:
                 print(name,"http",r.status,"url",r.url,"bytes",len(body),"title",(html.unescape(page_title.group(1)).strip() if page_title else "N/A")[:100],"not_available",any(x in body for x in ("varan är inte tillgänglig","varen er ikke tilgængelig","object is no longer available","objektet finns inte","404 not found")))
             except Exception as e:
               print(name,"ERROR",type(e).__name__,str(e)[:160])
+
+      - name: Analyze publicly rendered item availability
+        shell: python
+        run: |
+          import urllib.request,re,html
+          from html.parser import HTMLParser
+          class Content(HTMLParser):
+            def __init__(self): super().__init__();self.skip=0;self.out=[]
+            def handle_starttag(self,tag,attrs):
+              if tag in ("script","style"):self.skip+=1
+            def handle_endtag(self,tag):
+              if tag in ("script","style") and self.skip:self.skip-=1
+            def handle_data(self,data):
+              if not self.skip:self.out.append(data)
+          targets=[
+          ("tentacruel","https://www.tradera.com/da/item/1001337/759307493/tentacruel-44-62-pokemon-fossil"),
+          ("blastoise","https://www.tradera.com/da/item/1001337/760171752/blastoise-2-102-holo-base-set-pokemon")]
+          for name,u in targets:
+            req=urllib.request.Request(u,headers={"User-Agent":"Mozilla/5.0","Accept-Language":"da-DK,da;q=0.9"})
+            with urllib.request.urlopen(req,timeout=15) as response:
+              markup=response.read(1000000).decode("utf8","replace")
+            p=Content();p.feed(markup)
+            visible=re.sub(r"\\s+"," "," ".join(p.out)).strip()
+            print("ITEM",name,"visible_len",len(visible),"script_count",markup.count("<script"))
+            print("ITEM",name,"text_head",visible[:500].replace("|","/"))
+            for term in ("tilgængelig","tillgänglig","ikke længere","ended","sold","utgången","køb nu","læg bud","bud","404","_next","__next_data__","__initialstate","window.__"):
+              occurrences=[m.start() for m in re.finditer(re.escape(term),markup,re.I)]
+              print("SIGNAL",name,term,"count",len(occurrences),"first_context",re.sub(r"\\s+"," ",markup[max(0,occurrences[0]-80):occurrences[0]+170])[:240] if occurrences else "-")
