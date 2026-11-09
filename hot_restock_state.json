@@ -121,7 +121,7 @@
         "price": 329.0,
         "stock": "PÅ LAGER",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
-        "fetch_via": "jina_verified_detail"
+        "fetch_via": "jina_reader"
       },
       "3530350": {
         "name": "Pokemon Mega Evolution Delta reign Elite Trainer Box",
@@ -910,23 +910,23 @@
       "last_success_at": "2026-11-02T05:19:46.731199+00:00"
     },
     "boozt": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-09T00:11:55.281661+00:00",
-      "last_success_at": "2026-11-09T00:14:56.044497+00:00"
+      "backoff_level": 1,
+      "next_allowed_at": 1794212802.5554953,
+      "generic_failures": 1,
+      "last_error": "BOOZT fejlede: Reader: 422 Client Error: Unprocessable Entity for url: https://r.jina.ai/https://www.boozt.com/dk/da/pokemon-trading-cards/born | direct: 429 Client Error: Too Many Requests for url: https://www.boozt.com/dk/da/pokemon-trading-cards/born",
+      "last_failure_at": "2026-11-09T08:24:42.555470+00:00",
+      "last_success_at": "2026-11-09T08:24:00.903002+00:00"
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1794212417.3744154,
+      "next_allowed_at": 1794212711.612433,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-09T08:16:17.374387+00:00"
+      "last_success_at": "2026-11-09T08:21:11.612407+00:00"
     }
   },
-  "updated_at": "2026-11-09T08:19:43.633566+00:00",
+  "updated_at": "2026-11-09T08:24:42.556697+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -951,7 +951,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-09T08:16:16.544119+00:00"
+          "last_checked": "2026-11-09T08:21:10.682913+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -961,7 +961,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1794212174.3503659,
+      "last_discovery_epoch": 1794212469.5311909,
       "last_full_discovery_epoch": 1794212174.3503659,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -985,23 +985,23 @@
   "proshop_detail_checks": {
     "3417744": 1794211832.4393659,
     "3447592": 1794212360.8494241,
-    "3478496": 1794211478.267409,
+    "3478496": 1794212433.4934592,
     "3478497": 1794211941.0788088,
-    "3478498": 1794211702.822997,
-    "3519999": 1794211478.267409,
+    "3478498": 1794212616.1522763,
+    "3519999": 1794212433.4934592,
     "3530350": 1794212306.363604,
     "3530351": 1794212306.363604,
     "3530352": 1794211885.265206,
     "3530353": 1794211941.0788088,
     "3421827": 1794212360.8494241,
-    "3447590": 1794211542.205126,
-    "3478501": 1794211591.2679038,
-    "3502023": 1794211702.822997,
+    "3447590": 1794212487.0557897,
+    "3478501": 1794212542.6486897,
+    "3502023": 1794212616.1522763,
     "3519996": 1794211832.4393659,
     "3530348": 1794211885.265206,
-    "3530349": 1794211591.2679038
+    "3530349": 1794212542.6486897
   },
-  "proshop_broad_attempt_at": 1794211998.2494526,
+  "proshop_broad_attempt_at": 1794212599.1994658,
   "proshop_radar_alerts": {
     "3519996:BESTILLINGSVARE": 1793969439.0679424
   },
@@ -1013,9 +1013,9 @@
     "status": "ok",
     "primary_count": 6,
     "broad_count": 0,
-    "checked_at": "2026-11-09T08:19:20.849361+00:00",
+    "checked_at": "2026-11-09T08:24:13.971065+00:00",
     "details_or_listings_count": 6
   },
   "proshop_last_usable_count": 6,
-  "proshop_last_usable_at": "2026-11-09T08:19:25.132796+00:00"
+  "proshop_last_usable_at": "2026-11-09T08:24:13.971727+00:00"
 }
