@@ -58,3 +58,23 @@ jobs:
             for term in ("tilgængelig","tillgänglig","ikke længere","ended","sold","utgången","køb nu","læg bud","bud","404","_next","__next_data__","__initialstate","window.__"):
               occurrences=[m.start() for m in re.finditer(re.escape(term),markup,re.I)]
               print("SIGNAL",name,term,"count",len(occurrences),"first_context",re.sub(r"\\s+"," ",markup[max(0,occurrences[0]-80):occurrences[0]+170])[:240] if occurrences else "-")
+
+      - name: Compare ID-only links against canonical item links
+        shell: python
+        run: |
+          import urllib.request,urllib.error,re
+          urls=[
+          ("id_only","https://www.tradera.com/item/1001337/759307493"),
+          ("id_only_da","https://www.tradera.com/da/item/1001337/759307493"),
+          ("full_api","https://www.tradera.com/item/1001337/759307493/tentacruel-44-62-pok%C3%A9mon-fossil"),
+          ("full_da","https://www.tradera.com/da/item/1001337/759307493/tentacruel-44-62-pok%C3%A9mon-fossil")]
+          for name,u in urls:
+            try:
+              request=urllib.request.Request(u,headers={"User-Agent":"Mozilla/5.0","Accept-Language":"da-DK,da;q=0.9"})
+              with urllib.request.urlopen(request,timeout=15) as r:
+                body=r.read(800000).decode("utf8","replace")
+                print("TEST",name,"http",r.status,"final_url",r.url,
+                    "active_true",'"isActive":true' in body or '\\"isActive\\":true' in body,
+                    "can_buy_true",'"canBeBought":true' in body or '\\"canBeBought\\":true' in body,
+                    "title",re.search(r"<title[^>]*>(.*?)</title>",body,re.S).group(1)[:120] if "<title" in body else "none")
+            except Exception as e:print("TEST",name,"ERROR",str(e)[:250])
