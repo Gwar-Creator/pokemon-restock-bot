@@ -361,27 +361,6 @@
         "sku": "11379493-EA",
         "url": "https://www.bilka.dk/produkter/pokemon-poster-collection-30th/200392205/"
       },
-      "200385295": {
-        "name": "Pokemon First Partner collection box 3 samlekort",
-        "price": 249.0,
-        "online_count": 0,
-        "online_stock": false,
-        "is_exposed": true,
-        "store_count": 0,
-        "local_stocks": {
-          "1662": {
-            "name": "Bilka Kolding",
-            "stock": 0
-          },
-          "1659": {
-            "name": "Bilka Esbjerg",
-            "stock": 0
-          }
-        },
-        "quantity_limit": 1,
-        "sku": "11350615-EA",
-        "url": "https://www.bilka.dk/produkter/pokemon-first-partner-collection-box-3-samlekort/200385295/"
-      },
       "200366277": {
         "name": "Pokémon TCG booster pack samlekort",
         "price": 49.0,
@@ -486,27 +465,6 @@
         "quantity_limit": 6,
         "sku": "11398798-EA",
         "url": "https://www.bilka.dk/produkter/pokemon-mega-evolution-delta-reign-samlekortpakker/200397053/"
-      },
-      "200380919": {
-        "name": "Pokémon Box Premium Ex Mega Greninja",
-        "price": 529.0,
-        "online_count": 0,
-        "online_stock": false,
-        "is_exposed": true,
-        "store_count": 0,
-        "local_stocks": {
-          "1662": {
-            "name": "Bilka Kolding",
-            "stock": 0
-          },
-          "1659": {
-            "name": "Bilka Esbjerg",
-            "stock": 0
-          }
-        },
-        "quantity_limit": 1,
-        "sku": "11320999-EA",
-        "url": "https://www.bilka.dk/produkter/pokemon-box-premium-ex-mega-greninja/200380919/"
       }
     },
     "foetex": {
@@ -659,31 +617,6 @@
         "quantity_limit": 6,
         "sku": "11398799-EA",
         "url": "https://www.foetex.dk/produkter/pokemon-mega-evolution-delta-reign-samlekort-booster-pakke/200397054/"
-      },
-      "200380919": {
-        "name": "Pokémon Box Premium Ex Mega Greninja",
-        "price": 529.0,
-        "online_count": 0,
-        "online_stock": false,
-        "is_exposed": true,
-        "store_count": 0,
-        "local_stocks": {
-          "1307": {
-            "name": "føtex Kolding",
-            "stock": 0
-          },
-          "1370": {
-            "name": "føtex Kolding Syd",
-            "stock": 0
-          },
-          "1223": {
-            "name": "føtex Esbjerg Broen",
-            "stock": 0
-          }
-        },
-        "quantity_limit": 1,
-        "sku": "11320999-EA",
-        "url": "https://www.foetex.dk/produkter/pokemon-box-premium-ex-mega-greninja/200380919/"
       }
     },
     "boozt": {
@@ -878,10 +811,10 @@
     "proshop": {
       "backoff_level": 0,
       "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-09T10:33:38.170210+00:00",
-      "last_success_at": "2026-11-09T10:34:39.501377+00:00"
+      "generic_failures": 1,
+      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details",
+      "last_failure_at": "2026-11-09T11:21:40.888659+00:00",
+      "last_success_at": "2026-11-09T11:20:46.935033+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -917,14 +850,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1794223067.3053977,
+      "next_allowed_at": 1794223363.665039,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-09T11:13:47.305367+00:00"
+      "last_success_at": "2026-11-09T11:18:43.665010+00:00"
     }
   },
-  "updated_at": "2026-11-09T11:17:19.873773+00:00",
+  "updated_at": "2026-11-09T11:21:57.573063+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -949,7 +882,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-09T11:13:46.185414+00:00"
+          "last_checked": "2026-11-09T11:18:42.749026+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -959,7 +892,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1794222825.260869,
+      "last_discovery_epoch": 1794223121.4366198,
       "last_full_discovery_epoch": 1794212174.3503659,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -1001,7 +934,7 @@
     "3530348": 1794222539.552265,
     "3530349": 1794222443.7430925
   },
-  "proshop_broad_attempt_at": 1794222427.4097133,
+  "proshop_broad_attempt_at": 1794223084.058759,
   "proshop_radar_alerts": {
     "3519996:BESTILLINGSVARE": 1793969439.0679424
   },
@@ -1010,12 +943,12 @@
   ],
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
-    "status": "ok",
-    "primary_count": 6,
+    "status": "degraded",
+    "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-09T11:17:03.946410+00:00",
-    "details_or_listings_count": 6
+    "checked_at": "2026-11-09T11:21:40.888572+00:00",
+    "details_or_listings_count": 0
   },
   "proshop_last_usable_count": 6,
-  "proshop_last_usable_at": "2026-11-09T11:17:03.947357+00:00"
+  "proshop_last_usable_at": "2026-11-09T11:20:46.935045+00:00"
 }
