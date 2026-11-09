@@ -1,0 +1,32 @@
+name: Verify Tradera public auction links
+on:
+  push:
+    branches: [cardshow-tradera-2026-11-09]
+    paths: [".github/workflows/tradera_public_link_validation.yml"]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check public listing pages without Tradera credentials
+        shell: python
+        run: |
+          import urllib.request,urllib.error,html,re
+          cases=[
+            ("api_golem","https://www.tradera.com/da/item/1001337/759306866/golem-36-62-pokemon-fossil"),
+            ("api_tentacruel","https://www.tradera.com/da/item/1001337/759307493/tentacruel-44-62-pokemon-fossil"),
+            ("api_blastoise","https://www.tradera.com/da/item/1001337/760171752/blastoise-2-102-holo-base-set-pokemon"),
+            ("indexed_beedrill","https://www.tradera.com/da/item/1001337/758938699/beedrill-17-102-base-set-pokemonkort"),
+            ("indexed_geodude","https://www.tradera.com/da/item/1001337/759399779/geodude-47-62-fossil-pokemon")]
+          for name,url in cases:
+            req=urllib.request.Request(url,headers={"User-Agent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/124.0 Safari/537.36","Accept-Language":"da-DK,da;q=0.9"})
+            try:
+              with urllib.request.urlopen(req,timeout=18) as r:
+                body=r.read(200000).decode("utf-8","replace").lower()
+                page_title=re.search(r"<title[^>]*>(.{0,160})</title>",body,re.S)
+                print(name,"http",r.status,"url",r.url,"bytes",len(body),"title",(html.unescape(page_title.group(1)).strip() if page_title else "N/A")[:100],"not_available",any(x in body for x in ("varan är inte tillgänglig","varen er ikke tilgængelig","object is no longer available","objektet finns inte","404 not found")))
+            except Exception as e:
+              print(name,"ERROR",type(e).__name__,str(e)[:160])
