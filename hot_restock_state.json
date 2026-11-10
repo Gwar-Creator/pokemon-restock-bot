@@ -81,33 +81,40 @@
       }
     },
     "proshop": {
-      "3530352": {
-        "name": "Pokemon Mega Evolution Delta Reign Blister 3 pack",
-        "price": 199.0,
-        "stock": "PÅ LAGER",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-Mega-Evolution-Delta-Reign-Blister-3-pack/3530352",
-        "fetch_via": "jina_reader"
-      },
       "3478496": {
         "name": "Pokemon TCG Mega Greninja ex Premium Collection",
         "price": 499.0,
         "stock": "PÅ LAGER",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
-        "fetch_via": "jina_reader"
+        "fetch_via": "jina_verified_detail"
+      },
+      "3530352": {
+        "name": "Pokemon Mega Evolution Delta Reign Blister 3 pack",
+        "price": 199.0,
+        "stock": "PÅ LAGER",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-Mega-Evolution-Delta-Reign-Blister-3-pack/3530352",
+        "fetch_via": "preserved_previous_scan"
       },
       "3421827": {
         "name": "Pokemon TCG 2024 World Championships Deck",
         "price": 329.0,
         "stock": "PÅ LAGER",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
-        "fetch_via": "jina_reader"
+        "fetch_via": "preserved_previous_scan"
+      },
+      "3478497": {
+        "name": "Pokemon TCG 2-pack Booster",
+        "price": null,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2-pack-Booster/3478497",
+        "fetch_via": "preserved_previous_scan"
       },
       "3530349": {
         "name": "Pokemon Ex Box - Greninja 30th Celebration",
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Ex-Box-Greninja-30th-Celebration/3530349",
-        "fetch_via": "jina_verified_detail"
+        "fetch_via": "preserved_previous_scan"
       },
       "3519996": {
         "name": "Pokemon Ultra Premium Collection 30th Celebration - assorted",
@@ -128,13 +135,6 @@
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
-        "fetch_via": "preserved_previous_scan"
-      },
-      "3478497": {
-        "name": "Pokemon TCG 2-pack Booster",
-        "price": null,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2-pack-Booster/3478497",
         "fetch_via": "preserved_previous_scan"
       },
       "3519997": {
@@ -785,14 +785,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1794345615.4559097,
+      "next_allowed_at": 1794345898.0690434,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-10T21:16:15.455876+00:00"
+      "last_success_at": "2026-11-10T21:20:58.069016+00:00"
     }
   },
-  "updated_at": "2026-11-10T21:19:40.459526+00:00",
+  "updated_at": "2026-11-10T21:24:38.893264+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -817,7 +817,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-10T21:16:14.293792+00:00"
+          "last_checked": "2026-11-10T21:20:57.093661+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -827,7 +827,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1794345372.8223715,
+      "last_discovery_epoch": 1794345656.0909486,
       "last_full_discovery_epoch": 1794343258.1886923,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -855,9 +855,9 @@
   },
   "proshop_detail_checks": {
     "3417744": 1794345255.9081311,
-    "3447592": 1794344747.5559242,
-    "3478496": 1794344910.6345966,
-    "3478497": 1794344699.864801,
+    "3447592": 1794345690.207089,
+    "3478496": 1794345856.6295652,
+    "3478497": 1794345636.253906,
     "3478498": 1794345344.4175854,
     "3519999": 1794345450.2922971,
     "3530350": 1794345145.9716892,
@@ -869,10 +869,10 @@
     "3478501": 1794345344.4175854,
     "3502023": 1794345404.9514537,
     "3519996": 1794345450.2922971,
-    "3530348": 1794344699.864801,
+    "3530348": 1794345636.253906,
     "3530349": 1794345560.0964174,
     "3519993": 1794345560.0964174,
-    "3519997": 1794344747.5559242,
+    "3519997": 1794345690.207089,
     "3519992": 1794345508.9557943
   },
   "proshop_broad_attempt_at": 1794345340.5003803,
@@ -886,12 +886,12 @@
   ],
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
-    "status": "ok",
-    "primary_count": 4,
+    "status": "degraded",
+    "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-10T21:19:20.096333+00:00",
-    "details_or_listings_count": 5
+    "checked_at": "2026-11-10T21:24:16.629491+00:00",
+    "details_or_listings_count": 1
   },
-  "proshop_last_usable_count": 5,
-  "proshop_last_usable_at": "2026-11-10T21:19:24.469098+00:00"
+  "proshop_last_usable_count": 1,
+  "proshop_last_usable_at": "2026-11-10T21:24:17.970793+00:00"
 }
