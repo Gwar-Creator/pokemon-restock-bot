@@ -14,6 +14,7 @@ ROOT = Path(__file__).resolve().parent
 SHARED_FILE = ROOT / "restock_bot_github.py"
 STATE_FILE = ROOT / "salling_early_radar_state.json"
 STATE_VERSION = 3
+PRODUCT_FILTER_REVISION = 2  # Add joined/hyphenated Booster Bundle aliases without a state reset.
 SITES = ("bilka", "foetex", "br")
 LOCAL_TZ = ZoneInfo("Europe/Copenhagen")
 MAX_POKEMON_CATALOG_HITS = 250
@@ -146,6 +147,7 @@ def load_state():
 def save_state(products):
     payload = {
         "version": STATE_VERSION,
+        "filter_revision": PRODUCT_FILTER_REVISION,
         "updated_at": time.time(),
         "products": products,
     }
@@ -155,13 +157,31 @@ def save_state(products):
     )
 
 
+def normalize_sealed_name(name):
+    # Salling names the same format "boosterbundle", "booster-bundle"
+    # and "booster bundle". Canonicalise only for filtering, not display.
+    return re.sub(
+        r"\bbooster[\s_-]*bundle\b", "booster bundle",
+        str(name or ""), flags=re.IGNORECASE,
+    )
+
+
 def clean_name(name):
-    return " " + re.sub(r"\s+", " ", str(name or "").lower()).strip() + " "
+    return " " + re.sub(r"\s+", " ", normalize_sealed_name(name).lower()).strip() + " "
+
+
+def quiet_alias_migration(previous_state, product):
+    # The first run after expanding filters must not claim that existing
+    # catalogue items are brand new. All other products still alert normally.
+    if (previous_state or {}).get("filter_revision") == PRODUCT_FILTER_REVISION:
+        return False
+    name = str((product or {}).get("name") or "")
+    return bool(re.search(r"\bbooster[-_]?bundle\b", name, flags=re.IGNORECASE))
 
 
 def early_product_allowed(shared, hit):
     product = {
-        "name": hit.get("name") or "",
+        "name": normalize_sealed_name(hit.get("name")),
         "game": "POKÉMON",
     }
     if not shared["restock_alert_allowed"](product, "POKÉMON"):
@@ -772,6 +792,9 @@ def main():
         # The main edge: a brand-new relevant product appears in the filtered
         # Pokemon catalogue before Salling exposes it on the storefront.
         if old is None:
+            if quiet_alias_migration(previous_state, product):
+                print(f"EARLY RADAR: stille filterovergang for eksisterende alias {product_id}")
+                continue
             if hidden_somewhere(product):
                 send_alert("NY SKJULT VARE", product, "nyt produkt-ID fundet før offentlig visning")
             else:
