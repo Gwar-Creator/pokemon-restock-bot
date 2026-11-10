@@ -1,0 +1,91 @@
+name: Pokemon Early Intel Daily
+
+on:
+  schedule:
+    # Fixed UTC schedule: 08:30 CET / 09:30 CEST. Research only, no alerts.
+    - cron: "30 7 * * *"
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "early_intel_shadow.py"
+      - "test_early_intel_shadow.py"
+      - "salling_early_radar.py"
+      - "test_salling_early_radar.py"
+      - ".github/workflows/hot_restock.yml"
+      - ".github/workflows/early_intel_daily.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pokemon-early-intel-daily-${{ github.event_name == 'pull_request' && github.event.pull_request.number || 'production' }}
+  cancel-in-progress: false
+
+jobs:
+  offline-validation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 10
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Validate Early Intel and Salling filter (no live HTTP or Discord)
+        run: |
+          python -m py_compile early_intel_shadow.py salling_early_radar.py test_early_intel_shadow.py test_salling_early_radar.py
+          python -m unittest test_early_intel_shadow.py test_salling_early_radar.py
+
+  daily-research:
+    if: github.event_name != 'pull_request'
+    needs: offline-validation
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout current main (never a historic dispatch commit)
+        uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 10
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Record Early Intel snapshot (no Discord)
+        run: python early_intel_shadow.py
+      - name: Persist only Early Intel history with race-safe state push
+        run: |
+          set -e
+          test -f early_intel_shadow_state.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          cp early_intel_shadow_state.json "$RUNNER_TEMP/early_intel_shadow_state.json"
+          for attempt in 1 2 3 4 5; do
+            echo "EARLY INTEL state push attempt $attempt/5"
+            git fetch origin main
+            git reset --hard origin/main
+            cp "$RUNNER_TEMP/early_intel_shadow_state.json" early_intel_shadow_state.json
+            git add early_intel_shadow_state.json
+            if git diff --cached --quiet; then
+              echo "Early Intel state unchanged."
+              exit 0
+            fi
+            git commit -m "Update daily Early Intel research state"
+            if git push origin HEAD:main; then
+              echo "Early Intel state saved."
+              exit 0
+            fi
+            if [ "$attempt" -lt 5 ]; then
+              sleep $((attempt * 5))
+            fi
+          done
+          echo "::error::Could not persist Early Intel state after 5 retries."
+          exit 1
