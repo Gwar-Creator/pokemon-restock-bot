@@ -222,7 +222,7 @@
         "online_count": 0,
         "online_stock": false,
         "is_exposed": true,
-        "store_count": 1,
+        "store_count": 3,
         "kolding_stock": 0,
         "esbjerg_stock": 0,
         "quantity_limit": 1,
@@ -509,7 +509,7 @@
         "online_count": 0,
         "online_stock": false,
         "is_exposed": true,
-        "store_count": 75,
+        "store_count": 74,
         "local_stocks": {
           "1307": {
             "name": "føtex Kolding",
@@ -534,7 +534,7 @@
         "online_count": 0,
         "online_stock": false,
         "is_exposed": true,
-        "store_count": 1,
+        "store_count": 0,
         "local_stocks": {
           "1307": {
             "name": "føtex Kolding",
@@ -740,15 +740,15 @@
       "next_allowed_at": 0.0,
       "generic_failures": 0,
       "last_error": null,
-      "last_failure_at": "2026-11-09T07:15:36.257440+00:00",
-      "last_success_at": "2026-11-09T07:19:13.117880+00:00"
+      "last_failure_at": "2026-11-10T15:23:16.308658+00:00",
+      "last_success_at": "2026-11-10T15:24:12.931649+00:00"
     },
     "proshop": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-10T15:17:33.552179+00:00",
+      "backoff_level": 2,
+      "next_allowed_at": 1794324565.9444182,
+      "generic_failures": 3,
+      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details",
+      "last_failure_at": "2026-11-10T15:24:25.944390+00:00",
       "last_success_at": "2026-11-10T15:19:21.065513+00:00"
     },
     "br": {
@@ -785,14 +785,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1794324009.633539,
+      "next_allowed_at": 1794324295.708978,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-10T15:16:09.633513+00:00"
+      "last_success_at": "2026-11-10T15:20:55.708952+00:00"
     }
   },
-  "updated_at": "2026-11-10T15:19:38.673266+00:00",
+  "updated_at": "2026-11-10T15:24:45.995946+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -817,7 +817,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-10T15:16:08.016790+00:00"
+          "last_checked": "2026-11-10T15:20:54.848190+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -827,7 +827,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1794323765.6406848,
+      "last_discovery_epoch": 1794324053.4468617,
       "last_full_discovery_epoch": 1794321353.0235472,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -864,18 +864,18 @@
     "3530351": 1794323851.7606297,
     "3530352": 1794323549.736584,
     "3530353": 1794323600.8205898,
-    "3421827": 1794323216.3077083,
+    "3421827": 1794324259.425756,
     "3447590": 1794323906.1346412,
     "3478501": 1794323742.5761282,
     "3502023": 1794323796.5250454,
     "3519996": 1794323380.9613504,
     "3530348": 1794323435.9435954,
     "3530349": 1794323435.9435954,
-    "3519993": 1794323216.3077083,
+    "3519993": 1794324259.425756,
     "3519997": 1794323489.703589,
     "3519992": 1794323380.9613504
   },
-  "proshop_broad_attempt_at": 1794323546.9262595,
+  "proshop_broad_attempt_at": 1794324254.2767549,
   "proshop_radar_alerts": {
     "3519996:BESTILLINGSVARE": 1794301755.3165689,
     "3519997:BESTILLINGSVARE": 1794234274.0313218,
@@ -886,11 +886,11 @@
   ],
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
-    "status": "ok",
-    "primary_count": 5,
+    "status": "degraded",
+    "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-10T15:19:21.064588+00:00",
-    "details_or_listings_count": 5
+    "checked_at": "2026-11-10T15:24:19.425657+00:00",
+    "details_or_listings_count": 0
   },
   "proshop_last_usable_count": 5,
   "proshop_last_usable_at": "2026-11-10T15:19:21.065538+00:00"
