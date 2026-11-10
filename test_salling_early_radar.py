@@ -30,6 +30,40 @@ class SallingEarlyRadarLinkTests(unittest.TestCase):
             },
         }
 
+    def test_booster_bundle_spacing_variants_are_relevant(self):
+        shared = {
+            # The common alert gate is deliberately kept strict here to
+            # exercise the same canonical name used by its production filter.
+            "restock_alert_allowed": lambda p, g: " booster bundle " in (
+                " " + p["name"].lower() + " "
+            ),
+        }
+        for spelling in (
+            "Booster Bundle",
+            "Boosterbundle",
+            "Booster-Bundle",
+            "booster_bundle",
+            "BOOSTERBUNDLE",
+        ):
+            name = "Pokémon TCG Mega Evolution Delta Reign " + spelling
+            with self.subTest(spelling=spelling):
+                self.assertTrue(radar.early_product_allowed(shared, {"name": name}))
+                self.assertEqual(radar.priority_for(name), "HIGH")
+        self.assertFalse(radar.early_product_allowed(
+            shared, {"name": "Pokémon TCG Delta Reign Booster Pack"}
+        ))
+
+    def test_alias_migration_is_quiet_once_without_resetting_state(self):
+        alias = {"name": "Pokémon Delta Reign Boosterbundle"}
+        self.assertTrue(radar.quiet_alias_migration({"version": 3}, alias))
+        self.assertFalse(radar.quiet_alias_migration(
+            {"version": 3, "filter_revision": radar.PRODUCT_FILTER_REVISION},
+            alias,
+        ))
+        self.assertFalse(radar.quiet_alias_migration(
+            {"version": 3}, {"name": "Pokémon Delta Reign Elite Trainer Box"}
+        ))
+
     def test_best_url_respects_preferred_foetex_site(self):
         product = self._product()
         self.assertEqual(
