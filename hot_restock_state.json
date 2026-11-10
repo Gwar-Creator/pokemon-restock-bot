@@ -81,13 +81,6 @@
       }
     },
     "proshop": {
-      "3530352": {
-        "name": "Pokemon Mega Evolution Delta Reign Blister 3 pack",
-        "price": 199.0,
-        "stock": "PÅ LAGER",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-Mega-Evolution-Delta-Reign-Blister-3-pack/3530352",
-        "fetch_via": "jina_reader"
-      },
       "3478501": {
         "name": "Pokemon Tin Fall ex assorted",
         "price": 299.0,
@@ -95,12 +88,19 @@
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Tin-Fall-ex-assorted/3478501",
         "fetch_via": "jina_reader"
       },
+      "3530352": {
+        "name": "Pokemon Mega Evolution Delta Reign Blister 3-pack",
+        "price": 199.0,
+        "stock": "PÅ LAGER",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-Mega-Evolution-Delta-Reign-Blister-3-pack/3530352",
+        "fetch_via": "jina_verified_detail"
+      },
       "3478496": {
         "name": "Pokemon TCG Mega Greninja ex Premium Collection",
         "price": 499.0,
         "stock": "PÅ LAGER",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
-        "fetch_via": "jina_reader"
+        "fetch_via": "jina_verified_detail"
       },
       "3421827": {
         "name": "Pokemon TCG 2024 World Championships Deck",
@@ -108,6 +108,13 @@
         "stock": "PÅ LAGER",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
         "fetch_via": "jina_reader"
+      },
+      "3478497": {
+        "name": "Pokemon TCG 2-pack Booster",
+        "price": null,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2-pack-Booster/3478497",
+        "fetch_via": "preserved_previous_scan"
       },
       "3417744": {
         "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
@@ -128,13 +135,6 @@
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Ultra-Premium-Collection-30th-Celebration-assorted/3519996",
-        "fetch_via": "preserved_previous_scan"
-      },
-      "3478497": {
-        "name": "Pokemon TCG 2-pack Booster",
-        "price": null,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2-pack-Booster/3478497",
         "fetch_via": "preserved_previous_scan"
       },
       "3519997": {
@@ -744,12 +744,12 @@
       "last_success_at": "2026-11-10T15:24:12.931649+00:00"
     },
     "proshop": {
-      "backoff_level": 1,
-      "next_allowed_at": 1794338667.6373668,
-      "generic_failures": 2,
-      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details",
+      "backoff_level": 0,
+      "next_allowed_at": 0.0,
+      "generic_failures": 0,
+      "last_error": null,
       "last_failure_at": "2026-11-10T19:22:27.637337+00:00",
-      "last_success_at": "2026-11-10T19:20:40.622552+00:00"
+      "last_success_at": "2026-11-10T19:29:13.519443+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -785,14 +785,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1794338710.685778,
+      "next_allowed_at": 1794338995.6764405,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-10T19:21:10.685750+00:00"
+      "last_success_at": "2026-11-10T19:25:55.676415+00:00"
     }
   },
-  "updated_at": "2026-11-10T19:24:28.647784+00:00",
+  "updated_at": "2026-11-10T19:29:31.154804+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -817,7 +817,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-10T19:21:09.771421+00:00"
+          "last_checked": "2026-11-10T19:25:54.153775+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -827,7 +827,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1794338468.7619715,
+      "last_discovery_epoch": 1794338752.7442718,
       "last_full_discovery_epoch": 1794321353.0235472,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -855,27 +855,27 @@
   },
   "proshop_detail_checks": {
     "3417744": 1794338221.3018813,
-    "3447592": 1794337948.049197,
-    "3478496": 1794338002.6653025,
-    "3478497": 1794337652.8131313,
+    "3447592": 1794338855.808326,
+    "3478496": 1794338950.210099,
+    "3478497": 1794338731.1532345,
     "3478498": 1794338221.3018813,
     "3519999": 1794338369.859637,
     "3530350": 1794338057.7531173,
     "3530351": 1794338435.0043807,
-    "3530352": 1794338002.6653025,
+    "3530352": 1794338950.210099,
     "3530353": 1794338057.7531173,
     "3421827": 1794338369.859637,
-    "3447590": 1794337613.9181006,
+    "3447590": 1794338731.1532345,
     "3478501": 1794338314.202227,
     "3502023": 1794338314.202227,
     "3519996": 1794338435.0043807,
-    "3530348": 1794337652.8131313,
+    "3530348": 1794338784.9847882,
     "3530349": 1794338545.5527704,
     "3519993": 1794338489.9660628,
-    "3519997": 1794337948.049197,
+    "3519997": 1794338855.808326,
     "3519992": 1794338489.9660628
   },
-  "proshop_broad_attempt_at": 1794338205.0775268,
+  "proshop_broad_attempt_at": 1794338839.7939696,
   "proshop_radar_alerts": {
     "3519996:BESTILLINGSVARE": 1794301755.3165689,
     "3519997:BESTILLINGSVARE": 1794234274.0313218,
@@ -886,12 +886,12 @@
   ],
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
-    "status": "degraded",
-    "primary_count": 0,
+    "status": "ok",
+    "primary_count": 5,
     "broad_count": 0,
-    "checked_at": "2026-11-10T19:22:25.552702+00:00",
-    "details_or_listings_count": 0
+    "checked_at": "2026-11-10T19:29:10.210031+00:00",
+    "details_or_listings_count": 5
   },
   "proshop_last_usable_count": 5,
-  "proshop_last_usable_at": "2026-11-10T19:20:40.622583+00:00"
+  "proshop_last_usable_at": "2026-11-10T19:29:13.519469+00:00"
 }
