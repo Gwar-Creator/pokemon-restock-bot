@@ -93,7 +93,7 @@
         "price": 329.0,
         "stock": "PÅ LAGER",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
-        "fetch_via": "jina_verified_detail"
+        "fetch_via": "jina_reader"
       },
       "3519993": {
         "name": "Pokemon Figure Collection 30th Celebration assorted",
@@ -744,12 +744,12 @@
       "last_success_at": "2026-11-10T15:24:12.931649+00:00"
     },
     "proshop": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-11T09:57:17.294485+00:00",
-      "last_success_at": "2026-11-11T10:04:39.336637+00:00"
+      "backoff_level": 1,
+      "next_allowed_at": 1794391872.360724,
+      "generic_failures": 2,
+      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details",
+      "last_failure_at": "2026-11-11T10:09:12.360706+00:00",
+      "last_success_at": "2026-11-11T10:07:25.408299+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -785,14 +785,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1794391516.5018196,
+      "next_allowed_at": 1794391792.5488694,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-11T10:01:16.501792+00:00"
+      "last_success_at": "2026-11-11T10:05:52.548841+00:00"
     }
   },
-  "updated_at": "2026-11-11T10:04:53.454117+00:00",
+  "updated_at": "2026-11-11T10:09:30.192087+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -817,7 +817,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-11T10:01:15.671255+00:00"
+          "last_checked": "2026-11-11T10:05:51.769562+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -827,7 +827,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1794391274.8264885,
+      "last_discovery_epoch": 1794391550.7202501,
       "last_full_discovery_epoch": 1794386751.816381,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -859,21 +859,21 @@
     "3478496": 1794391257.02082,
     "3478497": 1794390862.2551682,
     "3478498": 1794391364.719293,
-    "3519999": 1794390640.6417959,
+    "3519999": 1794391588.110979,
     "3530350": 1794391257.02082,
-    "3530351": 1794390710.4946532,
+    "3530351": 1794391642.0742664,
     "3530352": 1794391364.719293,
     "3530353": 1794391419.874127,
     "3421827": 1794391475.5029013,
     "3447590": 1794391419.874127,
     "3478501": 1794391324.4632766,
     "3502023": 1794391475.5029013,
-    "3519996": 1794390640.6417959,
+    "3519996": 1794391588.110979,
     "3530348": 1794390862.2551682,
-    "3530349": 1794390750.0592942,
-    "3519993": 1794390750.0592942,
+    "3530349": 1794391697.857097,
+    "3519993": 1794391697.857097,
     "3519997": 1794390981.845072,
-    "3519992": 1794390710.4946532
+    "3519992": 1794391642.0742664
   },
   "proshop_broad_attempt_at": 1794391308.7746253,
   "proshop_radar_alerts": {
@@ -886,12 +886,12 @@
   ],
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
-    "status": "ok",
-    "primary_count": 3,
+    "status": "degraded",
+    "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-11T10:04:35.502829+00:00",
-    "details_or_listings_count": 3
+    "checked_at": "2026-11-11T10:09:12.360611+00:00",
+    "details_or_listings_count": 0
   },
   "proshop_last_usable_count": 3,
-  "proshop_last_usable_at": "2026-11-11T10:04:39.336661+00:00"
+  "proshop_last_usable_at": "2026-11-11T10:07:25.408331+00:00"
 }
