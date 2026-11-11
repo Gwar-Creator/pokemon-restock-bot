@@ -82,7 +82,7 @@ class ProshopCoverageAuditTests(unittest.TestCase):
         self.assertEqual(len(seen), 3)
         self.assertTrue(all(url.startswith("https://api.github.com/repos/") for url, _ in seen))
         self.assertTrue(all(options.get("timeout") == 40 for _, options in seen))
-        self.assertFalse(hasattr(session, "post"))
+        session.post.assert_not_called()
 
 
 if __name__ == "__main__":
