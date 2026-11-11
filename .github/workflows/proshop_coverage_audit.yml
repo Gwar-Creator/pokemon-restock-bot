@@ -1,0 +1,65 @@
+name: Proshop coverage audit (read only)
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "tools/diagnostics/proshop_coverage_audit.py"
+      - "test_proshop_coverage_audit.py"
+      - ".github/workflows/proshop_coverage_audit.yml"
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: proshop-coverage-audit-${{ github.event_name == 'pull_request' && github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: false
+
+jobs:
+  offline-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - run: python -m pip install requests
+      - name: Prove log parser and GitHub read-only contract without HTTP
+        run: |
+          python -m py_compile tools/diagnostics/proshop_coverage_audit.py test_proshop_coverage_audit.py
+          python -m unittest -v test_proshop_coverage_audit.py
+
+  inspect-completed-hot-logs:
+    if: github.event_name == 'workflow_dispatch'
+    needs: offline-regression
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - run: python -m pip install requests
+      - name: Read recent HOT log coverage (GitHub API only; no Proshop traffic)
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          python tools/diagnostics/proshop_coverage_audit.py --runs 8 > "$RUNNER_TEMP/proshop-audit.json"
+          cat "$RUNNER_TEMP/proshop-audit.json"
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          result = json.loads((Path(os.environ["RUNNER_TEMP"]) / "proshop-audit.json").read_text())
+          s = result["summary"]
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as f:
+              f.write("# Proshop coverage audit (read only)\n\n")
+              f.write("Source: completed HOT GitHub Actions job logs. No Discord or Proshop requests.\n\n")
+              for key, value in s.items():
+                  f.write(f"- **{key}**: {value}\n")
+              f.write("\nA successful HOT job alone does not mean that Proshop responded in every cycle.\n")
+          PY
