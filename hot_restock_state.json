@@ -522,7 +522,7 @@
         "local_stocks": {
           "1307": {
             "name": "føtex Kolding",
-            "stock": 44
+            "stock": 36
           },
           "1370": {
             "name": "føtex Kolding Syd",
@@ -753,11 +753,11 @@
       "last_success_at": "2026-11-10T15:24:12.931649+00:00"
     },
     "proshop": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-11T18:27:29.672719+00:00",
+      "backoff_level": 2,
+      "next_allowed_at": 1794422374.4654937,
+      "generic_failures": 3,
+      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details",
+      "last_failure_at": "2026-11-11T18:34:34.465462+00:00",
       "last_success_at": "2026-11-11T18:29:22.119877+00:00"
     },
     "br": {
@@ -794,14 +794,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1794421803.5445304,
+      "next_allowed_at": 1794422112.2619877,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-11T18:26:03.544504+00:00"
+      "last_success_at": "2026-11-11T18:31:12.261961+00:00"
     }
   },
-  "updated_at": "2026-11-11T18:29:38.340002+00:00",
+  "updated_at": "2026-11-11T18:34:50.055836+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -826,7 +826,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-11T18:26:02.267824+00:00"
+          "last_checked": "2026-11-11T18:31:11.131331+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -836,7 +836,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1794421560.9325018,
+      "last_discovery_epoch": 1794421869.7890294,
       "last_full_discovery_epoch": 1794408356.0101995,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -863,8 +863,8 @@
     "proshop:3519996": 1794302452.6239011
   },
   "proshop_detail_checks": {
-    "3417744": 1794421123.9341006,
-    "3447592": 1794421123.9341006,
+    "3417744": 1794422066.8091981,
+    "3447592": 1794422066.8091981,
     "3478496": 1794421756.9949827,
     "3478497": 1794421756.9949827,
     "3478498": 1794421456.0317008,
@@ -897,9 +897,9 @@
   "proshop_primary_health": {
     "status": "degraded",
     "primary_count": 0,
-    "broad_count": 2,
-    "checked_at": "2026-11-11T18:29:16.994860+00:00",
-    "details_or_listings_count": 2
+    "broad_count": 0,
+    "checked_at": "2026-11-11T18:34:26.809124+00:00",
+    "details_or_listings_count": 0
   },
   "proshop_last_usable_count": 2,
   "proshop_last_usable_at": "2026-11-11T18:29:22.119903+00:00"
