@@ -93,14 +93,28 @@
         "price": 329.0,
         "stock": "PÅ LAGER",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
-        "fetch_via": "jina_reader"
+        "fetch_via": "jina_verified_detail"
+      },
+      "3478497": {
+        "name": "Pokemon TCG 2-pack Booster",
+        "price": null,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2-pack-Booster/3478497",
+        "fetch_via": "preserved_previous_scan"
+      },
+      "3478496": {
+        "name": "Pokemon TCG Mega Greninja ex Premium Collection",
+        "price": 499.0,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
+        "fetch_via": "preserved_previous_scan"
       },
       "3530349": {
         "name": "Pokemon Ex Box - Greninja 30th Celebration",
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Ex-Box-Greninja-30th-Celebration/3530349",
-        "fetch_via": "jina_verified_detail"
+        "fetch_via": "preserved_previous_scan"
       },
       "3530352": {
         "name": "Pokemon Mega Evolution Delta Reign Blister 3-pack",
@@ -116,25 +130,11 @@
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Tin-Fall-ex-assorted/3478501",
         "fetch_via": "preserved_previous_scan"
       },
-      "3478497": {
-        "name": "Pokemon TCG 2-pack Booster",
-        "price": null,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2-pack-Booster/3478497",
-        "fetch_via": "preserved_previous_scan"
-      },
       "3417744": {
         "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
-        "fetch_via": "preserved_previous_scan"
-      },
-      "3478496": {
-        "name": "Pokemon TCG Mega Greninja ex Premium Collection",
-        "price": 499.0,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
         "fetch_via": "preserved_previous_scan"
       },
       "3519993": {
@@ -739,23 +739,23 @@
       "last_success_at": "2026-11-02T05:19:46.731199+00:00"
     },
     "boozt": {
-      "backoff_level": 1,
-      "next_allowed_at": 1794524385.708005,
-      "generic_failures": 1,
-      "last_error": "BOOZT fejlede: Reader: 422 Client Error: Unprocessable Entity for url: https://r.jina.ai/https://www.boozt.com/dk/da/pokemon-trading-cards/born | direct: 429 Client Error: Too Many Requests for url: https://www.boozt.com/dk/da/pokemon-trading-cards/born",
+      "backoff_level": 0,
+      "next_allowed_at": 0.0,
+      "generic_failures": 0,
+      "last_error": null,
       "last_failure_at": "2026-11-12T22:57:45.707984+00:00",
-      "last_success_at": "2026-11-12T22:56:39.319646+00:00"
+      "last_success_at": "2026-11-12T23:05:00.407536+00:00"
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1794524385.0966213,
+      "next_allowed_at": 1794524725.6047046,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-12T22:55:45.096594+00:00"
+      "last_success_at": "2026-11-12T23:01:25.604677+00:00"
     }
   },
-  "updated_at": "2026-11-12T22:59:23.103324+00:00",
+  "updated_at": "2026-11-12T23:05:00.407602+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -780,7 +780,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-12T22:55:44.188438+00:00"
+          "last_checked": "2026-11-12T23:01:24.821620+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -790,7 +790,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1794524143.0877194,
+      "last_discovery_epoch": 1794524483.7982473,
       "last_full_discovery_epoch": 1794517866.3123498,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -817,19 +817,19 @@
     "proshop:3519996": 1794302452.6239011
   },
   "proshop_detail_checks": {
-    "3417744": 1794523598.1460602,
-    "3447592": 1794523707.7255569,
-    "3478496": 1794523460.5115047,
-    "3478497": 1794523652.5458667,
-    "3478498": 1794523763.285879,
-    "3519999": 1794523460.5115047,
-    "3530350": 1794523652.5458667,
-    "3530351": 1794523598.1460602,
+    "3417744": 1794524515.9370177,
+    "3447592": 1794524642.7634077,
+    "3478496": 1794524462.7678483,
+    "3478497": 1794524570.975868,
+    "3478498": 1794524681.2884011,
+    "3519999": 1794524462.7678483,
+    "3530350": 1794524570.975868,
+    "3530351": 1794524515.9370177,
     "3530352": 1794524182.5571609,
     "3530353": 1794524293.6268883,
-    "3421827": 1794523763.285879,
+    "3421827": 1794524681.2884011,
     "3447590": 1794524350.0420778,
-    "3478501": 1794523707.7255569,
+    "3478501": 1794524642.7634077,
     "3502023": 1794524020.7768633,
     "3519996": 1794524237.9208689,
     "3530348": 1794524020.7768633,
@@ -838,7 +838,7 @@
     "3519997": 1794524237.9208689,
     "3519992": 1794524182.5571609
   },
-  "proshop_broad_attempt_at": 1794524003.338623,
+  "proshop_broad_attempt_at": 1794524626.9417272,
   "proshop_radar_alerts": {
     "3519996:BESTILLINGSVARE": 1794402448.8076684,
     "3519997:BESTILLINGSVARE": 1794234274.0313218,
@@ -855,9 +855,9 @@
     "status": "ok",
     "primary_count": 3,
     "broad_count": 0,
-    "checked_at": "2026-11-12T22:59:10.042014+00:00",
-    "details_or_listings_count": 4
+    "checked_at": "2026-11-12T23:04:41.288327+00:00",
+    "details_or_listings_count": 3
   },
-  "proshop_last_usable_count": 4,
-  "proshop_last_usable_at": "2026-11-12T22:59:13.534853+00:00"
+  "proshop_last_usable_count": 3,
+  "proshop_last_usable_at": "2026-11-12T23:04:44.718832+00:00"
 }
