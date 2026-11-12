@@ -4,6 +4,16 @@ import early_intel_shadow as intel
 
 
 class EarlyIntelShadowTests(unittest.TestCase):
+    def test_isolated_shared_loader_uses_inert_webhook_without_real_secret(self):
+        from unittest.mock import patch
+        # The production shared definitions require a nonempty webhook string,
+        # but Early Intel must not inherit the actual Discord URL.
+        with patch.dict("os.environ", {"DISCORD_WEBHOOK_URL": "EARLY_INTEL_DISABLED_NO_DISCORD"}):
+            shared = intel.load_shared_namespace()
+        self.assertEqual(shared["WEBHOOK_URL"], "EARLY_INTEL_DISABLED_NO_DISCORD")
+        self.assertFalse(shared["WEBHOOK_URL"].startswith("https://"))
+        self.assertIn("is_real_pokemon_tcg", shared)
+
     def test_br_config_uses_fixed_index_constant(self):
         shared = {
             "get_br_frontend_config": lambda: {
