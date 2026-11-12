@@ -86,14 +86,14 @@
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Ultra-Premium-Collection-30th-Celebration-assorted/3519996",
-        "fetch_via": "jina_broad_reader"
+        "fetch_via": "jina_reader"
       },
       "3421827": {
         "name": "Pokemon TCG 2024 World Championships Deck",
         "price": 329.0,
         "stock": "PÅ LAGER",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
-        "fetch_via": "preserved_previous_scan"
+        "fetch_via": "jina_reader"
       },
       "3478497": {
         "name": "Pokemon TCG 2-pack Booster",
@@ -707,12 +707,12 @@
       "last_success_at": "2026-11-12T11:09:15.671129+00:00"
     },
     "proshop": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-12T14:09:26.540423+00:00",
-      "last_success_at": "2026-11-12T14:13:21.587690+00:00"
+      "backoff_level": 1,
+      "next_allowed_at": 1794493136.0780394,
+      "generic_failures": 2,
+      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details",
+      "last_failure_at": "2026-11-12T14:16:56.078023+00:00",
+      "last_success_at": "2026-11-12T14:15:01.650158+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -748,14 +748,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1794492827.1566002,
+      "next_allowed_at": 1794493106.5610206,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-12T14:09:47.156571+00:00"
+      "last_success_at": "2026-11-12T14:14:26.560992+00:00"
     }
   },
-  "updated_at": "2026-11-12T14:13:39.918513+00:00",
+  "updated_at": "2026-11-12T14:18:00.441718+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -780,7 +780,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-12T14:09:46.255601+00:00"
+          "last_checked": "2026-11-12T14:14:25.537268+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -790,7 +790,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1794492584.455099,
+      "last_discovery_epoch": 1794492864.4651847,
       "last_full_discovery_epoch": 1794474356.4517062,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -852,10 +852,10 @@
   "proshop_primary_health": {
     "status": "degraded",
     "primary_count": 0,
-    "broad_count": 1,
-    "checked_at": "2026-11-12T14:13:16.898528+00:00",
-    "details_or_listings_count": 1
+    "broad_count": 0,
+    "checked_at": "2026-11-12T14:16:56.077934+00:00",
+    "details_or_listings_count": 0
   },
-  "proshop_last_usable_count": 1,
-  "proshop_last_usable_at": "2026-11-12T14:13:21.587718+00:00"
+  "proshop_last_usable_count": 3,
+  "proshop_last_usable_at": "2026-11-12T14:15:01.650169+00:00"
 }
