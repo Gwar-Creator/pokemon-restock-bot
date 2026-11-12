@@ -82,11 +82,11 @@
     },
     "proshop": {
       "3478501": {
-        "name": "Pokemon Tin Fall ex - assorted",
+        "name": "Pokemon Tin Fall ex assorted",
         "price": 299.0,
         "stock": "PÅ LAGER",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Tin-Fall-ex-assorted/3478501",
-        "fetch_via": "jina_verified_detail"
+        "fetch_via": "jina_reader"
       },
       "3519996": {
         "name": "Pokemon Ultra Premium Collection 30th Celebration assorted",
@@ -100,7 +100,7 @@
         "price": 329.0,
         "stock": "PÅ LAGER",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
-        "fetch_via": "jina_verified_detail"
+        "fetch_via": "jina_reader"
       },
       "3417744": {
         "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
@@ -709,10 +709,10 @@
     "proshop": {
       "backoff_level": 0,
       "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-12T19:18:27.148126+00:00",
-      "last_success_at": "2026-11-12T19:19:20.984057+00:00"
+      "generic_failures": 1,
+      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details",
+      "last_failure_at": "2026-11-12T19:39:11.834804+00:00",
+      "last_success_at": "2026-11-12T19:38:22.784100+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -748,14 +748,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1794512131.9270747,
+      "next_allowed_at": 1794512390.9834023,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-12T19:31:31.927015+00:00"
+      "last_success_at": "2026-11-12T19:35:50.983375+00:00"
     }
   },
-  "updated_at": "2026-11-12T19:34:53.123684+00:00",
+  "updated_at": "2026-11-12T19:39:26.174467+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -780,7 +780,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-12T19:31:31.223893+00:00"
+          "last_checked": "2026-11-12T19:35:50.103948+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -790,7 +790,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1794511890.2004547,
+      "last_discovery_epoch": 1794512148.8350208,
       "last_full_discovery_epoch": 1794496119.7771604,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -821,20 +821,20 @@
     "3447592": 1794512020.9508972,
     "3478496": 1794511909.920008,
     "3478497": 1794511965.6534262,
-    "3478498": 1794511297.0468395,
+    "3478498": 1794512241.2977498,
     "3519999": 1794511871.7435184,
     "3530350": 1794512020.9508972,
     "3530351": 1794511909.920008,
     "3530352": 1794511702.6836133,
     "3530353": 1794511757.8355038,
     "3421827": 1794512077.3252134,
-    "3447590": 1794511259.2742105,
+    "3447590": 1794512241.2977498,
     "3478501": 1794512077.3252134,
     "3502023": 1794511538.0765188,
     "3519996": 1794511757.8355038,
-    "3530348": 1794511297.0468395,
+    "3530348": 1794512297.225047,
     "3530349": 1794511871.7435184,
-    "3519993": 1794511259.2742105,
+    "3519993": 1794512186.38953,
     "3519997": 1794511702.6836133,
     "3519992": 1794511538.0765188
   },
@@ -852,12 +852,12 @@
   ],
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
-    "status": "ok",
-    "primary_count": 4,
+    "status": "degraded",
+    "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-12T19:34:37.325100+00:00",
-    "details_or_listings_count": 4
+    "checked_at": "2026-11-12T19:39:11.834724+00:00",
+    "details_or_listings_count": 0
   },
   "proshop_last_usable_count": 4,
-  "proshop_last_usable_at": "2026-11-12T19:34:40.321837+00:00"
+  "proshop_last_usable_at": "2026-11-12T19:38:22.784125+00:00"
 }
