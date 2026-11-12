@@ -41,6 +41,35 @@ jobs:
           python -m py_compile early_intel_shadow.py salling_early_radar.py test_early_intel_shadow.py test_salling_early_radar.py
           python -m unittest test_early_intel_shadow.py test_salling_early_radar.py
 
+  no-discord-integration-smoke:
+    if: github.event_name == 'pull_request'
+    needs: offline-validation
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Exercise research fetch without Discord access or state commits
+        env:
+          DISCORD_WEBHOOK_URL: "EARLY_INTEL_DISABLED_NO_DISCORD"
+        run: |
+          python early_intel_shadow.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          data = json.loads(Path("early_intel_shadow_state.json").read_text(encoding="utf-8"))
+          assert data["version"] == 1
+          assert isinstance(data["sources"], dict)
+          assert isinstance(data["events"], list)
+          print("Early Intel state JSON valid; no Discord webhook configured; no state commit")
+          PY
+
   daily-research:
     if: github.event_name != 'pull_request'
     needs: offline-validation
@@ -60,6 +89,10 @@ jobs:
           cache: pip
       - run: pip install -r requirements.txt
       - name: Record Early Intel snapshot (no Discord)
+        # The shared scanner's import requires a non-empty webhook setting.
+        # This is intentionally NOT a URL, so the shadow lane cannot send Discord.
+        env:
+          DISCORD_WEBHOOK_URL: "EARLY_INTEL_DISABLED_NO_DISCORD"
         run: python early_intel_shadow.py
       - name: Persist only Early Intel history with race-safe state push
         run: |
