@@ -414,7 +414,7 @@
           },
           "1659": {
             "name": "Bilka Esbjerg",
-            "stock": 19
+            "stock": 18
           }
         },
         "quantity_limit": 6,
@@ -714,11 +714,11 @@
       "last_success_at": "2026-11-12T11:09:15.671129+00:00"
     },
     "proshop": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 1,
+      "backoff_level": 2,
+      "next_allowed_at": 1794585218.3758857,
+      "generic_failures": 3,
       "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details",
-      "last_failure_at": "2026-11-13T15:44:23.829841+00:00",
+      "last_failure_at": "2026-11-13T15:48:38.375858+00:00",
       "last_success_at": "2026-11-13T15:43:30.337936+00:00"
     },
     "br": {
@@ -755,14 +755,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1794584713.0395281,
+      "next_allowed_at": 1794585006.0966783,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-13T15:41:13.039504+00:00"
+      "last_success_at": "2026-11-13T15:46:06.096648+00:00"
     }
   },
-  "updated_at": "2026-11-13T15:44:40.794659+00:00",
+  "updated_at": "2026-11-13T15:49:37.288161+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -787,7 +787,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-13T15:41:11.051104+00:00"
+          "last_checked": "2026-11-13T15:46:04.580651+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -797,7 +797,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1794584470.2167687,
+      "last_discovery_epoch": 1794584762.7972717,
       "last_full_discovery_epoch": 1794582968.6673234,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -833,12 +833,12 @@
     "3519999": 1794584353.5809247,
     "3530350": 1794584441.8273628,
     "3530351": 1794584497.7531083,
-    "3530352": 1794583920.2455552,
+    "3530352": 1794584913.0603385,
     "3530353": 1794584241.084914,
     "3421827": 1794584497.7531083,
     "3447590": 1794584606.0183566,
     "3478501": 1794584441.8273628,
-    "3502023": 1794583875.3896854,
+    "3502023": 1794584913.0603385,
     "3519996": 1794584188.9928336,
     "3530348": 1794583975.4698744,
     "3530349": 1794584241.084914,
@@ -863,7 +863,7 @@
     "status": "degraded",
     "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-13T15:44:23.829754+00:00",
+    "checked_at": "2026-11-13T15:48:33.060266+00:00",
     "details_or_listings_count": 0
   },
   "proshop_last_usable_count": 3,
