@@ -319,7 +319,7 @@
       "online_stock": false,
       "is_exposed": true,
       "store_count": 15,
-      "kolding_stock": 16,
+      "kolding_stock": 15,
       "esbjerg_stock": 0,
       "quantity_limit": 1,
       "sku": "11398796-EA",
@@ -475,7 +475,7 @@
       "online_stock": false,
       "is_exposed": true,
       "store_count": 31,
-      "kolding_stock": 129,
+      "kolding_stock": 125,
       "esbjerg_stock": 77,
       "quantity_limit": 6,
       "sku": "11399552-EA",
@@ -3929,7 +3929,7 @@
       "10188862259531": {
         "name": "Pokémon TCG: Furious Fists Booster Pack (X & Y)",
         "game": "POKÉMON",
-        "price": 629.0,
+        "price": 799.0,
         "in_stock": true,
         "preorder": false,
         "url": "https://rogerz.dk/products/pokemon-furious-fists-booster-pack"
@@ -3953,7 +3953,7 @@
       "10188778144075": {
         "name": "Pokémon TCG: Generations Booster Pack (X & Y)",
         "game": "POKÉMON",
-        "price": 2300.0,
+        "price": 3000.0,
         "in_stock": true,
         "preorder": false,
         "url": "https://rogerz.dk/products/pokemon-generations-booster-pack"
@@ -9676,14 +9676,6 @@
         "preorder": false,
         "url": "https://spilforsyningen.dk/products/pokemon-scarlet-violet-9-journey-together-display"
       },
-      "15600736076159": {
-        "name": "Pokemon Mega Evolutions: Perfect Order - Display",
-        "game": "POKÉMON",
-        "price": 1699.95,
-        "in_stock": false,
-        "preorder": false,
-        "url": "https://spilforsyningen.dk/products/pokemon-mega-evolutions-perfect-order-display"
-      },
       "15774691099007": {
         "name": "Pokemon Mega Evolutions: Pitch Black - Booster Box (Display)",
         "game": "POKÉMON",
@@ -9691,6 +9683,14 @@
         "in_stock": true,
         "preorder": false,
         "url": "https://spilforsyningen.dk/products/pokemon-mega-evolutions-pitch-black-booster-box-display"
+      },
+      "15600736076159": {
+        "name": "Pokemon Mega Evolutions: Perfect Order - Display",
+        "game": "POKÉMON",
+        "price": 1699.95,
+        "in_stock": false,
+        "preorder": false,
+        "url": "https://spilforsyningen.dk/products/pokemon-mega-evolutions-perfect-order-display"
       },
       "16048881631615": {
         "name": "Pokemon Mega Evolutions: Delta Reign - Booster Box (Display)",
@@ -86555,7 +86555,7 @@
         "last_seen": "2026-11-13T07:48:50.124429+01:00"
       }
     },
-    "updated_at": "2026-11-13T13:08:29.492852+01:00"
+    "updated_at": "2026-11-13T13:13:53.058995+01:00"
   },
   "_elgiganten_key_cache": {
     "api_key": null,
@@ -100191,11 +100191,11 @@
       "last_error": ""
     },
     "proshop": {
-      "status": "degraded",
-      "last_attempt": "2026-11-13T12:06:16.779572+00:00",
-      "consecutive_failures": 0,
-      "last_error": "Kategori 3 aktuelle TCG-produkter, 0 bekræftede SKU-detaljer; health-target for kategori er 6",
-      "observed_count": 3,
+      "status": "failed",
+      "last_attempt": "2026-11-13T12:11:05.940499+00:00",
+      "consecutive_failures": 1,
+      "last_error": "Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403)",
+      "observed_count": null,
       "last_success": "2026-11-13T12:06:16.779589+00:00",
       "last_count": 3
     },
@@ -100503,8 +100503,8 @@
     },
     "tcgbruus": {
       "status": "failed",
-      "last_attempt": "2026-11-13T12:07:58.051881+00:00",
-      "consecutive_failures": 5016,
+      "last_attempt": "2026-11-13T12:12:39.285253+00:00",
+      "consecutive_failures": 5017,
       "last_error": "mistænkeligt lavt produktantal: 3 < 5",
       "observed_count": 3,
       "last_success": "2026-10-26T15:12:41.350111+00:00",
@@ -100528,12 +100528,12 @@
     },
     "kelz0r": {
       "status": "failed",
-      "last_attempt": "2026-11-13T12:08:09.473638+00:00",
+      "last_attempt": "2026-11-13T12:13:35.350195+00:00",
       "last_success": "2026-11-13T12:04:32.171634+00:00",
       "last_count": 2261,
       "observed_count": null,
-      "consecutive_failures": 1,
-      "last_error": "429 Client Error: Too Many Requests for url: https://www.kelz0r.dk/magic/pokemon-boosters-c-187_191.html?currency=DKK"
+      "consecutive_failures": 2,
+      "last_error": "429 Client Error: Too Many Requests for url: https://www.kelz0r.dk/magic/pokemon-boosters-c-187_191.html?currency=DKK&page=29"
     },
     "faraos": {
       "status": "ok",
@@ -112495,7 +112495,7 @@
     "fff940439ebc8fbda0afe0b985ab8c51",
     "fffcef15b6da7fe5087a520dad6f7197"
   ],
-  "_last_full_scan_epoch": 1794571709,
+  "_last_full_scan_epoch": 1794572033,
   "proshop_detail_checks": {
     "3417744": 1794570674.0367043,
     "3447592": 1794571573.6688163,
