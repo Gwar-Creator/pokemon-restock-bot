@@ -95,13 +95,6 @@
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Ultra-Premium-Collection-30th-Celebration-assorted/3519996",
         "fetch_via": "jina_reader"
       },
-      "3417744": {
-        "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
-        "price": null,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
-        "fetch_via": "preserved_previous_scan"
-      },
       "3530352": {
         "name": "Pokemon Mega Evolution Delta Reign Blister 3-pack",
         "price": 199.0,
@@ -114,6 +107,13 @@
         "price": 329.0,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
+        "fetch_via": "preserved_previous_scan"
+      },
+      "3417744": {
+        "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
+        "price": null,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
         "fetch_via": "preserved_previous_scan"
       },
       "3478497": {
@@ -714,12 +714,12 @@
       "last_success_at": "2026-11-13T20:24:17.847907+00:00"
     },
     "proshop": {
-      "backoff_level": 1,
-      "next_allowed_at": 1794603326.0756397,
-      "generic_failures": 2,
-      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details",
+      "backoff_level": 0,
+      "next_allowed_at": 0.0,
+      "generic_failures": 0,
+      "last_error": null,
       "last_failure_at": "2026-11-13T20:53:26.075600+00:00",
-      "last_success_at": "2026-11-13T20:51:38.605294+00:00"
+      "last_success_at": "2026-11-13T20:59:16.947107+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -755,14 +755,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1794603298.9530606,
+      "next_allowed_at": 1794603585.070036,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-13T20:50:58.953034+00:00"
+      "last_success_at": "2026-11-13T20:55:45.070006+00:00"
     }
   },
-  "updated_at": "2026-11-13T20:54:31.706874+00:00",
+  "updated_at": "2026-11-13T20:59:29.370264+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -787,7 +787,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-13T20:50:57.838173+00:00"
+          "last_checked": "2026-11-13T20:55:44.307660+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -797,7 +797,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1794603056.4851584,
+      "last_discovery_epoch": 1794603343.4983168,
       "last_full_discovery_epoch": 1794582968.6673234,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -826,27 +826,27 @@
   },
   "proshop_detail_checks": {
     "3417744": 1794602806.1166956,
-    "3447592": 1794602439.75509,
+    "3447592": 1794603384.1380458,
     "3478496": 1794602864.4938338,
     "3478497": 1794603093.4456012,
-    "3478498": 1794602549.9786289,
+    "3478498": 1794603511.0537462,
     "3519999": 1794603162.2611272,
     "3530350": 1794603162.2611272,
-    "3530351": 1794602495.8197117,
-    "3530352": 1794602495.8197117,
+    "3530351": 1794603439.018645,
+    "3530352": 1794603439.018645,
     "3530353": 1794602864.4938338,
-    "3421827": 1794602439.75509,
+    "3421827": 1794603384.1380458,
     "3447590": 1794602806.1166956,
     "3478501": 1794603093.4456012,
-    "3502023": 1794602549.9786289,
+    "3502023": 1794603511.0537462,
     "3519996": 1794602659.1071377,
     "3530348": 1794602659.1071377,
     "3530349": 1794602751.3279068,
-    "3519993": 1794602604.460218,
+    "3519993": 1794603550.875477,
     "3519997": 1794602751.3279068,
-    "3519992": 1794602604.460218
+    "3519992": 1794603550.875477
   },
-  "proshop_broad_attempt_at": 1794602861.1980948,
+  "proshop_broad_attempt_at": 1794603495.3560836,
   "proshop_radar_alerts": {
     "3519996:BESTILLINGSVARE": 1794402448.8076684,
     "3519997:BESTILLINGSVARE": 1794234274.0313218,
@@ -861,11 +861,11 @@
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
     "status": "degraded",
-    "primary_count": 0,
+    "primary_count": 2,
     "broad_count": 0,
-    "checked_at": "2026-11-13T20:53:26.075512+00:00",
-    "details_or_listings_count": 0
+    "checked_at": "2026-11-13T20:59:10.875407+00:00",
+    "details_or_listings_count": 2
   },
   "proshop_last_usable_count": 2,
-  "proshop_last_usable_at": "2026-11-13T20:51:38.605323+00:00"
+  "proshop_last_usable_at": "2026-11-13T20:59:16.947133+00:00"
 }
