@@ -714,11 +714,11 @@
       "last_success_at": "2026-11-13T20:24:17.847907+00:00"
     },
     "proshop": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-13T22:11:40.153546+00:00",
+      "backoff_level": 2,
+      "next_allowed_at": 1794608665.5202117,
+      "generic_failures": 3,
+      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details",
+      "last_failure_at": "2026-11-13T22:19:25.520186+00:00",
       "last_success_at": "2026-11-13T22:14:41.744930+00:00"
     },
     "br": {
@@ -755,14 +755,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1794608102.3907447,
+      "next_allowed_at": 1794608405.4848604,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-13T22:11:02.390715+00:00"
+      "last_success_at": "2026-11-13T22:16:05.484834+00:00"
     }
   },
-  "updated_at": "2026-11-13T22:14:55.714683+00:00",
+  "updated_at": "2026-11-13T22:19:40.266810+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -787,7 +787,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-13T22:11:01.203129+00:00"
+          "last_checked": "2026-11-13T22:16:04.410973+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -797,7 +797,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1794607859.910846,
+      "last_discovery_epoch": 1794608163.262977,
       "last_full_discovery_epoch": 1794604568.8580096,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -825,25 +825,25 @@
     "coolshop:https://www.coolshop.dk/produkt/pokemon-first-partner-illustration-collection-series-2-pok10395-101/23XF7G/": 1794578896.0901601
   },
   "proshop_detail_checks": {
-    "3417744": 1794607099.5588057,
+    "3417744": 1794608192.4304385,
     "3447592": 1794607586.6595538,
-    "3478496": 1794607099.5588057,
-    "3478497": 1794607155.4833179,
+    "3478496": 1794608192.4304385,
+    "3478497": 1794608359.303689,
     "3478498": 1794607840.609816,
     "3519999": 1794607482.4672272,
     "3530350": 1794607482.4672272,
     "3530351": 1794607750.3014455,
     "3530352": 1794607750.3014455,
-    "3530353": 1794607155.4833179,
+    "3530353": 1794608359.303689,
     "3421827": 1794607586.6595538,
     "3447590": 1794607316.8719516,
     "3478501": 1794607316.8719516,
     "3502023": 1794607840.609816,
     "3519996": 1794608075.6975076,
     "3530348": 1794608075.6975076,
-    "3530349": 1794607043.8057106,
+    "3530349": 1794608140.607406,
     "3519993": 1794607895.1611795,
-    "3519997": 1794607043.8057106,
+    "3519997": 1794608140.607406,
     "3519992": 1794607895.1611795
   },
   "proshop_broad_attempt_at": 1794608060.0397446,
@@ -862,9 +862,9 @@
   "proshop_primary_health": {
     "status": "degraded",
     "primary_count": 0,
-    "broad_count": 1,
-    "checked_at": "2026-11-13T22:14:35.697371+00:00",
-    "details_or_listings_count": 1
+    "broad_count": 0,
+    "checked_at": "2026-11-13T22:19:19.303631+00:00",
+    "details_or_listings_count": 0
   },
   "proshop_last_usable_count": 1,
   "proshop_last_usable_at": "2026-11-13T22:14:41.744964+00:00"
