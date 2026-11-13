@@ -294,7 +294,7 @@
       "price": 369.0,
       "stock": "PÅ LAGER",
       "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Lucario-ex-League-Battle-Deck/3447590",
-      "fetch_via": "jina_verified_detail"
+      "fetch_via": "jina_reader"
     },
     "3519996": {
       "name": "Pokemon Ultra Premium Collection 30th Celebration assorted",
@@ -309,13 +309,6 @@
       "stock": "PÅ LAGER",
       "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
       "fetch_via": "jina_reader"
-    },
-    "3478497": {
-      "name": "Pokemon TCG 2-pack Booster",
-      "price": null,
-      "stock": "UDSOLGT",
-      "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2-pack-Booster/3478497",
-      "fetch_via": "jina_verified_detail"
     }
   },
   "br": {
@@ -86546,7 +86539,7 @@
         "last_seen": "2026-11-13T07:48:50.124429+01:00"
       }
     },
-    "updated_at": "2026-11-13T09:08:24.981842+01:00"
+    "updated_at": "2026-11-13T09:13:35.529322+01:00"
   },
   "_elgiganten_key_cache": {
     "api_key": null,
@@ -100183,12 +100176,12 @@
     },
     "proshop": {
       "status": "degraded",
-      "last_attempt": "2026-11-13T08:01:37.573163+00:00",
+      "last_attempt": "2026-11-13T08:11:07.034425+00:00",
       "consecutive_failures": 0,
-      "last_error": "Kategori 3 aktuelle TCG-produkter, 1 bekræftede SKU-detaljer; health-target for kategori er 6",
-      "observed_count": 4,
-      "last_success": "2026-11-13T08:01:37.573180+00:00",
-      "last_count": 4
+      "last_error": "Kategori 3 aktuelle TCG-produkter, 0 bekræftede SKU-detaljer; health-target for kategori er 6",
+      "observed_count": 3,
+      "last_success": "2026-11-13T08:11:07.034440+00:00",
+      "last_count": 3
     },
     "br": {
       "status": "ok",
@@ -100494,8 +100487,8 @@
     },
     "tcgbruus": {
       "status": "failed",
-      "last_attempt": "2026-11-13T08:07:24.129840+00:00",
-      "consecutive_failures": 4968,
+      "last_attempt": "2026-11-13T08:12:27.379005+00:00",
+      "consecutive_failures": 4969,
       "last_error": "mistænkeligt lavt produktantal: 3 < 5",
       "observed_count": 3,
       "last_success": "2026-10-26T15:12:41.350111+00:00",
@@ -100519,12 +100512,12 @@
     },
     "kelz0r": {
       "status": "failed",
-      "last_attempt": "2026-11-13T08:08:07.178134+00:00",
+      "last_attempt": "2026-11-13T08:13:17.056241+00:00",
       "last_success": "2026-11-13T04:58:08.801313+00:00",
       "last_count": 2260,
       "observed_count": null,
-      "consecutive_failures": 5,
-      "last_error": "429 Client Error: Too Many Requests for url: https://www.kelz0r.dk/magic/pokemon-boosters-c-187_191.html?currency=DKK&page=17"
+      "consecutive_failures": 6,
+      "last_error": "429 Client Error: Too Many Requests for url: https://www.kelz0r.dk/magic/pokemon-boosters-c-187_191.html?currency=DKK&page=21"
     },
     "faraos": {
       "status": "ok",
@@ -112482,10 +112475,10 @@
     "fff940439ebc8fbda0afe0b985ab8c51",
     "fffcef15b6da7fe5087a520dad6f7197"
   ],
-  "_last_full_scan_epoch": 1794557305,
+  "_last_full_scan_epoch": 1794557615,
   "proshop_detail_checks": {
     "3417744": 1794556282.6023622,
-    "3447592": 1794555965.0551755,
+    "3447592": 1794557462.5439405,
     "3478496": 1794556892.906471,
     "3478497": 1794557160.1573942,
     "3478498": 1794555965.0551755,
@@ -112499,7 +112492,7 @@
     "3530350": 1794053485.8864028,
     "3519993": 1794389763.6129577,
     "3519997": 1794318082.519118,
-    "3519996": 1794555671.0384264,
+    "3519996": 1794557462.5439405,
     "3530349": 1794507378.406343
   }
 }
