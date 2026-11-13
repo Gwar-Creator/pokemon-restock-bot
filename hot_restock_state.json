@@ -372,7 +372,7 @@
           },
           "1659": {
             "name": "Bilka Esbjerg",
-            "stock": 11
+            "stock": 10
           }
         },
         "quantity_limit": null,
@@ -714,12 +714,12 @@
       "last_success_at": "2026-11-12T11:09:15.671129+00:00"
     },
     "proshop": {
-      "backoff_level": 3,
-      "next_allowed_at": 1794593142.5069609,
-      "generic_failures": 4,
-      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details",
+      "backoff_level": 2,
+      "next_allowed_at": 1794593510.0850773,
+      "generic_failures": 0,
+      "last_error": null,
       "last_failure_at": "2026-11-13T17:50:42.506929+00:00",
-      "last_success_at": "2026-11-13T17:39:17.405102+00:00"
+      "last_success_at": "2026-11-13T18:06:50.085060+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -755,14 +755,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1794593124.1484578,
+      "next_allowed_at": 1794593389.7818425,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-13T18:01:24.148430+00:00"
+      "last_success_at": "2026-11-13T18:05:49.781817+00:00"
     }
   },
-  "updated_at": "2026-11-13T18:05:03.148610+00:00",
+  "updated_at": "2026-11-13T18:09:24.881924+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -787,7 +787,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-13T18:01:22.914573+00:00"
+          "last_checked": "2026-11-13T18:05:48.933530+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -797,7 +797,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1794592881.8818233,
+      "last_discovery_epoch": 1794593147.9350553,
       "last_full_discovery_epoch": 1794582968.6673234,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -825,7 +825,7 @@
     "coolshop:https://www.coolshop.dk/produkt/pokemon-first-partner-illustration-collection-series-2-pok10395-101/23XF7G/": 1794578896.0901601
   },
   "proshop_detail_checks": {
-    "3417744": 1794591162.890638,
+    "3417744": 1794593201.7879517,
     "3447592": 1794591442.5591326,
     "3478496": 1794591221.894811,
     "3478497": 1794591221.894811,
@@ -836,7 +836,7 @@
     "3530352": 1794591511.4455352,
     "3530353": 1794591162.890638,
     "3421827": 1794591386.8961964,
-    "3447590": 1794590841.6398132,
+    "3447590": 1794593201.7879517,
     "3478501": 1794591274.0227358,
     "3502023": 1794591552.4669504,
     "3519996": 1794591861.30498,
@@ -846,7 +846,7 @@
     "3519997": 1794592236.971935,
     "3519992": 1794591552.4669504
   },
-  "proshop_broad_attempt_at": 1794591857.6511028,
+  "proshop_broad_attempt_at": 1794593185.9921167,
   "proshop_radar_alerts": {
     "3519996:BESTILLINGSVARE": 1794402448.8076684,
     "3519997:BESTILLINGSVARE": 1794234274.0313218,
@@ -860,12 +860,12 @@
   ],
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
-    "status": "degraded",
-    "primary_count": 0,
-    "broad_count": 0,
-    "checked_at": "2026-11-13T17:50:36.971742+00:00",
-    "details_or_listings_count": 0
+    "status": "ok",
+    "primary_count": 3,
+    "broad_count": 1,
+    "checked_at": "2026-11-13T18:06:41.787681+00:00",
+    "details_or_listings_count": 3
   },
   "proshop_last_usable_count": 3,
-  "proshop_last_usable_at": "2026-11-13T17:39:17.405127+00:00"
+  "proshop_last_usable_at": "2026-11-13T18:06:50.085099+00:00"
 }
