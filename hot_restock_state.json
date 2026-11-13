@@ -278,7 +278,7 @@
       "200279925": {
         "name": "Pokémon Battle Academy 2024",
         "price": 299.0,
-        "online_count": 292,
+        "online_count": 291,
         "online_stock": true,
         "is_exposed": true,
         "store_count": 32,
@@ -361,7 +361,7 @@
       "200279925": {
         "name": "Pokémon Battle Academy 2024",
         "price": 299.0,
-        "online_count": 292,
+        "online_count": 291,
         "online_stock": true,
         "is_exposed": true,
         "store_count": 19,
@@ -426,7 +426,7 @@
       "200279925": {
         "name": "Pokémon Battle Academy 2024",
         "price": 299.0,
-        "online_count": 292,
+        "online_count": 291,
         "online_stock": true,
         "is_exposed": true,
         "store_count": 1,
@@ -714,11 +714,11 @@
       "last_success_at": "2026-11-12T11:09:15.671129+00:00"
     },
     "proshop": {
-      "backoff_level": 1,
-      "next_allowed_at": 1794587422.8193052,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-13T16:22:31.405920+00:00",
+      "backoff_level": 2,
+      "next_allowed_at": 1794587820.429454,
+      "generic_failures": 2,
+      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details",
+      "last_failure_at": "2026-11-13T16:32:00.429424+00:00",
       "last_success_at": "2026-11-13T16:28:22.819289+00:00"
     },
     "br": {
@@ -755,14 +755,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1794587494.9178593,
+      "next_allowed_at": 1794587776.8702703,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-13T16:27:34.917833+00:00"
+      "last_success_at": "2026-11-13T16:32:16.870239+00:00"
     }
   },
-  "updated_at": "2026-11-13T16:29:26.279782+00:00",
+  "updated_at": "2026-11-13T16:34:51.313683+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -787,7 +787,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-13T16:27:34.260033+00:00"
+          "last_checked": "2026-11-13T16:32:15.736811+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -797,7 +797,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1794587253.2567549,
+      "last_discovery_epoch": 1794587534.571099,
       "last_full_discovery_epoch": 1794582968.6673234,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -826,14 +826,14 @@
   },
   "proshop_detail_checks": {
     "3417744": 1794586721.1547153,
-    "3447592": 1794585962.3391182,
+    "3447592": 1794587459.3404944,
     "3478496": 1794586764.2695765,
     "3478497": 1794586764.2695765,
-    "3478498": 1794586288.977186,
+    "3478498": 1794587515.1302366,
     "3519999": 1794586945.8885972,
     "3530350": 1794587299.6202006,
-    "3530351": 1794585962.3391182,
-    "3530352": 1794586456.5121953,
+    "3530351": 1794587459.3404944,
+    "3530352": 1794587515.1302366,
     "3530353": 1794586721.1547153,
     "3421827": 1794587299.6202006,
     "3447590": 1794586288.977186,
@@ -860,11 +860,11 @@
   ],
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
-    "status": "ok",
-    "primary_count": 3,
-    "broad_count": 1,
-    "checked_at": "2026-11-13T16:28:19.619944+00:00",
-    "details_or_listings_count": 3
+    "status": "degraded",
+    "primary_count": 0,
+    "broad_count": 0,
+    "checked_at": "2026-11-13T16:31:55.130158+00:00",
+    "details_or_listings_count": 0
   },
   "proshop_last_usable_count": 3,
   "proshop_last_usable_at": "2026-11-13T16:28:22.819322+00:00"
