@@ -93,7 +93,7 @@
         "price": 329.0,
         "stock": "PÅ LAGER",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
-        "fetch_via": "jina_verified_detail"
+        "fetch_via": "jina_reader"
       },
       "3478501": {
         "name": "Pokemon Tin Fall ex - assorted",
@@ -707,12 +707,12 @@
       "last_success_at": "2026-11-12T11:09:15.671129+00:00"
     },
     "proshop": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-13T08:44:37.908543+00:00",
-      "last_success_at": "2026-11-13T08:49:18.988609+00:00"
+      "backoff_level": 1,
+      "next_allowed_at": 1794560802.3778796,
+      "generic_failures": 2,
+      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details",
+      "last_failure_at": "2026-11-13T09:04:42.377863+00:00",
+      "last_success_at": "2026-11-13T09:02:59.322081+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -748,14 +748,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1794560404.5978093,
+      "next_allowed_at": 1794560727.7265198,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-13T08:56:04.597781+00:00"
+      "last_success_at": "2026-11-13T09:01:27.726494+00:00"
     }
   },
-  "updated_at": "2026-11-13T08:59:25.735380+00:00",
+  "updated_at": "2026-11-13T09:04:57.566201+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -780,7 +780,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-13T08:56:03.901172+00:00"
+          "last_checked": "2026-11-13T09:01:26.616155+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -790,7 +790,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1794560162.7247818,
+      "last_discovery_epoch": 1794560484.9759016,
       "last_full_discovery_epoch": 1794539506.118633,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -818,25 +818,25 @@
   },
   "proshop_detail_checks": {
     "3417744": 1794560056.1958756,
-    "3447592": 1794559472.7296367,
+    "3447592": 1794560462.0514143,
     "3478496": 1794560002.1276455,
     "3478497": 1794560239.9022923,
-    "3478498": 1794559472.7296367,
+    "3478498": 1794560462.0514143,
     "3519999": 1794560056.1958756,
     "3530350": 1794560349.806881,
     "3530351": 1794560295.341229,
-    "3530352": 1794559708.038965,
+    "3530352": 1794560627.4057856,
     "3530353": 1794559889.5853376,
     "3421827": 1794560349.806881,
     "3447590": 1794560239.9022923,
     "3478501": 1794560295.341229,
-    "3502023": 1794559648.1761928,
+    "3502023": 1794560574.7024271,
     "3519996": 1794559836.180615,
-    "3530348": 1794559648.1761928,
+    "3530348": 1794560574.7024271,
     "3530349": 1794559889.5853376,
-    "3519993": 1794559592.7782018,
+    "3519993": 1794560521.8349903,
     "3519997": 1794559836.180615,
-    "3519992": 1794559708.038965
+    "3519992": 1794560627.4057856
   },
   "proshop_broad_attempt_at": 1794560130.9531722,
   "proshop_radar_alerts": {
@@ -852,12 +852,12 @@
   ],
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
-    "status": "ok",
-    "primary_count": 3,
+    "status": "degraded",
+    "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-13T08:59:09.806803+00:00",
-    "details_or_listings_count": 3
+    "checked_at": "2026-11-13T09:04:42.377777+00:00",
+    "details_or_listings_count": 0
   },
   "proshop_last_usable_count": 3,
-  "proshop_last_usable_at": "2026-11-13T08:59:13.413243+00:00"
+  "proshop_last_usable_at": "2026-11-13T09:02:59.322106+00:00"
 }
