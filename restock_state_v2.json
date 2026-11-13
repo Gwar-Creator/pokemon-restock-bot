@@ -294,7 +294,7 @@
       "price": 369.0,
       "stock": "PÅ LAGER",
       "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Lucario-ex-League-Battle-Deck/3447590",
-      "fetch_via": "jina_reader"
+      "fetch_via": "jina_verified_detail"
     },
     "3519996": {
       "name": "Pokemon Ultra Premium Collection 30th Celebration assorted",
@@ -308,6 +308,13 @@
       "price": 329.0,
       "stock": "PÅ LAGER",
       "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
+      "fetch_via": "jina_reader"
+    },
+    "3478496": {
+      "name": "Pokemon TCG Mega Greninja ex Premium Collection",
+      "price": null,
+      "stock": "UDSOLGT",
+      "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
       "fetch_via": "jina_verified_detail"
     }
   },
@@ -346,7 +353,7 @@
       "is_exposed": true,
       "store_count": 32,
       "kolding_stock": 358,
-      "esbjerg_stock": 147,
+      "esbjerg_stock": 146,
       "quantity_limit": 6,
       "sku": "11398799-EA",
       "url": "https://www.br.dk/produkter/pokemon-mega-evolution-delta-reign-samlekort-booster-pakke/200397054/"
@@ -476,7 +483,7 @@
       "is_exposed": true,
       "store_count": 31,
       "kolding_stock": 125,
-      "esbjerg_stock": 77,
+      "esbjerg_stock": 75,
       "quantity_limit": 6,
       "sku": "11399552-EA",
       "url": "https://www.br.dk/produkter/pokemon-mega-evolution-delta-reign-samlekort-boosterpakke/200397060/"
@@ -6490,7 +6497,7 @@
         "name": "Pokémon TCG: Shining Fates Booster Pack",
         "game": "POKÉMON",
         "price": 149.0,
-        "in_stock": false,
+        "in_stock": true,
         "preorder": false,
         "url": "https://rogerz.dk/products/shining-fates-booster-pack"
       },
@@ -6874,7 +6881,7 @@
         "name": "Pokémon TCG: Champions Path Booster Packs",
         "game": "POKÉMON",
         "price": 179.0,
-        "in_stock": false,
+        "in_stock": true,
         "preorder": false,
         "url": "https://rogerz.dk/products/champions-path-booster-packs"
       },
@@ -20198,6 +20205,14 @@
         "preorder": false,
         "url": "https://halmeshule.dk/products/pokemon-tcg-mega-forces-tin"
       },
+      "11769096143189": {
+        "name": "Pokémon TCG: Deck Crafters Collection",
+        "game": "POKÉMON",
+        "price": 129.95,
+        "in_stock": true,
+        "preorder": false,
+        "url": "https://halmeshule.dk/products/pokemon-tcg-deck-craftes-collection"
+      },
       "10014882103637": {
         "name": "Bede Trainer Card binder Collection",
         "game": "POKÉMON",
@@ -20229,14 +20244,6 @@
         "in_stock": true,
         "preorder": false,
         "url": "https://halmeshule.dk/products/pokemon-tcg-umbreon-gx-premium-collection"
-      },
-      "11769096143189": {
-        "name": "Pokémon TCG: Deck Crafters Collection",
-        "game": "POKÉMON",
-        "price": 129.95,
-        "in_stock": true,
-        "preorder": false,
-        "url": "https://halmeshule.dk/products/pokemon-tcg-deck-craftes-collection"
       },
       "11706444579157": {
         "name": "Lorcana: Hyperia City (Set 14) - Booster Pack",
@@ -86555,7 +86562,7 @@
         "last_seen": "2026-11-13T07:48:50.124429+01:00"
       }
     },
-    "updated_at": "2026-11-13T13:23:52.366878+01:00"
+    "updated_at": "2026-11-13T13:28:13.384872+01:00"
   },
   "_elgiganten_key_cache": {
     "api_key": null,
@@ -98328,10 +98335,10 @@
         "historical_low_date": "2026-09-18",
         "historical_low_url": "https://rogerz.dk/products/shining-fates-booster-pack",
         "first_seen": "2026-09-18T16:38:17.539312+02:00",
-        "last_seen": "2026-11-04T00:00:30.704458+01:00",
+        "last_seen": "2026-11-13T13:28:13.498420+01:00",
         "baseline_price": 149.0,
-        "observation_days": 40,
-        "last_observation_date": "2026-11-04",
+        "observation_days": 41,
+        "last_observation_date": "2026-11-13",
         "price_changes": 0
       },
       "POKÉMON|BOOSTER PACK|EN|darkness ablaze": {
@@ -100192,12 +100199,12 @@
     },
     "proshop": {
       "status": "degraded",
-      "last_attempt": "2026-11-13T12:21:23.892436+00:00",
+      "last_attempt": "2026-11-13T12:26:00.699908+00:00",
       "consecutive_failures": 0,
-      "last_error": "Kategori 3 aktuelle TCG-produkter, 0 bekræftede SKU-detaljer; health-target for kategori er 6",
-      "observed_count": 3,
-      "last_success": "2026-11-13T12:21:23.892446+00:00",
-      "last_count": 3
+      "last_error": "Kategori 3 aktuelle TCG-produkter, 1 bekræftede SKU-detaljer; health-target for kategori er 6",
+      "observed_count": 4,
+      "last_success": "2026-11-13T12:26:00.699925+00:00",
+      "last_count": 4
     },
     "br": {
       "status": "ok",
@@ -100503,8 +100510,8 @@
     },
     "tcgbruus": {
       "status": "failed",
-      "last_attempt": "2026-11-13T12:22:48.752484+00:00",
-      "consecutive_failures": 5019,
+      "last_attempt": "2026-11-13T12:27:27.881995+00:00",
+      "consecutive_failures": 5020,
       "last_error": "mistænkeligt lavt produktantal: 3 < 5",
       "observed_count": 3,
       "last_success": "2026-10-26T15:12:41.350111+00:00",
@@ -100528,12 +100535,12 @@
     },
     "kelz0r": {
       "status": "failed",
-      "last_attempt": "2026-11-13T12:23:30.817045+00:00",
+      "last_attempt": "2026-11-13T12:27:58.046776+00:00",
       "last_success": "2026-11-13T12:18:42.985625+00:00",
       "last_count": 2261,
       "observed_count": null,
-      "consecutive_failures": 1,
-      "last_error": "429 Client Error: Too Many Requests for url: https://www.kelz0r.dk/magic/pokemon-boosters-c-187_191.html?currency=DKK&page=13"
+      "consecutive_failures": 2,
+      "last_error": "429 Client Error: Too Many Requests for url: https://www.kelz0r.dk/magic/pokemon-boosters-c-187_191.html?currency=DKK&page=22"
     },
     "faraos": {
       "status": "ok",
@@ -112495,11 +112502,11 @@
     "fff940439ebc8fbda0afe0b985ab8c51",
     "fffcef15b6da7fe5087a520dad6f7197"
   ],
-  "_last_full_scan_epoch": 1794572632,
+  "_last_full_scan_epoch": 1794572893,
   "proshop_detail_checks": {
     "3417744": 1794572166.0753176,
     "3447592": 1794571573.6688163,
-    "3478496": 1794570960.8987374,
+    "3478496": 1794572757.9693446,
     "3478497": 1794571302.6518223,
     "3478498": 1794572166.0753176,
     "3519999": 1794572480.1465983,
@@ -112507,7 +112514,7 @@
     "3530352": 1794509488.268277,
     "3530353": 1794228978.4559495,
     "3421827": 1794572480.1465983,
-    "3447590": 1794571302.6518223,
+    "3447590": 1794572757.9693446,
     "3478501": 1794513063.829766,
     "3530350": 1794053485.8864028,
     "3519993": 1794389763.6129577,
