@@ -95,6 +95,13 @@
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Ultra-Premium-Collection-30th-Celebration-assorted/3519996",
         "fetch_via": "jina_reader"
       },
+      "3478501": {
+        "name": "Pokemon Tin Fall ex - assorted",
+        "price": 299.0,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-Tin-Fall-ex-assorted/3478501",
+        "fetch_via": "preserved_previous_scan"
+      },
       "3417744": {
         "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
         "price": null,
@@ -114,13 +121,6 @@
         "price": 199.0,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Mega-Evolution-Delta-Reign-Blister-3-pack/3530352",
-        "fetch_via": "preserved_previous_scan"
-      },
-      "3478501": {
-        "name": "Pokemon Tin Fall ex - assorted",
-        "price": 299.0,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-Tin-Fall-ex-assorted/3478501",
         "fetch_via": "preserved_previous_scan"
       },
       "3530349": {
@@ -716,10 +716,10 @@
     "proshop": {
       "backoff_level": 0,
       "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-13T21:42:42.389484+00:00",
-      "last_success_at": "2026-11-13T21:44:26.558720+00:00"
+      "generic_failures": 1,
+      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details",
+      "last_failure_at": "2026-11-13T21:49:24.164826+00:00",
+      "last_success_at": "2026-11-13T21:48:21.295243+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -755,14 +755,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1794606306.4820824,
+      "next_allowed_at": 1794606595.6766264,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-13T21:41:06.482060+00:00"
+      "last_success_at": "2026-11-13T21:45:55.676595+00:00"
     }
   },
-  "updated_at": "2026-11-13T21:44:43.677150+00:00",
+  "updated_at": "2026-11-13T21:49:37.510722+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -787,7 +787,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-13T21:41:04.756407+00:00"
+          "last_checked": "2026-11-13T21:45:54.272032+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -797,7 +797,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1794606063.61635,
+      "last_discovery_epoch": 1794606352.9324079,
       "last_full_discovery_epoch": 1794604568.8580096,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -830,14 +830,14 @@
     "3478496": 1794606116.7852523,
     "3478497": 1794606155.7536783,
     "3478498": 1794605792.459586,
-    "3519999": 1794605617.4541404,
-    "3530350": 1794605617.4541404,
+    "3519999": 1794606557.4289742,
+    "3530350": 1794606557.4289742,
     "3530351": 1794605738.5676258,
     "3530352": 1794605738.5676258,
     "3530353": 1794606155.7536783,
     "3421827": 1794605673.73517,
-    "3447590": 1794605469.5592034,
-    "3478501": 1794605469.5592034,
+    "3447590": 1794606391.803866,
+    "3478501": 1794606391.803866,
     "3502023": 1794605792.459586,
     "3519996": 1794605903.4284775,
     "3530348": 1794605903.4284775,
@@ -861,11 +861,11 @@
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
     "status": "degraded",
-    "primary_count": 2,
+    "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-13T21:44:26.558013+00:00",
-    "details_or_listings_count": 2
+    "checked_at": "2026-11-13T21:49:17.428897+00:00",
+    "details_or_listings_count": 0
   },
   "proshop_last_usable_count": 2,
-  "proshop_last_usable_at": "2026-11-13T21:44:26.558734+00:00"
+  "proshop_last_usable_at": "2026-11-13T21:48:21.295260+00:00"
 }
