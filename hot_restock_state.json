@@ -88,12 +88,19 @@
       }
     },
     "proshop": {
+      "3478496": {
+        "name": "Pokemon TCG Mega Greninja ex Premium Collection",
+        "price": 499.0,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
+        "fetch_via": "jina_verified_detail"
+      },
       "3530349": {
         "name": "Pokemon Ex Box - Greninja 30th Celebration",
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Ex-Box-Greninja-30th-Celebration/3530349",
-        "fetch_via": "jina_verified_detail"
+        "fetch_via": "preserved_previous_scan"
       },
       "3519996": {
         "name": "Pokemon Ultra Premium Collection 30th Celebration assorted",
@@ -121,13 +128,6 @@
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
-        "fetch_via": "preserved_previous_scan"
-      },
-      "3478496": {
-        "name": "Pokemon TCG Mega Greninja ex Premium Collection",
-        "price": 499.0,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
         "fetch_via": "preserved_previous_scan"
       },
       "3530352": {
@@ -714,12 +714,12 @@
       "last_success_at": "2026-11-12T11:09:15.671129+00:00"
     },
     "proshop": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 1,
+      "backoff_level": 1,
+      "next_allowed_at": 1794585907.5549545,
+      "generic_failures": 2,
       "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details",
-      "last_failure_at": "2026-11-13T15:59:27.700439+00:00",
-      "last_success_at": "2026-11-13T15:58:20.226804+00:00"
+      "last_failure_at": "2026-11-13T16:03:07.554926+00:00",
+      "last_success_at": "2026-11-13T16:01:15.738531+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -755,14 +755,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1794585824.1412246,
+      "next_allowed_at": 1794586090.2207544,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-13T15:59:44.141154+00:00"
+      "last_success_at": "2026-11-13T16:04:10.220728+00:00"
     }
   },
-  "updated_at": "2026-11-13T15:59:44.141240+00:00",
+  "updated_at": "2026-11-13T16:05:04.135930+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -787,7 +787,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-13T15:59:42.855378+00:00"
+          "last_checked": "2026-11-13T16:04:08.715280+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -797,7 +797,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1794585581.856798,
+      "last_discovery_epoch": 1794585847.8168097,
       "last_full_discovery_epoch": 1794582968.6673234,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -827,17 +827,17 @@
   "proshop_detail_checks": {
     "3417744": 1794585562.45756,
     "3447592": 1794584551.4944053,
-    "3478496": 1794584298.2106724,
-    "3478497": 1794584353.5809247,
+    "3478496": 1794585672.1269386,
+    "3478497": 1794585672.1269386,
     "3478498": 1794584606.0183566,
-    "3519999": 1794584353.5809247,
-    "3530350": 1794584441.8273628,
+    "3519999": 1794585725.4379466,
+    "3530350": 1794585781.2649605,
     "3530351": 1794584497.7531083,
     "3530352": 1794584913.0603385,
     "3530353": 1794585562.45756,
-    "3421827": 1794584497.7531083,
+    "3421827": 1794585781.2649605,
     "3447590": 1794584606.0183566,
-    "3478501": 1794584441.8273628,
+    "3478501": 1794585725.4379466,
     "3502023": 1794584913.0603385,
     "3519996": 1794585438.6425111,
     "3530348": 1794585438.6425111,
@@ -863,9 +863,9 @@
     "status": "degraded",
     "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-13T15:59:22.457493+00:00",
+    "checked_at": "2026-11-13T16:03:01.264897+00:00",
     "details_or_listings_count": 0
   },
   "proshop_last_usable_count": 1,
-  "proshop_last_usable_at": "2026-11-13T15:58:20.226836+00:00"
+  "proshop_last_usable_at": "2026-11-13T16:01:15.738556+00:00"
 }
