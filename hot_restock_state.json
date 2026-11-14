@@ -95,26 +95,19 @@
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Ultra-Premium-Collection-30th-Celebration-assorted/3519996",
         "fetch_via": "jina_reader"
       },
-      "3530349": {
-        "name": "Pokemon Ex Box - Greninja 30th Celebration",
-        "price": null,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-Ex-Box-Greninja-30th-Celebration/3530349",
-        "fetch_via": "jina_verified_detail"
-      },
       "3421827": {
         "name": "Pokemon TCG 2024 World Championships Deck",
         "price": 329.0,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
-        "fetch_via": "preserved_previous_scan"
+        "fetch_via": "jina_verified_detail"
       },
       "3530352": {
         "name": "Pokemon Mega Evolution Delta Reign Blister 3-pack",
         "price": 199.0,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Mega-Evolution-Delta-Reign-Blister-3-pack/3530352",
-        "fetch_via": "preserved_previous_scan"
+        "fetch_via": "jina_verified_detail"
       },
       "3478501": {
         "name": "Pokemon Tin Fall ex - assorted",
@@ -142,6 +135,13 @@
         "price": 499.0,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
+        "fetch_via": "preserved_previous_scan"
+      },
+      "3530349": {
+        "name": "Pokemon Ex Box - Greninja 30th Celebration",
+        "price": null,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-Ex-Box-Greninja-30th-Celebration/3530349",
         "fetch_via": "preserved_previous_scan"
       },
       "3519993": {
@@ -746,23 +746,23 @@
       "last_success_at": "2026-11-14T01:05:03.784434+00:00"
     },
     "boozt": {
-      "backoff_level": 1,
-      "next_allowed_at": 1794626860.8365722,
-      "generic_failures": 1,
-      "last_error": "BOOZT fejlede: Reader: 503 Server Error: Service Unavailable for url: https://r.jina.ai/https://www.boozt.com/dk/da/pokemon-trading-cards/born | direct: 429 Client Error: Too Many Requests for url: https://www.boozt.com/dk/da/pokemon-trading-cards/born",
+      "backoff_level": 0,
+      "next_allowed_at": 0.0,
+      "generic_failures": 0,
+      "last_error": null,
       "last_failure_at": "2026-11-14T03:25:40.836548+00:00",
-      "last_success_at": "2026-11-14T03:23:38.573806+00:00"
+      "last_success_at": "2026-11-14T03:29:58.737862+00:00"
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1794626982.4136112,
+      "next_allowed_at": 1794627240.216921,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-14T03:25:42.413586+00:00"
+      "last_success_at": "2026-11-14T03:30:00.216897+00:00"
     }
   },
-  "updated_at": "2026-11-14T03:25:42.413625+00:00",
+  "updated_at": "2026-11-14T03:30:00.216934+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -787,7 +787,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-14T03:25:41.553270+00:00"
+          "last_checked": "2026-11-14T03:29:59.524451+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -797,7 +797,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1794626740.838055,
+      "last_discovery_epoch": 1794626998.7379236,
       "last_full_discovery_epoch": 1794626457.8092885,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -825,19 +825,19 @@
     "coolshop:https://www.coolshop.dk/produkt/pokemon-first-partner-illustration-collection-series-2-pok10395-101/23XF7G/": 1794578896.0901601
   },
   "proshop_detail_checks": {
-    "3417744": 1794625755.370694,
+    "3417744": 1794626763.032746,
     "3447592": 1794626246.5272558,
-    "3478496": 1794625755.370694,
-    "3478497": 1794625945.6977634,
+    "3478496": 1794626763.032746,
+    "3478497": 1794626872.7752717,
     "3478498": 1794626304.6420608,
     "3519999": 1794626246.5272558,
-    "3530350": 1794626018.3951705,
+    "3530350": 1794626928.2770526,
     "3530351": 1794626304.6420608,
-    "3530352": 1794626057.1200151,
-    "3530353": 1794625945.6977634,
-    "3421827": 1794626057.1200151,
+    "3530352": 1794626983.1582932,
+    "3530353": 1794626872.7752717,
+    "3421827": 1794626983.1582932,
     "3447590": 1794626191.177128,
-    "3478501": 1794626018.3951705,
+    "3478501": 1794626928.2770526,
     "3502023": 1794626358.629634,
     "3519996": 1794626490.0765848,
     "3530348": 1794626545.044999,
@@ -862,10 +862,10 @@
   "proshop_primary_health": {
     "status": "degraded",
     "primary_count": 2,
-    "broad_count": 2,
-    "checked_at": "2026-11-14T03:24:39.310299+00:00",
-    "details_or_listings_count": 3
+    "broad_count": 0,
+    "checked_at": "2026-11-14T03:29:43.158231+00:00",
+    "details_or_listings_count": 4
   },
-  "proshop_last_usable_count": 3,
-  "proshop_last_usable_at": "2026-11-14T03:24:43.233059+00:00"
+  "proshop_last_usable_count": 4,
+  "proshop_last_usable_at": "2026-11-14T03:29:45.888834+00:00"
 }
