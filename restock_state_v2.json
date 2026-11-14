@@ -67172,14 +67172,6 @@
         "preorder": false,
         "url": "https://www.hyggeonkel.dk/produkt/lorcana-archazias-island-single-player-deck-amethyst-steel"
       },
-      "dca60fc8fe10b112ea70": {
-        "name": "Disney Lorcana: Azurite Sea (Set 6) - Emerald & Sapphire - Starter Deck",
-        "game": "LORCANA",
-        "price": 149.95,
-        "in_stock": false,
-        "preorder": false,
-        "url": "https://www.hyggeonkel.dk/produkt/lorcana-azurite-sea-single-player-deck-emerald-sapphire"
-      },
       "1a4ecc7767041a1bea2d": {
         "name": "Disney Lorcana: Azurite Sea (Set 6) - Booster Pack",
         "game": "LORCANA",
@@ -67187,6 +67179,14 @@
         "in_stock": false,
         "preorder": false,
         "url": "https://www.hyggeonkel.dk/produkt/lorcana-azurite-sea-booster-pack"
+      },
+      "dca60fc8fe10b112ea70": {
+        "name": "Disney Lorcana: Azurite Sea (Set 6) - Emerald & Sapphire - Starter Deck",
+        "game": "LORCANA",
+        "price": 149.95,
+        "in_stock": false,
+        "preorder": false,
+        "url": "https://www.hyggeonkel.dk/produkt/lorcana-azurite-sea-single-player-deck-emerald-sapphire"
       },
       "2b48c63681cb42bfb44d": {
         "name": "Disney Lorcana: Azurite Sea (Set 6) - Booster Display",
@@ -86721,7 +86721,7 @@
         "last_seen": "2026-11-13T07:48:50.124429+01:00"
       }
     },
-    "updated_at": "2026-11-14T06:45:21.760328+01:00"
+    "updated_at": "2026-11-14T06:48:57.352986+01:00"
   },
   "_elgiganten_key_cache": {
     "api_key": null,
@@ -100427,11 +100427,11 @@
       "last_error": ""
     },
     "proshop": {
-      "status": "degraded",
-      "last_attempt": "2026-11-14T05:42:16.764609+00:00",
-      "consecutive_failures": 0,
-      "last_error": "Kategori 2 aktuelle TCG-produkter, 1 bekræftede SKU-detaljer; health-target for kategori er 6",
-      "observed_count": 3,
+      "status": "failed",
+      "last_attempt": "2026-11-14T05:46:44.890015+00:00",
+      "consecutive_failures": 1,
+      "last_error": "mistænkeligt lavt produktantal: 2 < 3",
+      "observed_count": 2,
       "last_success": "2026-11-14T05:42:16.764627+00:00",
       "last_count": 3
     },
@@ -100702,12 +100702,12 @@
       "last_error": ""
     },
     "kocardz": {
-      "status": "failed",
-      "last_attempt": "2026-11-14T05:44:02.289944+00:00",
-      "consecutive_failures": 1,
-      "last_error": "HTTPSConnectionPool(host='www.kocardz.dk', port=443): Read timed out.",
-      "observed_count": null,
-      "last_success": "2026-11-14T05:39:48.052434+00:00",
+      "status": "ok",
+      "last_attempt": "2026-11-14T05:47:57.678424+00:00",
+      "consecutive_failures": 0,
+      "last_error": "",
+      "observed_count": 164,
+      "last_success": "2026-11-14T05:47:57.678444+00:00",
       "last_count": 164
     },
     "vaulted": {
@@ -100739,8 +100739,8 @@
     },
     "tcgbruus": {
       "status": "failed",
-      "last_attempt": "2026-11-14T05:44:07.592913+00:00",
-      "consecutive_failures": 5227,
+      "last_attempt": "2026-11-14T05:48:05.032308+00:00",
+      "consecutive_failures": 5228,
       "last_error": "mistænkeligt lavt produktantal: 3 < 5",
       "observed_count": 3,
       "last_success": "2026-10-26T15:12:41.350111+00:00",
@@ -100763,13 +100763,13 @@
       "observed_count": 0
     },
     "kelz0r": {
-      "status": "ok",
-      "last_attempt": "2026-11-14T05:19:32.656829+00:00",
+      "status": "failed",
+      "last_attempt": "2026-11-14T05:48:37.037064+00:00",
       "last_success": "2026-11-14T05:19:32.656849+00:00",
       "last_count": 2261,
-      "observed_count": 2261,
-      "consecutive_failures": 0,
-      "last_error": ""
+      "observed_count": null,
+      "consecutive_failures": 1,
+      "last_error": "429 Client Error: Too Many Requests for url: https://www.kelz0r.dk/magic/pokemon-tins-andet-c-187_457.html?currency=DKK"
     },
     "faraos": {
       "status": "ok",
@@ -112762,14 +112762,14 @@
     "fff940439ebc8fbda0afe0b985ab8c51",
     "fffcef15b6da7fe5087a520dad6f7197"
   ],
-  "_last_full_scan_epoch": 1794635121,
+  "_last_full_scan_epoch": 1794635337,
   "proshop_detail_checks": {
     "3417744": 1794634932.8554776,
     "3447592": 1794634711.969828,
-    "3478496": 1794634163.994705,
+    "3478496": 1794635201.0737717,
     "3478497": 1794634416.6886563,
     "3478498": 1794634932.8554776,
-    "3519999": 1794634163.994705,
+    "3519999": 1794635201.0737717,
     "3530351": 1794317761.7018461,
     "3530352": 1794509488.268277,
     "3530353": 1794228978.4559495,
