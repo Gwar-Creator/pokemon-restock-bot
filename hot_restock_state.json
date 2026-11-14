@@ -100,7 +100,7 @@
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Ex-Box-Greninja-30th-Celebration/3530349",
-        "fetch_via": "jina_verified_detail"
+        "fetch_via": "preserved_previous_scan"
       },
       "3478501": {
         "name": "Pokemon Tin Fall ex - assorted",
@@ -716,10 +716,10 @@
     "proshop": {
       "backoff_level": 0,
       "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-14T05:13:26.604834+00:00",
-      "last_success_at": "2026-11-14T05:14:26.641929+00:00"
+      "generic_failures": 1,
+      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details",
+      "last_failure_at": "2026-11-14T05:24:15.975678+00:00",
+      "last_success_at": "2026-11-14T05:23:19.160070+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -755,14 +755,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1794633599.5506692,
+      "next_allowed_at": 1794633898.957801,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-14T05:15:59.550640+00:00"
+      "last_success_at": "2026-11-14T05:20:58.957774+00:00"
     }
   },
-  "updated_at": "2026-11-14T05:19:38.767331+00:00",
+  "updated_at": "2026-11-14T05:24:30.423177+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -787,7 +787,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-14T05:15:58.930721+00:00"
+          "last_checked": "2026-11-14T05:20:57.632146+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -797,7 +797,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1794633358.25182,
+      "last_discovery_epoch": 1794633656.6068864,
       "last_full_discovery_epoch": 1794626457.8092885,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -825,10 +825,10 @@
     "coolshop:https://www.coolshop.dk/produkt/pokemon-first-partner-illustration-collection-series-2-pok10395-101/23XF7G/": 1794578896.0901601
   },
   "proshop_detail_checks": {
-    "3417744": 1794632519.8044777,
+    "3417744": 1794633634.448622,
     "3447592": 1794633258.166862,
-    "3478496": 1794632684.9141726,
-    "3478497": 1794632684.9141726,
+    "3478496": 1794633704.4058964,
+    "3478497": 1794633704.4058964,
     "3478498": 1794633340.484533,
     "3519999": 1794633340.484533,
     "3530350": 1794633200.71946,
@@ -843,10 +843,10 @@
     "3530348": 1794633559.4429936,
     "3530349": 1794633559.4429936,
     "3519993": 1794633504.424881,
-    "3519997": 1794632519.8044777,
+    "3519997": 1794633634.448622,
     "3519992": 1794633449.1112556
   },
-  "proshop_broad_attempt_at": 1794633036.9819486,
+  "proshop_broad_attempt_at": 1794633688.7490942,
   "proshop_radar_alerts": {
     "3519996:BESTILLINGSVARE": 1794402448.8076684,
     "3519997:BESTILLINGSVARE": 1794234274.0313218,
@@ -861,11 +861,11 @@
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
     "status": "degraded",
-    "primary_count": 2,
+    "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-14T05:19:19.442919+00:00",
-    "details_or_listings_count": 3
+    "checked_at": "2026-11-14T05:24:15.975595+00:00",
+    "details_or_listings_count": 0
   },
-  "proshop_last_usable_count": 3,
-  "proshop_last_usable_at": "2026-11-14T05:19:25.927435+00:00"
+  "proshop_last_usable_count": 2,
+  "proshop_last_usable_at": "2026-11-14T05:23:19.160083+00:00"
 }
