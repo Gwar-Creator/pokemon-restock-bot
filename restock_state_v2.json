@@ -352,7 +352,7 @@
       "online_stock": false,
       "is_exposed": true,
       "store_count": 32,
-      "kolding_stock": 333,
+      "kolding_stock": 332,
       "esbjerg_stock": 144,
       "quantity_limit": 6,
       "sku": "11398799-EA",
@@ -67220,14 +67220,6 @@
         "preorder": false,
         "url": "https://www.hyggeonkel.dk/produkt/lorcana-archazias-island-single-player-deck-amethyst-steel"
       },
-      "1a4ecc7767041a1bea2d": {
-        "name": "Disney Lorcana: Azurite Sea (Set 6) - Booster Pack",
-        "game": "LORCANA",
-        "price": 54.95,
-        "in_stock": false,
-        "preorder": false,
-        "url": "https://www.hyggeonkel.dk/produkt/lorcana-azurite-sea-booster-pack"
-      },
       "dca60fc8fe10b112ea70": {
         "name": "Disney Lorcana: Azurite Sea (Set 6) - Emerald & Sapphire - Starter Deck",
         "game": "LORCANA",
@@ -67235,6 +67227,14 @@
         "in_stock": false,
         "preorder": false,
         "url": "https://www.hyggeonkel.dk/produkt/lorcana-azurite-sea-single-player-deck-emerald-sapphire"
+      },
+      "1a4ecc7767041a1bea2d": {
+        "name": "Disney Lorcana: Azurite Sea (Set 6) - Booster Pack",
+        "game": "LORCANA",
+        "price": 54.95,
+        "in_stock": false,
+        "preorder": false,
+        "url": "https://www.hyggeonkel.dk/produkt/lorcana-azurite-sea-booster-pack"
       },
       "2b48c63681cb42bfb44d": {
         "name": "Disney Lorcana: Azurite Sea (Set 6) - Booster Display",
@@ -86760,7 +86760,7 @@
         "last_seen": "2026-11-13T07:48:50.124429+01:00"
       }
     },
-    "updated_at": "2026-11-14T12:59:17.786998+01:00"
+    "updated_at": "2026-11-14T13:04:05.108060+01:00"
   },
   "_elgiganten_key_cache": {
     "api_key": null,
@@ -100466,11 +100466,11 @@
       "last_error": ""
     },
     "proshop": {
-      "status": "degraded",
-      "last_attempt": "2026-11-14T11:46:28.884272+00:00",
-      "consecutive_failures": 0,
-      "last_error": "Kategori 2 aktuelle TCG-produkter, 1 bekræftede SKU-detaljer; health-target for kategori er 6",
-      "observed_count": 3,
+      "status": "failed",
+      "last_attempt": "2026-11-14T12:01:43.049703+00:00",
+      "consecutive_failures": 1,
+      "last_error": "mistænkeligt lavt produktantal: 2 < 3",
+      "observed_count": 2,
       "last_success": "2026-11-14T11:46:28.884287+00:00",
       "last_count": 3
     },
@@ -100778,8 +100778,8 @@
     },
     "tcgbruus": {
       "status": "failed",
-      "last_attempt": "2026-11-14T11:57:58.229061+00:00",
-      "consecutive_failures": 5302,
+      "last_attempt": "2026-11-14T12:03:10.609546+00:00",
+      "consecutive_failures": 5303,
       "last_error": "mistænkeligt lavt produktantal: 3 < 5",
       "observed_count": 3,
       "last_success": "2026-10-26T15:12:41.350111+00:00",
@@ -100802,13 +100802,13 @@
       "observed_count": 0
     },
     "kelz0r": {
-      "status": "ok",
-      "last_attempt": "2026-11-14T11:53:21.762396+00:00",
+      "status": "failed",
+      "last_attempt": "2026-11-14T12:03:45.953394+00:00",
       "last_success": "2026-11-14T11:53:21.762414+00:00",
       "last_count": 2261,
-      "observed_count": 2261,
-      "consecutive_failures": 0,
-      "last_error": ""
+      "observed_count": null,
+      "consecutive_failures": 1,
+      "last_error": "429 Client Error: Too Many Requests for url: https://www.kelz0r.dk/magic/pokemon-tins-andet-c-187_457.html?currency=DKK&page=8"
     },
     "faraos": {
       "status": "ok",
@@ -112829,10 +112829,10 @@
     "fff940439ebc8fbda0afe0b985ab8c51",
     "fffcef15b6da7fe5087a520dad6f7197"
   ],
-  "_last_full_scan_epoch": 1794657557,
+  "_last_full_scan_epoch": 1794657845,
   "proshop_detail_checks": {
     "3417744": 1794656783.6747603,
-    "3447592": 1794656479.218977,
+    "3447592": 1794657697.9920702,
     "3478496": 1794657062.2152305,
     "3478497": 1794657379.070444,
     "3478498": 1794656783.6747603,
@@ -112846,7 +112846,7 @@
     "3530350": 1794053485.8864028,
     "3519993": 1794389763.6129577,
     "3519997": 1794318082.519118,
-    "3519996": 1794656479.218977,
+    "3519996": 1794657697.9920702,
     "3530349": 1794507378.406343
   }
 }
