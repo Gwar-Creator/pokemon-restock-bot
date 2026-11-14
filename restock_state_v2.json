@@ -310,11 +310,11 @@
       "url": "https://www.proshop.dk/Pokemon/Pokemon-Ultra-Premium-Collection-30th-Celebration-assorted/3519996",
       "fetch_via": "jina_reader"
     },
-    "3417744": {
-      "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
+    "3478496": {
+      "name": "Pokemon TCG Mega Greninja ex Premium Collection",
       "price": null,
       "stock": "UDSOLGT",
-      "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
+      "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
       "fetch_via": "jina_verified_detail"
     }
   },
@@ -2476,6 +2476,14 @@
         "in_stock": true,
         "preorder": true,
         "url": "https://rogerz.dk/products/pokemon-tcg-30th-celebration-ultra-premium-collections-day-night"
+      },
+      "16695609360774": {
+        "name": "Pokémon TCG: Magma Gang VS Aqua Gang: Double Crisis Booster Box (Japansk)",
+        "game": "POKÉMON",
+        "price": 85000.0,
+        "in_stock": true,
+        "preorder": false,
+        "url": "https://rogerz.dk/products/pokemon-tcg-magma-gang-vs-aqua-gang-double-crisis-booster-box-japansk"
       },
       "16682716397958": {
         "name": "Pokémon TCG: TAG TEAM Generations Premium Collection",
@@ -86761,7 +86769,7 @@
         "last_seen": "2026-11-13T07:48:50.124429+01:00"
       }
     },
-    "updated_at": "2026-11-14T09:43:46.281413+01:00"
+    "updated_at": "2026-11-14T09:49:10.632340+01:00"
   },
   "_elgiganten_key_cache": {
     "api_key": null,
@@ -100467,12 +100475,12 @@
       "last_error": ""
     },
     "proshop": {
-      "status": "failed",
-      "last_attempt": "2026-11-14T08:41:02.004431+00:00",
-      "consecutive_failures": 1,
-      "last_error": "Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403)",
-      "observed_count": null,
-      "last_success": "2026-11-14T08:36:10.218449+00:00",
+      "status": "degraded",
+      "last_attempt": "2026-11-14T08:46:29.000735+00:00",
+      "consecutive_failures": 0,
+      "last_error": "Kategori 2 aktuelle TCG-produkter, 1 bekræftede SKU-detaljer; health-target for kategori er 6",
+      "observed_count": 3,
+      "last_success": "2026-11-14T08:46:29.000751+00:00",
       "last_count": 3
     },
     "br": {
@@ -100520,10 +100528,10 @@
     },
     "rogerz": {
       "status": "ok",
-      "last_attempt": "2026-11-08T19:36:38.666251+00:00",
-      "last_success": "2026-11-08T19:36:38.666267+00:00",
-      "last_count": 626,
-      "observed_count": 626,
+      "last_attempt": "2026-11-14T08:46:46.868934+00:00",
+      "last_success": "2026-11-14T08:46:46.868948+00:00",
+      "last_count": 627,
+      "observed_count": 627,
       "consecutive_failures": 0,
       "last_error": ""
     },
@@ -100779,8 +100787,8 @@
     },
     "tcgbruus": {
       "status": "failed",
-      "last_attempt": "2026-11-14T08:42:31.755386+00:00",
-      "consecutive_failures": 5263,
+      "last_attempt": "2026-11-14T08:48:15.711523+00:00",
+      "consecutive_failures": 5264,
       "last_error": "mistænkeligt lavt produktantal: 3 < 5",
       "observed_count": 3,
       "last_success": "2026-10-26T15:12:41.350111+00:00",
@@ -100803,13 +100811,13 @@
       "observed_count": 0
     },
     "kelz0r": {
-      "status": "ok",
-      "last_attempt": "2026-11-14T08:38:31.132920+00:00",
+      "status": "failed",
+      "last_attempt": "2026-11-14T08:48:49.937889+00:00",
       "last_success": "2026-11-14T08:38:31.132941+00:00",
       "last_count": 2261,
-      "observed_count": 2261,
-      "consecutive_failures": 0,
-      "last_error": ""
+      "observed_count": null,
+      "consecutive_failures": 1,
+      "last_error": "429 Client Error: Too Many Requests for url: https://www.kelz0r.dk/magic/pokemon-boosters-c-187_191.html?currency=DKK&page=6"
     },
     "faraos": {
       "status": "ok",
@@ -106676,6 +106684,7 @@
     "7d272e51d857f5130bc282b0b4dbfda8",
     "7d2db4b52b5bb3fece9518a69b22d3c2",
     "7d3fe1670f65b8b50eddc9d1268f80f7",
+    "7d400ce3d810119742d82a811f78d720",
     "7d421e8172091f227d9e988ea3c3bbf1",
     "7d44799fc75cd2bc4cf54dbd24db9feb",
     "7d45668b3c52229e5b158cc1b63c18e6",
@@ -112829,14 +112838,14 @@
     "fff940439ebc8fbda0afe0b985ab8c51",
     "fffcef15b6da7fe5087a520dad6f7197"
   ],
-  "_last_full_scan_epoch": 1794645826,
+  "_last_full_scan_epoch": 1794646150,
   "proshop_detail_checks": {
     "3417744": 1794645365.8650415,
     "3447592": 1794645083.2106779,
-    "3478496": 1794644471.9273808,
+    "3478496": 1794645984.938102,
     "3478497": 1794644771.8999238,
     "3478498": 1794645365.8650415,
-    "3519999": 1794644471.9273808,
+    "3519999": 1794645984.938102,
     "3530351": 1794317761.7018461,
     "3530352": 1794509488.268277,
     "3530353": 1794228978.4559495,
