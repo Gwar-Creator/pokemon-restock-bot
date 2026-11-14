@@ -95,6 +95,27 @@
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Ultra-Premium-Collection-30th-Celebration-assorted/3519996",
         "fetch_via": "jina_reader"
       },
+      "3478497": {
+        "name": "Pokemon TCG 2-pack Booster",
+        "price": null,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2-pack-Booster/3478497",
+        "fetch_via": "jina_verified_detail"
+      },
+      "3478496": {
+        "name": "Pokemon TCG Mega Greninja ex Premium Collection",
+        "price": 499.0,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
+        "fetch_via": "preserved_previous_scan"
+      },
+      "3530349": {
+        "name": "Pokemon Ex Box - Greninja 30th Celebration",
+        "price": null,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-Ex-Box-Greninja-30th-Celebration/3530349",
+        "fetch_via": "preserved_previous_scan"
+      },
       "3530352": {
         "name": "Pokemon Mega Evolution Delta Reign Blister 3-pack",
         "price": 199.0,
@@ -114,27 +135,6 @@
         "price": 299.0,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Tin-Fall-ex-assorted/3478501",
-        "fetch_via": "preserved_previous_scan"
-      },
-      "3530349": {
-        "name": "Pokemon Ex Box - Greninja 30th Celebration",
-        "price": null,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-Ex-Box-Greninja-30th-Celebration/3530349",
-        "fetch_via": "preserved_previous_scan"
-      },
-      "3478497": {
-        "name": "Pokemon TCG 2-pack Booster",
-        "price": null,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2-pack-Booster/3478497",
-        "fetch_via": "preserved_previous_scan"
-      },
-      "3478496": {
-        "name": "Pokemon TCG Mega Greninja ex Premium Collection",
-        "price": 499.0,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
         "fetch_via": "preserved_previous_scan"
       },
       "3417744": {
@@ -508,7 +508,7 @@
         "local_stocks": {
           "1307": {
             "name": "føtex Kolding",
-            "stock": 25
+            "stock": 23
           },
           "1370": {
             "name": "føtex Kolding Syd",
@@ -716,10 +716,10 @@
     "proshop": {
       "backoff_level": 0,
       "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-14T16:47:28.542760+00:00",
-      "last_success_at": "2026-11-14T16:49:24.308894+00:00"
+      "generic_failures": 1,
+      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details",
+      "last_failure_at": "2026-11-14T16:54:15.128145+00:00",
+      "last_success_at": "2026-11-14T16:53:23.916880+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -755,14 +755,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1794675014.8053753,
+      "next_allowed_at": 1794675298.708163,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-14T16:46:14.805348+00:00"
+      "last_success_at": "2026-11-14T16:50:58.708135+00:00"
     }
   },
-  "updated_at": "2026-11-14T16:49:40.871677+00:00",
+  "updated_at": "2026-11-14T16:54:28.440155+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -787,7 +787,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-14T16:46:13.951131+00:00"
+          "last_checked": "2026-11-14T16:50:57.644057+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -797,7 +797,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1794674773.2921674,
+      "last_discovery_epoch": 1794675056.7012866,
       "last_full_discovery_epoch": 1794670279.6486418,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -825,10 +825,10 @@
     "coolshop:https://www.coolshop.dk/produkt/pokemon-first-partner-illustration-collection-series-2-pok10395-101/23XF7G/": 1794578896.0901601
   },
   "proshop_detail_checks": {
-    "3417744": 1794674077.3789735,
+    "3417744": 1794675036.826278,
     "3447592": 1794674547.5121999,
-    "3478496": 1794674129.4168906,
-    "3478497": 1794674238.8431292,
+    "3478496": 1794675089.1968822,
+    "3478497": 1794675199.4745913,
     "3478498": 1794674602.7733717,
     "3519999": 1794674602.7733717,
     "3530350": 1794674492.8424735,
@@ -836,14 +836,14 @@
     "3530352": 1794674547.5121999,
     "3530353": 1794674439.5183332,
     "3421827": 1794674492.8424735,
-    "3447590": 1794674182.01516,
+    "3447590": 1794675144.0500474,
     "3478501": 1794674439.5183332,
     "3502023": 1794674659.2803814,
-    "3519996": 1794674129.4168906,
-    "3530348": 1794674182.01516,
-    "3530349": 1794674077.3789735,
+    "3519996": 1794675089.1968822,
+    "3530348": 1794675144.0500474,
+    "3530349": 1794675036.826278,
     "3519993": 1794674754.7275,
-    "3519997": 1794674238.8431292,
+    "3519997": 1794675199.4745913,
     "3519992": 1794674659.2803814
   },
   "proshop_broad_attempt_at": 1794674738.9293382,
@@ -861,11 +861,11 @@
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
     "status": "degraded",
-    "primary_count": 2,
+    "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-14T16:49:24.308176+00:00",
-    "details_or_listings_count": 2
+    "checked_at": "2026-11-14T16:54:15.128057+00:00",
+    "details_or_listings_count": 0
   },
-  "proshop_last_usable_count": 2,
-  "proshop_last_usable_at": "2026-11-14T16:49:24.308907+00:00"
+  "proshop_last_usable_count": 3,
+  "proshop_last_usable_at": "2026-11-14T16:53:23.916906+00:00"
 }
