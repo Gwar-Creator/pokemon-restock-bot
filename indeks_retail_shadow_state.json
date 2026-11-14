@@ -8,16 +8,15 @@
     "stock_disagreements": []
   },
   "last_alerts": {},
-  "last_verified_scan": "2026-11-14T13:28:44.660140+00:00",
+  "last_verified_scan": "2026-11-14T13:39:01.562424+00:00",
   "local_sources": {
     "legekaeden_vejen": {
       "health": {
-        "consecutive_failures": 1,
-        "last_error": "kunne ikke finde LegeKædens Storefront API credentials: 429 Client Error: Too Many Requests for url: https://www.legekaeden.dk/products/bogbind-selvklaebende-50cmx3m-531054",
-        "last_failure": "2026-11-14T13:33:38.797147+00:00",
-        "last_success": "2026-11-14T13:08:52.251102+00:00",
+        "consecutive_failures": 0,
+        "last_error": "",
+        "last_success": "2026-11-14T13:39:01.562424+00:00",
         "observed_count": 90,
-        "status": "failed"
+        "status": "ok"
       },
       "label": "LEGEKÆDEN VEJEN",
       "mode": "live",
@@ -448,7 +447,7 @@
           "skus": [
             "3152836"
           ],
-          "updated_at": "2026-11-13T16:06:30Z",
+          "updated_at": "2026-11-14T13:35:02Z",
           "url": "https://www.legekaeden.dk/products/laes-med-pok-mon-kampen-om-kronen-indbundet-3152836",
           "variant_ids": [
             "gid://shopify/ProductVariant/47286694314237"
@@ -592,7 +591,7 @@
           "skus": [
             "3447414"
           ],
-          "updated_at": "2026-11-14T13:03:47Z",
+          "updated_at": "2026-11-14T13:35:53Z",
           "url": "https://www.legekaeden.dk/products/lego-pokemon-30729-premier-ball-3447414",
           "variant_ids": [
             "gid://shopify/ProductVariant/47659479367933"
@@ -616,7 +615,7 @@
           "skus": [
             "3447415"
           ],
-          "updated_at": "2026-11-14T12:32:47Z",
+          "updated_at": "2026-11-14T13:34:16Z",
           "url": "https://www.legekaeden.dk/products/lego-pokemon-30730-traenerudstyr-3447415",
           "variant_ids": [
             "gid://shopify/ProductVariant/47898075726077"
@@ -1696,7 +1695,7 @@
           "skus": [
             "3514944"
           ],
-          "updated_at": "2026-11-14T13:05:17Z",
+          "updated_at": "2026-11-14T13:34:36Z",
           "url": "https://www.legekaeden.dk/products/pokemon-pa-opdagelse-en-eventyrlig-malebog-kolli-6-indbundet-3514944",
           "variant_ids": [
             "gid://shopify/ProductVariant/71587717611773"
@@ -2196,12 +2195,11 @@
   "sources": {
     "bogide": {
       "health": {
-        "consecutive_failures": 1,
-        "last_error": "429 Client Error: Too Many Requests for url: https://www.bog-ide.dk/collections/pokemon-tcg/products.json?limit=250&page=1",
-        "last_failure": "2026-11-14T13:33:38.797147+00:00",
-        "last_success": "2026-11-14T13:28:44.660140+00:00",
+        "consecutive_failures": 0,
+        "last_error": "0 matchende Pokémon TCG-produkter i officielle Shopify-feeds",
+        "last_success": "2026-11-14T13:39:01.562424+00:00",
         "observed_count": 0,
-        "status": "failed"
+        "status": "degraded"
       },
       "label": "BOG & IDÉ",
       "mode": "shadow",
@@ -2209,18 +2207,17 @@
     },
     "legekaeden": {
       "health": {
-        "consecutive_failures": 1,
-        "last_error": "429 Client Error: Too Many Requests for url: https://www.legekaeden.dk/collections/pokemon-tcg/products.json?limit=250&page=1",
-        "last_failure": "2026-11-14T13:33:38.797147+00:00",
-        "last_success": "2026-11-14T13:28:44.660140+00:00",
+        "consecutive_failures": 0,
+        "last_error": "0 matchende Pokémon TCG-produkter i officielle Shopify-feeds",
+        "last_success": "2026-11-14T13:39:01.562424+00:00",
         "observed_count": 0,
-        "status": "failed"
+        "status": "degraded"
       },
       "label": "LEGEKÆDEN",
       "mode": "shadow",
       "products": {}
     }
   },
-  "updated_at": "2026-11-14T13:33:38.797147+00:00",
+  "updated_at": "2026-11-14T13:39:01.562424+00:00",
   "version": 5
 }
