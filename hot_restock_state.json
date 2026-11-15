@@ -95,6 +95,20 @@
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Ultra-Premium-Collection-30th-Celebration-assorted/3519996",
         "fetch_via": "jina_reader"
       },
+      "3417744": {
+        "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
+        "price": null,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
+        "fetch_via": "jina_verified_detail"
+      },
+      "3478496": {
+        "name": "Pokemon TCG Mega Greninja ex Premium Collection",
+        "price": 499.0,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
+        "fetch_via": "jina_verified_detail"
+      },
       "3530352": {
         "name": "Pokemon Mega Evolution Delta Reign Blister 3-pack",
         "price": 199.0,
@@ -128,20 +142,6 @@
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Ex-Box-Greninja-30th-Celebration/3530349",
-        "fetch_via": "preserved_previous_scan"
-      },
-      "3417744": {
-        "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
-        "price": null,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
-        "fetch_via": "preserved_previous_scan"
-      },
-      "3478496": {
-        "name": "Pokemon TCG Mega Greninja ex Premium Collection",
-        "price": 499.0,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
         "fetch_via": "preserved_previous_scan"
       },
       "3519993": {
@@ -718,8 +718,8 @@
       "next_allowed_at": 0.0,
       "generic_failures": 0,
       "last_error": null,
-      "last_failure_at": "2026-11-15T22:30:46.111832+00:00",
-      "last_success_at": "2026-11-15T22:34:33.365853+00:00"
+      "last_failure_at": "2026-11-15T23:16:30.981338+00:00",
+      "last_success_at": "2026-11-15T23:19:25.513155+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -755,14 +755,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1794784495.766811,
+      "next_allowed_at": 1794784794.6078901,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-15T23:10:55.766783+00:00"
+      "last_success_at": "2026-11-15T23:15:54.607856+00:00"
     }
   },
-  "updated_at": "2026-11-15T23:14:33.612951+00:00",
+  "updated_at": "2026-11-15T23:19:39.930824+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -787,7 +787,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-15T23:10:55.064419+00:00"
+          "last_checked": "2026-11-15T23:15:52.721522+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -797,7 +797,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1794784254.3710563,
+      "last_discovery_epoch": 1794784551.998379,
       "last_full_discovery_epoch": 1794779455.2586951,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -825,14 +825,14 @@
     "coolshop:https://www.coolshop.dk/produkt/pokemon-first-partner-illustration-collection-series-2-pok10395-101/23XF7G/": 1794578896.0901601
   },
   "proshop_detail_checks": {
-    "3417744": 1794783824.3971803,
+    "3417744": 1794784755.6736252,
     "3447592": 1794784291.1640413,
-    "3478496": 1794783824.3971803,
+    "3478496": 1794784755.6736252,
     "3478497": 1794783983.667763,
     "3478498": 1794784401.4456913,
     "3519999": 1794784456.0189161,
     "3530350": 1794784149.480916,
-    "3530351": 1794783713.747045,
+    "3530351": 1794784651.422393,
     "3530352": 1794784291.1640413,
     "3530353": 1794784236.8169124,
     "3421827": 1794784094.510138,
@@ -842,11 +842,11 @@
     "3519996": 1794784057.5865426,
     "3530348": 1794784094.510138,
     "3530349": 1794783983.667763,
-    "3519993": 1794783713.747045,
+    "3519993": 1794784651.422393,
     "3519997": 1794784149.480916,
     "3519992": 1794784456.0189161
   },
-  "proshop_broad_attempt_at": 1794784041.6850016,
+  "proshop_broad_attempt_at": 1794784648.1940012,
   "proshop_radar_alerts": {
     "3519996:BESTILLINGSVARE": 1794402448.8076684,
     "3519997:BESTILLINGSVARE": 1794234274.0313218,
@@ -863,9 +863,9 @@
     "status": "degraded",
     "primary_count": 2,
     "broad_count": 0,
-    "checked_at": "2026-11-15T23:14:16.018845+00:00",
-    "details_or_listings_count": 2
+    "checked_at": "2026-11-15T23:19:15.673560+00:00",
+    "details_or_listings_count": 4
   },
-  "proshop_last_usable_count": 2,
-  "proshop_last_usable_at": "2026-11-15T23:14:20.301637+00:00"
+  "proshop_last_usable_count": 4,
+  "proshop_last_usable_at": "2026-11-15T23:19:25.513181+00:00"
 }
