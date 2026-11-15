@@ -159,6 +159,9 @@ def screen(search_row, item, rate, now):
 
 
 def run(app_id, app_key):
+    # GitHub secrets may include a trailing newline from copy/paste.
+    app_id = app_id.strip() if isinstance(app_id, str) else ""
+    app_key = app_key.strip() if isinstance(app_key, str) else ""
     if not app_id or not app_key:
         raise ValueError("Existing Tradera API secrets not configured")
     fx, day = ecb_fx()
