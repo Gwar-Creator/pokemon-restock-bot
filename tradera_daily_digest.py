@@ -175,8 +175,19 @@ def run(app_id, app_key):
                 item_id = str(row.get("id", ""))
                 if item_id.isdigit() and _safe_public_listing_url(row.get("itemUrl")):
                     found[item_id] = row
-        except (requests.RequestException, ValueError):
-            failed.append(term)
+        except (requests.RequestException, ValueError) as exc:
+            if isinstance(exc, requests.HTTPError):
+                response = getattr(exc, "response", None)
+                status = getattr(response, "status_code", None)
+                category_name = "http_" + str(status if type(status) is int else "unknown")
+            elif isinstance(exc, requests.Timeout):
+                category_name = "timeout"
+            elif isinstance(exc, requests.ConnectionError):
+                category_name = "connection"
+            else:
+                category_name = type(exc).__name__
+            failed.append({"query": term, "cause": category_name})
+            print("Tradera search status: " + category_name + " for term " + term)
     if ok_queries == 0:
         raise RuntimeError("All official Tradera v4 searches failed")
     ranked = sorted(found.values(), key=lambda x: (
