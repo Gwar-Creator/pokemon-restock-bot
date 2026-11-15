@@ -73,7 +73,7 @@ def candidate(title):
 def category(title):
     s = _norm(title)
     # Explicit plural card collections and lots only; not vintage singles.
-    is_lot = any(word in s for word in LOT) or re.search(r"(?<!\\w)lot(?!\\w)", s)
+    is_lot = any(word in s for word in LOT) or re.search(r"(?<!\w)lot(?!\w)", s)
     if is_lot:
         return "holo_lots" if any(word in s for word in FOIL) else "collections"
     return "singles"
