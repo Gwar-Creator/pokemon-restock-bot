@@ -123,9 +123,11 @@ def screen(search_row, item, rate, now):
         return None
     # Only bid auctions, not buy-now-only listings.
     label, amount = None, None
-    if item.get("nextBidSpecified") is True:
+    # Since the 2026-11-04 REST v4 migration Tradera omits all
+    # '*Specified' fields; a missing numeric price means not supplied.
+    if positive(item.get("nextBid")) is not None:
         label, amount = "next bid", positive(item.get("nextBid"))
-    if amount is None and item.get("openingBidSpecified") is True:
+    elif positive(item.get("openingBid")) is not None:
         label, amount = "opening bid", positive(item.get("openingBid"))
     if amount is None or amount * rate > MAX_DKK:
         return None
@@ -215,8 +217,7 @@ def run(app_id, app_key):
             reasons["invalid_end_date"] += 1
         elif end_time(item.get("endDate")) <= now:
             reasons["already_ended_by_time"] += 1
-        elif (item.get("nextBidSpecified") is not True
-              and item.get("openingBidSpecified") is not True):
+        elif ("nextBid" not in item and "openingBid" not in item):
             reasons["not_an_auction_or_no_bid"] += 1
         elif (positive(item.get("nextBid")) is None
               and positive(item.get("openingBid")) is None):
