@@ -88,12 +88,40 @@
       }
     },
     "proshop": {
+      "3478501": {
+        "name": "Pokemon Tin Fall ex - assorted",
+        "price": 299.0,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-Tin-Fall-ex-assorted/3478501",
+        "fetch_via": "jina_verified_detail"
+      },
       "3519996": {
         "name": "Pokemon Ultra Premium Collection 30th Celebration assorted",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Ultra-Premium-Collection-30th-Celebration-assorted/3519996",
-        "fetch_via": "jina_reader"
+        "fetch_via": "preserved_previous_scan"
+      },
+      "3530349": {
+        "name": "Pokemon Ex Box - Greninja 30th Celebration",
+        "price": null,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-Ex-Box-Greninja-30th-Celebration/3530349",
+        "fetch_via": "preserved_previous_scan"
+      },
+      "3417744": {
+        "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
+        "price": null,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
+        "fetch_via": "preserved_previous_scan"
+      },
+      "3478496": {
+        "name": "Pokemon TCG Mega Greninja ex Premium Collection",
+        "price": 499.0,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
+        "fetch_via": "preserved_previous_scan"
       },
       "3530352": {
         "name": "Pokemon Mega Evolution Delta Reign Blister 3-pack",
@@ -109,39 +137,11 @@
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
         "fetch_via": "preserved_previous_scan"
       },
-      "3478501": {
-        "name": "Pokemon Tin Fall ex - assorted",
-        "price": 299.0,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-Tin-Fall-ex-assorted/3478501",
-        "fetch_via": "preserved_previous_scan"
-      },
       "3478497": {
         "name": "Pokemon TCG 2-pack Booster",
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2-pack-Booster/3478497",
-        "fetch_via": "preserved_previous_scan"
-      },
-      "3417744": {
-        "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
-        "price": null,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
-        "fetch_via": "preserved_previous_scan"
-      },
-      "3530349": {
-        "name": "Pokemon Ex Box - Greninja 30th Celebration",
-        "price": null,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-Ex-Box-Greninja-30th-Celebration/3530349",
-        "fetch_via": "preserved_previous_scan"
-      },
-      "3478496": {
-        "name": "Pokemon TCG Mega Greninja ex Premium Collection",
-        "price": 499.0,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
         "fetch_via": "preserved_previous_scan"
       },
       "3519993": {
@@ -372,7 +372,7 @@
           },
           "1659": {
             "name": "Bilka Esbjerg",
-            "stock": 9
+            "stock": 8
           }
         },
         "quantity_limit": null,
@@ -716,10 +716,10 @@
     "proshop": {
       "backoff_level": 0,
       "next_allowed_at": 0.0,
-      "generic_failures": 1,
-      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details",
+      "generic_failures": 0,
+      "last_error": null,
       "last_failure_at": "2026-11-15T13:44:13.355564+00:00",
-      "last_success_at": "2026-11-15T13:43:32.862904+00:00"
+      "last_success_at": "2026-11-15T13:49:34.830781+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -755,14 +755,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1794750294.3911312,
+      "next_allowed_at": 1794750604.2599468,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-15T13:40:54.391106+00:00"
+      "last_success_at": "2026-11-15T13:46:04.259915+00:00"
     }
   },
-  "updated_at": "2026-11-15T13:44:28.508152+00:00",
+  "updated_at": "2026-11-15T13:49:50.455614+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -787,7 +787,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-15T13:40:53.130556+00:00"
+          "last_checked": "2026-11-15T13:46:03.120843+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -797,7 +797,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1794750052.0900912,
+      "last_discovery_epoch": 1794750361.8600657,
       "last_full_discovery_epoch": 1794735948.823027,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -825,10 +825,10 @@
     "coolshop:https://www.coolshop.dk/produkt/pokemon-first-partner-illustration-collection-series-2-pok10395-101/23XF7G/": 1794578896.0901601
   },
   "proshop_detail_checks": {
-    "3417744": 1794749446.7553577,
+    "3417744": 1794750436.2429624,
     "3447592": 1794749841.912932,
-    "3478496": 1794749446.7553577,
-    "3478497": 1794749573.0077639,
+    "3478496": 1794750436.2429624,
+    "3478497": 1794750515.8030922,
     "3478498": 1794749895.6570606,
     "3519999": 1794749951.5877197,
     "3530350": 1794749785.668506,
@@ -836,12 +836,12 @@
     "3530352": 1794749841.912932,
     "3530353": 1794749785.668506,
     "3421827": 1794749665.7637825,
-    "3447590": 1794749499.4965038,
-    "3478501": 1794749612.3104162,
+    "3447590": 1794750460.5376418,
+    "3478501": 1794750571.6718936,
     "3502023": 1794749895.6570606,
-    "3519996": 1794749573.0077639,
-    "3530348": 1794749612.3104162,
-    "3530349": 1794749499.4965038,
+    "3519996": 1794750515.8030922,
+    "3530348": 1794750571.6718936,
+    "3530349": 1794750460.5376418,
     "3519993": 1794750142.1141999,
     "3519997": 1794749665.7637825,
     "3519992": 1794749951.5877197
@@ -863,9 +863,9 @@
     "status": "degraded",
     "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-15T13:44:13.355484+00:00",
-    "details_or_listings_count": 0
+    "checked_at": "2026-11-15T13:49:31.671732+00:00",
+    "details_or_listings_count": 1
   },
-  "proshop_last_usable_count": 2,
-  "proshop_last_usable_at": "2026-11-15T13:43:32.862914+00:00"
+  "proshop_last_usable_count": 1,
+  "proshop_last_usable_at": "2026-11-15T13:49:34.830808+00:00"
 }
