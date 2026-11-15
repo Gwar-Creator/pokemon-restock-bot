@@ -197,13 +197,36 @@ def run(app_id, app_key):
         category(x["shortDescription"]) == "singles",
         not any(token in _norm(x["shortDescription"]) for token in VINTAGE),
         -int(x["id"])))
+    from collections import Counter
     matches, checked = [], 0
+    reasons = Counter()
     for row in ranked[:MAX_DETAILS]:
         checked += 1
         item = get_details(row["id"], app_id, app_key)
         result = screen(row, item, fx, now)
         if result:
             matches.append(result)
+            continue
+        if not isinstance(item, dict):
+            reasons["detail_unavailable"] += 1
+        elif not isinstance(item.get("status"), dict) or item["status"].get("ended") is not False:
+            reasons["not_open_or_missing_status"] += 1
+        elif end_time(item.get("endDate")) is None:
+            reasons["invalid_end_date"] += 1
+        elif end_time(item.get("endDate")) <= now:
+            reasons["already_ended_by_time"] += 1
+        elif (item.get("nextBidSpecified") is not True
+              and item.get("openingBidSpecified") is not True):
+            reasons["not_an_auction_or_no_bid"] += 1
+        elif (positive(item.get("nextBid")) is None
+              and positive(item.get("openingBid")) is None):
+            reasons["invalid_bid"] += 1
+        elif any(positive(item.get(k)) is not None and positive(item[k]) * fx > MAX_DKK
+                 for k in ("nextBid", "openingBid")):
+            reasons["over_price_cap"] += 1
+        else:
+            reasons["other_filter"] += 1
+    print("Tradera detail rejection counts: " + repr(dict(reasons)))
     by_group = {}
     for group in ("collections", "holo_lots", "singles"):
         ordered = sorted((x for x in matches if x["group"] == group),
