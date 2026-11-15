@@ -219,10 +219,17 @@ def run(app_id, app_key):
             print("Tradera search status: " + category_name + " for term " + term)
     if ok_queries == 0:
         raise RuntimeError("All official Tradera v4 searches failed")
-    ranked = sorted(found.values(), key=lambda x: (
-        category(x["shortDescription"]) == "singles",
-        not any(token in _norm(x["shortDescription"]) for token in VINTAGE),
-        -int(x["id"])))
+    # Reserve detail checks for each category so general collection searches
+    # cannot crowd all e-reader/EX holos and standalone singles out.
+    ranked = []
+    for group_name, quota in (("collections", 30), ("holo_lots", 20), ("singles", 25)):
+        pool = [x for x in found.values()
+                if category(x["shortDescription"]) == group_name]
+        pool.sort(key=lambda x: (
+            not any(token in _norm(x["shortDescription"]) for token in VINTAGE),
+            not any(token in _norm(x["shortDescription"]) for token in FAV),
+            -int(x["id"])))
+        ranked.extend(pool[:quota])
     from collections import Counter
     matches, checked = [], 0
     reasons = Counter()
