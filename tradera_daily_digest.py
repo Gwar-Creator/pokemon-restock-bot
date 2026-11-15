@@ -116,7 +116,10 @@ def screen(search_row, item, rate, now):
         return None
     if not isinstance(item.get("shortDescription"), str):
         return None
-    if item["shortDescription"].strip() != title.strip():
+    # Detail response is authoritative for the same numeric listing ID; search
+    # titles may be abbreviated, so revalidate its own title, not exact equality.
+    title = item["shortDescription"].strip()
+    if not candidate(title):
         return None
     ends = end_time(item.get("endDate"))
     if ends is None or ends <= now:
@@ -131,9 +134,26 @@ def screen(search_row, item, rate, now):
         label, amount = "opening bid", positive(item.get("openingBid"))
     if amount is None or amount * rate > MAX_DKK:
         return None
-    if not isinstance(item.get("numberOfImages"), int) or item["numberOfImages"] < 1:
+    # The v4 detail response may not include the old numberOfImages field.
+    # Demand at least one safe official Tradera image URL instead.
+    from vintage_marketplace_live import image_url
+    image = image_url(item.get("thumbnailLink"))
+    image_links = item.get("detailedImageLinks")
+    if isinstance(image_links, list):
+        for pic in image_links:
+            if not image and isinstance(pic, dict):
+                image = image_url(pic.get("url"))
+    raw_links = item.get("imageLinks")
+    if isinstance(raw_links, list):
+        for pic in raw_links:
+            if not image:
+                image = image_url(pic.get("url") if isinstance(pic, dict) else pic)
+    if not image:
         return None
-    description = unescape(re.sub(r"<[^>]+>", " ", str(item.get("description") or "")))
+    image_count = item.get("numberOfImages")
+    if type(image_count) is not int or image_count < 1:
+        image_count = len(image_links or []) or len(raw_links or []) or 1
+    description = unescape(re.sub(r"<[^>]+>", " ", str(item.get("longDescription") or item.get("description") or "")))
     titled = _norm(title)
     body = _norm(description)
     vintage_in_title = any(x in titled for x in VINTAGE)
@@ -154,7 +174,7 @@ def screen(search_row, item, rate, now):
         "price_basis": label, "bid_sek": str(amount),
         "bid_dkk": str((amount * rate).quantize(Decimal("0.01"))),
         "end": ends.isoformat(), "vintage_evidence": vintage_evidence,
-        "score": score, "photo_count": item["numberOfImages"],
+        "score": score, "photo_count": image_count, "image_url": image,
         "shipping_to_denmark": "unknown", "language": "unverified",
         "condition": "unverified", "buy_advice": "NONE - MANUAL REVIEW",
     }
@@ -225,6 +245,10 @@ def run(app_id, app_key):
         elif any(positive(item.get(k)) is not None and positive(item[k]) * fx > MAX_DKK
                  for k in ("nextBid", "openingBid")):
             reasons["over_price_cap"] += 1
+        elif not isinstance(item.get("shortDescription"), str) or not candidate(item.get("shortDescription")):
+            reasons["detail_title_not_relevant"] += 1
+        elif not isinstance(item.get("numberOfImages"), int) or item["numberOfImages"] < 1:
+            reasons["image_count_missing_or_zero"] += 1
         else:
             reasons["other_filter"] += 1
     print("Tradera detail rejection counts: " + repr(dict(reasons)))
