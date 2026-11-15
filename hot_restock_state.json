@@ -95,26 +95,12 @@
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Ultra-Premium-Collection-30th-Celebration-assorted/3519996",
         "fetch_via": "jina_reader"
       },
-      "3530352": {
-        "name": "Pokemon Mega Evolution Delta Reign Blister 3-pack",
-        "price": 199.0,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-Mega-Evolution-Delta-Reign-Blister-3-pack/3530352",
-        "fetch_via": "preserved_previous_scan"
-      },
       "3421827": {
         "name": "Pokemon TCG 2024 World Championships Deck",
         "price": 329.0,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
-        "fetch_via": "preserved_previous_scan"
-      },
-      "3478501": {
-        "name": "Pokemon Tin Fall ex - assorted",
-        "price": 299.0,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-Tin-Fall-ex-assorted/3478501",
-        "fetch_via": "preserved_previous_scan"
+        "fetch_via": "jina_verified_detail"
       },
       "3478497": {
         "name": "Pokemon TCG 2-pack Booster",
@@ -142,6 +128,20 @@
         "price": 499.0,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
+        "fetch_via": "preserved_previous_scan"
+      },
+      "3530352": {
+        "name": "Pokemon Mega Evolution Delta Reign Blister 3-pack",
+        "price": 199.0,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-Mega-Evolution-Delta-Reign-Blister-3-pack/3530352",
+        "fetch_via": "preserved_previous_scan"
+      },
+      "3478501": {
+        "name": "Pokemon Tin Fall ex - assorted",
+        "price": 299.0,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-Tin-Fall-ex-assorted/3478501",
         "fetch_via": "preserved_previous_scan"
       },
       "3519993": {
@@ -716,10 +716,10 @@
     "proshop": {
       "backoff_level": 0,
       "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-15T19:21:27.357072+00:00",
-      "last_success_at": "2026-11-15T19:24:15.999762+00:00"
+      "generic_failures": 1,
+      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details",
+      "last_failure_at": "2026-11-15T19:44:20.238353+00:00",
+      "last_success_at": "2026-11-15T19:43:24.036211+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -746,23 +746,23 @@
       "last_success_at": "2026-11-14T01:05:03.784434+00:00"
     },
     "boozt": {
-      "backoff_level": 1,
-      "next_allowed_at": 1794771699.2803192,
-      "generic_failures": 1,
-      "last_error": "BOOZT fejlede: Reader: 422 Client Error: Unprocessable Entity for url: https://r.jina.ai/https://www.boozt.com/dk/da/pokemon-trading-cards/born | direct: 429 Client Error: Too Many Requests for url: https://www.boozt.com/dk/da/pokemon-trading-cards/born",
+      "backoff_level": 0,
+      "next_allowed_at": 0.0,
+      "generic_failures": 0,
+      "last_error": null,
       "last_failure_at": "2026-11-15T19:39:39.280295+00:00",
-      "last_success_at": "2026-11-15T19:38:27.346715+00:00"
+      "last_success_at": "2026-11-15T19:44:32.471633+00:00"
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1794771662.0560913,
+      "next_allowed_at": 1794771940.230305,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-15T19:37:02.056055+00:00"
+      "last_success_at": "2026-11-15T19:41:40.230275+00:00"
     }
   },
-  "updated_at": "2026-11-15T19:39:39.281825+00:00",
+  "updated_at": "2026-11-15T19:44:32.471695+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -787,7 +787,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-15T19:37:01.374206+00:00"
+          "last_checked": "2026-11-15T19:41:39.577137+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -797,7 +797,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1794771420.5936046,
+      "last_discovery_epoch": 1794771698.7648,
       "last_full_discovery_epoch": 1794757558.6289363,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -825,25 +825,25 @@
     "coolshop:https://www.coolshop.dk/produkt/pokemon-first-partner-illustration-collection-series-2-pok10395-101/23XF7G/": 1794578896.0901601
   },
   "proshop_detail_checks": {
-    "3417744": 1794770652.548906,
+    "3417744": 1794771632.8794496,
     "3447592": 1794771045.4682376,
-    "3478496": 1794770652.548906,
-    "3478497": 1794770731.699347,
+    "3478496": 1794771632.8794496,
+    "3478497": 1794771686.2747931,
     "3478498": 1794771098.4174013,
     "3519999": 1794771403.2951949,
-    "3530350": 1794770893.0997431,
+    "3530350": 1794771856.6949446,
     "3530351": 1794771550.9131546,
     "3530352": 1794771045.4682376,
     "3530353": 1794770948.8072076,
-    "3421827": 1794770837.7340176,
+    "3421827": 1794771797.2768447,
     "3447590": 1794770948.8072076,
-    "3478501": 1794770799.1332319,
+    "3478501": 1794771742.3333764,
     "3502023": 1794771098.4174013,
-    "3519996": 1794770799.1332319,
-    "3530348": 1794770837.7340176,
-    "3530349": 1794770731.699347,
+    "3519996": 1794771742.3333764,
+    "3530348": 1794771797.2768447,
+    "3530349": 1794771686.2747931,
     "3519993": 1794771550.9131546,
-    "3519997": 1794770893.0997431,
+    "3519997": 1794771856.6949446,
     "3519992": 1794771403.2951949
   },
   "proshop_broad_attempt_at": 1794771386.9272733,
@@ -861,11 +861,11 @@
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
     "status": "degraded",
-    "primary_count": 2,
+    "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-15T19:39:10.913083+00:00",
-    "details_or_listings_count": 2
+    "checked_at": "2026-11-15T19:44:16.694853+00:00",
+    "details_or_listings_count": 0
   },
-  "proshop_last_usable_count": 2,
-  "proshop_last_usable_at": "2026-11-15T19:39:14.636967+00:00"
+  "proshop_last_usable_count": 3,
+  "proshop_last_usable_at": "2026-11-15T19:43:24.036235+00:00"
 }
