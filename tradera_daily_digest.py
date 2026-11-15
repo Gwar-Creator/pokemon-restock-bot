@@ -25,9 +25,11 @@ SEARCHES = [
     "pokemon skyridge", "pokemon ex ruby", "pokemon sandstorm",
     "pokemon ex dragon", "pokemon fossil", "pokemon jungle", "pokemon base set",
 ]
-LOT = ("samling", "collection", "lot", "kortlot", "pärm", "parm", "album",
-       "binder", "mapp", "gamla kort", "äldre", "aldre", "vintage",
-       "blandade", "blandat", "barndom")
+# Keep generic "vintage" out of lot detection: sellers use it for singles.
+LOT = ("samling", "collection", "kortlot", "pärm", "parm", "album",
+       "binder", "mapp", "gamla kort", "blandade", "blandat",
+       "barndom", "kortpaket", "kortbunt", "card lot", "pokemon lot",
+       "pokemonkort lot", "pokémonkort lot")
 VINTAGE = ("base set", "jungle", "fossil", "team rocket", "gym heroes",
            "gym challenge", "neo", "expedition", "aquapolis", "skyridge",
            "ruby sapphire", "ruby & sapphire", "ex ruby", "sandstorm",
@@ -70,7 +72,9 @@ def candidate(title):
 
 def category(title):
     s = _norm(title)
-    if any(word in s for word in LOT):
+    # Explicit plural card collections and lots only; not vintage singles.
+    is_lot = any(word in s for word in LOT) or re.search(r"(?<!\\w)lot(?!\\w)", s)
+    if is_lot:
         return "holo_lots" if any(word in s for word in FOIL) else "collections"
     return "singles"
 
