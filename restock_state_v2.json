@@ -86850,7 +86850,7 @@
         "last_seen": "2026-11-13T07:48:50.124429+01:00"
       }
     },
-    "updated_at": "2026-11-15T20:03:46.066098+01:00"
+    "updated_at": "2026-11-15T20:08:29.848975+01:00"
   },
   "_elgiganten_key_cache": {
     "api_key": null,
@@ -100560,11 +100560,11 @@
       "last_error": ""
     },
     "proshop": {
-      "status": "degraded",
-      "last_attempt": "2026-11-15T18:51:16.138428+00:00",
-      "consecutive_failures": 0,
-      "last_error": "Kategori 2 aktuelle TCG-produkter, 1 bekræftede SKU-detaljer; health-target for kategori er 6",
-      "observed_count": 3,
+      "status": "failed",
+      "last_attempt": "2026-11-15T19:06:25.250855+00:00",
+      "consecutive_failures": 1,
+      "last_error": "mistænkeligt lavt produktantal: 2 < 3",
+      "observed_count": 2,
       "last_success": "2026-11-15T18:51:16.138445+00:00",
       "last_count": 3
     },
@@ -100872,8 +100872,8 @@
     },
     "tcgbruus": {
       "status": "failed",
-      "last_attempt": "2026-11-15T19:03:13.476574+00:00",
-      "consecutive_failures": 5675,
+      "last_attempt": "2026-11-15T19:08:02.147405+00:00",
+      "consecutive_failures": 5676,
       "last_error": "mistænkeligt lavt produktantal: 3 < 5",
       "observed_count": 3,
       "last_success": "2026-10-26T15:12:41.350111+00:00",
@@ -100897,12 +100897,12 @@
     },
     "kelz0r": {
       "status": "failed",
-      "last_attempt": "2026-11-15T19:03:25.960775+00:00",
+      "last_attempt": "2026-11-15T19:08:09.575750+00:00",
       "last_success": "2026-11-15T18:13:56.142822+00:00",
       "last_count": 2262,
       "observed_count": null,
-      "consecutive_failures": 10,
-      "last_error": "429 Client Error: Too Many Requests for url: https://www.kelz0r.dk/magic/pokemon-boosters-c-187_191.html?currency=DKK&page=8"
+      "consecutive_failures": 11,
+      "last_error": "429 Client Error: Too Many Requests for url: https://www.kelz0r.dk/magic/pokemon-boosters-c-187_191.html?currency=DKK&page=2"
     },
     "faraos": {
       "status": "ok",
@@ -112941,19 +112941,19 @@
     "fff940439ebc8fbda0afe0b985ab8c51",
     "fffcef15b6da7fe5087a520dad6f7197"
   ],
-  "_last_full_scan_epoch": 1794769426,
+  "_last_full_scan_epoch": 1794769710,
   "proshop_detail_checks": {
     "3417744": 1794768960.8840704,
     "3447592": 1794768663.8715067,
     "3478496": 1794769294.426619,
     "3478497": 1794768663.8715067,
     "3478498": 1794769294.426619,
-    "3519999": 1794768365.216712,
+    "3519999": 1794769581.953936,
     "3530351": 1794317761.7018461,
     "3530352": 1794509488.268277,
     "3530353": 1794228978.4559495,
     "3421827": 1794599166.5642803,
-    "3447590": 1794768365.216712,
+    "3447590": 1794769581.953936,
     "3478501": 1794597964.6044035,
     "3530350": 1794053485.8864028,
     "3519993": 1794664274.8527675,
