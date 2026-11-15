@@ -310,11 +310,11 @@
       "url": "https://www.proshop.dk/Pokemon/Pokemon-Ultra-Premium-Collection-30th-Celebration-assorted/3519996",
       "fetch_via": "jina_reader"
     },
-    "3478496": {
-      "name": "Pokemon TCG Mega Greninja ex Premium Collection",
+    "3478497": {
+      "name": "Pokemon TCG 2-pack Booster",
       "price": null,
       "stock": "UDSOLGT",
-      "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
+      "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2-pack-Booster/3478497",
       "fetch_via": "jina_verified_detail"
     }
   },
@@ -68224,7 +68224,7 @@
       "name": "Pokemon Mega Dragonite EX Tinboks max 2stk. pr/husstand",
       "game": "POKÉMON",
       "price": 275.0,
-      "stock": 4,
+      "stock": 3,
       "status": "PÅ LAGER",
       "in_stock": true,
       "preorder": false,
@@ -68234,7 +68234,7 @@
       "name": "Pokemon Mega Zeraora EX tin boks max 2stk pr/husstand",
       "game": "POKÉMON",
       "price": 275.0,
-      "stock": 6,
+      "stock": 5,
       "status": "PÅ LAGER",
       "in_stock": true,
       "preorder": false,
@@ -86842,7 +86842,7 @@
         "last_seen": "2026-11-13T07:48:50.124429+01:00"
       }
     },
-    "updated_at": "2026-11-15T18:59:11.814030+01:00"
+    "updated_at": "2026-11-15T19:04:27.614999+01:00"
   },
   "_elgiganten_key_cache": {
     "api_key": null,
@@ -100552,12 +100552,12 @@
       "last_error": ""
     },
     "proshop": {
-      "status": "failed",
-      "last_attempt": "2026-11-15T17:56:10.755605+00:00",
-      "consecutive_failures": 1,
-      "last_error": "mistænkeligt lavt produktantal: 2 < 3",
-      "observed_count": 2,
-      "last_success": "2026-11-15T17:51:08.650295+00:00",
+      "status": "degraded",
+      "last_attempt": "2026-11-15T18:01:44.354939+00:00",
+      "consecutive_failures": 0,
+      "last_error": "Kategori 2 aktuelle TCG-produkter, 1 bekræftede SKU-detaljer; health-target for kategori er 6",
+      "observed_count": 3,
+      "last_success": "2026-11-15T18:01:44.354952+00:00",
       "last_count": 3
     },
     "br": {
@@ -100864,8 +100864,8 @@
     },
     "tcgbruus": {
       "status": "failed",
-      "last_attempt": "2026-11-15T17:57:31.785513+00:00",
-      "consecutive_failures": 5662,
+      "last_attempt": "2026-11-15T18:03:29.656174+00:00",
+      "consecutive_failures": 5663,
       "last_error": "mistænkeligt lavt produktantal: 3 < 5",
       "observed_count": 3,
       "last_success": "2026-10-26T15:12:41.350111+00:00",
@@ -100888,13 +100888,13 @@
       "observed_count": 0
     },
     "kelz0r": {
-      "status": "ok",
-      "last_attempt": "2026-11-15T17:53:37.624448+00:00",
+      "status": "failed",
+      "last_attempt": "2026-11-15T18:04:07.291570+00:00",
       "last_success": "2026-11-15T17:53:37.624465+00:00",
       "last_count": 2262,
-      "observed_count": 2262,
-      "consecutive_failures": 0,
-      "last_error": ""
+      "observed_count": null,
+      "consecutive_failures": 1,
+      "last_error": "429 Client Error: Too Many Requests for url: https://www.kelz0r.dk/magic/pokemon-boosters-c-187_191.html?currency=DKK&page=6"
     },
     "faraos": {
       "status": "ok",
@@ -112933,12 +112933,12 @@
     "fff940439ebc8fbda0afe0b985ab8c51",
     "fffcef15b6da7fe5087a520dad6f7197"
   ],
-  "_last_full_scan_epoch": 1794765552,
+  "_last_full_scan_epoch": 1794765867,
   "proshop_detail_checks": {
     "3417744": 1794764767.9497313,
-    "3447592": 1794764477.0030224,
+    "3447592": 1794765700.4279032,
     "3478496": 1794765064.0940099,
-    "3478497": 1794764477.0030224,
+    "3478497": 1794765700.4279032,
     "3478498": 1794765064.0940099,
     "3519999": 1794765367.443144,
     "3530351": 1794317761.7018461,
