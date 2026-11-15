@@ -746,23 +746,23 @@
       "last_success_at": "2026-11-14T01:05:03.784434+00:00"
     },
     "boozt": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-15T08:00:04.919470+00:00",
-      "last_success_at": "2026-11-15T08:04:55.259722+00:00"
+      "backoff_level": 1,
+      "next_allowed_at": 1794771699.2803192,
+      "generic_failures": 1,
+      "last_error": "BOOZT fejlede: Reader: 422 Client Error: Unprocessable Entity for url: https://r.jina.ai/https://www.boozt.com/dk/da/pokemon-trading-cards/born | direct: 429 Client Error: Too Many Requests for url: https://www.boozt.com/dk/da/pokemon-trading-cards/born",
+      "last_failure_at": "2026-11-15T19:39:39.280295+00:00",
+      "last_success_at": "2026-11-15T19:38:27.346715+00:00"
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1794771409.2878926,
+      "next_allowed_at": 1794771662.0560913,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-15T19:32:49.287865+00:00"
+      "last_success_at": "2026-11-15T19:37:02.056055+00:00"
     }
   },
-  "updated_at": "2026-11-15T19:34:38.150309+00:00",
+  "updated_at": "2026-11-15T19:39:39.281825+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -787,7 +787,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-15T19:32:48.611042+00:00"
+          "last_checked": "2026-11-15T19:37:01.374206+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -797,7 +797,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1794771167.6676302,
+      "last_discovery_epoch": 1794771420.5936046,
       "last_full_discovery_epoch": 1794757558.6289363,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -830,9 +830,9 @@
     "3478496": 1794770652.548906,
     "3478497": 1794770731.699347,
     "3478498": 1794771098.4174013,
-    "3519999": 1794770433.466985,
+    "3519999": 1794771403.2951949,
     "3530350": 1794770893.0997431,
-    "3530351": 1794770597.4021132,
+    "3530351": 1794771550.9131546,
     "3530352": 1794771045.4682376,
     "3530353": 1794770948.8072076,
     "3421827": 1794770837.7340176,
@@ -842,11 +842,11 @@
     "3519996": 1794770799.1332319,
     "3530348": 1794770837.7340176,
     "3530349": 1794770731.699347,
-    "3519993": 1794770597.4021132,
+    "3519993": 1794771550.9131546,
     "3519997": 1794770893.0997431,
-    "3519992": 1794770433.466985
+    "3519992": 1794771403.2951949
   },
-  "proshop_broad_attempt_at": 1794770783.3405077,
+  "proshop_broad_attempt_at": 1794771386.9272733,
   "proshop_radar_alerts": {
     "3519996:BESTILLINGSVARE": 1794402448.8076684,
     "3519997:BESTILLINGSVARE": 1794234274.0313218,
@@ -863,9 +863,9 @@
     "status": "degraded",
     "primary_count": 2,
     "broad_count": 0,
-    "checked_at": "2026-11-15T19:34:24.705589+00:00",
+    "checked_at": "2026-11-15T19:39:10.913083+00:00",
     "details_or_listings_count": 2
   },
   "proshop_last_usable_count": 2,
-  "proshop_last_usable_at": "2026-11-15T19:34:24.706187+00:00"
+  "proshop_last_usable_at": "2026-11-15T19:39:14.636967+00:00"
 }
