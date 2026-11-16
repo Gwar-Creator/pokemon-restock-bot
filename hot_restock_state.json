@@ -714,12 +714,12 @@
       "last_success_at": "2026-11-15T05:14:14.256170+00:00"
     },
     "proshop": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 1,
+      "backoff_level": 1,
+      "next_allowed_at": 1794829769.3611028,
+      "generic_failures": 2,
       "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details",
-      "last_failure_at": "2026-11-16T11:44:38.716640+00:00",
-      "last_success_at": "2026-11-16T11:43:24.359085+00:00"
+      "last_failure_at": "2026-11-16T11:47:29.361086+00:00",
+      "last_success_at": "2026-11-16T11:45:40.599576+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -755,14 +755,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1794829505.7992308,
+      "next_allowed_at": 1794829804.2260833,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-16T11:41:05.799204+00:00"
+      "last_success_at": "2026-11-16T11:46:04.226056+00:00"
     }
   },
-  "updated_at": "2026-11-16T11:44:56.193702+00:00",
+  "updated_at": "2026-11-16T11:49:33.904117+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -787,7 +787,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-16T11:41:04.760281+00:00"
+          "last_checked": "2026-11-16T11:46:03.194605+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -797,7 +797,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1794829263.6273448,
+      "last_discovery_epoch": 1794829561.7282019,
       "last_full_discovery_epoch": 1794822958.2888672,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -827,7 +827,7 @@
   "proshop_detail_checks": {
     "3417744": 1794829295.4586425,
     "3447592": 1794829104.494309,
-    "3478496": 1794828653.671748,
+    "3478496": 1794829596.215021,
     "3478497": 1794828822.7123451,
     "3478498": 1794829160.498915,
     "3519999": 1794829295.4586425,
@@ -863,9 +863,9 @@
     "status": "degraded",
     "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-16T11:44:38.716500+00:00",
+    "checked_at": "2026-11-16T11:47:29.360994+00:00",
     "details_or_listings_count": 0
   },
   "proshop_last_usable_count": 1,
-  "proshop_last_usable_at": "2026-11-16T11:43:24.359100+00:00"
+  "proshop_last_usable_at": "2026-11-16T11:45:40.599596+00:00"
 }
