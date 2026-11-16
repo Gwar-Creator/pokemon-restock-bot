@@ -672,6 +672,11 @@ def _install_proshop_reader_v2(namespace):
         )
 
         category_fresh = category_count[0] or 0
+        fallback_fresh = sum(
+            item.get("fetch_via") == "jina_broad_reader"
+            for item in products.values()
+            if isinstance(item, dict)
+        )
         verified_details = sum(
             item.get("fetch_via") == "jina_verified_detail"
             for item in products.values()
@@ -689,7 +694,8 @@ def _install_proshop_reader_v2(namespace):
         # category's TCG count nor the 19 cached historic SKUs establish full
         # discovery across Proshop's brand/search pages.
         reason = (
-            f"Kategori {category_fresh} friske TCG-produkter, "
+            f"Proshop-katalog/søgning {category_fresh} friske TCG-produkter "
+            f"(heraf {fallback_fresh} via alternativ Reader-side), "
             f"{verified_details} verificerede SKU-detaljer, "
             f"{usable} med eksplicit lagerstatus; "
             "produktdækning på tværs af Proshop er ikke verificeret"
@@ -701,6 +707,7 @@ def _install_proshop_reader_v2(namespace):
             catalogue_status=("available" if category_fresh else "not_verified"),
             coverage_status="unverified",
             category_count=category_fresh,
+            fallback_count=fallback_fresh,
             verified_detail_count=verified_details,
             usable_fresh_count=usable,
         )
