@@ -12,7 +12,7 @@ import requests
 
 from alert_policy import TIER_A_SOURCES
 from discord_v2_hot_adapter import hot_payload
-from proshop_reader_v2 import parse_proshop_reader, raw_product_id_count
+from proshop_reader_v2 import parse_proshop_reader, raw_product_id_count, require_proshop_reader_source
 from proshop_known_sku_watch import KNOWN_PRODUCTS, is_proshop_tcg_title, extend_with_known_details
 
 ROOT = Path(__file__).resolve().parent
@@ -31,12 +31,15 @@ PROSHOP_EARLY_WEBHOOK_URL = os.getenv("EARLY_RADAR_SALLING_WEBHOOK_URL", "").str
 PROSHOP_FRONTEND_URL = "https://www.proshop.dk/?s=Pokemon+TCG"
 # The narrow Pokemon TCG collection misses some new products.
 PROSHOP_BROAD_READER_URLS = (
-    "https://r.jina.ai/https://www.proshop.dk/Pokemon/Pokemon",
-    "https://r.jina.ai/https://www.proshop.dk/Pokemon/Pokemon?pn=2",
+    # Search currently responds with real products when the main category
+    # and brand page show an HTTP 200 CAPTCHA through Jina Reader.
+    "https://r.jina.ai/https://www.proshop.dk/?s=Pokemon+TCG",
+    "https://r.jina.ai/https://www.proshop.dk/?s=Pokemon+booster",
     "https://r.jina.ai/https://www.proshop.dk/?s=Pokemon+30th+Celebration",
+    "https://r.jina.ai/https://www.proshop.dk/Pokemon/Pokemon",
 )
 PROSHOP_BROAD_INTERVAL_SECONDS = 10 * 60
-PROSHOP_BROAD_DISCOVERY_VERSION = 1
+PROSHOP_BROAD_DISCOVERY_VERSION = 2
 PROSHOP_DISCOVERY_VERSION = 6
 PROSHOP_MIN_FRESH_PRODUCTS = 3
 # Source-system availability can briefly flap. Suppress rapid repeats without
@@ -691,6 +694,10 @@ def _fetch_proshop_broad_reader_products(shared):
             timeout=35,
         )
         response.raise_for_status()
+        # A Jina 200 may be a CAPTCHA or a redirect to a different page.
+        require_proshop_reader_source(
+            response.text, url.removeprefix("https://r.jina.ai/")
+        )
         raw_count = raw_product_id_count(response.text)
         if raw_count < 2:
             raise RuntimeError("insufficient raw product cards")
