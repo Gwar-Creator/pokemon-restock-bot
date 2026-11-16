@@ -1,9 +1,11 @@
 """Proshop Reader V2 offline regression tests; no network or Discord."""
 import unittest
+from unittest.mock import Mock
 
 from proshop_reader_v2 import (
     parse_proshop_reader, raw_product_id_count, _stock, _price,
     proshop_reader_source_status, require_proshop_reader_source,
+    fetch_verified_proshop_reader_catalog,
 )
 
 
@@ -98,6 +100,65 @@ class ProshopReaderV2Tests(unittest.TestCase):
         wrong = "URL Source: https://www.proshop.dk/Pokemon/Pokemon\n"
         self.assertEqual(proshop_reader_source_status(wrong, target), "wrong_source")
         self.assertEqual(proshop_reader_source_status("hello world", target), "missing_source")
+
+    def test_valid_brand_fallback_requires_source_and_real_product_cards(self):
+        target = "https://www.proshop.dk/Pokemon/Pokemon"
+        body = "URL Source: " + target + "\nMarkdown Content:\n" + card(
+            1, "Pokemon-TCG-Mega-Lucario-ex-League-Battle-Deck",
+            3447590, "På lager", "369,00 kr.",
+        )
+        response = Mock(text=body)
+        response.raise_for_status.return_value = None
+        getter = Mock(return_value=response)
+        items = fetch_verified_proshop_reader_catalog(
+            target, allowed, get=getter, min_raw_links=1
+        )
+        self.assertEqual(set(items), {"3447590"})
+        self.assertEqual(items["3447590"]["price"], 369.0)
+        self.assertEqual(items["3447590"]["stock"], "PÅ LAGER")
+        getter.assert_called_once()
+        self.assertEqual(getter.call_args.args[0], "https://r.jina.ai/" + target)
+
+    def test_fallback_rejects_redirects_and_captcha_despite_real_links(self):
+        target = "https://www.proshop.dk/Pokemon/Pokemon"
+        cards = card(1, "Pokemon-TCG-Mega-Lucario-ex-League-Battle-Deck",
+                     3447590, "På lager", "369,00 kr.")
+        for prefix in (
+            "Title: Just a moment...\nURL Source: " + target + "\n",
+            "URL Source: " + target +
+            "\nFinal URL: https://www.proshop.dk/pokemon-kort\n",
+        ):
+            response = Mock(text=prefix + cards)
+            with self.subTest(prefix=prefix), self.assertRaisesRegex(
+                RuntimeError, "invalid source"
+            ):
+                fetch_verified_proshop_reader_catalog(
+                    target, allowed, get=Mock(return_value=response),
+                    min_raw_links=1,
+                )
+
+    def test_fallback_never_accepts_accessories_as_product_coverage(self):
+        target = "https://www.proshop.dk/Pokemon/Pokemon"
+        body = "URL Source: " + target + "\n" + card(
+            1, "Pokemon-TCG-Portfolio-9-P", 3447426,
+            "På lager", "90,00 kr.",
+        )
+        with self.assertRaisesRegex(RuntimeError, "no parsed TCG products"):
+            fetch_verified_proshop_reader_catalog(
+                target, allowed, get=Mock(return_value=Mock(text=body)),
+                min_raw_links=1,
+            )
+
+    def test_fallback_low_raw_link_count_does_not_satisfy_health(self):
+        target = "https://www.proshop.dk/Pokemon/Pokemon"
+        body = "URL Source: " + target + "\n" + card(
+            1, "Pokemon-TCG-Mega-Lucario-ex-League-Battle-Deck",
+            3447590, "På lager", "369,00 kr.",
+        )
+        with self.assertRaisesRegex(RuntimeError, "insufficient raw"):
+            fetch_verified_proshop_reader_catalog(
+                target, allowed, get=Mock(return_value=Mock(text=body))
+            )
 
     def test_price_and_negative_stock(self):
         self.assertEqual(_price("2.199,00 kr. (1.759,20 kr.)"), 2199.0)
