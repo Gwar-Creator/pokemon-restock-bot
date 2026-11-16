@@ -752,11 +752,11 @@
       "last_success_at": "2026-11-15T05:14:14.256170+00:00"
     },
     "proshop": {
-      "backoff_level": 1,
-      "next_allowed_at": 1794843297.1268256,
-      "generic_failures": 2,
+      "backoff_level": 2,
+      "next_allowed_at": 1794843652.2548876,
+      "generic_failures": 3,
       "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details",
-      "last_failure_at": "2026-11-16T15:32:57.126790+00:00",
+      "last_failure_at": "2026-11-16T15:35:52.254856+00:00",
       "last_success_at": "2026-11-16T15:31:17.854673+00:00"
     },
     "br": {
@@ -793,14 +793,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1794843335.1952772,
+      "next_allowed_at": 1794843614.3252559,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-16T15:31:35.195246+00:00"
+      "last_success_at": "2026-11-16T15:36:14.325230+00:00"
     }
   },
-  "updated_at": "2026-11-16T15:34:53.021675+00:00",
+  "updated_at": "2026-11-16T15:39:24.420805+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -825,7 +825,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-16T15:31:34.404015+00:00"
+          "last_checked": "2026-11-16T15:36:13.214822+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -835,7 +835,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1794843093.406883,
+      "last_discovery_epoch": 1794843371.060859,
       "last_full_discovery_epoch": 1794822958.2888672,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -865,7 +865,7 @@
   "proshop_detail_checks": {
     "3417744": 1794843172.6982634,
     "3447592": 1794842957.1846886,
-    "3478496": 1794842253.182418,
+    "3478496": 1794843345.0713925,
     "3478497": 1794842363.6856933,
     "3478498": 1794843058.5774717,
     "3519999": 1794842308.3631792,
@@ -880,7 +880,7 @@
     "3519996": 1794842498.6279144,
     "3530348": 1794843058.5774717,
     "3530349": 1794842443.1998482,
-    "3519993": 1794842253.182418,
+    "3519993": 1794843345.0713925,
     "3519997": 1794842957.1846886,
     "3519992": 1794843172.6982634
   },
@@ -901,7 +901,7 @@
     "status": "degraded",
     "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-16T15:32:52.698187+00:00",
+    "checked_at": "2026-11-16T15:35:45.071252+00:00",
     "details_or_listings_count": 0
   },
   "proshop_last_usable_count": 1,
