@@ -2,9 +2,11 @@
 """Read-only Proshop transport coverage probe. No Discord, no state writes."""
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import re
+import json
 
 import requests
 from proshop_reader_v2 import parse_proshop_reader
+from proshop_known_sku_watch import is_proshop_tcg_title
 
 SOURCES = {
     "cards-category": "https://www.proshop.dk/pokemon-kort",
@@ -30,6 +32,68 @@ TCG = re.compile(
     r"premium collection|illustration collection|battle deck|world championships|mini tin)"
 )
 
+def _is_tcg(value):
+    """Diagnostics mirror the conservative sealed TCG title criteria.
+
+    Keep accessories out of observed TCG coverage. No status is inferred.
+    """
+    text = " " + re.sub(r"\\s+", " ", str(value or "").lower()) + " "
+    allowed = (
+        "booster", "elite trainer", " etb ", "premium collection",
+        "ultra-premium collection", "illustration collection",
+        "battle deck", "world championships", "championships deck",
+        "mini tin", " tin ", "blister", "collection box",
+        "binder collection", "playmat collection", "trainer toolkit",
+    )
+    blocked = (
+        "portfolio", "sleeves", "deck box", "card case", "display case",
+        "storage box", "samlemappe", "kortlomme", "binder", "playmat",
+    )
+    if any(marker in text for marker in blocked) and not any(
+        marker in text for marker in ("binder collection", "playmat collection")
+    ):
+        return False
+    return is_proshop_tcg_title(value, lambda name: any(
+        marker in (" " + str(name or "").lower() + " ") for marker in allowed
+    ))
+
+
+def summarize_probes(results):
+    """Union of *observed* TCG SKUs, not a claim of complete Proshop stock."""
+    rows = {row["source"]: row for row in results}
+    catalogue_labels = (
+        "cards-category", "pokemon-brand", "pokemon-search",
+        "booster-search", "collection-search",
+    )
+    observed = {
+        label: set(rows.get(label, {}).get("v2_ids") or ())
+        for label in catalogue_labels
+    }
+    union = set().union(*observed.values())
+    category = observed["cards-category"]
+    extras = union - category
+    return {
+        "coverage_status": "unverified",
+        "note": "Only observed parser-matched SKUs; not the full Proshop catalogue",
+        "category_skus": sorted(category),
+        "catalogue_union_skus": sorted(union),
+        "extra_skus_outside_category": sorted(extras),
+        "extra_count": len(extras),
+        "catalogue_source_counts": {
+            label: len(observed[label]) for label in catalogue_labels
+        },
+        "source_results": {
+            row["source"]: {
+                "http_status": row.get("status"),
+                "error_type": row.get("error_type"),
+                "raw_unique_ids": row.get("raw_unique_ids"),
+                "parsed_tcg": row.get("v2_tcg_count"),
+            }
+            for row in results
+        },
+    }
+
+
 def probe(label, url):
     reader_url = "https://r.jina.ai/" + url
     try:
@@ -41,11 +105,7 @@ def probe(label, url):
         }, timeout=50)
         page = response.text
         ids = set(PRODUCT_LINK.findall(page))
-        parsed = parse_proshop_reader(page, lambda name: any(word in name.lower() for word in (
-            "booster", "elite trainer", "premium collection",
-            "illustration collection", "battle deck", "world championships",
-            "mini tin", " tin ", "blister", "collection box",
-        )))
+        parsed = parse_proshop_reader(page, _is_tcg)
         md = MARKDOWN_LINK.findall(page)
         seen_paths = list(dict.fromkeys(re.findall(r"/Pokemon/[^)\\s?#\\\"<>]+/\\d+", page, re.I)))
         relevant = [(name.strip().replace("\n", " ")[:110], path) for name, path in md if TCG.search(name)]
@@ -54,6 +114,11 @@ def probe(label, url):
             "bytes": len(page), "raw_unique_ids": len(ids),
             "markdown_links": len(md), "tcg_markdown": len(relevant),
             "v2_tcg_count": len(parsed),
+            "v2_ids": sorted(parsed),
+            "verified_stock_cards": sum(
+                product["stock"] not in (None, "UKENDT")
+                for product in parsed.values()
+            ),
             "v2_products": [(key, row["name"], row["price"], row["stock"]) for key, row in parsed.items()],
             "tcg_examples": relevant[:15],
             "all_paths": seen_paths[:70],
@@ -68,10 +133,20 @@ def probe(label, url):
         return {"source": label, "error_type": type(exc).__name__, "message": str(exc)[:180]}
 
 def main():
+    results = []
     with ThreadPoolExecutor(max_workers=3) as pool:
         futures = [pool.submit(probe, k, v) for k, v in SOURCES.items()]
         for future in as_completed(futures):
-            print("PROSHOP PROBE", future.result(), flush=True)
+            result = future.result()
+            results.append(result)
+            print("PROSHOP PROBE", json.dumps(
+                result, ensure_ascii=False
+            ), flush=True)
+
+    # The check is deliberately read-only; coverage always stays unverified.
+    print("PROSHOP COVERAGE SUMMARY", json.dumps(
+        summarize_probes(results), ensure_ascii=False
+    ), flush=True)
     return 0
 
 if __name__ == "__main__":
