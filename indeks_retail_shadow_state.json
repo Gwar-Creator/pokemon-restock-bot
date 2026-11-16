@@ -8,16 +8,15 @@
     "stock_disagreements": []
   },
   "last_alerts": {},
-  "last_verified_scan": "2026-11-16T01:18:27.636400+00:00",
+  "last_verified_scan": "2026-11-16T01:28:35.280392+00:00",
   "local_sources": {
     "legekaeden_vejen": {
       "health": {
-        "consecutive_failures": 1,
-        "last_error": "kunne ikke finde LegeKædens Storefront API credentials: 429 Client Error: Too Many Requests for url: https://www.legekaeden.dk/products/bogbind-selvklaebende-50cmx3m-531054",
-        "last_failure": "2026-11-16T01:21:57.395736+00:00",
-        "last_success": "2026-11-15T20:03:23.087318+00:00",
+        "consecutive_failures": 0,
+        "last_error": "",
+        "last_success": "2026-11-16T01:28:35.280392+00:00",
         "observed_count": 90,
-        "status": "failed"
+        "status": "ok"
       },
       "label": "LEGEKÆDEN VEJEN",
       "mode": "live",
@@ -2196,12 +2195,11 @@
   "sources": {
     "bogide": {
       "health": {
-        "consecutive_failures": 1,
-        "last_error": "429 Client Error: Too Many Requests for url: https://www.bog-ide.dk/collections/pokemon-tcg/products.json?limit=250&page=1",
-        "last_failure": "2026-11-16T01:21:57.395736+00:00",
-        "last_success": "2026-11-16T01:18:27.636400+00:00",
+        "consecutive_failures": 0,
+        "last_error": "0 matchende Pokémon TCG-produkter i officielle Shopify-feeds",
+        "last_success": "2026-11-16T01:28:35.280392+00:00",
         "observed_count": 0,
-        "status": "failed"
+        "status": "degraded"
       },
       "label": "BOG & IDÉ",
       "mode": "shadow",
@@ -2209,18 +2207,17 @@
     },
     "legekaeden": {
       "health": {
-        "consecutive_failures": 1,
-        "last_error": "429 Client Error: Too Many Requests for url: https://www.legekaeden.dk/collections/pokemon-tcg/products.json?limit=250&page=1",
-        "last_failure": "2026-11-16T01:21:57.395736+00:00",
-        "last_success": "2026-11-16T01:18:27.636400+00:00",
+        "consecutive_failures": 0,
+        "last_error": "0 matchende Pokémon TCG-produkter i officielle Shopify-feeds",
+        "last_success": "2026-11-16T01:28:35.280392+00:00",
         "observed_count": 0,
-        "status": "failed"
+        "status": "degraded"
       },
       "label": "LEGEKÆDEN",
       "mode": "shadow",
       "products": {}
     }
   },
-  "updated_at": "2026-11-16T01:21:57.395736+00:00",
+  "updated_at": "2026-11-16T01:28:35.280392+00:00",
   "version": 5
 }
