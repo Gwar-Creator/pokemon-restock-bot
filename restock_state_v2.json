@@ -86862,7 +86862,7 @@
         "last_seen": "2026-11-15T21:53:02.093257+01:00"
       }
     },
-    "updated_at": "2026-11-16T02:54:53.148768+01:00"
+    "updated_at": "2026-11-16T02:57:56.052516+01:00"
   },
   "_elgiganten_key_cache": {
     "api_key": null,
@@ -88480,13 +88480,12 @@
       },
       "POKÉMON|ETB|EN|destined rivals": {
         "name": "Destined Rivals",
-        "current_best": 999.0,
+        "current_best": 949.0,
         "current_shops": [
-          "MTGWEBSHOP",
-          "SYMBIZON"
+          "FARAOS"
         ],
-        "current_shop": "MTGWEBSHOP",
-        "current_url": "https://mtgwebshop.dk/products/destined-rivals-elite-trainer-box",
+        "current_shop": "FARAOS",
+        "current_url": "https://www.faraos.dk/games/kortspil/pokemon/elitetrainerbox/destinedrivals/destined-rivals-elite-trainer-box",
         "historical_low": 699.0,
         "historical_low_shops": [
           "BR"
@@ -88494,13 +88493,13 @@
         "historical_low_date": "2026-09-08",
         "historical_low_url": "https://www.br.dk/produkter/pokemon-destined-rivals-elite-trainer-box/200322371/",
         "first_seen": "2026-08-16T15:27:14.261074+02:00",
-        "last_seen": "2026-11-16T02:54:53.253543+01:00",
+        "last_seen": "2026-11-16T02:57:56.167307+01:00",
         "baseline_price": 1795.95,
-        "price_changes": 158,
+        "price_changes": 159,
         "observation_days": 91,
         "last_observation_date": "2026-11-16",
-        "previous_best": 949.0,
-        "last_change_pct": 5.268703898840887,
+        "previous_best": 999.0,
+        "last_change_pct": -5.005005005005003,
         "last_change_date": "2026-11-16",
         "last_daily_signal_date": "2026-09-03"
       },
@@ -100573,11 +100572,11 @@
       "last_error": ""
     },
     "proshop": {
-      "status": "degraded",
-      "last_attempt": "2026-11-16T01:41:22.764724+00:00",
-      "consecutive_failures": 0,
-      "last_error": "Kategori 2 aktuelle TCG-produkter, 1 bekræftede SKU-detaljer; health-target for kategori er 6",
-      "observed_count": 3,
+      "status": "failed",
+      "last_attempt": "2026-11-16T01:56:09.450116+00:00",
+      "consecutive_failures": 1,
+      "last_error": "mistænkeligt lavt produktantal: 2 < 3",
+      "observed_count": 2,
       "last_success": "2026-11-16T01:41:22.764738+00:00",
       "last_count": 3
     },
@@ -100885,8 +100884,8 @@
     },
     "tcgbruus": {
       "status": "failed",
-      "last_attempt": "2026-11-16T01:53:02.736425+00:00",
-      "consecutive_failures": 5757,
+      "last_attempt": "2026-11-16T01:57:32.806743+00:00",
+      "consecutive_failures": 5758,
       "last_error": "mistænkeligt lavt produktantal: 3 < 5",
       "observed_count": 3,
       "last_success": "2026-10-26T15:12:41.350111+00:00",
@@ -100910,21 +100909,21 @@
     },
     "kelz0r": {
       "status": "failed",
-      "last_attempt": "2026-11-16T01:53:38.648764+00:00",
+      "last_attempt": "2026-11-16T01:57:39.068873+00:00",
       "last_success": "2026-11-16T01:34:15.946107+00:00",
       "last_count": 2262,
       "observed_count": null,
-      "consecutive_failures": 3,
-      "last_error": "429 Client Error: Too Many Requests for url: https://www.kelz0r.dk/magic/pokemon-boosters-c-187_191.html?currency=DKK&page=30"
+      "consecutive_failures": 4,
+      "last_error": "429 Client Error: Too Many Requests for url: https://www.kelz0r.dk/magic/pokemon-boosters-c-187_191.html?currency=DKK"
     },
     "faraos": {
-      "status": "failed",
-      "last_attempt": "2026-11-16T01:54:39.917464+00:00",
-      "last_success": "2026-11-16T00:34:07.556894+00:00",
+      "status": "ok",
+      "last_attempt": "2026-11-16T01:57:44.789642+00:00",
+      "last_success": "2026-11-16T01:57:44.789660+00:00",
       "last_count": 29,
-      "observed_count": null,
-      "consecutive_failures": 1,
-      "last_error": "HTTPSConnectionPool(host='www.faraos.dk', port=443): Read timed out. (read timeout=30)"
+      "observed_count": 29,
+      "consecutive_failures": 0,
+      "last_error": ""
     },
     "goblingames": {
       "status": "ok",
@@ -112955,19 +112954,19 @@
     "fff940439ebc8fbda0afe0b985ab8c51",
     "fffcef15b6da7fe5087a520dad6f7197"
   ],
-  "_last_full_scan_epoch": 1794794093,
+  "_last_full_scan_epoch": 1794794276,
   "proshop_detail_checks": {
     "3417744": 1794793569.2756388,
     "3447592": 1794793279.8936334,
     "3478496": 1794793883.1872175,
     "3478497": 1794793279.8936334,
     "3478498": 1794793883.1872175,
-    "3519999": 1794792978.0967853,
+    "3519999": 1794794163.7554119,
     "3530351": 1794317761.7018461,
     "3530352": 1794509488.268277,
     "3530353": 1794228978.4559495,
     "3421827": 1794599166.5642803,
-    "3447590": 1794792978.0967853,
+    "3447590": 1794794163.7554119,
     "3478501": 1794597964.6044035,
     "3530350": 1794053485.8864028,
     "3519993": 1794664274.8527675,
