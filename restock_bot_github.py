@@ -5061,29 +5061,29 @@ def get_proshop_products_via_reader():
 def get_proshop_products():
     errors = []
 
-    # GitHub-hosted requests are consistently blocked with HTTP 403, while
-    # Jina/browser rendering exposes the public category reliably. Treat it
-    # as the production transport instead of pretending it is an emergency
-    # fallback.
+    # Try the original category first. A successful category containing
+    # only one or two relevant TCG products is NOT comprehensive discovery:
+    # it may be mostly accessories or otherwise partially rendered.
+    category_products = {}
     try:
-        products = get_proshop_products_via_reader()
-        if products:
-            return products
-        errors.append("Jina Reader: 0 produkter")
+        category_products = get_proshop_products_via_reader()
+        if len(category_products) >= 3:
+            return category_products
+        if not category_products:
+            errors.append("Jina Reader: 0 produkter")
     except Exception as error:
         errors.append(f"Jina Reader: {error}")
 
-    # When the narrow card category is blocked, two other real Proshop
-    # catalogue surfaces can still return product cards. They were verified
-    # independently in the read-only probe on 2026-11-16. They are not proof
-    # of complete catalogue coverage, and are only fetched after primary
-    # Reader fails (maximum two bounded requests, no retry storm).
+    # When the narrow card category is blocked or yields <3 TCG cards,
+    # also inspect two real Proshop catalogue surfaces observed working in
+    # the read-only probe on 2026-11-16. Even combined, these do not prove
+    # complete coverage (maximum two bounded requests; no retry storm).
     from proshop_reader_v2 import fetch_verified_proshop_reader_catalog
     fallback_surfaces = (
         ("brand", "https://www.proshop.dk/Pokemon/Pokemon"),
         ("search", "https://www.proshop.dk/?s=Pokemon+TCG"),
     )
-    fallback_products = {}
+    fallback_products = dict(category_products)
     for label, url in fallback_surfaces:
         try:
             found = fetch_verified_proshop_reader_catalog(
@@ -5104,8 +5104,9 @@ def get_proshop_products():
 
     if fallback_products:
         print(
-            "PROSHOP: valid Reader fallback surfaces "
-            f"found {len(fallback_products)} TCG SKUs; "
+            "PROSHOP: verified Reader catalogue / fallback surfaces "
+            f"found {len(fallback_products)} TCG SKUs "
+            f"(primary={len(category_products)}); "
             "discovery coverage remains unverified"
         )
         return fallback_products
