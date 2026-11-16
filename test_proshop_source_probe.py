@@ -1,8 +1,9 @@
 """Offline regression tests for read-only Proshop coverage comparison."""
 
 import unittest
+from unittest.mock import patch
 
-from proshop_source_probe import _is_tcg, summarize_probes
+from proshop_source_probe import _is_tcg, summarize_probes, probe
 
 
 class ProshopSourceProbeTests(unittest.TestCase):
@@ -37,6 +38,36 @@ class ProshopSourceProbeTests(unittest.TestCase):
         self.assertEqual(result["extra_count"], 2)
         self.assertNotIn("999", result["catalogue_union_skus"])
         self.assertEqual(result["source_results"]["collection-search"]["error_type"], "Timeout")
+
+    def test_http_200_captcha_is_blocked_not_valid_catalogue(self):
+        target = "https://www.proshop.dk/pokemon-kort"
+        response = type("Response", (), {
+            "status_code": 200,
+            "text": f"Title: Just a moment...\nURL Source: {target}\n"
+                    "Warning: This page maybe requiring CAPTCHA\n",
+        })()
+        with patch("proshop_source_probe.requests.get", return_value=response):
+            result = probe("cards-category", target)
+        self.assertEqual(result["status"], 200)
+        self.assertEqual(result["page_status"], "blocked")
+        self.assertEqual(result["v2_ids"], [])
+
+    def test_redirect_page_does_not_count_related_products(self):
+        target = "https://www.proshop.dk/Pokemon/Pokemon-TCG-First-Partner/3478498"
+        page = (
+            f"Title: Generic Pokemon\nURL Source: {target}\n"
+            "Final URL: https://www.proshop.dk/Pokemon/Pokemon\n"
+            "Markdown Content:\n"
+            "*   [![Image 1: Mega Lucario](https://www.proshop.dk/image.jpg)]"
+            "(https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Lucario-ex-League-Battle-Deck/3447590)\n"
+            "På lager\n369,00 kr.\n"
+        )
+        response = type("Response", (), {"status_code": 200, "text": page})()
+        with patch("proshop_source_probe.requests.get", return_value=response):
+            result = probe("detail-first-partner", target)
+        self.assertEqual(result["page_status"], "redirected")
+        self.assertGreater(result["raw_unique_ids"], 0)
+        self.assertEqual(result["v2_ids"], [])
 
     def test_no_responses_are_unknown_not_proof_of_empty_shop(self):
         result = summarize_probes([
