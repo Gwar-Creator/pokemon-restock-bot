@@ -128,5 +128,43 @@ def parse_proshop_reader(markdown, is_tcg):
     return products
 
 
+def fetch_verified_proshop_reader_catalog(
+    url, is_tcg, *, get=None, timeout=30, min_raw_links=5
+):
+    """Read a Proshop catalogue surface; fail closed on CAPTCHA/redirect.
+
+    The fallback uses only Proshop's public pages through Jina Reader and
+    extracts real product URLs and adjacent stock/price; never synthesizes
+    availability or treats HTTP 200 as proof of a valid page. `get` is
+    injectable for offline regression tests.
+    """
+    import requests
+
+    fetch = get or requests.get
+    response = fetch(
+        "https://r.jina.ai/" + url,
+        headers={
+            "Accept": "text/plain, text/markdown;q=0.9, */*;q=0.5",
+            "User-Agent": "Pokemon-Restock-Bot/VerifiedCatalogFallback",
+            "x-no-cache": "true",
+            "x-engine": "browser",
+        },
+        timeout=timeout,
+    )
+    response.raise_for_status()
+    require_proshop_reader_source(response.text, url)
+    raw = raw_product_id_count(response.text)
+    if raw < min_raw_links:
+        raise RuntimeError(
+            f"Proshop Reader insufficient raw product IDs: {raw} < {min_raw_links}"
+        )
+    products = parse_proshop_reader(response.text, is_tcg)
+    if not products:
+        raise RuntimeError(
+            f"Proshop Reader no parsed TCG products from {raw} raw IDs"
+        )
+    return products
+
+
 def raw_product_id_count(markdown):
     return len({m.group("id") for m in PRODUCT_URL_RE.finditer(markdown or "")})
