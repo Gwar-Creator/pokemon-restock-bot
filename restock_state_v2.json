@@ -20143,6 +20143,14 @@
         "preorder": false,
         "url": "https://halmeshule.dk/products/pokemon-tcg-30th-anniversary-ditto-premium-collection"
       },
+      "11769154732373": {
+        "name": "Pokémon TCG: 30th Celebration Battle Deck (Zeraora/Umbreon)",
+        "game": "POKÉMON",
+        "price": 349.95,
+        "in_stock": true,
+        "preorder": false,
+        "url": "https://halmeshule.dk/products/pokemon-tcg-30th-celebration-battle-deck-victini-espeon-copy"
+      },
       "11769131270485": {
         "name": "Pokémon TCG: 30th Celebration Figure Collection (Mewtwo)",
         "game": "POKÉMON",
@@ -20175,14 +20183,6 @@
         "preorder": false,
         "url": "https://halmeshule.dk/products/pokemon-tcg-delta-reign-me06-premium-checklane-blister-pack"
       },
-      "11769154732373": {
-        "name": "Pokémon TCG: 30th Celebration Battle Deck (Zeraora/Umbreon)",
-        "game": "POKÉMON",
-        "price": 349.95,
-        "in_stock": true,
-        "preorder": false,
-        "url": "https://halmeshule.dk/products/pokemon-tcg-30th-celebration-battle-deck-victini-espeon-copy"
-      },
       "11769153192277": {
         "name": "Pokémon TCG: 30th Celebration Battle Deck (Victini/Espeon)",
         "game": "POKÉMON",
@@ -20206,6 +20206,14 @@
         "in_stock": true,
         "preorder": false,
         "url": "https://halmeshule.dk/products/pokemon-tcg-mega-forces-tin"
+      },
+      "11769096143189": {
+        "name": "Pokémon TCG: Deck Crafters Collection",
+        "game": "POKÉMON",
+        "price": 129.95,
+        "in_stock": true,
+        "preorder": false,
+        "url": "https://halmeshule.dk/products/pokemon-tcg-deck-craftes-collection"
       },
       "11378615615829": {
         "name": "World Championship 2025 Deck - Riley McKay - KSI's Gardevoir",
@@ -20238,14 +20246,6 @@
         "in_stock": true,
         "preorder": false,
         "url": "https://halmeshule.dk/products/pokemon-tcg-gem-pack-vol-2-booster-pack"
-      },
-      "11769096143189": {
-        "name": "Pokémon TCG: Deck Crafters Collection",
-        "game": "POKÉMON",
-        "price": 129.95,
-        "in_stock": true,
-        "preorder": false,
-        "url": "https://halmeshule.dk/products/pokemon-tcg-deck-craftes-collection"
       },
       "10014882103637": {
         "name": "Bede Trainer Card binder Collection",
@@ -86852,7 +86852,7 @@
         "last_seen": "2026-11-16T14:05:19.936252+01:00"
       }
     },
-    "updated_at": "2026-11-16T14:13:43.890465+01:00"
+    "updated_at": "2026-11-16T14:18:56.576738+01:00"
   },
   "_elgiganten_key_cache": {
     "api_key": null,
@@ -100568,10 +100568,10 @@
     },
     "proshop": {
       "status": "failed",
-      "last_attempt": "2026-11-16T13:11:12.279211+00:00",
-      "consecutive_failures": 68,
-      "last_error": "Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403)",
-      "observed_count": null,
+      "last_attempt": "2026-11-16T13:16:17.593319+00:00",
+      "consecutive_failures": 69,
+      "last_error": "mistænkeligt lavt produktantal: 2 < 3",
+      "observed_count": 2,
       "last_success": "2026-11-16T07:16:22.755724+00:00",
       "last_count": 3
     },
@@ -100879,8 +100879,8 @@
     },
     "tcgbruus": {
       "status": "failed",
-      "last_attempt": "2026-11-16T13:13:05.931808+00:00",
-      "consecutive_failures": 5891,
+      "last_attempt": "2026-11-16T13:18:23.227891+00:00",
+      "consecutive_failures": 5892,
       "last_error": "mistænkeligt lavt produktantal: 3 < 5",
       "observed_count": 3,
       "last_success": "2026-10-26T15:12:41.350111+00:00",
@@ -100904,12 +100904,12 @@
     },
     "kelz0r": {
       "status": "failed",
-      "last_attempt": "2026-11-16T13:13:21.825762+00:00",
+      "last_attempt": "2026-11-16T13:18:36.292421+00:00",
       "last_success": "2026-11-16T12:30:06.743383+00:00",
       "last_count": 2259,
       "observed_count": null,
-      "consecutive_failures": 8,
-      "last_error": "429 Client Error: Too Many Requests for url: https://www.kelz0r.dk/magic/pokemon-boosters-c-187_191.html?currency=DKK&page=10"
+      "consecutive_failures": 9,
+      "last_error": "429 Client Error: Too Many Requests for url: https://www.kelz0r.dk/magic/pokemon-boosters-c-187_191.html?currency=DKK&page=8"
     },
     "faraos": {
       "status": "ok",
@@ -112961,12 +112961,12 @@
     "fff940439ebc8fbda0afe0b985ab8c51",
     "fffcef15b6da7fe5087a520dad6f7197"
   ],
-  "_last_full_scan_epoch": 1794834824,
+  "_last_full_scan_epoch": 1794835136,
   "proshop_detail_checks": {
     "3417744": 1794833472.005261,
-    "3447592": 1794833184.9940379,
+    "3447592": 1794834974.1454482,
     "3478496": 1794833756.6042721,
-    "3478497": 1794833184.9940379,
+    "3478497": 1794834974.1454482,
     "3478498": 1794833756.6042721,
     "3519999": 1794834107.6359596,
     "3530351": 1794317761.7018461,
