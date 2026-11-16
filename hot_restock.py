@@ -759,7 +759,11 @@ def _fetch_expanded_proshop_products(shared, state=None):
 
     if state is not None:
         state["proshop_primary_health"] = {
-            "status": "ok" if len(curated) >= PROSHOP_MIN_FRESH_PRODUCTS else "degraded",
+            # Parsing several cards does not demonstrate complete discovery
+            # across Proshop search, brand pages and future product releases.
+            "status": "degraded",
+            "transport_status": "available" if curated else "unavailable",
+            "coverage_status": "unverified",
             "primary_count": len(curated),
             "broad_count": len(broad),
             "checked_at": _utc_now_iso(),
