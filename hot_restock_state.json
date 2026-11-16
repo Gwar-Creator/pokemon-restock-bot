@@ -88,6 +88,13 @@
       }
     },
     "proshop": {
+      "3417744": {
+        "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
+        "price": null,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
+        "fetch_via": "jina_verified_detail"
+      },
       "3478501": {
         "name": "Pokemon Tin Fall ex - assorted",
         "price": 299.0,
@@ -114,13 +121,6 @@
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2-pack-Booster/3478497",
-        "fetch_via": "preserved_previous_scan"
-      },
-      "3417744": {
-        "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
-        "price": null,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
         "fetch_via": "preserved_previous_scan"
       },
       "3530352": {
@@ -752,12 +752,12 @@
       "last_success_at": "2026-11-16T19:39:16.627829+00:00"
     },
     "proshop": {
-      "backoff_level": 1,
-      "next_allowed_at": 1794864998.3500972,
-      "generic_failures": 2,
-      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details",
-      "last_failure_at": "2026-11-16T21:34:38.350068+00:00",
-      "last_success_at": "2026-11-16T21:32:53.030962+00:00"
+      "backoff_level": 0,
+      "next_allowed_at": 0.0,
+      "generic_failures": 0,
+      "last_error": null,
+      "last_failure_at": "2026-11-16T21:38:19.457241+00:00",
+      "last_success_at": "2026-11-16T21:39:12.335004+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -793,14 +793,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1794864909.9710572,
+      "next_allowed_at": 1794865185.6266947,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-16T21:31:09.971031+00:00"
+      "last_success_at": "2026-11-16T21:35:45.626668+00:00"
     }
   },
-  "updated_at": "2026-11-16T21:34:54.824602+00:00",
+  "updated_at": "2026-11-16T21:39:27.034227+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -825,7 +825,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-16T21:31:09.072904+00:00"
+          "last_checked": "2026-11-16T21:35:44.523016+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -835,7 +835,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1794864667.8734517,
+      "last_discovery_epoch": 1794864943.2121785,
       "last_full_discovery_epoch": 1794844881.8626912,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -863,28 +863,28 @@
     "coolshop:https://www.coolshop.dk/produkt/pokemon-first-partner-illustration-collection-series-2-pok10395-101/23XF7G/": 1794578896.0901601
   },
   "proshop_detail_checks": {
-    "3417744": 1794864163.6108003,
+    "3417744": 1794865148.1354632,
     "3447592": 1794864876.615825,
     "3478496": 1794864391.1936057,
     "3478497": 1794864443.3221276,
-    "3478498": 1794864054.545142,
+    "3478498": 1794865041.5323796,
     "3519999": 1794864708.2097788,
     "3530350": 1794864817.1018813,
     "3530351": 1794864766.6498883,
     "3530352": 1794864817.1018813,
     "3530353": 1794864391.1936057,
     "3421827": 1794864443.3221276,
-    "3447590": 1794864054.545142,
+    "3447590": 1794865041.5323796,
     "3478501": 1794864708.2097788,
     "3502023": 1794864221.6048868,
-    "3519996": 1794864108.9625196,
-    "3530348": 1794864163.6108003,
+    "3519996": 1794865093.725348,
+    "3530348": 1794865148.1354632,
     "3530349": 1794864766.6498883,
     "3519993": 1794864498.0498095,
-    "3519997": 1794864108.9625196,
+    "3519997": 1794865093.725348,
     "3519992": 1794864498.0498095
   },
-  "proshop_broad_attempt_at": 1794864388.9659662,
+  "proshop_broad_attempt_at": 1794865037.851492,
   "proshop_radar_alerts": {
     "3519996:BESTILLINGSVARE": 1794402448.8076684,
     "3519997:BESTILLINGSVARE": 1794234274.0313218,
@@ -901,9 +901,9 @@
     "status": "degraded",
     "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-16T21:34:36.615762+00:00",
-    "details_or_listings_count": 0
+    "checked_at": "2026-11-16T21:39:08.135406+00:00",
+    "details_or_listings_count": 1
   },
   "proshop_last_usable_count": 1,
-  "proshop_last_usable_at": "2026-11-16T21:32:53.030986+00:00"
+  "proshop_last_usable_at": "2026-11-16T21:39:12.335030+00:00"
 }
