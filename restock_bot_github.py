@@ -5019,6 +5019,12 @@ def get_proshop_products_via_reader():
     )
     response.raise_for_status()
 
+    # Jina may report HTTP 200 for a CAPTCHA page or a redirect to a
+    # different Proshop surface. Verify the rendered page identity before
+    # interpreting any links or making a stock change.
+    from proshop_reader_v2 import require_proshop_reader_source
+    require_proshop_reader_source(response.text, PROSHOP_URL)
+
     raw_link_pattern = re.compile(
         r"(?:https?://(?:www\.)?proshop\.dk)?/Pokemon/[^)\s?#]+/\d+",
         re.IGNORECASE,
