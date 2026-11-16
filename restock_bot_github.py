@@ -5073,8 +5073,45 @@ def get_proshop_products():
     except Exception as error:
         errors.append(f"Jina Reader: {error}")
 
-    # Safety fallback only: if Reader is temporarily unavailable, try the two
-    # public Proshop routes once each. No retry storm.
+    # When the narrow card category is blocked, two other real Proshop
+    # catalogue surfaces can still return product cards. They were verified
+    # independently in the read-only probe on 2026-11-16. They are not proof
+    # of complete catalogue coverage, and are only fetched after primary
+    # Reader fails (maximum two bounded requests, no retry storm).
+    from proshop_reader_v2 import fetch_verified_proshop_reader_catalog
+    fallback_surfaces = (
+        ("brand", "https://www.proshop.dk/Pokemon/Pokemon"),
+        ("search", "https://www.proshop.dk/?s=Pokemon+TCG"),
+    )
+    fallback_products = {}
+    for label, url in fallback_surfaces:
+        try:
+            found = fetch_verified_proshop_reader_catalog(
+                url, _proshop_is_tcg_text, timeout=25, min_raw_links=5
+            )
+        except Exception as error:
+            errors.append(f"Jina {label}: {error}")
+            continue
+        for sku, item in found.items():
+            row = dict(item)
+            row["fetch_via"] = "jina_broad_reader"
+            previous = fallback_products.get(sku)
+            if previous is None or (
+                previous.get("stock") in (None, "UKENDT")
+                and row.get("stock") not in (None, "UKENDT")
+            ):
+                fallback_products[sku] = row
+
+    if fallback_products:
+        print(
+            "PROSHOP: valid Reader fallback surfaces "
+            f"found {len(fallback_products)} TCG SKUs; "
+            "discovery coverage remains unverified"
+        )
+        return fallback_products
+
+    # Safety fallback only: if verified Reader surfaces are unavailable, try
+    # two direct public routes once each. GitHub's HTTP 403 is still expected.
     headers = {
         **BROWSER_HEADERS,
         "Accept": (
