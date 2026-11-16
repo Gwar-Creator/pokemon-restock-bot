@@ -3,6 +3,7 @@ import unittest
 
 from proshop_reader_v2 import (
     parse_proshop_reader, raw_product_id_count, _stock, _price,
+    proshop_reader_source_status, require_proshop_reader_source,
 )
 
 
@@ -73,6 +74,30 @@ class ProshopReaderV2Tests(unittest.TestCase):
         self.assertEqual(parse_proshop_reader("Just a moment... CAPTCHA", allowed), {})
         self.assertEqual(parse_proshop_reader("", allowed), {})
         self.assertEqual(raw_product_id_count("Just a moment"), 0)
+
+    def test_reader_source_identity_fails_closed_on_http_200_captcha(self):
+        target = "https://www.proshop.dk/pokemon-kort"
+        good = f"Title: Pokemon TCG\\nURL Source: {target}\\nMarkdown Content:\\n"
+        good = good.replace("\\n", "\n")
+        self.assertEqual(proshop_reader_source_status(good, target), "ok")
+        self.assertTrue(require_proshop_reader_source(good, target))
+        blocked = (
+            f"Title: Just a moment...\nURL Source: {target}\n"
+            "Warning: This page maybe requiring CAPTCHA\n"
+        )
+        self.assertEqual(proshop_reader_source_status(blocked, target), "blocked")
+        with self.assertRaisesRegex(RuntimeError, "blocked"):
+            require_proshop_reader_source(blocked, target)
+
+    def test_reader_redirect_and_wrong_source_are_not_valid_catalogues(self):
+        target = "https://www.proshop.dk/pokemon-kort"
+        redirected = (
+            f"URL Source: {target}\nFinal URL: https://www.proshop.dk/Pokemon/Pokemon\n"
+        )
+        self.assertEqual(proshop_reader_source_status(redirected, target), "redirected")
+        wrong = "URL Source: https://www.proshop.dk/Pokemon/Pokemon\n"
+        self.assertEqual(proshop_reader_source_status(wrong, target), "wrong_source")
+        self.assertEqual(proshop_reader_source_status("hello world", target), "missing_source")
 
     def test_price_and_negative_stock(self):
         self.assertEqual(_price("2.199,00 kr. (1.759,20 kr.)"), 2199.0)
