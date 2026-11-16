@@ -559,7 +559,7 @@
         "in_stock": true,
         "availability_known": true,
         "url": "https://www.boozt.com/dk/da/pokmon-trading-cards/poke-me04-elite-trainer-box-rel-22-5_33175543/233145333",
-        "fetch_via": "jina_reader_category"
+        "fetch_via": "direct_category"
       },
       "boozt:33175542": {
         "name": "Pokémon Trading Cards Poke Box Premium EX Mega Zygarde 1/5 - Pokémon Trading Cards - MULTI COLOURED / multi",
@@ -568,7 +568,7 @@
         "in_stock": true,
         "availability_known": true,
         "url": "https://www.boozt.com/dk/da/pokmon-trading-cards/poke-box-premium-ex-mega-zygarde-1-5_33175542/233145332",
-        "fetch_via": "jina_reader_category"
+        "fetch_via": "direct_category"
       },
       "boozt:33181863": {
         "name": "Pokémon Trading Cards Poke ME05 Elite Trainer Box - Pokémon Trading Cards - BLACK / black",
@@ -586,7 +586,7 @@
         "in_stock": true,
         "availability_known": true,
         "url": "https://www.boozt.com/dk/da/pokmon-trading-cards/poke-tin-ex-30th-assorted_33202392/233321290",
-        "fetch_via": "jina_reader_category"
+        "fetch_via": "direct_category"
       },
       "boozt:33181869": {
         "name": "Pokémon Trading Cards Poke First Partner Collection Box 3 - Pokémon Trading Cards - MULTI COLOURED / multi",
@@ -595,7 +595,7 @@
         "in_stock": true,
         "availability_known": true,
         "url": "https://www.boozt.com/dk/da/pokmon-trading-cards/poke-first-partner-collection-box-3_33181869/233181714",
-        "fetch_via": "jina_reader_category"
+        "fetch_via": "direct_category"
       },
       "boozt:33202388": {
         "name": "Pokémon Trading Cards Poke Elite Trainer Box 30th - Pokémon Trading Cards - GOLD / gold",
@@ -604,7 +604,7 @@
         "in_stock": true,
         "availability_known": true,
         "url": "https://www.boozt.com/dk/da/pokmon-trading-cards/poke-elite-trainer-box-30th_33202388/233321286",
-        "fetch_via": "jina_reader_category"
+        "fetch_via": "direct_category"
       },
       "boozt:33067793": {
         "name": "Pokémon Trading Cards Poke Ultra Premium Coll Mega Chariz14/11 - Pokémon Trading Cards - BLUE / blue",
@@ -631,7 +631,7 @@
         "in_stock": true,
         "availability_known": true,
         "url": "https://www.boozt.com/dk/da/pokmon-trading-cards/poke-box-ex-30th-sylveon-greninja-assorted_33202391/233321289",
-        "fetch_via": "jina_reader_category"
+        "fetch_via": "direct_category"
       },
       "boozt:33212668": {
         "name": "Pokémon Trading Cards Poke Tin ex 30th - Variant A - Pokémon Trading Cards - MULTI COLOURED / multi",
@@ -640,7 +640,7 @@
         "in_stock": true,
         "availability_known": true,
         "url": "https://www.boozt.com/dk/da/pokmon-trading-cards/poke-tin-ex-30th-variant-a_33212668/233388992",
-        "fetch_via": "jina_reader_category"
+        "fetch_via": "direct_category"
       },
       "boozt:33212669": {
         "name": "Pokémon Trading Cards Poke Tin ex 30th - Variant B - Pokémon Trading Cards - MULTI COLOURED / multi",
@@ -649,7 +649,7 @@
         "in_stock": true,
         "availability_known": true,
         "url": "https://www.boozt.com/dk/da/pokmon-trading-cards/poke-tin-ex-30th-variant-b_33212669/233388993",
-        "fetch_via": "jina_reader_category"
+        "fetch_via": "direct_category"
       },
       "boozt:33202394": {
         "name": "Pokémon Trading Cards Poke 2-Pack Blister 30th - Pokémon Trading Cards - GOLD / gold",
@@ -714,11 +714,11 @@
       "last_success_at": "2026-11-15T05:14:14.256170+00:00"
     },
     "proshop": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-16T12:43:20.819935+00:00",
+      "backoff_level": 2,
+      "next_allowed_at": 1794833958.5532646,
+      "generic_failures": 3,
+      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details",
+      "last_failure_at": "2026-11-16T12:54:18.553234+00:00",
       "last_success_at": "2026-11-16T12:44:18.434260+00:00"
     },
     "br": {
@@ -755,14 +755,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1794833401.435217,
+      "next_allowed_at": 1794833690.6165924,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-16T12:46:01.435191+00:00"
+      "last_success_at": "2026-11-16T12:50:50.616561+00:00"
     }
   },
-  "updated_at": "2026-11-16T12:49:33.130504+00:00",
+  "updated_at": "2026-11-16T12:54:27.971209+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -787,7 +787,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-16T12:46:00.665734+00:00"
+          "last_checked": "2026-11-16T12:50:49.883499+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -797,7 +797,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1794833159.7918067,
+      "last_discovery_epoch": 1794833448.924378,
       "last_full_discovery_epoch": 1794822958.2888672,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -825,12 +825,12 @@
     "coolshop:https://www.coolshop.dk/produkt/pokemon-first-partner-illustration-collection-series-2-pok10395-101/23XF7G/": 1794578896.0901601
   },
   "proshop_detail_checks": {
-    "3417744": 1794832538.7004483,
+    "3417744": 1794833492.6582015,
     "3447592": 1794833139.4133477,
-    "3478496": 1794832720.2231882,
+    "3478496": 1794833658.4221473,
     "3478497": 1794832757.6556227,
     "3478498": 1794833193.697022,
-    "3519999": 1794832720.2231882,
+    "3519999": 1794833658.4221473,
     "3530350": 1794832944.8595266,
     "3530351": 1794832835.6716485,
     "3530352": 1794833055.2310615,
@@ -842,7 +842,7 @@
     "3519996": 1794832944.8595266,
     "3530348": 1794833139.4133477,
     "3530349": 1794832891.1785922,
-    "3519993": 1794832538.7004483,
+    "3519993": 1794833492.6582015,
     "3519997": 1794833055.2310615,
     "3519992": 1794833251.3737578
   },
@@ -861,10 +861,10 @@
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
     "status": "degraded",
-    "primary_count": 1,
+    "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-16T12:49:19.508349+00:00",
-    "details_or_listings_count": 1
+    "checked_at": "2026-11-16T12:54:18.422078+00:00",
+    "details_or_listings_count": 0
   },
   "proshop_last_usable_count": 1,
   "proshop_last_usable_at": "2026-11-16T12:49:19.509310+00:00"
