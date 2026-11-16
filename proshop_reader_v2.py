@@ -19,6 +19,39 @@ PRICE_RE = re.compile(
 )
 
 
+def proshop_reader_source_status(markdown, expected_url):
+    """Classify Jina's actual rendered destination, not its HTTP status.
+
+    HTTP 200 can contain a CAPTCHA or a product redirect to /Pokemon.
+    Those pages must never be treated as fresh source coverage.
+    """
+    text = str(markdown or "")
+    head = text[:1200].lower()
+    if ("just a moment" in head or "performing security verification" in head
+            or "requiring captcha" in head):
+        return "blocked"
+
+    source = re.search(r"(?m)^URL Source:\s*(\S+)", text)
+    if source is None:
+        return "missing_source"
+    if source.group(1).rstrip("/") != str(expected_url).rstrip("/"):
+        return "wrong_source"
+
+    final = re.search(r"(?m)^Final URL:\s*(\S+)", text)
+    if final and final.group(1).rstrip("/") != str(expected_url).rstrip("/"):
+        return "redirected"
+
+    return "ok"
+
+
+def require_proshop_reader_source(markdown, expected_url):
+    """Reject a nominally successful Jina response for a different page."""
+    status = proshop_reader_source_status(markdown, expected_url)
+    if status != "ok":
+        raise RuntimeError(f"Proshop Reader invalid source page: {status}")
+    return True
+
+
 def _price(text):
     match = PRICE_RE.search(text or "")
     if not match:
