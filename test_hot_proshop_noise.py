@@ -207,6 +207,21 @@ class ProshopNoiseTests(unittest.TestCase):
         self.assertEqual(state["proshop_primary_health"]["primary_count"], 1)
         self.assertEqual(state["proshop_primary_health"]["status"], "degraded")
 
+    def test_multiple_hot_catalogue_cards_do_not_claim_full_coverage(self):
+        product = proshop_product("PÅ LAGER")
+        state = {"proshop_broad_attempt_at": time.time()}
+        shared = {"get_proshop_products_via_reader": lambda: {
+            "101": product,
+            "102": {**product, "stock": "UDSOLGT"},
+            "103": {**product, "stock": "BESTILLINGSVARE"},
+        }}
+        found = hot._fetch_expanded_proshop_products(shared, state)
+        self.assertEqual(len(found), 3)
+        health = state["proshop_primary_health"]
+        self.assertEqual(health["transport_status"], "available")
+        self.assertEqual(health["coverage_status"], "unverified")
+        self.assertEqual(health["status"], "degraded")
+
     def test_proshop_category_failure_can_recover_through_sku_details(self):
         stock = {**proshop_product("PÅ LAGER"),
                  "fetch_via": "jina_verified_detail"}
