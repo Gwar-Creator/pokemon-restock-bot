@@ -37,7 +37,7 @@ def _is_tcg(value):
 
     Keep accessories out of observed TCG coverage. No status is inferred.
     """
-    text = " " + re.sub(r"\\s+", " ", str(value or "").lower()) + " "
+    text = " " + re.sub(r"\s+", " ", str(value or "").lower()) + " "
     allowed = (
         "booster", "elite trainer", " etb ", "premium collection",
         "ultra-premium collection", "illustration collection",
