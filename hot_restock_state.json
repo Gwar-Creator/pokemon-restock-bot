@@ -427,7 +427,7 @@
           },
           "1659": {
             "name": "Bilka Esbjerg",
-            "stock": 13
+            "stock": 12
           }
         },
         "quantity_limit": 6,
@@ -752,11 +752,11 @@
       "last_success_at": "2026-11-16T16:34:30.988471+00:00"
     },
     "proshop": {
-      "backoff_level": 1,
-      "next_allowed_at": 1794856829.4815412,
-      "generic_failures": 2,
+      "backoff_level": 2,
+      "next_allowed_at": 1794857144.7377033,
+      "generic_failures": 3,
       "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details",
-      "last_failure_at": "2026-11-16T19:18:29.481508+00:00",
+      "last_failure_at": "2026-11-16T19:20:44.737674+00:00",
       "last_success_at": "2026-11-16T19:16:54.090199+00:00"
     },
     "br": {
@@ -793,14 +793,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1794856804.201686,
+      "next_allowed_at": 1794857105.7151127,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-16T19:16:04.201636+00:00"
+      "last_success_at": "2026-11-16T19:21:05.715085+00:00"
     }
   },
-  "updated_at": "2026-11-16T19:19:35.762872+00:00",
+  "updated_at": "2026-11-16T19:24:35.383628+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -825,7 +825,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-16T19:16:03.354093+00:00"
+          "last_checked": "2026-11-16T19:21:04.340887+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -835,7 +835,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1794856561.7880754,
+      "last_discovery_epoch": 1794856863.316233,
       "last_full_discovery_epoch": 1794844881.8626912,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -864,10 +864,10 @@
   },
   "proshop_detail_checks": {
     "3417744": 1794856295.513433,
-    "3447592": 1794855827.71025,
+    "3447592": 1794856838.879506,
     "3478496": 1794856349.7960532,
     "3478497": 1794856460.7401018,
-    "3478498": 1794855883.8473217,
+    "3478498": 1794856838.879506,
     "3519999": 1794856539.7124023,
     "3530350": 1794856648.9829333,
     "3530351": 1794856610.2871366,
@@ -901,7 +901,7 @@
     "status": "degraded",
     "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-16T19:18:23.957770+00:00",
+    "checked_at": "2026-11-16T19:20:38.879364+00:00",
     "details_or_listings_count": 0
   },
   "proshop_last_usable_count": 1,
