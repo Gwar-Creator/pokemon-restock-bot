@@ -309,6 +309,33 @@ class ProshopDiscoveryRadarTests(unittest.TestCase):
         self.assertIn("ikke verificeret", str(data["embeds"][0]).lower())
         self.assertEqual(data["allowed_mentions"], {"parse": []})
 
+    def test_broad_discovery_includes_live_search_surfaces(self):
+        self.assertTrue(any(
+            "?s=Pokemon+TCG" in url for url in hot.PROSHOP_BROAD_READER_URLS
+        ))
+        self.assertTrue(any(
+            "?s=Pokemon+booster" in url for url in hot.PROSHOP_BROAD_READER_URLS
+        ))
+
+    def test_broad_discovery_rejects_http_200_redirects(self):
+        source = "https://www.proshop.dk/?s=Pokemon+TCG"
+        page = (
+            f"URL Source: {source}\n"
+            "Final URL: https://www.proshop.dk/Pokemon/Pokemon\n"
+            "Markdown Content:\n"
+            "* [![Image 1: Booster](https://example.org/a.jpg)]"
+            "(https://www.proshop.dk/Pokemon/Pokemon-Booster-Box/3591111)\n"
+            "På lager\n599,00 kr.\n"
+        )
+        response = type("Response", (), {
+            "text": page, "raise_for_status": lambda self: None,
+        })()
+        with patch.object(hot.requests, "get", return_value=response):
+            found = hot._fetch_proshop_broad_reader_products(
+                {"_proshop_is_tcg_text": lambda _value: True}
+            )
+        self.assertEqual(found, {})
+
     def test_expanded_proshop_reader_discovers_two_ex_boxes_offline(self):
         # Two independent search cards; no real Proshop/Jina/Discord traffic.
         text = (
@@ -321,10 +348,14 @@ class ProshopDiscoveryRadarTests(unittest.TestCase):
             "Pokemon Ex Box Greninja 30th Celebration\n"
             "På lager\n599,00 kr.\n"
         )
-        response = type("Response", (), {
-            "text": text, "raise_for_status": lambda self: None,
-        })()
-        with patch.object(hot.requests, "get", return_value=response):
+        def fake_get(url, **_kwargs):
+            requested = url.removeprefix("https://r.jina.ai/")
+            return type("Response", (), {
+                "text": f"URL Source: {requested}\n" + text,
+                "raise_for_status": lambda self: None,
+            })()
+
+        with patch.object(hot.requests, "get", side_effect=fake_get):
             found = hot._fetch_proshop_broad_reader_products(
                 {"_proshop_is_tcg_text": lambda _value: False})
         self.assertEqual(set(found), {"3591111", "3591112"})
