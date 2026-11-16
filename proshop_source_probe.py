@@ -5,7 +5,7 @@ import re
 import json
 
 import requests
-from proshop_reader_v2 import parse_proshop_reader
+from proshop_reader_v2 import parse_proshop_reader, proshop_reader_source_status
 from proshop_known_sku_watch import is_proshop_tcg_title
 
 SOURCES = {
@@ -85,6 +85,7 @@ def summarize_probes(results):
         "source_results": {
             row["source"]: {
                 "http_status": row.get("status"),
+                "page_status": row.get("page_status"),
                 "error_type": row.get("error_type"),
                 "raw_unique_ids": row.get("raw_unique_ids"),
                 "parsed_tcg": row.get("v2_tcg_count"),
@@ -105,12 +106,14 @@ def probe(label, url):
         }, timeout=50)
         page = response.text
         ids = set(PRODUCT_LINK.findall(page))
-        parsed = parse_proshop_reader(page, _is_tcg)
+        page_status = proshop_reader_source_status(page, url)
+        parsed = parse_proshop_reader(page, _is_tcg) if page_status == "ok" else {}
         md = MARKDOWN_LINK.findall(page)
         seen_paths = list(dict.fromkeys(re.findall(r"/Pokemon/[^)\\s?#\\\"<>]+/\\d+", page, re.I)))
         relevant = [(name.strip().replace("\n", " ")[:110], path) for name, path in md if TCG.search(name)]
         return {
             "source": label, "status": response.status_code,
+            "page_status": page_status,
             "bytes": len(page), "raw_unique_ids": len(ids),
             "markdown_links": len(md), "tcg_markdown": len(relevant),
             "v2_tcg_count": len(parsed),
