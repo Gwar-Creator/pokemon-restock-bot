@@ -761,10 +761,10 @@
     "proshop": {
       "backoff_level": 0,
       "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-17T23:34:36.773748+00:00",
-      "last_success_at": "2026-11-17T23:44:20.754499+00:00"
+      "generic_failures": 1,
+      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details",
+      "last_failure_at": "2026-11-17T23:59:17.439541+00:00",
+      "last_success_at": "2026-11-17T23:58:16.319539+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -800,14 +800,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1794959700.6353488,
+      "next_allowed_at": 1794959989.9693108,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-17T23:51:00.635322+00:00"
+      "last_success_at": "2026-11-17T23:55:49.969285+00:00"
     }
   },
-  "updated_at": "2026-11-17T23:54:31.535413+00:00",
+  "updated_at": "2026-11-17T23:59:32.809881+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -832,7 +832,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-17T23:50:59.536522+00:00"
+          "last_checked": "2026-11-17T23:55:48.576127+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -842,7 +842,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1794959458.445716,
+      "last_discovery_epoch": 1794959747.4556396,
       "last_full_discovery_epoch": 1794953463.208907,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -871,11 +871,11 @@
     "coolshop:https://www.coolshop.dk/produkt/pokemon-sv8-5-prismatic-evolutions-super-premium-collection-pok10106/23PQ9J/": 1794916529.7686853
   },
   "proshop_detail_checks": {
-    "3417744": 1794959004.1323955,
-    "3447592": 1794958854.019645,
+    "3417744": 1794959952.6064565,
+    "3447592": 1794959787.7098043,
     "3478496": 1794959057.282585,
     "3478497": 1794959250.9192688,
-    "3478498": 1794958854.019645,
+    "3478498": 1794959787.7098043,
     "3519999": 1794959435.9129305,
     "3530350": 1794959435.9129305,
     "3530351": 1794959504.8306158,
@@ -885,7 +885,7 @@
     "3447590": 1794959192.421962,
     "3478501": 1794959306.1194425,
     "3502023": 1794959057.282585,
-    "3519996": 1794959004.1323955,
+    "3519996": 1794959952.6064565,
     "3530348": 1794959192.421962,
     "3530349": 1794959359.3129294,
     "3519993": 1794959359.3129294,
@@ -907,11 +907,11 @@
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
     "status": "degraded",
-    "primary_count": 2,
+    "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-17T23:54:14.837840+00:00",
-    "details_or_listings_count": 2
+    "checked_at": "2026-11-17T23:59:12.606364+00:00",
+    "details_or_listings_count": 0
   },
   "proshop_last_usable_count": 2,
-  "proshop_last_usable_at": "2026-11-17T23:54:14.838738+00:00"
+  "proshop_last_usable_at": "2026-11-17T23:58:16.319552+00:00"
 }
