@@ -43,6 +43,8 @@ REPORT_PATH = Path("vintage_marketplace_report.json")
 DETAIL_ROOT = "https://api.tradera.com/v4/items/"
 MAX_DETAIL_CHECKS = 30
 MAX_REPORT_DETAIL_CHECKS = 90
+MAX_UNVALUED_SINGLE_BUY_NOW_SEK = Decimal("120")
+MAX_SINGLE_CM_RATIO = Decimal("0.70")
 
 
 def image_url(raw):
@@ -207,6 +209,51 @@ def enrich(candidate, detail, now=None):
             "checked_at": now.isoformat()}
 
 
+
+def _decimal_or_none(value):
+    try:
+        number = Decimal(str(value))
+        return number if number.is_finite() and number > 0 else None
+    except (InvalidOperation, TypeError, ValueError):
+        return None
+
+
+def single_value_gate(item):
+    """Fail closed for expensive singles unless a Cardmarket reference exists.
+
+    If downstream enrichment supplies cm_trend_eur, cm_avg30_eur and eur_dkk,
+    the lower of Trend/Avg30 is used as the conservative reference. Without an
+    exact Cardmarket match, only cheap Buy Now singles may alert.
+    """
+    if not isinstance(item, dict) or item.get("tier") != "VINTAGE_SINGLE":
+        return True, "not_single"
+
+    price_sek = _decimal_or_none(item.get("price_sek"))
+    if price_sek is None:
+        return False, "missing_price"
+
+    trend = _decimal_or_none(item.get("cm_trend_eur"))
+    avg30 = _decimal_or_none(item.get("cm_avg30_eur"))
+    eur_dkk = _decimal_or_none(item.get("eur_dkk"))
+    sek_dkk = _decimal_or_none(item.get("sek_dkk"))
+
+    refs = [x for x in (trend, avg30) if x is not None]
+    if refs and eur_dkk is not None and sek_dkk is not None:
+        reference_dkk = min(refs) * eur_dkk
+        tradera_dkk = price_sek * sek_dkk
+        if reference_dkk <= 0:
+            return False, "invalid_cm_reference"
+        ratio = tradera_dkk / reference_dkk
+        item["cm_reference_eur"] = str(min(refs))
+        item["cm_ratio"] = str(ratio.quantize(Decimal("0.001")))
+        return ratio <= MAX_SINGLE_CM_RATIO, "cm_value_gate"
+
+    if item.get("price_label") == "Køb nu" and price_sek > MAX_UNVALUED_SINGLE_BUY_NOW_SEK:
+        return False, "unvalued_buy_now_too_high"
+
+    return True, "cheap_unvalued_single"
+
+
 def prepare(app_id, app_key, state, now=None,
             search_transport=requests.get, detail_transport=requests.get):
     """Inert until first baseline is committed. Never sends Discord."""
@@ -247,7 +294,11 @@ def prepare(app_id, app_key, state, now=None,
         detail = get_details(item["id"], app_id, app_key, detail_transport)
         checked = enrich(item, detail, now)
         if checked:
-            eligible.append(checked)
+            allowed, gate_reason = single_value_gate(checked)
+            if allowed:
+                eligible.append(checked)
+            else:
+                rejected["single_value_" + gate_reason] += 1
         else:
             rejected[rejection_stage(item, detail, now)] += 1
 
