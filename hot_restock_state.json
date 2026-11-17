@@ -102,6 +102,27 @@
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Figure-Collection-30th-Celebration-assorted/3519993",
         "fetch_via": "jina_reader"
       },
+      "3478497": {
+        "name": "Pokemon TCG 2-pack Booster",
+        "price": null,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2-pack-Booster/3478497",
+        "fetch_via": "jina_verified_detail"
+      },
+      "3421827": {
+        "name": "Pokemon TCG 2024 World Championships Deck",
+        "price": 329.0,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
+        "fetch_via": "preserved_previous_scan"
+      },
+      "3478496": {
+        "name": "Pokemon TCG Mega Greninja ex Premium Collection",
+        "price": 499.0,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
+        "fetch_via": "preserved_previous_scan"
+      },
       "3417744": {
         "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
         "price": null,
@@ -121,27 +142,6 @@
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Ex-Box-Greninja-30th-Celebration/3530349",
-        "fetch_via": "preserved_previous_scan"
-      },
-      "3478497": {
-        "name": "Pokemon TCG 2-pack Booster",
-        "price": null,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2-pack-Booster/3478497",
-        "fetch_via": "preserved_previous_scan"
-      },
-      "3421827": {
-        "name": "Pokemon TCG 2024 World Championships Deck",
-        "price": 329.0,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
-        "fetch_via": "preserved_previous_scan"
-      },
-      "3478496": {
-        "name": "Pokemon TCG Mega Greninja ex Premium Collection",
-        "price": 499.0,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
         "fetch_via": "preserved_previous_scan"
       },
       "3478501": {
@@ -761,10 +761,10 @@
     "proshop": {
       "backoff_level": 0,
       "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-17T16:22:46.473966+00:00",
-      "last_success_at": "2026-11-17T16:24:20.348158+00:00"
+      "generic_failures": 1,
+      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details",
+      "last_failure_at": "2026-11-17T16:34:36.208923+00:00",
+      "last_success_at": "2026-11-17T16:33:46.540272+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -800,14 +800,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1794933028.1109364,
+      "next_allowed_at": 1794933341.626158,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-17T16:26:28.110909+00:00"
+      "last_success_at": "2026-11-17T16:31:41.626133+00:00"
     }
   },
-  "updated_at": "2026-11-17T16:29:58.994016+00:00",
+  "updated_at": "2026-11-17T16:34:53.740100+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -832,7 +832,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-17T16:26:26.472452+00:00"
+          "last_checked": "2026-11-17T16:31:39.933392+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -842,7 +842,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1794932785.6221707,
+      "last_discovery_epoch": 1794933099.0151672,
       "last_full_discovery_epoch": 1794931564.8961387,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -873,26 +873,26 @@
   "proshop_detail_checks": {
     "3417744": 1794932818.0796912,
     "3447592": 1794932763.499027,
-    "3478496": 1794932143.2341263,
-    "3478497": 1794932307.3509045,
+    "3478496": 1794933075.9879947,
+    "3478497": 1794933221.671889,
     "3478498": 1794932763.499027,
     "3519999": 1794932549.5213091,
     "3530350": 1794932549.5213091,
     "3530351": 1794932604.2370725,
     "3530352": 1794932604.2370725,
-    "3530353": 1794932307.3509045,
-    "3421827": 1794932199.2590828,
+    "3530353": 1794933221.671889,
+    "3421827": 1794933112.239403,
     "3447590": 1794932922.708976,
     "3478501": 1794932458.6643498,
     "3502023": 1794932867.4231157,
     "3519996": 1794932818.0796912,
-    "3530348": 1794932199.2590828,
+    "3530348": 1794933112.239403,
     "3530349": 1794932495.0744526,
     "3519993": 1794932495.0744526,
-    "3519997": 1794932143.2341263,
+    "3519997": 1794933075.9879947,
     "3519992": 1794932458.6643498
   },
-  "proshop_broad_attempt_at": 1794932442.8248968,
+  "proshop_broad_attempt_at": 1794933060.5259125,
   "proshop_radar_alerts": {
     "3519996:BESTILLINGSVARE": 1794402448.8076684,
     "3519997:BESTILLINGSVARE": 1794234274.0313218,
@@ -907,11 +907,11 @@
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
     "status": "degraded",
-    "primary_count": 2,
+    "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-17T16:29:37.381532+00:00",
-    "details_or_listings_count": 2
+    "checked_at": "2026-11-17T16:34:36.208838+00:00",
+    "details_or_listings_count": 0
   },
-  "proshop_last_usable_count": 2,
-  "proshop_last_usable_at": "2026-11-17T16:29:37.382271+00:00"
+  "proshop_last_usable_count": 3,
+  "proshop_last_usable_at": "2026-11-17T16:33:46.540297+00:00"
 }
