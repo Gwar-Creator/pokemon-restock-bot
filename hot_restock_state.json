@@ -102,6 +102,13 @@
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Figure-Collection-30th-Celebration-assorted/3519993",
         "fetch_via": "jina_reader"
       },
+      "3417744": {
+        "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
+        "price": null,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
+        "fetch_via": "preserved_previous_scan"
+      },
       "3530352": {
         "name": "Pokemon Mega Evolution Delta Reign Blister 3-pack",
         "price": 199.0,
@@ -128,13 +135,6 @@
         "price": 329.0,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
-        "fetch_via": "preserved_previous_scan"
-      },
-      "3417744": {
-        "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
-        "price": null,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
         "fetch_via": "preserved_previous_scan"
       },
       "3530349": {
@@ -761,10 +761,10 @@
     "proshop": {
       "backoff_level": 0,
       "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-17T12:58:25.311021+00:00",
-      "last_success_at": "2026-11-17T12:59:19.777068+00:00"
+      "generic_failures": 1,
+      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details",
+      "last_failure_at": "2026-11-17T13:04:39.689996+00:00",
+      "last_success_at": "2026-11-17T13:03:43.419619+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -800,14 +800,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1794920395.230819,
+      "next_allowed_at": 1794920726.8648374,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-17T12:55:55.230795+00:00"
+      "last_success_at": "2026-11-17T13:01:26.864816+00:00"
     }
   },
-  "updated_at": "2026-11-17T12:59:39.867155+00:00",
+  "updated_at": "2026-11-17T13:04:54.013997+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -832,7 +832,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-17T12:55:54.122447+00:00"
+          "last_checked": "2026-11-17T13:01:26.108903+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -842,7 +842,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1794920152.8871331,
+      "last_discovery_epoch": 1794920485.1763313,
       "last_full_discovery_epoch": 1794909941.9796815,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -871,7 +871,7 @@
     "coolshop:https://www.coolshop.dk/produkt/pokemon-sv8-5-prismatic-evolutions-super-premium-collection-pok10106/23PQ9J/": 1794916529.7686853
   },
   "proshop_detail_checks": {
-    "3417744": 1794919310.6755986,
+    "3417744": 1794920464.4662123,
     "3447592": 1794920352.1802454,
     "3478496": 1794919857.8030233,
     "3478497": 1794919949.4451997,
@@ -882,17 +882,17 @@
     "3530352": 1794920298.6968253,
     "3530353": 1794919949.4451997,
     "3421827": 1794919896.6014392,
-    "3447590": 1794919651.8316846,
+    "3447590": 1794920570.9479797,
     "3478501": 1794920131.5483391,
-    "3502023": 1794919651.8316846,
-    "3519996": 1794919310.6755986,
+    "3502023": 1794920570.9479797,
+    "3519996": 1794920464.4662123,
     "3530348": 1794919896.6014392,
     "3530349": 1794920187.0659156,
     "3519993": 1794920187.0659156,
     "3519997": 1794919857.8030233,
     "3519992": 1794920131.5483391
   },
-  "proshop_broad_attempt_at": 1794919840.9415848,
+  "proshop_broad_attempt_at": 1794920460.0295458,
   "proshop_radar_alerts": {
     "3519996:BESTILLINGSVARE": 1794402448.8076684,
     "3519997:BESTILLINGSVARE": 1794234274.0313218,
@@ -907,11 +907,11 @@
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
     "status": "degraded",
-    "primary_count": 2,
+    "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-17T12:59:12.180170+00:00",
-    "details_or_listings_count": 2
+    "checked_at": "2026-11-17T13:04:39.689922+00:00",
+    "details_or_listings_count": 0
   },
   "proshop_last_usable_count": 2,
-  "proshop_last_usable_at": "2026-11-17T12:59:19.777096+00:00"
+  "proshop_last_usable_at": "2026-11-17T13:03:43.419629+00:00"
 }
