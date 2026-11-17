@@ -102,12 +102,26 @@
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Figure-Collection-30th-Celebration-assorted/3519993",
         "fetch_via": "jina_reader"
       },
+      "3421827": {
+        "name": "Pokemon TCG 2024 World Championships Deck",
+        "price": 329.0,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
+        "fetch_via": "jina_verified_detail"
+      },
+      "3478496": {
+        "name": "Pokemon TCG Mega Greninja ex Premium Collection",
+        "price": 499.0,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
+        "fetch_via": "preserved_previous_scan"
+      },
       "3417744": {
         "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
-        "fetch_via": "jina_verified_detail"
+        "fetch_via": "preserved_previous_scan"
       },
       "3530352": {
         "name": "Pokemon Mega Evolution Delta Reign Blister 3-pack",
@@ -135,20 +149,6 @@
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2-pack-Booster/3478497",
-        "fetch_via": "preserved_previous_scan"
-      },
-      "3478496": {
-        "name": "Pokemon TCG Mega Greninja ex Premium Collection",
-        "price": 499.0,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
-        "fetch_via": "preserved_previous_scan"
-      },
-      "3421827": {
-        "name": "Pokemon TCG 2024 World Championships Deck",
-        "price": 329.0,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
         "fetch_via": "preserved_previous_scan"
       },
       "3519996": {
@@ -434,7 +434,7 @@
           },
           "1659": {
             "name": "Bilka Esbjerg",
-            "stock": 12
+            "stock": 11
           }
         },
         "quantity_limit": 6,
@@ -759,12 +759,12 @@
       "last_success_at": "2026-11-16T19:39:16.627829+00:00"
     },
     "proshop": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-17T19:10:44.506920+00:00",
-      "last_success_at": "2026-11-17T19:14:26.917648+00:00"
+      "backoff_level": 1,
+      "next_allowed_at": 1794943523.7855306,
+      "generic_failures": 2,
+      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details",
+      "last_failure_at": "2026-11-17T19:23:23.785514+00:00",
+      "last_success_at": "2026-11-17T19:21:33.451026+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -800,14 +800,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1794943222.7895455,
+      "next_allowed_at": 1794943499.6087837,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-17T19:16:22.789523+00:00"
+      "last_success_at": "2026-11-17T19:20:59.608749+00:00"
     }
   },
-  "updated_at": "2026-11-17T19:19:46.337152+00:00",
+  "updated_at": "2026-11-17T19:24:29.174417+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -832,7 +832,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-17T19:16:21.503451+00:00"
+          "last_checked": "2026-11-17T19:20:58.293772+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -842,7 +842,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1794942980.4180782,
+      "last_discovery_epoch": 1794943257.453788,
       "last_full_discovery_epoch": 1794931564.8961387,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -873,7 +873,7 @@
   "proshop_detail_checks": {
     "3417744": 1794943163.432374,
     "3447592": 1794943109.0978813,
-    "3478496": 1794942302.6834533,
+    "3478496": 1794943236.708471,
     "3478497": 1794942697.7610824,
     "3478498": 1794943109.0978813,
     "3519999": 1794942997.444636,
@@ -881,15 +881,15 @@
     "3530351": 1794943052.6792543,
     "3530352": 1794943052.6792543,
     "3530353": 1794942697.7610824,
-    "3421827": 1794942351.908179,
+    "3421827": 1794943290.3250382,
     "3447590": 1794942569.2735236,
     "3478501": 1794942751.5838146,
-    "3502023": 1794942302.6834533,
+    "3502023": 1794943236.708471,
     "3519996": 1794943163.432374,
     "3530348": 1794942569.2735236,
     "3530349": 1794942863.9457397,
     "3519993": 1794942863.9457397,
-    "3519997": 1794942351.908179,
+    "3519997": 1794943290.3250382,
     "3519992": 1794942751.5838146
   },
   "proshop_broad_attempt_at": 1794942946.3660307,
@@ -907,11 +907,11 @@
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
     "status": "degraded",
-    "primary_count": 2,
+    "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-17T19:19:23.432315+00:00",
-    "details_or_listings_count": 3
+    "checked_at": "2026-11-17T19:23:23.785432+00:00",
+    "details_or_listings_count": 0
   },
   "proshop_last_usable_count": 3,
-  "proshop_last_usable_at": "2026-11-17T19:19:27.377220+00:00"
+  "proshop_last_usable_at": "2026-11-17T19:21:33.451054+00:00"
 }
