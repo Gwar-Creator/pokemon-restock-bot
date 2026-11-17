@@ -96,7 +96,7 @@ class VintageShortlistTests(unittest.TestCase):
         state, selected, baseline = propose_shortlist(rows, state, T)
         self.assertFalse(baseline)
         self.assertEqual(len(selected), 6)
-        self.assertEqual(len({x["id"] for x in selected}), 3)
+        self.assertEqual(len({x["id"] for x in selected}), 6)
         state, again, _ = propose_shortlist(rows, state, T)
         self.assertEqual(again, [])
         more = [row(i, "Pokemon Aquapolis samling") for i in range(20, 30)]
