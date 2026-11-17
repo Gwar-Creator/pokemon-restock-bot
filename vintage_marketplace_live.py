@@ -23,18 +23,26 @@ from vintage_marketplace_shortlist import TIERS
 
 # Searches deliberately mirror the useful categories in the morning discovery agent.
 DISCOVERY_QUERIES = (
-    'pokemon samling', 'gamla pokemon kort', 'pokemon kort lot',
-    'pokemon album', 'pokemon parmar', 'pokemon holo',
-    'pokemon gym heroes', 'pokemon neo destiny',
-    'pokemon expedition', 'pokemon aquapolis', 'pokemon skyridge',
-    'pokemon ex dragon', 'pokemon ex sandstorm',
+    'pokemon samling', 'pokemon kort samling', 'gamla pokemon kort',
+    'gamla pokemonkort', 'pokemon kort lot', 'pokemon kortlot',
+    'blandade gamla pokemon kort', 'pokemon pärm', 'pokemon parmar',
+    'pokemon album', 'pokemon binder', 'pokemon holo', 'pokemon reverse',
+    'pokemon stamped', 'pokemon dark', 'pokemon light', 'pokemon gym',
+    'pokemon gym heroes', 'pokemon gym challenge', 'pokemon neo',
+    'pokemon neo destiny', 'pokemon expedition', 'pokemon aquapolis',
+    'pokemon skyridge', 'pokemon ruby sapphire', 'pokemon ex ruby',
+    'pokemon sandstorm', 'pokemon ex sandstorm', 'pokemon dragon',
+    'pokemon ex dragon', 'pokemon base set', 'pokemon jungle',
+    'pokemon fossil', 'pokemon team rocket', 'pokemon wotc',
 )
 
 CHANNEL_ID = "1540094708439711904"
 STATE_PATH = Path("vintage_marketplace_state_v1.json")
 PENDING_PATH = Path("vintage_marketplace_pending.json")
+REPORT_PATH = Path("vintage_marketplace_report.json")
 DETAIL_ROOT = "https://api.tradera.com/v4/items/"
 MAX_DETAIL_CHECKS = 30
+MAX_REPORT_DETAIL_CHECKS = 90
 
 
 def image_url(raw):
@@ -120,10 +128,10 @@ def rejection_stage(candidate, detail, now):
     if not any(image_url(entry.get("url")) for entry in detail.get("detailedImageLinks", [])
                if isinstance(entry, dict)) and not image_url(detail.get("thumbnailLink")):
         return "image_url_missing"
-    if (detail.get("nextBidSpecified") is not True
-            and detail.get("buyItNowPriceSpecified") is not True
-            and detail.get("openingBidSpecified") is not True):
-        return "no_price_flag"
+    if (_positive_price(detail.get("nextBid")) is None
+            and _positive_price(detail.get("buyItNowPrice")) is None
+            and _positive_price(detail.get("openingBid")) is None):
+        return "no_price"
     return "other"
 
 
@@ -149,7 +157,16 @@ def enrich(candidate, detail, now=None):
         end_time = end_time.replace(tzinfo=ZoneInfo("Europe/Stockholm"))
     if end_time <= now:
         return None
-    if type(detail.get("numberOfImages")) is not int or detail["numberOfImages"] < 1:
+    image_count = detail.get("numberOfImages")
+    if type(image_count) is not int or image_count < 1:
+        links = detail.get("detailedImageLinks")
+        raw_links = detail.get("imageLinks")
+        image_count = len(links) if isinstance(links, list) else 0
+        if image_count < 1 and isinstance(raw_links, list):
+            image_count = len(raw_links)
+        if image_count < 1 and image_url(detail.get("thumbnailLink")):
+            image_count = 1
+    if image_count < 1:
         return None
 
     photo = ""
@@ -173,19 +190,20 @@ def enrich(candidate, detail, now=None):
         return None
 
     price = label = None
-    if detail.get("nextBidSpecified") is True:
-        price = _positive_price(detail.get("nextBid"))
-        label = "Næste bud" if price else None
-    if price is None and detail.get("buyItNowPriceSpecified") is True:
-        price = _positive_price(detail.get("buyItNowPrice"))
-        label = "Køb nu" if price else None
-    if price is None and detail.get("openingBidSpecified") is True:
-        price = _positive_price(detail.get("openingBid"))
-        label = "Startbud" if price else None
+    next_bid = _positive_price(detail.get("nextBid"))
+    buy_now = _positive_price(detail.get("buyItNowPrice"))
+    opening = _positive_price(detail.get("openingBid"))
+    if next_bid is not None:
+        price, label = next_bid, "Næste bud"
+    elif buy_now is not None:
+        price, label = buy_now, "Køb nu"
+    elif opening is not None:
+        price, label = opening, "Startbud"
     if price is None:
         return None
     return {**candidate, "image": photo, "price_sek": price,
-            "price_label": label, "photo_count": detail["numberOfImages"],
+            "price_label": label, "photo_count": image_count,
+            "end_date": end_time.isoformat(),
             "checked_at": now.isoformat()}
 
 
@@ -246,6 +264,98 @@ def prepare(app_id, app_key, state, now=None,
     selected = {x["id"] for x in shortlisted}
     return new_state, [x for x in eligible if x["id"] in selected], len(found), False
 
+
+def _report_group(item):
+    tier = item.get("tier")
+    title = str(item.get("title") or "").lower()
+    if tier in ("VINTAGE_LOT", "OLD_COLLECTION", "POSSIBLE_BINDER"):
+        if any(x in title for x in ("holo", "reverse", "stamped")):
+            return "holo_lots"
+        return "collections"
+    return "singles"
+
+
+def build_report(app_id, app_key, now=None,
+                 search_transport=requests.get, detail_transport=requests.get):
+    """Official Tradera REST v4 report from the same discovery engine as alerts."""
+    now = now or datetime.now(timezone.utc)
+    app_id = app_id.strip() if isinstance(app_id, str) else ""
+    app_key = app_key.strip() if isinstance(app_key, str) else ""
+    if not app_id or not app_key:
+        raise ValueError("Tradera credentials unavailable")
+
+    found = {}
+    ok_queries = 0
+    failed_queries = []
+    for q in DISCOVERY_QUERIES:
+        try:
+            rows = fetch_search(q, app_id, app_key, transport=search_transport)
+            ok_queries += 1
+        except Exception as exc:
+            failed_queries.append({"query": q, "error": type(exc).__name__})
+            continue
+        for row in rows:
+            candidate = pick_title(row)
+            if candidate:
+                found[candidate["id"]] = candidate
+
+    ranked = sorted(
+        found.values(),
+        key=lambda x: (TIERS.get(x["tier"], 99), -int(x["id"]))
+    )
+    checked = 0
+    verified = []
+    rejected = Counter()
+    for item in ranked:
+        if checked >= MAX_REPORT_DETAIL_CHECKS:
+            break
+        checked += 1
+        detail = get_details(item["id"], app_id, app_key, detail_transport)
+        enriched = enrich(item, detail, now)
+        if enriched:
+            enriched["group"] = _report_group(enriched)
+            enriched["active_verified"] = True
+            enriched["language"] = "UNVERIFIED"
+            enriched["condition"] = "UNVERIFIED"
+            enriched["shipping_to_denmark"] = "UNVERIFIED"
+            enriched["decision"] = "UNDERSØG"
+            verified.append(enriched)
+        else:
+            rejected[rejection_stage(item, detail, now)] += 1
+
+    groups = {"collections": [], "holo_lots": [], "singles": []}
+    for group in groups:
+        pool = [x for x in verified if x["group"] == group]
+        pool.sort(key=lambda x: (
+            TIERS.get(x["tier"], 99),
+            Decimal(x["price_sek"]),
+            x.get("end_date") or ""
+        ))
+        groups[group] = pool[:12]
+
+    return {
+        "generated_at": now.isoformat(),
+        "source": "Tradera REST v4 official API",
+        "api_verified": ok_queries > 0,
+        "queries_ok": ok_queries,
+        "queries_total": len(DISCOVERY_QUERIES),
+        "queries_failed": failed_queries,
+        "title_candidates": len(found),
+        "details_checked": checked,
+        "active_verified": len(verified),
+        "shortlist": groups,
+        "rejected": dict(sorted(rejected.items())),
+        "rules": {
+            "no_bids_buys_messages": True,
+            "single_value_check": "Cardmarket/portfolio validation happens downstream before recommendation",
+            "language_condition_shipping": "unverified unless explicitly checked later",
+        },
+    }
+
+
+def write_report(result, path=REPORT_PATH):
+    path.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n",
+                    encoding="utf-8")
 
 def payload(item):
     if not isinstance(item, dict) or item.get("verification") != "UNVERIFIED":
@@ -332,9 +442,17 @@ def publish(items, state, webhook, now=None,
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("mode", choices=("prepare", "publish"))
+    parser.add_argument("mode", choices=("report", "prepare", "publish"))
     args = parser.parse_args()
-    if args.mode == "prepare":
+    if args.mode == "report":
+        result = build_report(
+            os.getenv("TRADERA_APP_ID"), os.getenv("TRADERA_APP_KEY")
+        )
+        write_report(result)
+        print("Vintage Finder API report: "
+              f"{result['queries_ok']}/{result['queries_total']} searches; "
+              f"{result['active_verified']} active verified candidates.")
+    elif args.mode == "prepare":
         state = read_state()
         new_state, selected, count, baseline = prepare(
             os.getenv("TRADERA_APP_ID"), os.getenv("TRADERA_APP_KEY"), state
