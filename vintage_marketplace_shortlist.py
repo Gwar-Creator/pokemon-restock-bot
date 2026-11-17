@@ -38,9 +38,11 @@ SPECIAL_SETS = ("expedition", "aquapolis", "skyridge", "neo destiny",
 BINDER_WORDS = ("album", "binder", "mapp", "mappe", "parm", "parmar")
 TIERS = {"VINTAGE_LOT": 0, "OLD_COLLECTION": 1,
          "VINTAGE_SINGLE": 2, "POSSIBLE_BINDER": 3}
-MAX_PER_RUN = 3
-MAX_PER_DAY = 3
-MAX_PER_WEEK = 8
+# Alerts are balanced between lot/collection candidates and vintage singles.
+# Keep the feed useful without allowing one category to crowd out the other.
+MAX_PER_RUN = 6
+MAX_PER_DAY = 6
+MAX_PER_WEEK = 30
 SEEN_DAYS = 45
 
 
@@ -125,15 +127,34 @@ def propose_shortlist(rows, state=None, now=None):
     cap = min(MAX_PER_RUN, max(0, MAX_PER_DAY - daily),
               max(0, MAX_PER_WEEK - len(sent)))
     new_items = [x for x in candidates.values() if x["id"] not in seen]
-    proposed = [] if first_run else sorted(
-        new_items,
-        key=lambda x: (
-            TIERS.get(x["tier"], 99),
-            hashlib.sha256(x["id"].encode()).hexdigest(),
+    if first_run:
+        proposed = []
+    else:
+        ranked = sorted(
+            new_items,
+            key=lambda x: (
+                TIERS.get(x["tier"], 99),
+                hashlib.sha256(x["id"].encode()).hexdigest(),
+            )
         )
-    )[:cap]
+        lot_like = [x for x in ranked if x["tier"] != "VINTAGE_SINGLE"]
+        singles = [x for x in ranked if x["tier"] == "VINTAGE_SINGLE"]
+        proposed = []
+        # Round-robin selection guarantees singles are not starved by binders/lots.
+        while len(proposed) < cap and (lot_like or singles):
+            if lot_like and len(proposed) < cap:
+                proposed.append(lot_like.pop(0))
+            if singles and len(proposed) < cap:
+                proposed.append(singles.pop(0))
+
     stamp = now.isoformat().replace("+00:00", "Z")
-    seen.update({ident: stamp for ident in candidates})
+    if first_run:
+        # Baseline all existing candidates only once, to avoid a historical flood.
+        seen.update({ident: stamp for ident in candidates})
+    else:
+        # Only reserve candidates actually selected for alerting. Qualified items
+        # held back by the cap remain eligible for a later run.
+        seen.update({item["id"]: stamp for item in proposed})
     # Reservations reflect shortlists, NOT successfully published messages.
     sent.extend([stamp] * len(proposed))
     return {
