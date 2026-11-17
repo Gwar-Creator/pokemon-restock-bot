@@ -180,3 +180,58 @@ class V4CompatibilityTests(unittest.TestCase):
         self.assertIsNotNone(item)
         self.assertEqual(item["price_label"], "Køb nu")
         self.assertEqual(item["price_sek"], "45")
+
+
+class SingleValueGateTests(unittest.TestCase):
+    def test_expensive_unvalued_buy_now_single_is_blocked(self):
+        from vintage_marketplace_live import single_value_gate
+        item = {
+            "tier": "VINTAGE_SINGLE",
+            "price_sek": "900",
+            "price_label": "Køb nu",
+        }
+        allowed, reason = single_value_gate(item)
+        self.assertFalse(allowed)
+        self.assertEqual(reason, "unvalued_buy_now_too_high")
+
+    def test_cheap_unvalued_single_can_still_alert(self):
+        from vintage_marketplace_live import single_value_gate
+        item = {
+            "tier": "VINTAGE_SINGLE",
+            "price_sek": "80",
+            "price_label": "Køb nu",
+        }
+        allowed, reason = single_value_gate(item)
+        self.assertTrue(allowed)
+        self.assertEqual(reason, "cheap_unvalued_single")
+
+    def test_cm_reference_uses_lower_of_trend_and_avg30(self):
+        from vintage_marketplace_live import single_value_gate
+        item = {
+            "tier": "VINTAGE_SINGLE",
+            "price_sek": "100",
+            "price_label": "Køb nu",
+            "cm_trend_eur": "30",
+            "cm_avg30_eur": "25",
+            "eur_dkk": "7.46",
+            "sek_dkk": "0.68",
+        }
+        allowed, reason = single_value_gate(item)
+        self.assertTrue(allowed)
+        self.assertEqual(reason, "cm_value_gate")
+        self.assertEqual(item["cm_reference_eur"], "25")
+
+    def test_cm_reference_blocks_overpriced_single(self):
+        from vintage_marketplace_live import single_value_gate
+        item = {
+            "tier": "VINTAGE_SINGLE",
+            "price_sek": "400",
+            "price_label": "Køb nu",
+            "cm_trend_eur": "20",
+            "cm_avg30_eur": "18",
+            "eur_dkk": "7.46",
+            "sek_dkk": "0.68",
+        }
+        allowed, reason = single_value_gate(item)
+        self.assertFalse(allowed)
+        self.assertEqual(reason, "cm_value_gate")
