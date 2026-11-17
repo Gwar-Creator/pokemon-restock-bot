@@ -24,7 +24,7 @@ def details(i, price=123):
         "endDate": (NOW + timedelta(days=1)).isoformat(),
         "numberOfImages": 4,
         "detailedImageLinks": [{"url": "http://img.tradera.net/images/safe.jpeg"}],
-        "nextBidSpecified": True, "nextBid": price,
+        "nextBid": price,
     }
 
 
@@ -81,7 +81,7 @@ class LightLiveTests(unittest.TestCase):
         for changed in (
             {"status": {"ended": True}},
             {"endDate": (NOW - timedelta(days=1)).isoformat()},
-            {"nextBidSpecified": False},
+            {"nextBid": None, "openingBid": None, "buyItNowPrice": None},
             {"nextBid": "NaN"},
             {"detailedImageLinks": [{"url": "https://evil.invalid/a.png"}],
              "thumbnailLink": "https://evil.invalid/b.png"},
@@ -153,3 +153,29 @@ class LightLiveTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class V4CompatibilityTests(unittest.TestCase):
+    def test_v4_price_fields_work_without_specified_flags(self):
+        candidate = {"id": "100", "title": "Pokemon Gym Heroes lot 11 st",
+                     "url": "https://www.tradera.com/item/1001342/100",
+                     "tier": "VINTAGE_LOT", "verification": "UNVERIFIED"}
+        d = details(100, 77)
+        self.assertNotIn("nextBidSpecified", d)
+        item = enrich(candidate, d, NOW)
+        self.assertIsNotNone(item)
+        self.assertEqual(item["price_label"], "Næste bud")
+        self.assertEqual(item["price_sek"], "77")
+
+    def test_fixed_price_is_supported_by_same_api_pipeline(self):
+        candidate = {"id": "100", "title": "Pokemon Aquapolis reverse holo",
+                     "url": "https://www.tradera.com/item/1001342/100",
+                     "tier": "VINTAGE_SINGLE", "verification": "UNVERIFIED"}
+        d = details(100, 123)
+        d["shortDescription"] = candidate["title"]
+        d["nextBid"] = None
+        d["buyItNowPrice"] = 45
+        item = enrich(candidate, d, NOW)
+        self.assertIsNotNone(item)
+        self.assertEqual(item["price_label"], "Køb nu")
+        self.assertEqual(item["price_sek"], "45")
