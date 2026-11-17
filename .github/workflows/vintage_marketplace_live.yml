@@ -37,6 +37,17 @@ jobs:
         run: |
           python -m py_compile vintage_marketplace_live.py
           python -m unittest -q test_vintage_marketplace_live.py test_vintage_marketplace_shortlist.py test_vintage_marketplace_webhook_check.py
+      - name: Build unified Tradera REST v4 report artifact
+        env:
+          TRADERA_APP_ID: ${{ secrets.TRADERA_APP_ID }}
+          TRADERA_APP_KEY: ${{ secrets.TRADERA_APP_KEY }}
+        run: python vintage_marketplace_live.py report
+      - name: Upload unified vintage API report
+        uses: actions/upload-artifact@v4
+        with:
+          name: vintage-marketplace-report
+          path: vintage_marketplace_report.json
+          retention-days: 14
       - name: Prepare small selection (no Discord)
         env:
           TRADERA_APP_ID: ${{ secrets.TRADERA_APP_ID }}
