@@ -95,7 +95,7 @@ class VintageShortlistTests(unittest.TestCase):
         rows = [row(i, "Pokemon Gym Heroes lot") for i in range(2, 14)]
         state, selected, baseline = propose_shortlist(rows, state, T)
         self.assertFalse(baseline)
-        self.assertEqual(len(selected), 3)
+        self.assertEqual(len(selected), 6)
         self.assertEqual(len({x["id"] for x in selected}), 3)
         state, again, _ = propose_shortlist(rows, state, T)
         self.assertEqual(again, [])
@@ -105,11 +105,11 @@ class VintageShortlistTests(unittest.TestCase):
         tomorrow = datetime(2026, 10, 29, 19, tzinfo=timezone.utc)
         state, picked, _ = propose_shortlist([row(i, "Pokemon Fossil samling")
                                                 for i in range(50, 60)], state, tomorrow)
-        self.assertEqual(len(picked), 3)
+        self.assertEqual(len(picked), 6)
         days_later = datetime(2026, 10, 30, 19, tzinfo=timezone.utc)
         state, picked, _ = propose_shortlist([row(i, "Pokemon WotC samling")
                                                 for i in range(70, 80)], state, days_later)
-        self.assertEqual(len(picked), 2)
+        self.assertEqual(len(picked), 6)
 
     def test_no_secret_or_purchase_fields_in_preview(self):
         candidate = pick_title(row(789, "Pokemon Gym Challenge samling"))
@@ -122,3 +122,26 @@ class VintageShortlistTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+    def test_balances_lots_and_singles(self):
+        state, _, _ = propose_shortlist([row(1, "Pokemon WotC lot")], now=T)
+        rows = [
+            row(100+i, "Pokemon Gym Heroes lot 10 st") for i in range(8)
+        ] + [
+            row(200+i, "Pokemon Aquapolis reverse holo") for i in range(8)
+        ]
+        state, selected, _ = propose_shortlist(rows, state, T)
+        self.assertEqual(len(selected), 6)
+        tiers = [x["tier"] for x in selected]
+        self.assertGreaterEqual(tiers.count("VINTAGE_SINGLE"), 3)
+        self.assertGreaterEqual(len([x for x in tiers if x != "VINTAGE_SINGLE"]), 3)
+
+    def test_unselected_candidates_are_not_marked_seen(self):
+        state, _, _ = propose_shortlist([row(1, "Pokemon WotC lot")], now=T)
+        rows = [row(i, "Pokemon Gym Heroes lot") for i in range(10, 20)]
+        state, selected, _ = propose_shortlist(rows, state, T)
+        selected_ids = {x["id"] for x in selected}
+        held_back = {str(i) for i in range(10, 20)} - selected_ids
+        self.assertTrue(held_back)
+        self.assertTrue(all(i not in state["seen"] for i in held_back))
