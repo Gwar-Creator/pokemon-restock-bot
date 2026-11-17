@@ -87,7 +87,8 @@ class LightLiveTests(unittest.TestCase):
              "thumbnailLink": "https://evil.invalid/b.png"},
             {"id": 999},
             {"shortDescription": "Pokemon unrelated listing"},
-            {"numberOfImages": 0},
+            {"numberOfImages": 0, "detailedImageLinks": [], "imageLinks": [],
+             "thumbnailLink": ""},
             {"endDate": "2026-10-28T07:00:00"},
         ):
             with self.subTest(changed=changed):
