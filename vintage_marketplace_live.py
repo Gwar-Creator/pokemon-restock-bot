@@ -394,7 +394,7 @@ def publish(items, state, webhook, now=None,
             verify_transport=requests.get, send_transport=requests.post):
     """After durable state commit only. Exact webhook check before POST."""
     now = now or datetime.now(timezone.utc)
-    if not isinstance(items, list) or not 0 < len(items) <= 3:
+    if not isinstance(items, list) or not 0 < len(items) <= 6:
         return 0
     if not isinstance(state, dict) or not isinstance(state.get("seen"), dict):
         return 0
@@ -469,7 +469,7 @@ def main():
     else:
         state = read_state()
         items = json.loads(PENDING_PATH.read_text(encoding="utf-8"))
-        if not isinstance(items, list) or len(items) > 3:
+        if not isinstance(items, list) or len(items) > 6:
             raise SystemExit("Unsafe pending batch")
         count = publish(items, state, os.getenv("MARKETPLACE_WEBHOOK_URL"))
         print(f"Vintage Finder: {count} selected-find messages accepted by Discord.")
