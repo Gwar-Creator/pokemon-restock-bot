@@ -14,6 +14,11 @@ on:
     branches: [main]
     paths:
       - ".github/workflows/vintage_marketplace_live.yml"
+      - "vintage_marketplace_live.py"
+      - "vintage_marketplace_shortlist.py"
+      - "test_vintage_marketplace_live.py"
+      - "test_vintage_marketplace_shortlist.py"
+      - "vintage_marketplace_webhook_check.py"
 
 permissions:
   contents: write
