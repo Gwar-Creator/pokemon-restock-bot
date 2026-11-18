@@ -67469,14 +67469,6 @@
         "preorder": false,
         "url": "https://www.hyggeonkel.dk/produkt/lorcana-archazias-island-single-player-deck-amethyst-steel"
       },
-      "1a4ecc7767041a1bea2d": {
-        "name": "Disney Lorcana: Azurite Sea (Set 6) - Booster Pack",
-        "game": "LORCANA",
-        "price": 54.95,
-        "in_stock": false,
-        "preorder": false,
-        "url": "https://www.hyggeonkel.dk/produkt/lorcana-azurite-sea-booster-pack"
-      },
       "dca60fc8fe10b112ea70": {
         "name": "Disney Lorcana: Azurite Sea (Set 6) - Emerald & Sapphire - Starter Deck",
         "game": "LORCANA",
@@ -67484,6 +67476,14 @@
         "in_stock": false,
         "preorder": false,
         "url": "https://www.hyggeonkel.dk/produkt/lorcana-azurite-sea-single-player-deck-emerald-sapphire"
+      },
+      "1a4ecc7767041a1bea2d": {
+        "name": "Disney Lorcana: Azurite Sea (Set 6) - Booster Pack",
+        "game": "LORCANA",
+        "price": 54.95,
+        "in_stock": false,
+        "preorder": false,
+        "url": "https://www.hyggeonkel.dk/produkt/lorcana-azurite-sea-booster-pack"
       },
       "2b48c63681cb42bfb44d": {
         "name": "Disney Lorcana: Azurite Sea (Set 6) - Booster Display",
@@ -87315,7 +87315,7 @@
         "last_seen": "2026-11-18T21:29:10.729683+01:00"
       }
     },
-    "updated_at": "2026-11-18T21:59:08.182267+01:00"
+    "updated_at": "2026-11-18T22:04:41.323303+01:00"
   },
   "_elgiganten_key_cache": {
     "api_key": null,
@@ -101075,8 +101075,8 @@
     },
     "proshop": {
       "status": "failed",
-      "last_attempt": "2026-11-18T20:56:16.131452+00:00",
-      "consecutive_failures": 1,
+      "last_attempt": "2026-11-18T21:01:46.862965+00:00",
+      "consecutive_failures": 2,
       "last_error": "Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403)",
       "observed_count": null,
       "last_success": "2026-11-18T20:46:14.688211+00:00",
@@ -101389,8 +101389,8 @@
     },
     "tcgbruus": {
       "status": "failed",
-      "last_attempt": "2026-11-18T20:57:47.229092+00:00",
-      "consecutive_failures": 6558,
+      "last_attempt": "2026-11-18T21:03:16.102983+00:00",
+      "consecutive_failures": 6559,
       "last_error": "mistænkeligt lavt produktantal: 3 < 5",
       "observed_count": 3,
       "last_success": "2026-10-26T15:12:41.350111+00:00",
@@ -101413,13 +101413,13 @@
       "observed_count": 0
     },
     "kelz0r": {
-      "status": "ok",
-      "last_attempt": "2026-11-18T20:48:50.722113+00:00",
+      "status": "failed",
+      "last_attempt": "2026-11-18T21:04:20.845172+00:00",
       "last_success": "2026-11-18T20:48:50.722132+00:00",
       "last_count": 2260,
-      "observed_count": 2260,
-      "consecutive_failures": 0,
-      "last_error": ""
+      "observed_count": null,
+      "consecutive_failures": 1,
+      "last_error": "HTTPSConnectionPool(host='www.kelz0r.dk', port=443): Read timed out. (read timeout=30)"
     },
     "faraos": {
       "status": "ok",
@@ -113551,7 +113551,7 @@
     "fff940439ebc8fbda0afe0b985ab8c51",
     "fffcef15b6da7fe5087a520dad6f7197"
   ],
-  "_last_full_scan_epoch": 1795035548,
+  "_last_full_scan_epoch": 1795035881,
   "proshop_detail_checks": {
     "3417744": 1795034168.332964,
     "3447592": 1795035069.5621808,
