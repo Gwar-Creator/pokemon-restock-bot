@@ -23,7 +23,23 @@ class ProshopMainHealthTests(unittest.TestCase):
             return d
 
         def original_fetch(key, old, fetcher, target):
-            products = fetcher()
+            try:
+                products = fetcher()
+            except RuntimeError:
+                previous = target.get("_source_health", {}).get(key, {})
+                updated(
+                    target, key, status="failed",
+                    consecutive_failures=previous.get("consecutive_failures", 0) + 1,
+                )
+                raise
+            # Emulate the legacy source's count/drop checks for Proshop,
+            # so this regression actually tests the adapter's old-cache guard.
+            if key == "proshop":
+                minimum = self.ns["SOURCE_MIN_PRODUCTS"][key]
+                if len(products) < minimum:
+                    raise RuntimeError("source minimum failed")
+                if len(old) >= minimum and len(products) < len(old) * 0.4:
+                    raise RuntimeError("source count drop guard fired")
             updated(target, key, status="ok", last_count=len(products), consecutive_failures=0)
             return products
 
@@ -61,23 +77,16 @@ class ProshopMainHealthTests(unittest.TestCase):
         self.assertEqual(self.state["_source_health"]["proshop"]["status"], "ok")
 
     def test_failed_transport_is_not_relabelled_healthy(self):
-        def failing_fetch(source, old, fetcher, state):
-            try:
-                fetcher()
-            except RuntimeError:
-                self.ns["_source_health_update"](
-                    state, source, status="failed", consecutive_failures=1
-                )
-                raise
-
-        self.ns["fetch_source_products"] = failing_fetch
         with self.assertRaisesRegex(RuntimeError, "reader blocked"):
             self.ns["fetch_source_products"](
                 "proshop", {}, lambda: (_ for _ in ()).throw(
                     RuntimeError("reader blocked")
                 ), self.state,
             )
-        self.assertEqual(self.state["_source_health"]["proshop"]["status"], "failed")
+        health = self.state["_source_health"]["proshop"]
+        self.assertEqual(health["status"], "failed")
+        self.assertEqual(health["consecutive_failures"], 1)
+        self.assertNotIn("transport_status", health)
 
     def test_migration_does_not_send_false_new_alerts(self):
         fn = self.ns["process_proshop_changes"]
