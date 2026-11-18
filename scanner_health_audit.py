@@ -7,7 +7,8 @@ STATE_FILE = "restock_state_v2.json"
 
 SOURCE_MINIMUMS = {
     "coolshop": 10,
-    "proshop": 2,
+    # Count is not a completeness requirement: Proshop filters most accessories.
+    "proshop": 1,
     "br": 5,
     "bilka": 5,
     "foetex": 5,
