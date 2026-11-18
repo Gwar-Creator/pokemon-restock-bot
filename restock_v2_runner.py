@@ -690,7 +690,7 @@ def _install_proshop_reader_v2(namespace):
             return
         return legacy_changes(old_for_alerts, new_products)
 
-    namespace["send_scanner_health"] = health_send
+    # Preserve the existing transport failure/recovery health notification.
     namespace["fetch_source_products"] = monitored_fetch
     namespace["process_proshop_changes"] = migration_safe_changes
 
