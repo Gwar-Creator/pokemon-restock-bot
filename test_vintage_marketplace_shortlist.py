@@ -67,10 +67,34 @@ class VintageShortlistTests(unittest.TestCase):
             "Pokemon Aquapolis PSA 9 holo",
             "Pokemon Scarlet Violet pärm modern kort",
             "Pokemon skyridge fake gold star",
+            "Pokemon kort - 9st Reverse rare lot - Terapagos Team Rocket's Exeggutor",
+            "Pokemon-mappe med næsten komplet base set af Pitch Black",
+            "Neo Revelation Pokemonkortsamling",
         )
         for idx, title in enumerate(examples, 600):
             with self.subTest(title=title):
                 self.assertIsNone(pick_title(row(idx, title)))
+
+    def test_completion_set_lots_still_pass_broadly(self):
+        examples = (
+            ("Pokemon Base Set samling 20 kort", "VINTAGE_LOT"),
+            ("Pokemon Jungle lot 15 kort", "VINTAGE_LOT"),
+            ("Pokemon Fossil samling commons uncommons", "VINTAGE_LOT"),
+        )
+        for idx, (title, tier) in enumerate(examples, 700):
+            with self.subTest(title=title):
+                self.assertEqual(pick_title(row(idx, title))["tier"], tier)
+
+    def test_non_completion_vintage_lot_needs_quality_signal(self):
+        self.assertIsNone(pick_title(row(720, "Pokemon Neo Revelation samling")))
+        self.assertEqual(
+            pick_title(row(721, "Pokemon Neo Revelation holo samling"))["tier"],
+            "VINTAGE_LOT",
+        )
+        self.assertEqual(
+            pick_title(row(722, "Pokemon Gym Heroes reverse lot"))["tier"],
+            "VINTAGE_LOT",
+        )
 
     def test_invalid_links_and_ids_fail_closed(self):
         self.assertIsNone(pick_title({"id": 1, "shortDescription": "Pokemon Gym Heroes lot",
