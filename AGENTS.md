@@ -1,5 +1,12 @@
 # AGENTS.md
 
+## AKTIV BESLUTNING — Proshop er sund ved få relevante produkter (18. november 2026)
+
+- Brugerens aktuelle observation: Proshop har meget Pokémon-legetøj/tilbehør, der bevidst falder uden for vores filtre. Nye relevante TCG-produkter kan forsvinde hurtigt. **1–3 relevante SKU'er på en valid side kan derfor være helt normalt.** Et fast mål på 3 eller 6 matchende varer er ikke dokumentation for, at scanneren fejler.
+- **Kildesundhed** afhænger af vellykket indhentning/parsing, verificeret kildeside og friske brugbare data; fejlede anmodninger/CAPTCHA/redirects kan stadig være reelle fejl. **Katalogdækning** må gerne stå som `unverified` uden at udløse et incident. Historiske kort/produkt-ID'er må ikke tælle som friske.
+- MasterBot watchdog bruger seneste friske brugbare Proshop-observation (10 minutter) i HOT-state. Eksisterende Tier 1 produktfilter, Discord-alerts, cooldown, out-of-stock-til-in-stock og known-SKU-baseline **ændres ikke** af sundhedsrettelsen.
+- **Korrigerer tidligere tekst nedenfor** om at et Proshop-katalog nødvendigvis skal vise mindst 6 friske relevante TCG-produkter. `DEGRADED` må kun betyde en reel kilde-/datakvalitetsfejl, ikke et lille legitimt filtreret sortiment. Se issue #62 og PR #124 (uafhængig draft om katalogtransport).
+
 ## AKTIV KANALOPDELING — godkendt 5. november 2026
 
 Brugeren har præciseret den oprindelige strategi: **#restocks = reelle, dokumenterede butikslagerændringer i udvalgte butikker/byer**; **HOT Restock = friske online-lagersignaler fra de fem udvalgte Tier 1-kæder**, med eksisterende produktfiltre. Alle pre-publish-signaler går til Early Radar (ikke normal Restock).
