@@ -205,7 +205,9 @@ class ProshopNoiseTests(unittest.TestCase):
         self.assertEqual(set(found), {"3478496"})
         broad.assert_not_called()
         self.assertEqual(state["proshop_primary_health"]["primary_count"], 1)
-        self.assertEqual(state["proshop_primary_health"]["status"], "degraded")
+        self.assertEqual(state["proshop_primary_health"]["status"], "ok")
+        self.assertEqual(state["proshop_primary_health"]["coverage_status"], "unverified")
+        self.assertEqual(state["proshop_primary_health"]["transport_status"], "available")
 
     def test_proshop_category_failure_can_recover_through_sku_details(self):
         stock = {**proshop_product("PÅ LAGER"),
