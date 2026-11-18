@@ -34,6 +34,21 @@ class ScannerHealthAuditTests(unittest.TestCase):
         row = self._row({"status": "ok", "consecutive_failures": 0}, products=3)
         self.assertEqual(row["status"], "DEGRADED")
 
+    def test_proshop_one_relevant_product_does_not_count_as_a_failure(self):
+        state = {
+            "proshop": {"sku-1": {"stock": "PÅ LAGER"}},
+            "_source_health": {
+                "proshop": {
+                    "status": "ok",
+                    "consecutive_failures": 0,
+                    "coverage_status": "unverified",
+                }
+            },
+        }
+        self.assertEqual(audit.SOURCE_MINIMUMS["proshop"], 1)
+        row = audit.inspect_sources(state, {"proshop": 1})[0]
+        self.assertEqual(row["status"], "OK")
+
     def test_missing_source_health_is_unknown_not_healthy(self):
         row = self._row(None, products=20)
         self.assertEqual(row["status"], "UNKNOWN")

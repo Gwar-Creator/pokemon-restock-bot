@@ -23,7 +23,23 @@ class ProshopMainHealthTests(unittest.TestCase):
             return d
 
         def original_fetch(key, old, fetcher, target):
-            products = fetcher()
+            try:
+                products = fetcher()
+            except RuntimeError:
+                previous = target.get("_source_health", {}).get(key, {})
+                updated(
+                    target, key, status="failed",
+                    consecutive_failures=previous.get("consecutive_failures", 0) + 1,
+                )
+                raise
+            # Emulate the legacy source's count/drop checks for Proshop,
+            # so this regression actually tests the adapter's old-cache guard.
+            if key == "proshop":
+                minimum = self.ns["SOURCE_MIN_PRODUCTS"][key]
+                if len(products) < minimum:
+                    raise RuntimeError("source minimum failed")
+                if len(old) >= minimum and len(products) < len(old) * 0.4:
+                    raise RuntimeError("source count drop guard fired")
             updated(target, key, status="ok", last_count=len(products), consecutive_failures=0)
             return products
 
@@ -37,25 +53,40 @@ class ProshopMainHealthTests(unittest.TestCase):
         }
         _install_proshop_reader_v2(self.ns)
 
-    def test_coverage_three_to_five_is_degraded_not_green(self):
-        self.assertEqual(self.ns["SOURCE_MIN_PRODUCTS"]["proshop"], 3)
-        for n in [4, 4, 5]:
-            self.ns["fetch_source_products"]("proshop", {}, lambda: {str(x): {} for x in range(n)}, self.state)
-        self.assertEqual(self.state["_source_health"]["proshop"]["status"], "degraded")
-        self.assertEqual(len(self.messages), 1)
-        self.assertIn("DELVIST", self.messages[0])
-
-    def test_recovery_only_after_six_and_no_false_green(self):
-        self.state["_source_health"]["proshop"] = {"status": "failed", "consecutive_failures": 3}
-        self.ns["send_scanner_health"](
-            "✅ **SCANNERKILDE KØRER IGEN**\n**PROSHOP**\nProdukter fundet: 4"
-        )
+    def test_one_to_five_filtered_products_are_healthy_when_fetch_succeeds(self):
+        self.assertEqual(self.ns["SOURCE_MIN_PRODUCTS"]["proshop"], 1)
+        for n in [1, 2, 3, 4, 5]:
+            products = self.ns["fetch_source_products"](
+                "proshop", {}, lambda n=n: {str(x): {} for x in range(n)},
+                self.state,
+            )
+            self.assertEqual(len(products), n)
+            health = self.state["_source_health"]["proshop"]
+            self.assertEqual(health["status"], "ok")
+            self.assertEqual(health["category_count"], n)
+            self.assertEqual(health["transport_status"], "available")
+            self.assertEqual(health["coverage_status"], "unverified")
         self.assertEqual(self.messages, [])
-        self.ns["fetch_source_products"]("proshop", {}, lambda: {str(x): {} for x in range(4)}, self.state)
-        self.ns["fetch_source_products"]("proshop", {}, lambda: {str(x): {} for x in range(7)}, self.state)
-        self.assertEqual(len(self.messages), 2)
-        self.assertIn("GENOPRETTET", self.messages[-1])
+
+    def test_small_valid_scan_does_not_fail_due_to_large_historic_cache(self):
+        old = {str(i): {} for i in range(25)}
+        products = self.ns["fetch_source_products"](
+            "proshop", old, lambda: {"1": {}}, self.state
+        )
+        self.assertEqual(list(products), ["1"])
         self.assertEqual(self.state["_source_health"]["proshop"]["status"], "ok")
+
+    def test_failed_transport_is_not_relabelled_healthy(self):
+        with self.assertRaisesRegex(RuntimeError, "reader blocked"):
+            self.ns["fetch_source_products"](
+                "proshop", {}, lambda: (_ for _ in ()).throw(
+                    RuntimeError("reader blocked")
+                ), self.state,
+            )
+        health = self.state["_source_health"]["proshop"]
+        self.assertEqual(health["status"], "failed")
+        self.assertEqual(health["consecutive_failures"], 1)
+        self.assertNotIn("transport_status", health)
 
     def test_migration_does_not_send_false_new_alerts(self):
         fn = self.ns["process_proshop_changes"]
@@ -75,23 +106,24 @@ class ProshopMainHealthTests(unittest.TestCase):
         self.assertEqual(prior["3478497"]["stock"], "BESTILLINGSVARE")
         self.assertIn("3478497", current)
 
-    def test_detail_supplement_does_not_make_category_green(self):
-        # Even when a confirmed extra known SKU raises total from 4 to 6,
-        # the category still provides only four fresh catalogue products.
+    def test_known_details_do_not_fake_category_count(self):
         with patch(
             "restock_v2_runner.extend_with_known_details",
             side_effect=lambda current, old, state: {
                 **current,
-                "3478496": {"stock": "UDSOLGT"},
-                "3478497": {"stock": "UDSOLGT"},
+                "3478496": {"stock": "UDSOLGT", "fetch_via": "jina_verified_detail"},
+                "3478497": {"stock": "UDSOLGT", "fetch_via": "jina_verified_detail"},
             },
         ):
             self.ns["fetch_source_products"](
-                "proshop", {}, lambda: {str(x): {} for x in range(4)},
+                "proshop", {}, lambda: {str(x): {} for x in range(2)},
                 self.state,
             )
-        self.assertEqual(self.state["_source_health"]["proshop"]["status"], "degraded")
-        self.assertIn("Kategori 4", self.state["_source_health"]["proshop"]["last_error"])
+        health = self.state["_source_health"]["proshop"]
+        self.assertEqual(health["status"], "ok")
+        self.assertEqual(health["category_count"], 2)
+        self.assertEqual(health["coverage_status"], "unverified")
+        self.assertEqual(health["last_count"], 4)
 
     def test_other_sources_unchanged(self):
         products = self.ns["fetch_source_products"](
