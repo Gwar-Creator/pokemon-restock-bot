@@ -28,6 +28,7 @@ EXCLUDE_WORDS = (
     "1000 cards", "vmax", "vstar", "prismatic",
     "surging sparks", "destined rivals", "paldea",
     "scarlet", "violet", "pokemon 151", "mega evolution",
+    "terapagos", "pitch black",
     "pris per kort", "pris per styck", "individuella priser",
 )
 SPECIAL_SINGLE = ("holo", "reverse", "stamped", "gold star", "shining",
@@ -35,6 +36,11 @@ SPECIAL_SINGLE = ("holo", "reverse", "stamped", "gold star", "shining",
 SPECIAL_SETS = ("expedition", "aquapolis", "skyridge", "neo destiny",
                 "ex ruby", "ex sandstorm", "ex dragon", "gym heroes",
                 "gym challenge", "team rocket")
+COMPLETION_SETS = ("base set", "jungle", "fossil")
+LOT_QUALITY_WORDS = (
+    "holo", "reverse", "stamped", "rare", "1st edition", "first edition",
+    "dark", "light", "gold star", "shining", "crystal", "delta species",
+)
 BINDER_WORDS = ("album", "binder", "mapp", "mappe", "parm", "parmar")
 TIERS = {"VINTAGE_LOT": 0, "OLD_COLLECTION": 1,
          "VINTAGE_SINGLE": 2, "POSSIBLE_BINDER": 3}
@@ -70,7 +76,17 @@ def pick_title(row):
     old = has_word(s, OLD_WORDS)
     vintage = category == "TITLE_VINTAGE"
     if lot and vintage:
-        tier = "VINTAGE_LOT"
+        # Base/Jungle/Fossil are completion projects, so broad lots stay relevant.
+        if has_word(s, COMPLETION_SETS):
+            tier = "VINTAGE_LOT"
+        # For other vintage eras, small generic lots need an extra quality signal.
+        elif has_word(s, LOT_QUALITY_WORDS):
+            tier = "VINTAGE_LOT"
+        # Keep genuinely old/large binder-style collections broad enough for discovery.
+        elif has_word(s, BINDER_WORDS) or old:
+            tier = "OLD_COLLECTION" if old else "POSSIBLE_BINDER"
+        else:
+            return None
     elif old and (lot or "kort" in s or "cards" in s):
         tier = "OLD_COLLECTION"
     elif vintage and (has_word(s, SPECIAL_SINGLE)
