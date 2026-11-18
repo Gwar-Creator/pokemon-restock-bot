@@ -6,6 +6,7 @@ on:
       - fix/proshop-diagnostics-20261029
     paths:
       - "proshop_source_probe.py"
+      - "test_proshop_source_probe.py"
       - "proshop_reader_v2.py"
       - "test_proshop_reader_v2.py"
       - ".github/workflows/proshop_diagnostics.yml"
@@ -32,8 +33,8 @@ jobs:
       - name: Install read-only dependencies
         run: python -m pip install requests
       - name: Compile diagnostics
-        run: python -m py_compile proshop_source_probe.py proshop_reader_v2.py test_proshop_reader_v2.py
+        run: python -m py_compile proshop_source_probe.py proshop_reader_v2.py test_proshop_reader_v2.py test_proshop_source_probe.py
       - name: Test Proshop Reader V2 offline
-        run: python -m unittest -v test_proshop_reader_v2.py
+        run: python -m unittest -v test_proshop_reader_v2.py test_proshop_source_probe.py
       - name: Compare Proshop Reader catalog surfaces
         run: python -u proshop_source_probe.py

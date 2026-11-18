@@ -5019,6 +5019,12 @@ def get_proshop_products_via_reader():
     )
     response.raise_for_status()
 
+    # Jina may report HTTP 200 for a CAPTCHA page or a redirect to a
+    # different Proshop surface. Verify the rendered page identity before
+    # interpreting any links or making a stock change.
+    from proshop_reader_v2 import require_proshop_reader_source
+    require_proshop_reader_source(response.text, PROSHOP_URL)
+
     raw_link_pattern = re.compile(
         r"(?:https?://(?:www\.)?proshop\.dk)?/Pokemon/[^)\s?#]+/\d+",
         re.IGNORECASE,
@@ -5055,20 +5061,58 @@ def get_proshop_products_via_reader():
 def get_proshop_products():
     errors = []
 
-    # GitHub-hosted requests are consistently blocked with HTTP 403, while
-    # Jina/browser rendering exposes the public category reliably. Treat it
-    # as the production transport instead of pretending it is an emergency
-    # fallback.
+    # Try the original category first. A successful category containing
+    # only one or two relevant TCG products is NOT comprehensive discovery:
+    # it may be mostly accessories or otherwise partially rendered.
+    category_products = {}
     try:
-        products = get_proshop_products_via_reader()
-        if products:
-            return products
-        errors.append("Jina Reader: 0 produkter")
+        category_products = get_proshop_products_via_reader()
+        if len(category_products) >= 3:
+            return category_products
+        if not category_products:
+            errors.append("Jina Reader: 0 produkter")
     except Exception as error:
         errors.append(f"Jina Reader: {error}")
 
-    # Safety fallback only: if Reader is temporarily unavailable, try the two
-    # public Proshop routes once each. No retry storm.
+    # When the narrow card category is blocked or yields <3 TCG cards,
+    # also inspect two real Proshop catalogue surfaces observed working in
+    # the read-only probe on 2026-11-16. Even combined, these do not prove
+    # complete coverage (maximum two bounded requests; no retry storm).
+    from proshop_reader_v2 import fetch_verified_proshop_reader_catalog
+    fallback_surfaces = (
+        ("brand", "https://www.proshop.dk/Pokemon/Pokemon"),
+        ("search", "https://www.proshop.dk/?s=Pokemon+TCG"),
+    )
+    fallback_products = dict(category_products)
+    for label, url in fallback_surfaces:
+        try:
+            found = fetch_verified_proshop_reader_catalog(
+                url, _proshop_is_tcg_text, timeout=25, min_raw_links=5
+            )
+        except Exception as error:
+            errors.append(f"Jina {label}: {error}")
+            continue
+        for sku, item in found.items():
+            row = dict(item)
+            row["fetch_via"] = "jina_broad_reader"
+            previous = fallback_products.get(sku)
+            if previous is None or (
+                previous.get("stock") in (None, "UKENDT")
+                and row.get("stock") not in (None, "UKENDT")
+            ):
+                fallback_products[sku] = row
+
+    if fallback_products:
+        print(
+            "PROSHOP: verified Reader catalogue / fallback surfaces "
+            f"found {len(fallback_products)} TCG SKUs "
+            f"(primary={len(category_products)}); "
+            "discovery coverage remains unverified"
+        )
+        return fallback_products
+
+    # Safety fallback only: if verified Reader surfaces are unavailable, try
+    # two direct public routes once each. GitHub's HTTP 403 is still expected.
     headers = {
         **BROWSER_HEADERS,
         "Accept": (

@@ -607,9 +607,14 @@ def _install_kelz0r_fast_fetch(namespace):
 
 
 def _install_proshop_reader_v2(namespace):
-    """Install tested Proshop parser and conservative verified SKU monitoring."""
-    min_accepted = 3
-    healthy_target = 6
+    """Separate Proshop transport health from unverified catalogue coverage.
+
+    A valid /pokemon-kort page can contain mostly accessories and only one
+    relevant TCG product. Reader already checks raw product links and parses
+    product cards; do not require 3/6 relevant SKUs or compare today's
+    partial category with historic products from other Proshop surfaces.
+    """
+    min_accepted = 1
     old_tcg = namespace["_proshop_is_tcg_text"]
     tcg_check = lambda name: is_proshop_tcg_title(name, old_tcg)
     namespace["_proshop_is_tcg_text"] = tcg_check
@@ -620,65 +625,98 @@ def _install_proshop_reader_v2(namespace):
     legacy_changes = namespace["process_proshop_changes"]
     legacy_fetch = namespace["fetch_source_products"]
     legacy_health_send = namespace["send_scanner_health"]
-    category_last_count = {"count": None}
 
     def health_send(message):
-        # A fallback with a handful of verified known SKUs does not prove
-        # category discovery works; avoid false "fully recovered" messages.
+        # The legacy success message implies full source recovery. A single
+        # valid category card only proves that the transport responded; it
+        # does NOT prove that new products on other Proshop pages are covered.
         msg = str(message)
         if "SCANNERKILDE KØRER IGEN" in msg and "**PROSHOP**" in msg:
-            found = re.search(r"Produkter fundet:\s*(\d+)", msg)
-            count = int(found.group(1)) if found else 0
-            if count < healthy_target or (
-                category_last_count["count"] is not None
-                and category_last_count["count"] < healthy_target
-            ):
-                print("PROSHOP HEALTH: legacy recovery suppressed for partial coverage")
-                return False
+            print("PROSHOP HEALTH: generic full-recovery alert suppressed; "
+                  "catalogue coverage not verified")
+            return False
         return legacy_health_send(message)
 
     def monitored_fetch(source_key, old_products, fetcher, state_target):
-        previous = dict((state_target.get("_source_health") or {}).get(source_key) or {})
         if source_key != "proshop":
             return legacy_fetch(source_key, old_products, fetcher, state_target)
 
-        category_last_count["count"] = None
+        previous = dict((state_target.get("_source_health") or {}).get(source_key) or {})
+        category_count = [None]
+        # The generic drift guard compares an entire historical source cache
+        # with today's small /pokemon-kort category and flags a false outage.
+        # Feed it only IDs present in the *fresh* result. Keep real prior data
+        # unchanged for SKU verification, persistence and alert comparisons.
+        old_for_count_guard = {}
 
         def fetch_with_detail_checks():
             category = fetcher()
-            category_last_count["count"] = len(category)
-            return extend_with_known_details(category, old_products, state_target)
+            if not isinstance(category, dict):
+                return category  # legacy_fetch will reject and record failure
+            category_count[0] = len(category)
+            fresh = extend_with_known_details(
+                category, old_products, state_target
+            )
+            if isinstance(fresh, dict) and isinstance(old_products, dict):
+                old_for_count_guard.update({
+                    sku: old_products[sku]
+                    for sku in fresh if sku in old_products
+                })
+            return fresh
 
-        products = legacy_fetch(source_key, old_products, fetch_with_detail_checks, state_target)
-        category_count = category_last_count["count"]
-        count = len(products)
-        if category_count is None:
-            category_count = 0
-        if category_count < healthy_target:
-            namespace["_source_health_update"](
-                state_target, "proshop",
-                status="degraded",
-                last_error=(
-                    f"Kategori {category_count} aktuelle TCG-produkter, "
-                    f"{count - category_count} bekræftede SKU-detaljer; "
-                    f"health-target for kategori er {healthy_target}"
-                ),
+        # Actual transport errors, invalid responses, and zero fresh products
+        # are still recorded as failures by the legacy source health mechanism.
+        products = legacy_fetch(
+            source_key, old_for_count_guard, fetch_with_detail_checks,
+            state_target,
+        )
+
+        category_fresh = category_count[0] or 0
+        fallback_fresh = sum(
+            item.get("fetch_via") == "jina_broad_reader"
+            for item in products.values()
+            if isinstance(item, dict)
+        )
+        verified_details = sum(
+            item.get("fetch_via") == "jina_verified_detail"
+            for item in products.values()
+            if isinstance(item, dict)
+        )
+        usable = sum(
+            item.get("stock") in (
+                "PÅ LAGER", "UDSOLGT", "BESTILLINGSVARE", "FJERNLAGER"
             )
-            print(
-                f"PROSHOP HEALTH: DEGRADED kategori={category_count} "
-                f"+ detaljer={count - category_count}; target={healthy_target}"
-            )
-            if previous.get("status") != "degraded":
-                health_send(
-                    "⚠️ **PROSHOP SCANNING ER DELVIST DÆKKENDE**\n"
-                    f"Kategori {category_count} friske TCG-produkter; "
-                    f"{count - category_count} særskilt verificeret. "
-                    f"Fuld kategoridækning kræver mindst {healthy_target}."
-                )
-        elif previous.get("status") == "degraded":
+            for item in products.values()
+            if isinstance(item, dict)
+        )
+
+        # Explicitly keep coverage in an *unverified* state. Neither the
+        # category's TCG count nor the 19 cached historic SKUs establish full
+        # discovery across Proshop's brand/search pages.
+        reason = (
+            f"Proshop-katalog/søgning {category_fresh} friske TCG-produkter "
+            f"(heraf {fallback_fresh} via alternativ Reader-side), "
+            f"{verified_details} verificerede SKU-detaljer, "
+            f"{usable} med eksplicit lagerstatus; "
+            "produktdækning på tværs af Proshop er ikke verificeret"
+        )
+        namespace["_source_health_update"](
+            state_target, "proshop",
+            status="degraded",
+            last_error=reason,
+            catalogue_status=("available" if category_fresh else "not_verified"),
+            coverage_status="unverified",
+            category_count=category_fresh,
+            fallback_count=fallback_fresh,
+            verified_detail_count=verified_details,
+            usable_fresh_count=usable,
+        )
+        print(f"PROSHOP HEALTH: ACCESSIBLE BUT COVERAGE UNVERIFIED | {reason}")
+
+        if previous.get("status") != "degraded":
             health_send(
-                "✅ **PROSHOP DÆKNING GENOPRETTET**\n"
-                f"{category_count} friske produkter i kataloget."
+                "⚠️ **PROSHOP KATALOGSVAR MODTAGET – DÆKNING UVIS**\n"
+                f"{reason}. Ingen ændring af produktfiltre."
             )
         return products
 
@@ -697,7 +735,9 @@ def _install_proshop_reader_v2(namespace):
                 # Existing known preorders/history require a silent baseline
                 # before a future true out-of-stock -> available transition.
                 old_for_alerts[sku] = dict(fresh)
-        if len(old_products or {}) < 4 and len(new_products or {}) >= min_accepted:
+        # A 1-item healthy catalogue is *not* a reason to change the existing
+        # conservative 3-item migration baseline for NEW alerts.
+        if len(old_products or {}) < 4 and len(new_products or {}) >= 3:
             print("PROSHOP: silent partial-catalog migration without NEW alerts")
             return
         return legacy_changes(old_for_alerts, new_products)
@@ -705,7 +745,6 @@ def _install_proshop_reader_v2(namespace):
     namespace["send_scanner_health"] = health_send
     namespace["fetch_source_products"] = monitored_fetch
     namespace["process_proshop_changes"] = migration_safe_changes
-
 
 def main():
     definitions, startup = load_scanner_parts()
