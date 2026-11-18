@@ -720,8 +720,10 @@ def _fetch_expanded_proshop_products(shared, state=None):
     not the same as zero inventory: the tracked SKU detail lane still runs.
     """
     curated = {}
+    primary_reader_ok = False
     try:
         curated = shared["get_proshop_products_via_reader"]()
+        primary_reader_ok = isinstance(curated, dict) and bool(curated)
     except Exception as error:
         print(f"HOT PROSHOP primary reader degraded: {type(error).__name__}: {error}")
 
@@ -759,7 +761,11 @@ def _fetch_expanded_proshop_products(shared, state=None):
 
     if state is not None:
         state["proshop_primary_health"] = {
-            "status": "ok" if len(curated) >= PROSHOP_MIN_FRESH_PRODUCTS else "degraded",
+            # A validated one-card category is healthy source access, not
+            # a failure. Count does not establish full catalogue coverage.
+            "status": "ok" if primary_reader_ok else "degraded",
+            "coverage_status": "unverified",
+            "transport_status": "available" if primary_reader_ok else "unavailable",
             "primary_count": len(curated),
             "broad_count": len(broad),
             "checked_at": _utc_now_iso(),
