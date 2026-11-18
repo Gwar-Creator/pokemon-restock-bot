@@ -38,7 +38,6 @@ PROSHOP_BROAD_READER_URLS = (
 PROSHOP_BROAD_INTERVAL_SECONDS = 10 * 60
 PROSHOP_BROAD_DISCOVERY_VERSION = 1
 PROSHOP_DISCOVERY_VERSION = 6
-PROSHOP_MIN_FRESH_PRODUCTS = 3
 # Source-system availability can briefly flap. Suppress rapid repeats without
 # hiding genuine later restocks for an entire day. Proshop remains 24 hours.
 HOT_ALERT_COOLDOWN_SECONDS = 2 * 60 * 60
@@ -1843,9 +1842,9 @@ def fetch_source(shared, source_key, old_products, state=None):
             health = state.setdefault("proshop_primary_health", {})
             observed = len(current)
             health["details_or_listings_count"] = observed
-            if observed < PROSHOP_MIN_FRESH_PRODUCTS:
-                health["status"] = "degraded"
-                print(f"::warning::PROSHOP partial coverage: {observed} fresh product IDs")
+            # A small valid set is normal with strict TCG filters. Only
+            # failed Reader transport or lack of fresh verified SKU data is
+            # degraded; the original source failure path below remains.
         if not current:
             raise RuntimeError(
                 "Proshop has neither fresh catalogue cards nor verified SKU details"
