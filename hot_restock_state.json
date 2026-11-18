@@ -295,7 +295,7 @@
         "online_stock": false,
         "is_exposed": true,
         "store_count": 27,
-        "kolding_stock": 5,
+        "kolding_stock": 4,
         "esbjerg_stock": 7,
         "quantity_limit": 6,
         "sku": "11399552-EA",
@@ -752,11 +752,11 @@
       "last_success_at": "2026-11-18T00:49:21.208206+00:00"
     },
     "proshop": {
-      "backoff_level": 1,
-      "next_allowed_at": 1795016320.9403315,
-      "generic_failures": 1,
+      "backoff_level": 2,
+      "next_allowed_at": 1795016749.742485,
+      "generic_failures": 2,
       "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details",
-      "last_failure_at": "2026-11-18T15:39:22.531098+00:00",
+      "last_failure_at": "2026-11-18T15:40:49.742450+00:00",
       "last_success_at": "2026-11-18T15:36:40.940313+00:00"
     },
     "br": {
@@ -793,14 +793,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1795016396.3943927,
+      "next_allowed_at": 1795016709.5411286,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-18T15:35:56.394365+00:00"
+      "last_success_at": "2026-11-18T15:41:09.541097+00:00"
     }
   },
-  "updated_at": "2026-11-18T15:39:39.393736+00:00",
+  "updated_at": "2026-11-18T15:44:36.755435+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -825,7 +825,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-18T15:35:55.166957+00:00"
+          "last_checked": "2026-11-18T15:41:08.569309+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -835,7 +835,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1795016154.0557506,
+      "last_discovery_epoch": 1795016467.2163343,
       "last_full_discovery_epoch": 1794996957.844151,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -864,8 +864,8 @@
     "coolshop:https://www.coolshop.dk/produkt/pokemon-sv8-5-prismatic-evolutions-super-premium-collection-pok10106/23PQ9J/": 1794916529.7686853
   },
   "proshop_detail_checks": {
-    "3417744": 1795015241.9884334,
-    "3447592": 1795014996.574209,
+    "3417744": 1795016445.150619,
+    "3447592": 1795016445.150619,
     "3478496": 1795015297.4076626,
     "3478497": 1795015353.7611773,
     "3478498": 1795015241.9884334,
@@ -904,7 +904,7 @@
     "transport_status": "unavailable",
     "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-18T15:39:16.670907+00:00",
+    "checked_at": "2026-11-18T15:40:45.150381+00:00",
     "details_or_listings_count": 0
   },
   "proshop_last_usable_count": 2,
