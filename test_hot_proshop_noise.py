@@ -207,6 +207,28 @@ class ProshopNoiseTests(unittest.TestCase):
             state["source_controls"]["proshop"]["backoff_level"], 1
         )
 
+    def test_reader_401_survives_detail_fallback_and_triggers_backoff(self):
+        state = {"proshop_broad_attempt_at": time.time()}
+        shared = {"get_proshop_products_via_reader":
+                  lambda: (_ for _ in ()).throw(
+                      RuntimeError("401 Client Error: Unauthorized")
+                  )}
+        with patch.object(
+            hot, "_fetch_proshop_broad_reader_products", return_value={}
+        ), patch.object(
+            hot, "extend_with_known_details", return_value={}
+        ):
+            with self.assertRaisesRegex(RuntimeError, "401 Client Error") as caught:
+                hot.fetch_source(shared, "proshop", {}, state)
+        with patch.object(hot.time, "time", return_value=1000.0):
+            delay = hot._register_source_failure(
+                state, "proshop", caught.exception
+            )
+        self.assertGreaterEqual(delay, 120)
+        self.assertEqual(
+            state["source_controls"]["proshop"]["backoff_level"], 1
+        )
+
     def test_proshop_uses_reader_without_repeating_blocked_direct_403(self):
         product = proshop_product("PÅ LAGER")
         state = {"proshop_broad_attempt_at": time.time()}
