@@ -12,7 +12,7 @@ import requests
 
 from alert_policy import TIER_A_SOURCES
 from discord_v2_hot_adapter import hot_payload
-from proshop_reader_v2 import parse_proshop_reader, raw_product_id_count
+from proshop_reader_v2 import parse_proshop_reader, raw_product_id_count, proshop_reader_headers
 from proshop_known_sku_watch import KNOWN_PRODUCTS, is_proshop_tcg_title, extend_with_known_details
 
 ROOT = Path(__file__).resolve().parent
@@ -71,6 +71,8 @@ RETAIL_MIN_PRODUCTS = {
 
 RATE_LIMIT_BACKOFF_SECONDS = (0, 120, 300, 900)
 RATE_LIMIT_MARKERS = (
+    "401",
+    "unauthorized",
     "429",
     "too many requests",
     "rate limit",
@@ -681,12 +683,10 @@ def _fetch_proshop_broad_reader_products(shared):
     def one_page(url):
         response = requests.get(
             url,
-            headers={
-                "Accept": "text/plain, text/markdown;q=0.9",
-                "User-Agent": "Pokemon-Restock-Bot/ExpandedDiscovery",
-                "x-no-cache": "true",
-                "x-engine": "browser",
-            },
+            headers=proshop_reader_headers(
+                "Pokemon-Restock-Bot/ExpandedDiscovery",
+                accept="text/plain, text/markdown;q=0.9",
+            ),
             timeout=35,
         )
         response.raise_for_status()
