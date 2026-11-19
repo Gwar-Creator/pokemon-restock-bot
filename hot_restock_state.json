@@ -88,18 +88,25 @@
       }
     },
     "proshop": {
-      "3421827": {
-        "name": "Pokemon TCG 2024 World Championships Deck",
-        "price": 329.0,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
-        "fetch_via": "jina_verified_detail"
-      },
       "3478501": {
         "name": "Pokemon Tin Fall ex assorted",
         "price": 299.0,
         "stock": "PÅ LAGER",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Tin-Fall-ex-assorted/3478501",
+        "fetch_via": "jina_reader"
+      },
+      "3519997": {
+        "name": "Pokemon Ditto Premium Collection 30th Celebration",
+        "price": 529.0,
+        "stock": "PÅ LAGER",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-Ditto-Premium-Collection-30th-Celebration/3519997",
+        "fetch_via": "jina_reader"
+      },
+      "3421827": {
+        "name": "Pokemon TCG 2024 World Championships Deck",
+        "price": 329.0,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
         "fetch_via": "preserved_previous_scan"
       },
       "3417744": {
@@ -135,13 +142,6 @@
         "price": 499.0,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
-        "fetch_via": "preserved_previous_scan"
-      },
-      "3519997": {
-        "name": "Pokemon Ditto Premium Collection 30th Celebration",
-        "price": null,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-Ditto-Premium-Collection-30th-Celebration/3519997",
         "fetch_via": "preserved_previous_scan"
       },
       "3519993": {
@@ -929,12 +929,12 @@
       "last_success_at": "2026-11-19T09:19:51.421569+00:00"
     },
     "proshop": {
-      "backoff_level": 2,
-      "next_allowed_at": 1795119507.9489167,
-      "generic_failures": 3,
-      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details | primary Reader: Jina Reader returned too little raw Proshop data (0 product links)",
+      "backoff_level": 1,
+      "next_allowed_at": 1795119637.3520849,
+      "generic_failures": 0,
+      "last_error": null,
       "last_failure_at": "2026-11-19T20:13:27.948906+00:00",
-      "last_success_at": "2026-11-19T20:08:45.474929+00:00"
+      "last_success_at": "2026-11-19T20:18:37.352062+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -970,14 +970,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1795119306.03099,
+      "next_allowed_at": 1795119616.228862,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-19T20:11:06.030965+00:00"
+      "last_success_at": "2026-11-19T20:16:16.228834+00:00"
     }
   },
-  "updated_at": "2026-11-19T20:14:35.551455+00:00",
+  "updated_at": "2026-11-19T20:19:42.460563+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -1002,7 +1002,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-19T20:11:05.159798+00:00"
+          "last_checked": "2026-11-19T20:16:14.795835+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -1012,7 +1012,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1795119063.732007,
+      "last_discovery_epoch": 1795119373.9327013,
       "last_full_discovery_epoch": 1795105869.6086776,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -1035,7 +1035,7 @@
     "br:200397759": 1794216154.1980968,
     "br:200397760": 1794216154.3510168,
     "proshop:3519993": 1795114645.948858,
-    "proshop:3519997": 1794228217.972998,
+    "proshop:3519997": 1795119517.9181163,
     "proshop:3519996": 1794907640.9624124,
     "coolshop:https://www.coolshop.dk/produkt/pokemon-first-partner-illustration-collection-series-2-pok10395-101/23XF7G/": 1794578896.0901601,
     "coolshop:https://www.coolshop.dk/produkt/pokemon-sv8-5-prismatic-evolutions-super-premium-collection-pok10106/23PQ9J/": 1794916529.7686853,
@@ -1061,9 +1061,9 @@
     "3530352": 1795118921.1471403,
     "3530353": 1795118685.737346,
     "3421827": 1795118921.1471403,
-    "3447590": 1795118352.9716582,
+    "3447590": 1795119513.1930428,
     "3478501": 1795118685.737346,
-    "3502023": 1795118352.9716582,
+    "3502023": 1795119513.1930428,
     "3519996": 1795118963.6116748,
     "3530348": 1795118627.0809872,
     "3530349": 1795118742.7803648,
@@ -1071,7 +1071,7 @@
     "3519997": 1795118627.0809872,
     "3519992": 1795118515.370841
   },
-  "proshop_broad_attempt_at": 1795119041.5447662,
+  "proshop_broad_attempt_at": 1795119510.9023654,
   "proshop_radar_alerts": {
     "3519996:BESTILLINGSVARE": 1794402448.8076684,
     "3519997:BESTILLINGSVARE": 1795095861.5824559,
@@ -1086,15 +1086,15 @@
   ],
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
-    "status": "degraded",
+    "status": "ok",
     "coverage_status": "unverified",
-    "transport_status": "unavailable",
-    "primary_count": 0,
+    "transport_status": "available",
+    "primary_count": 3,
     "broad_count": 0,
-    "checked_at": "2026-11-19T20:13:27.948786+00:00",
-    "details_or_listings_count": 0
+    "checked_at": "2026-11-19T20:18:33.192778+00:00",
+    "details_or_listings_count": 3
   },
-  "proshop_last_usable_count": 1,
-  "proshop_last_usable_at": "2026-11-19T20:08:45.474959+00:00",
-  "proshop_broad_next_index": 2
+  "proshop_last_usable_count": 3,
+  "proshop_last_usable_at": "2026-11-19T20:18:37.352116+00:00",
+  "proshop_broad_next_index": 0
 }
