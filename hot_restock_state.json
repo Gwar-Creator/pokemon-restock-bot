@@ -923,10 +923,10 @@
     },
     "proshop": {
       "backoff_level": 3,
-      "next_allowed_at": 1795130796.2717674,
-      "generic_failures": 4,
-      "last_error": "Proshop Reader temporarily blocked: 401 Client Error: Unauthorized for url: https://r.jina.ai/https://www.proshop.dk/pokemon-kort",
-      "last_failure_at": "2026-11-19T23:11:36.271758+00:00",
+      "next_allowed_at": 1795131751.3288512,
+      "generic_failures": 5,
+      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details | primary Reader: Jina Reader returned too little raw Proshop data (0 product links)",
+      "last_failure_at": "2026-11-19T23:27:31.328823+00:00",
       "last_success_at": "2026-11-19T23:02:11.169580+00:00"
     },
     "br": {
@@ -963,14 +963,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1795130690.350487,
+      "next_allowed_at": 1795130994.1853175,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-19T23:20:50.350462+00:00"
+      "last_success_at": "2026-11-19T23:25:54.185290+00:00"
     }
   },
-  "updated_at": "2026-11-19T23:24:27.954068+00:00",
+  "updated_at": "2026-11-19T23:29:28.770291+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -995,7 +995,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-19T23:20:49.707708+00:00"
+          "last_checked": "2026-11-19T23:25:53.052793+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -1005,7 +1005,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1795130448.7666702,
+      "last_discovery_epoch": 1795130751.9877517,
       "last_full_discovery_epoch": 1795127748.4018576,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -1043,14 +1043,14 @@
     "br:200385297": 1795072907.084842
   },
   "proshop_detail_checks": {
-    "3417744": 1795128808.011192,
+    "3417744": 1795130846.55535,
     "3447592": 1795129153.1885798,
     "3478496": 1795128986.6544335,
     "3478497": 1795129097.4966693,
     "3478498": 1795129427.6207557,
     "3519999": 1795129427.6207557,
     "3530350": 1795129097.4966693,
-    "3530351": 1795128808.011192,
+    "3530351": 1795130846.55535,
     "3530352": 1795128859.0541866,
     "3530353": 1795129318.1909852,
     "3421827": 1795128859.0541866,
@@ -1064,7 +1064,7 @@
     "3519997": 1795129273.5788548,
     "3519992": 1795129042.1714365
   },
-  "proshop_broad_attempt_at": 1795129585.1983733,
+  "proshop_broad_attempt_at": 1795130843.1336339,
   "proshop_radar_alerts": {
     "3519996:BESTILLINGSVARE": 1794402448.8076684,
     "3519997:BESTILLINGSVARE": 1795095861.5824559,
@@ -1084,9 +1084,10 @@
     "transport_status": "unavailable",
     "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-19T23:11:36.271719+00:00"
+    "checked_at": "2026-11-19T23:27:26.555115+00:00",
+    "details_or_listings_count": 0
   },
   "proshop_last_usable_count": 1,
   "proshop_last_usable_at": "2026-11-19T23:02:11.169605+00:00",
-  "proshop_broad_next_index": 0
+  "proshop_broad_next_index": 1
 }
