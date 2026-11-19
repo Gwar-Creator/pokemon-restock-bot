@@ -1,8 +1,10 @@
 """Proshop Reader V2 offline regression tests; no network or Discord."""
 import unittest
+from unittest.mock import patch
 
 from proshop_reader_v2 import (
     parse_proshop_reader, raw_product_id_count, _stock, _price,
+    proshop_reader_headers,
 )
 
 
@@ -26,6 +28,22 @@ def allowed(name):
 
 
 class ProshopReaderV2Tests(unittest.TestCase):
+    def test_reader_auth_is_optional_and_preserves_existing_headers(self):
+        with patch.dict("os.environ", {"JINA_API_KEY": ""}):
+            headers = proshop_reader_headers("Pokemon-Restock-Bot/Test")
+        self.assertNotIn("Authorization", headers)
+        self.assertEqual(headers["x-no-cache"], "true")
+        self.assertEqual(headers["User-Agent"], "Pokemon-Restock-Bot/Test")
+
+    def test_reader_auth_uses_official_bearer_header_only_when_configured(self):
+        with patch.dict("os.environ", {"JINA_API_KEY": " secret-example-key "}):
+            headers = proshop_reader_headers("Pokemon-Restock-Bot/Test")
+        self.assertEqual(headers["Authorization"], "Bearer secret-example-key")
+        self.assertEqual(headers["x-engine"], "browser")
+        with patch.dict("os.environ", {"JINA_API_KEY": ""}):
+            fresh_headers = proshop_reader_headers("Pokemon-Restock-Bot/Test")
+        self.assertNotIn("Authorization", fresh_headers)
+
     def test_extracts_long_description_and_correct_price_stock(self):
         text = "Title: Pokemon TCG\nMarkdown Content:\n" + card(
             1, "Pokemon-TCG-Mega-Zygarde-ex-Premium-Collection", 3447589,

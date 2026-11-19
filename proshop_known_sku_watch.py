@@ -9,6 +9,8 @@ import time
 
 import requests
 
+from proshop_reader_v2 import proshop_reader_headers
+
 KNOWN_PRODUCTS = {
     "3417744": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
     "3447592": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-EvolutionChaos-Rising-Booster-box-with-36-boosters/3447592",
@@ -186,12 +188,7 @@ def extend_with_known_details(current, old, state, *, get=None, now=None,
         try:
             response = fetch(
                 "https://r.jina.ai/" + url,
-                headers={
-                    "Accept": "text/plain, text/markdown;q=0.9, */*;q=0.5",
-                    "User-Agent": "Pokemon-Restock-Bot/ProshopSkuCheck",
-                    "x-no-cache": "true",
-                    "x-engine": "browser",
-                },
+                headers=proshop_reader_headers("Pokemon-Restock-Bot/ProshopSkuCheck"),
                 timeout=REQUEST_TIMEOUT_SECONDS,
             )
             response.raise_for_status()

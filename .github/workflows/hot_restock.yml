@@ -95,6 +95,8 @@ jobs:
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           EARLY_RADAR_SALLING_WEBHOOK_URL: ${{ secrets.EARLY_RADAR_SALLING_WEBHOOK_URL }}
+          # Optional official Jina Reader authentication; anonymous remains supported.
+          JINA_API_KEY: ${{ secrets.JINA_API_KEY }}
           HOT_ITERATIONS: "5"
           HOT_INTERVAL_SECONDS: "55"
           DISCORD_V2_HOT_MODE: "on"

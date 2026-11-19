@@ -4,6 +4,7 @@ Reader embeds the same product URL in thumbnail and heading links. Headings
 often have long descriptions, titles and nested markdown; the old [label](url)
 parser silently missed them. Bound price/stock to the image-led product card.
 """
+import os
 import re
 from urllib.parse import unquote
 
@@ -17,6 +18,24 @@ PRICE_RE = re.compile(
     r"(?<!\d)(\d{1,3}(?:\.\d{3})+|\d{1,6})(?:,(\d{2}))?\s*kr\.?",
     re.IGNORECASE,
 )
+
+
+def proshop_reader_headers(user_agent, *, accept="text/plain, text/markdown;q=0.9, */*;q=0.5"):
+    """Build safe Reader request headers with optional official API auth.
+
+    Anonymous access is still supported. A configured key authenticates with
+    Jina's documented Bearer API. Never print or persist the credential.
+    """
+    headers = {
+        "Accept": accept,
+        "User-Agent": user_agent,
+        "x-no-cache": "true",
+        "x-engine": "browser",
+    }
+    key = os.getenv("JINA_API_KEY", "").strip()
+    if key:
+        headers["Authorization"] = f"Bearer {key}"
+    return headers
 
 
 def _price(text):

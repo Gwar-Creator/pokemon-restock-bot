@@ -1,5 +1,6 @@
 """Offline regression tests for known Proshop SKU coverage; no Discord/network."""
 import unittest
+from unittest.mock import patch
 
 from proshop_known_sku_watch import (
     KNOWN_PRODUCTS, CHECK_INTERVAL_SECONDS,
@@ -56,6 +57,25 @@ class ProshopKnownSkuTests(unittest.TestCase):
         ):
             with self.subTest(name=name):
                 self.assertFalse(is_proshop_tcg_title(name, original))
+
+    def test_known_sku_detail_reader_receives_optional_auth(self):
+        sku = "3478496"
+        observed_headers = []
+        def fetch(_url, **kwargs):
+            observed_headers.append(kwargs["headers"])
+            return FakeResponse(make_page(sku, "På lager\\n499,00 kr."))
+
+        # Exclude other known SKUs to make this test deterministic.
+        state = {"proshop_detail_checks": {
+            known_id: 1000 for known_id in KNOWN_PRODUCTS if known_id != sku
+        }}
+        with patch.dict("os.environ", {"JINA_API_KEY": "test-credential"}):
+            found = extend_with_known_details(
+                {}, {sku: {"stock": "UDSOLGT", "url": KNOWN_PRODUCTS[sku]}},
+                state, get=fetch, now=1000, max_checks=1,
+            )
+        self.assertEqual(observed_headers[0]["Authorization"], "Bearer test-credential")
+        self.assertEqual(found[sku]["stock"], "PÅ LAGER")
 
     def test_verified_product_on_stock_and_real_price(self):
         page = make_page("3478496", "På lager\n529,00 kr.(423,20 kr.)")

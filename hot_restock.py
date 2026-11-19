@@ -12,7 +12,7 @@ import requests
 
 from alert_policy import TIER_A_SOURCES
 from discord_v2_hot_adapter import hot_payload
-from proshop_reader_v2 import parse_proshop_reader, raw_product_id_count
+from proshop_reader_v2 import parse_proshop_reader, raw_product_id_count, proshop_reader_headers
 from proshop_known_sku_watch import KNOWN_PRODUCTS, is_proshop_tcg_title, extend_with_known_details
 
 ROOT = Path(__file__).resolve().parent
@@ -71,6 +71,8 @@ RETAIL_MIN_PRODUCTS = {
 
 RATE_LIMIT_BACKOFF_SECONDS = (0, 120, 300, 900)
 RATE_LIMIT_MARKERS = (
+    "401",
+    "unauthorized",
     "429",
     "too many requests",
     "rate limit",
@@ -681,12 +683,10 @@ def _fetch_proshop_broad_reader_products(shared):
     def one_page(url):
         response = requests.get(
             url,
-            headers={
-                "Accept": "text/plain, text/markdown;q=0.9",
-                "User-Agent": "Pokemon-Restock-Bot/ExpandedDiscovery",
-                "x-no-cache": "true",
-                "x-engine": "browser",
-            },
+            headers=proshop_reader_headers(
+                "Pokemon-Restock-Bot/ExpandedDiscovery",
+                accept="text/plain, text/markdown;q=0.9",
+            ),
             timeout=35,
         )
         response.raise_for_status()
@@ -720,10 +720,15 @@ def _fetch_expanded_proshop_products(shared, state=None):
     """
     curated = {}
     primary_reader_ok = False
+    # Keep only the current in-memory failure reason so 401/429 can trigger
+    # the existing backoff even when the known-SKU detail fallback also fails.
+    # Never write this transient error into the persisted stock state.
+    shared.pop("_proshop_reader_failure_reason", None)
     try:
         curated = shared["get_proshop_products_via_reader"]()
         primary_reader_ok = isinstance(curated, dict) and bool(curated)
     except Exception as error:
+        shared["_proshop_reader_failure_reason"] = str(error)[:240]
         print(f"HOT PROSHOP primary reader degraded: {type(error).__name__}: {error}")
 
     merged = dict(curated)
@@ -1846,8 +1851,12 @@ def fetch_source(shared, source_key, old_products, state=None):
             # failed Reader transport or lack of fresh verified SKU data is
             # degraded; the original source failure path below remains.
         if not current:
+            # Propagate a real Reader HTTP 401/429 to the outer source gate;
+            # otherwise it is discarded and HOT retries too aggressively.
+            reader_error = shared.get("_proshop_reader_failure_reason") or ""
             raise RuntimeError(
                 "Proshop has neither fresh catalogue cards nor verified SKU details"
+                + (f" | primary Reader: {reader_error}" if reader_error else "")
             )
         return _preserve_missing_proshop_products(old_products, current)
     if source_key == "br":

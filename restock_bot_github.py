@@ -5007,14 +5007,10 @@ def _parse_proshop_reader_markdown(markdown):
 
 
 def get_proshop_products_via_reader():
+    from proshop_reader_v2 import proshop_reader_headers
     response = requests.get(
         PROSHOP_READER_URL,
-        headers={
-            "Accept": "text/plain, text/markdown;q=0.9, */*;q=0.5",
-            "User-Agent": "Pokemon-Lorcana-MasterBot/2.5 ProshopPrimary",
-            "x-no-cache": "true",
-            "x-engine": "browser",
-        },
+        headers=proshop_reader_headers("Pokemon-Lorcana-MasterBot/2.5 ProshopPrimary"),
         timeout=50,
     )
     response.raise_for_status()
