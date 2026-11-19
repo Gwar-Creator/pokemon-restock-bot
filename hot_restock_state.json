@@ -597,7 +597,7 @@
         "in_stock": true,
         "availability_known": true,
         "url": "https://www.boozt.com/dk/da/pokmon-trading-cards/poke-me04-elite-trainer-box-rel-22-5_33175543/233145333",
-        "fetch_via": "jina_reader_category"
+        "fetch_via": "direct_category"
       },
       "boozt:33175542": {
         "name": "Pokémon Trading Cards Poke Box Premium EX Mega Zygarde 1/5 - Pokémon Trading Cards - MULTI COLOURED / multi",
@@ -606,7 +606,7 @@
         "in_stock": true,
         "availability_known": true,
         "url": "https://www.boozt.com/dk/da/pokmon-trading-cards/poke-box-premium-ex-mega-zygarde-1-5_33175542/233145332",
-        "fetch_via": "jina_reader_category"
+        "fetch_via": "direct_category"
       },
       "boozt:33181863": {
         "name": "Pokémon Trading Cards Poke ME05 Elite Trainer Box - Pokémon Trading Cards - BLACK / black",
@@ -624,7 +624,7 @@
         "in_stock": true,
         "availability_known": true,
         "url": "https://www.boozt.com/dk/da/pokmon-trading-cards/poke-tin-ex-30th-assorted_33202392/233321290",
-        "fetch_via": "jina_reader_category"
+        "fetch_via": "direct_category"
       },
       "boozt:33181869": {
         "name": "Pokémon Trading Cards Poke First Partner Collection Box 3 - Pokémon Trading Cards - MULTI COLOURED / multi",
@@ -633,7 +633,7 @@
         "in_stock": true,
         "availability_known": true,
         "url": "https://www.boozt.com/dk/da/pokmon-trading-cards/poke-first-partner-collection-box-3_33181869/233181714",
-        "fetch_via": "jina_reader_category"
+        "fetch_via": "direct_category"
       },
       "boozt:33202388": {
         "name": "Pokémon Trading Cards Poke Elite Trainer Box 30th - Pokémon Trading Cards - GOLD / gold",
@@ -642,7 +642,7 @@
         "in_stock": true,
         "availability_known": true,
         "url": "https://www.boozt.com/dk/da/pokmon-trading-cards/poke-elite-trainer-box-30th_33202388/233321286",
-        "fetch_via": "jina_reader_category"
+        "fetch_via": "direct_category"
       },
       "boozt:33067793": {
         "name": "Pokémon Trading Cards Poke Ultra Premium Coll Mega Chariz14/11 - Pokémon Trading Cards - BLUE / blue",
@@ -669,7 +669,7 @@
         "in_stock": true,
         "availability_known": true,
         "url": "https://www.boozt.com/dk/da/pokmon-trading-cards/poke-box-ex-30th-sylveon-greninja-assorted_33202391/233321289",
-        "fetch_via": "jina_reader_category"
+        "fetch_via": "direct_category"
       },
       "boozt:33212668": {
         "name": "Pokémon Trading Cards Poke Tin ex 30th - Variant A - Pokémon Trading Cards - MULTI COLOURED / multi",
@@ -678,7 +678,7 @@
         "in_stock": true,
         "availability_known": true,
         "url": "https://www.boozt.com/dk/da/pokmon-trading-cards/poke-tin-ex-30th-variant-a_33212668/233388992",
-        "fetch_via": "jina_reader_category"
+        "fetch_via": "direct_category"
       },
       "boozt:33212669": {
         "name": "Pokémon Trading Cards Poke Tin ex 30th - Variant B - Pokémon Trading Cards - MULTI COLOURED / multi",
@@ -687,7 +687,7 @@
         "in_stock": true,
         "availability_known": true,
         "url": "https://www.boozt.com/dk/da/pokmon-trading-cards/poke-tin-ex-30th-variant-b_33212669/233388993",
-        "fetch_via": "jina_reader_category"
+        "fetch_via": "direct_category"
       },
       "boozt:33202394": {
         "name": "Pokémon Trading Cards Poke 2-Pack Blister 30th - Pokémon Trading Cards - GOLD / gold",
@@ -752,11 +752,11 @@
       "last_success_at": "2026-11-18T20:29:13.207118+00:00"
     },
     "proshop": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-19T04:52:25.281384+00:00",
+      "backoff_level": 2,
+      "next_allowed_at": 1795065567.6045184,
+      "generic_failures": 3,
+      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details",
+      "last_failure_at": "2026-11-19T05:14:27.604508+00:00",
       "last_success_at": "2026-11-19T04:54:22.041936+00:00"
     },
     "br": {
@@ -784,23 +784,23 @@
       "last_success_at": "2026-11-14T01:05:03.784434+00:00"
     },
     "boozt": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-19T01:43:05.327718+00:00",
-      "last_success_at": "2026-11-19T01:49:53.170429+00:00"
+      "backoff_level": 1,
+      "next_allowed_at": 1795065346.1143694,
+      "generic_failures": 1,
+      "last_error": "BOOZT fejlede: Reader: 401 Client Error: Unauthorized for url: https://r.jina.ai/https://www.boozt.com/dk/da/pokemon-trading-cards/born | direct: 429 Client Error: Too Many Requests for url: https://www.boozt.com/dk/da/pokemon-trading-cards/born",
+      "last_failure_at": "2026-11-19T05:13:46.114349+00:00",
+      "last_success_at": "2026-11-19T05:12:51.790847+00:00"
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1795064995.8921626,
+      "next_allowed_at": 1795065306.8376408,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-19T05:05:55.892134+00:00"
+      "last_success_at": "2026-11-19T05:11:06.837614+00:00"
     }
   },
-  "updated_at": "2026-11-19T05:09:34.502765+00:00",
+  "updated_at": "2026-11-19T05:14:41.667929+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -825,7 +825,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-19T05:05:54.332508+00:00"
+          "last_checked": "2026-11-19T05:11:05.443928+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -835,7 +835,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1795064753.453596,
+      "last_discovery_epoch": 1795065064.3304498,
       "last_full_discovery_epoch": 1795062069.5489774,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -872,20 +872,20 @@
     "3519999": 1795064788.5486457,
     "3530350": 1795064630.4447045,
     "3530351": 1795064465.9524252,
-    "3530352": 1795064184.451415,
+    "3530352": 1795065102.0540307,
     "3530353": 1795064630.4447045,
     "3421827": 1795064575.4497242,
     "3447590": 1795064843.9625776,
     "3478501": 1795064954.100134,
     "3502023": 1795064465.9524252,
     "3519996": 1795064538.3960087,
-    "3530348": 1795064055.2650018,
-    "3530349": 1795064184.451415,
+    "3530348": 1795065047.179823,
+    "3530349": 1795065102.0540307,
     "3519993": 1795064685.6451051,
-    "3519997": 1795064055.2650018,
+    "3519997": 1795065047.179823,
     "3519992": 1795064575.4497242
   },
-  "proshop_broad_attempt_at": 1795064519.860813,
+  "proshop_broad_attempt_at": 1795065267.0095298,
   "proshop_radar_alerts": {
     "3519996:BESTILLINGSVARE": 1794402448.8076684,
     "3519997:BESTILLINGSVARE": 1794234274.0313218,
@@ -899,13 +899,13 @@
   ],
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
-    "status": "ok",
+    "status": "degraded",
     "coverage_status": "unverified",
-    "transport_status": "available",
-    "primary_count": 2,
+    "transport_status": "unavailable",
+    "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-19T05:09:14.100062+00:00",
-    "details_or_listings_count": 3
+    "checked_at": "2026-11-19T05:14:27.604384+00:00",
+    "details_or_listings_count": 0
   },
   "proshop_last_usable_count": 3,
   "proshop_last_usable_at": "2026-11-19T05:09:17.327031+00:00"
