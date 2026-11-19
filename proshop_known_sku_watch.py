@@ -177,10 +177,10 @@ def extend_with_known_details(current, old, state, *, get=None, now=None,
         priority = 0 if current_stock in ("UDSOLGT", "UKENDT") else 1
         return (float(meta.get(sku, 0) or 0), priority, sku)
 
-    # A fresh catalogue observation of the same explicit stock and price is
-    # already a useful current check. Do not immediately re-fetch that SKU's
-    # detail through the same Reader. Changes, unpriced/unknown products and
-    # items missing from today's catalogue must still be independently checked.
+    # A fresh, unchanged, priced PÅ LAGER catalogue observation does not
+    # need an immediate identical detail check. Always independently track
+    # sold-out/preorder/uncertain products for short restock opportunities,
+    # plus changed, unpriced or catalogue-missing products.
     trusted_catalogue_vias = {"jina_reader", "jina_broad_reader", "direct_frontend_search"}
 
     def unchanged_fresh_catalogue(sku):
@@ -190,7 +190,9 @@ def extend_with_known_details(current, old, state, *, get=None, now=None,
             return False
         if str(present.get("fetch_via") or "") not in trusted_catalogue_vias:
             return False
-        if present.get("stock") not in ("PÅ LAGER", "UDSOLGT", "BESTILLINGSVARE", "FJERNLAGER"):
+        # Never skip independent details for sold-out, preorder or
+        # uncertain stock: those are precisely the likely restock targets.
+        if present.get("stock") != "PÅ LAGER":
             return False
         return (
             present.get("stock") == prior.get("stock")
