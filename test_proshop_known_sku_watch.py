@@ -170,6 +170,64 @@ class ProshopKnownSkuTests(unittest.TestCase):
         self.assertEqual(result["price"], 599.0)
         self.assertEqual(result["fetch_via"], "jina_verified_detail")
 
+    def test_unchanged_fresh_catalogue_skips_redundant_detail_request(self):
+        sku = "3478496"
+        product = {
+            "url": KNOWN_PRODUCTS[sku], "stock": "UDSOLGT",
+            "price": 499.0, "fetch_via": "jina_reader",
+        }
+        state = {"proshop_detail_checks": {
+            item: 1000 for item in KNOWN_PRODUCTS if item != sku
+        }}
+        with patch("proshop_known_sku_watch.requests.get") as request:
+            found = extend_with_known_details(
+                {sku: product}, {sku: dict(product)},
+                state, now=1000, max_checks=2,
+            )
+        request.assert_not_called()
+        self.assertEqual(found[sku]["stock"], "UDSOLGT")
+
+    def test_changed_stock_still_gets_detail_verification(self):
+        sku = "3478496"
+        previous = {
+            "url": KNOWN_PRODUCTS[sku], "stock": "UDSOLGT",
+            "price": 499.0, "fetch_via": "jina_reader",
+        }
+        current = {**previous, "stock": "PÅ LAGER"}
+        state = {"proshop_detail_checks": {
+            item: 1000 for item in KNOWN_PRODUCTS if item != sku
+        }}
+        calls = []
+        def fetch(url, **kwargs):
+            calls.append(url)
+            return FakeResponse(make_page(sku, "Ikke på lager"))
+        found = extend_with_known_details(
+            {sku: current}, {sku: previous}, state,
+            get=fetch, now=1000, max_checks=2,
+        )
+        self.assertEqual(calls, ["https://r.jina.ai/" + KNOWN_PRODUCTS[sku]])
+        self.assertEqual(found[sku]["stock"], "UDSOLGT")
+
+    def test_missing_catalogue_item_still_gets_independent_detail(self):
+        sku = "3478496"
+        previous = {
+            "url": KNOWN_PRODUCTS[sku], "stock": "UDSOLGT",
+            "price": 499.0, "fetch_via": "jina_reader",
+        }
+        state = {"proshop_detail_checks": {
+            item: 1000 for item in KNOWN_PRODUCTS if item != sku
+        }}
+        calls = []
+        def fetch(url, **kwargs):
+            calls.append(url)
+            return FakeResponse(make_page(sku, "På lager\\n499,00 kr."))
+        found = extend_with_known_details(
+            {}, {sku: previous}, state,
+            get=fetch, now=1000, max_checks=2,
+        )
+        self.assertEqual(calls, ["https://r.jina.ai/" + KNOWN_PRODUCTS[sku]])
+        self.assertEqual(found[sku]["stock"], "PÅ LAGER")
+
     def test_newly_discovered_sku_is_checked_when_catalogue_missing(self):
         sku = "3530350"
         url = "https://www.proshop.dk/Pokemon/Pokemon-Mega-Evolution-Delta-reign-Elite-Trainer-Box/3530350"
