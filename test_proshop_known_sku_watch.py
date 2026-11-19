@@ -65,10 +65,14 @@ class ProshopKnownSkuTests(unittest.TestCase):
             observed_headers.append(kwargs["headers"])
             return FakeResponse(make_page(sku, "På lager\\n499,00 kr."))
 
+        # Exclude other known SKUs to make this test deterministic.
+        state = {"proshop_detail_checks": {
+            known_id: 1000 for known_id in KNOWN_PRODUCTS if known_id != sku
+        }}
         with patch.dict("os.environ", {"JINA_API_KEY": "test-credential"}):
             found = extend_with_known_details(
                 {}, {sku: {"stock": "UDSOLGT", "url": KNOWN_PRODUCTS[sku]}},
-                {}, get=fetch, now=1000, max_checks=1,
+                state, get=fetch, now=1000, max_checks=1,
             )
         self.assertEqual(observed_headers[0]["Authorization"], "Bearer test-credential")
         self.assertEqual(found[sku]["stock"], "PÅ LAGER")
