@@ -35,7 +35,7 @@ PROSHOP_BROAD_READER_URLS = (
     "https://r.jina.ai/https://www.proshop.dk/Pokemon/Pokemon?pn=2",
     "https://r.jina.ai/https://www.proshop.dk/?s=Pokemon+30th+Celebration",
 )
-PROSHOP_BROAD_INTERVAL_SECONDS = 10 * 60
+PROSHOP_BROAD_INTERVAL_SECONDS = 5 * 60
 PROSHOP_BROAD_DISCOVERY_VERSION = 1
 PROSHOP_DISCOVERY_VERSION = 6
 # Source-system availability can briefly flap. Suppress rapid repeats without
@@ -670,7 +670,7 @@ def _merge_proshop_products(*product_sets):
 
 
 
-def _fetch_proshop_broad_reader_products(shared):
+def _fetch_proshop_broad_reader_products(shared, urls=None):
     """Supplement narrowly curated Proshop TCG with public category/search.
 
     Parse only official /Pokemon/<slug>/<SKU> product cards. Never infer an
@@ -698,16 +698,18 @@ def _fetch_proshop_broad_reader_products(shared):
             product["fetch_via"] = "jina_broad_reader"
         return found
 
+    # Production passes a single rotating surface rather than requesting
+    # all three simultaneously. Keep an explicit urls argument for offline
+    # regression tests; never increase parallel traffic after a 401/429.
+    selected_urls = tuple(PROSHOP_BROAD_READER_URLS if urls is None else urls)
     merged = {}
-    with ThreadPoolExecutor(max_workers=3) as pool:
-        futures = [pool.submit(one_page, url) for url in PROSHOP_BROAD_READER_URLS]
-        for future in futures:
-            try:
-                found = future.result()
-                merged = _merge_proshop_products(merged, found)
-                print(f"HOT PROSHOP expanded discovery: {len(found)} TCG products")
-            except Exception as error:
-                print(f"HOT PROSHOP expanded warning: {type(error).__name__}")
+    for url in selected_urls:
+        try:
+            found = one_page(url)
+            merged = _merge_proshop_products(merged, found)
+            print(f"HOT PROSHOP expanded discovery: {len(found)} TCG products")
+        except Exception as error:
+            print(f"HOT PROSHOP expanded warning: {type(error).__name__}")
     return merged
 
 
@@ -720,6 +722,7 @@ def _fetch_expanded_proshop_products(shared, state=None):
     """
     curated = {}
     primary_reader_ok = False
+    reader_blocked = False
     # Keep only the current in-memory failure reason so 401/429 can trigger
     # the existing backoff even when the known-SKU detail fallback also fails.
     # Never write this transient error into the persisted stock state.
@@ -729,6 +732,7 @@ def _fetch_expanded_proshop_products(shared, state=None):
         primary_reader_ok = isinstance(curated, dict) and bool(curated)
     except Exception as error:
         shared["_proshop_reader_failure_reason"] = str(error)[:240]
+        reader_blocked = _is_rate_limit_like(error)
         print(f"HOT PROSHOP primary reader degraded: {type(error).__name__}: {error}")
 
     merged = dict(curated)
@@ -736,9 +740,20 @@ def _fetch_expanded_proshop_products(shared, state=None):
     if state is not None:
         now = time.time()
         last = float(state.get("proshop_broad_attempt_at") or 0)
-        if now - last >= PROSHOP_BROAD_INTERVAL_SECONDS:
+        if now - last >= PROSHOP_BROAD_INTERVAL_SECONDS and not reader_blocked:
+            # One supplementary URL per 5m; visit each of the original
+            # three URLs within ~15m rather than bursting three together.
+            # Keep the index in HOT state, across GitHub workflow runs.
+            index = int(state.get("proshop_broad_next_index") or 0) % len(PROSHOP_BROAD_READER_URLS)
+            state["proshop_broad_next_index"] = (index + 1) % len(PROSHOP_BROAD_READER_URLS)
             state["proshop_broad_attempt_at"] = now
-            broad = _fetch_proshop_broad_reader_products(shared)
+            broad = _fetch_proshop_broad_reader_products(
+                shared, urls=(PROSHOP_BROAD_READER_URLS[index],)
+            )
+            print(f"HOT PROSHOP broad cadence: surface {index + 1}/{len(PROSHOP_BROAD_READER_URLS)}")
+        elif reader_blocked:
+            print("HOT PROSHOP: skip broad Reader after access/rate-limit error")
+        if broad:
             if (
                 broad
                 and state.get("proshop_broad_discovery_version")
@@ -1840,6 +1855,13 @@ def fetch_source(shared, source_key, old_products, state=None):
         return shared["get_coolshop_products"]()
     if source_key == "proshop":
         current = _fetch_expanded_proshop_products(shared, state)
+        reader_error = shared.get("_proshop_reader_failure_reason") or ""
+        if _is_rate_limit_like(reader_error):
+            # Do not make extra Reader calls to detail pages when the
+            # primary Reader has explicitly denied access or rate-limited.
+            raise RuntimeError(
+                f"Proshop Reader temporarily blocked: {reader_error}"
+            )
         # The detail watcher runs even when a category listing is missing.
         # Only real, identity-checked detail pages can change a missing SKU.
         if state is not None:

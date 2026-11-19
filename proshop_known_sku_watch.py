@@ -177,9 +177,33 @@ def extend_with_known_details(current, old, state, *, get=None, now=None,
         priority = 0 if current_stock in ("UDSOLGT", "UKENDT") else 1
         return (float(meta.get(sku, 0) or 0), priority, sku)
 
+    # A fresh, unchanged, priced PÅ LAGER catalogue observation does not
+    # need an immediate identical detail check. Always independently track
+    # sold-out/preorder/uncertain products for short restock opportunities,
+    # plus changed, unpriced or catalogue-missing products.
+    trusted_catalogue_vias = {"jina_reader", "jina_broad_reader", "direct_frontend_search"}
+
+    def unchanged_fresh_catalogue(sku):
+        present = updated.get(sku)
+        prior = (old or {}).get(sku)
+        if not isinstance(present, dict) or not isinstance(prior, dict):
+            return False
+        if str(present.get("fetch_via") or "") not in trusted_catalogue_vias:
+            return False
+        # Never skip independent details for sold-out, preorder or
+        # uncertain stock: those are precisely the likely restock targets.
+        if present.get("stock") != "PÅ LAGER":
+            return False
+        return (
+            present.get("stock") == prior.get("stock")
+            and present.get("price") is not None
+            and present.get("price") == prior.get("price")
+        )
+
     eligible = [
         item for item in known_urls.items()
         if when - float(meta.get(item[0], 0) or 0) >= CHECK_INTERVAL_SECONDS
+        and not unchanged_fresh_catalogue(item[0])
     ]
     eligible.sort(key=order)
 
