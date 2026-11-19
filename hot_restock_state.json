@@ -922,11 +922,11 @@
       "last_success_at": "2026-11-19T09:19:51.421569+00:00"
     },
     "proshop": {
-      "backoff_level": 2,
-      "next_allowed_at": 1795124326.5783815,
-      "generic_failures": 2,
+      "backoff_level": 3,
+      "next_allowed_at": 1795125266.148312,
+      "generic_failures": 3,
       "last_error": "Proshop Reader temporarily blocked: 401 Client Error: Unauthorized for url: https://r.jina.ai/https://www.proshop.dk/pokemon-kort",
-      "last_failure_at": "2026-11-19T21:33:46.578375+00:00",
+      "last_failure_at": "2026-11-19T21:39:26.148304+00:00",
       "last_success_at": "2026-11-19T21:29:12.695072+00:00"
     },
     "br": {
@@ -963,14 +963,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1795124113.594005,
+      "next_allowed_at": 1795124406.5715048,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-19T21:31:13.593976+00:00"
+      "last_success_at": "2026-11-19T21:36:06.571478+00:00"
     }
   },
-  "updated_at": "2026-11-19T21:34:52.264927+00:00",
+  "updated_at": "2026-11-19T21:39:41.320300+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -995,7 +995,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-19T21:31:12.739177+00:00"
+          "last_checked": "2026-11-19T21:36:05.377793+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -1005,7 +1005,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1795123871.9742937,
+      "last_discovery_epoch": 1795124163.8178072,
       "last_full_discovery_epoch": 1795105869.6086776,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -1084,7 +1084,7 @@
     "transport_status": "unavailable",
     "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-19T21:33:46.578338+00:00"
+    "checked_at": "2026-11-19T21:39:26.148267+00:00"
   },
   "proshop_last_usable_count": 3,
   "proshop_last_usable_at": "2026-11-19T21:29:12.695097+00:00",
