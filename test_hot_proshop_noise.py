@@ -229,6 +229,48 @@ class ProshopNoiseTests(unittest.TestCase):
             state["source_controls"]["proshop"]["backoff_level"], 1
         )
 
+    def test_broad_discovery_rotates_one_page_every_five_minutes(self):
+        product = proshop_product("PÅ LAGER")
+        shared = {"get_proshop_products_via_reader": lambda: {"3478496": product}}
+        state = {}
+        with patch.object(
+            hot, "_fetch_proshop_broad_reader_products", return_value={}
+        ) as broad, patch.object(hot.time, "time", side_effect=[
+            1000.0, 1299.0, 1300.0, 1600.0, 1900.0,
+        ]):
+            for _ in range(5):
+                found = hot._fetch_expanded_proshop_products(shared, state)
+                self.assertEqual(set(found), {"3478496"})
+        self.assertEqual(broad.call_count, 4)
+        requested = [call.kwargs["urls"] for call in broad.call_args_list]
+        self.assertEqual(requested, [
+            (hot.PROSHOP_BROAD_READER_URLS[0],),
+            (hot.PROSHOP_BROAD_READER_URLS[1],),
+            (hot.PROSHOP_BROAD_READER_URLS[2],),
+            (hot.PROSHOP_BROAD_READER_URLS[0],),
+        ])
+        self.assertEqual(state["proshop_broad_next_index"], 1)
+        self.assertEqual(hot.PROSHOP_BROAD_INTERVAL_SECONDS, 300)
+
+    def test_reader_401_skips_secondary_broad_and_detail_calls(self):
+        shared = {"get_proshop_products_via_reader":
+                  lambda: (_ for _ in ()).throw(
+                      RuntimeError("401 Client Error: Unauthorized")
+                  )}
+        state = {}
+        with patch.object(
+            hot, "_fetch_proshop_broad_reader_products",
+            side_effect=AssertionError("Broad must not run after 401")
+        ) as broad, patch.object(
+            hot, "extend_with_known_details",
+            side_effect=AssertionError("Detail must not run after 401")
+        ) as detail:
+            with self.assertRaisesRegex(RuntimeError, "temporarily blocked"):
+                hot.fetch_source(shared, "proshop", {}, state)
+        broad.assert_not_called()
+        detail.assert_not_called()
+        self.assertNotIn("proshop_broad_attempt_at", state)
+
     def test_proshop_uses_reader_without_repeating_blocked_direct_403(self):
         product = proshop_product("PÅ LAGER")
         state = {"proshop_broad_attempt_at": time.time()}
