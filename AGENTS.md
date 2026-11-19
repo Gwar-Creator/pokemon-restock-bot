@@ -1,5 +1,13 @@
 # AGENTS.md
 
+## AKTIV BESLUTNING — anonym Proshop-optimering (19. november 2026)
+
+- **Ingen Jina API-nøgle** skal oprettes/aktiveres eller købes. Den tidligere tilføjede valgfri header-understøttelse i PR #132 er inaktiv; gammel omtale af at aktivere nøgle er **erstattet** af denne beslutning.
+- HOT opdaterer stadig det primære filtrerede Proshop-katalog ved hver ordinær minutscanning, når kilden tillader det. Hovedscannerens normale femminutters scan bevares.
+- Tre supplerende Reader-kilder bliver nu **roteret ét opslag ad gangen pr. fem minutter**, ikke tre samtidige opslag pr. ti minutter. Alle eksisterende URLs og TCG-kriterier bevares; alle tre besøges inden for cirka femten minutter ved normal drift. De tidligere sammenfaldende bursts spares væk. Hvis Reader returnerer HTTP 401/429/403, foretages ingen nye Reader-bredde- eller detaljekald i den samme HOT-iteration; eksisterende backoff håndterer fejlen.
+- SKU-detaljescanneren springer kun en redundant verifikation over, hvis SKU'en netop er fundet på en frisk kategori-/søgeside, har eksplicit lagerstatus og pris, og tidligere status og pris er identisk. Ukendte, nye, ændrede eller fra kataloget manglende SKUs bliver fortsat roteret og kontrolleret konservativt. Uændrede katalogdata må ikke bruges til at udløse lageralarm.
+- Eksisterende købsfiltre, Discord-ruting, state-baselines, fejlhåndtering og den korte HOT-cadence må ikke nulstilles. Monitorér seneste brugbare Proshop-observation frem for kun grøn Actions-status. Ikke dokumentation for, at Reader altid vil være tilgængelig.
+
 ## Proshop Reader-adgang — valgfri officiel autentificering (19. november 2026)
 
 - Den primære Proshop-reader er `r.jina.ai`, ikke en officiel Proshop-API. Loggene viser periodisk Jina HTTP 401/tomme svar og direkte Proshop HTTP 403, mens enkelte gyldige katalogsvar stadig går igennem. Dette er **ikke** bevis for en bestemt rodårsag; kun en autentificeret live-test kan afgøre om Jina-nøglen hjælper.
