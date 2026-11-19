@@ -192,6 +192,21 @@ class ProshopNoiseTests(unittest.TestCase):
                 confirmed_restock=hot._confirmed_proshop_restock(gone, back)))
             sender.assert_called_once()
 
+    def test_reader_401_is_backed_off_without_immediate_retries(self):
+        self.assertTrue(hot._is_rate_limit_like(
+            RuntimeError("401 Client Error: Unauthorized for url: https://r.jina.ai/")
+        ))
+        state = {}
+        with patch.object(hot.time, "time", return_value=1000.0):
+            delay = hot._register_source_failure(
+                state, "proshop",
+                RuntimeError("401 Client Error: Unauthorized"),
+            )
+        self.assertGreaterEqual(delay, 120)
+        self.assertEqual(
+            state["source_controls"]["proshop"]["backoff_level"], 1
+        )
+
     def test_proshop_uses_reader_without_repeating_blocked_direct_403(self):
         product = proshop_product("PÅ LAGER")
         state = {"proshop_broad_attempt_at": time.time()}
