@@ -173,7 +173,7 @@ class ProshopKnownSkuTests(unittest.TestCase):
     def test_unchanged_fresh_catalogue_skips_redundant_detail_request(self):
         sku = "3478496"
         product = {
-            "url": KNOWN_PRODUCTS[sku], "stock": "UDSOLGT",
+            "url": KNOWN_PRODUCTS[sku], "stock": "PÅ LAGER",
             "price": 499.0, "fetch_via": "jina_reader",
         }
         state = {"proshop_detail_checks": {
@@ -185,7 +185,27 @@ class ProshopKnownSkuTests(unittest.TestCase):
                 state, now=1000, max_checks=2,
             )
         request.assert_not_called()
-        self.assertEqual(found[sku]["stock"], "UDSOLGT")
+        self.assertEqual(found[sku]["stock"], "PÅ LAGER")
+
+    def test_unchanged_sold_out_still_gets_independent_detail(self):
+        sku = "3478496"
+        product = {
+            "url": KNOWN_PRODUCTS[sku], "stock": "UDSOLGT",
+            "price": 499.0, "fetch_via": "jina_reader",
+        }
+        state = {"proshop_detail_checks": {
+            item: 1000 for item in KNOWN_PRODUCTS if item != sku
+        }}
+        calls = []
+        def fetch(url, **kwargs):
+            calls.append(url)
+            return FakeResponse(make_page(sku, "På lager\\n499,00 kr."))
+        found = extend_with_known_details(
+            {sku: product}, {sku: dict(product)}, state,
+            get=fetch, now=1000, max_checks=2,
+        )
+        self.assertEqual(calls, ["https://r.jina.ai/" + KNOWN_PRODUCTS[sku]])
+        self.assertEqual(found[sku]["stock"], "PÅ LAGER")
 
     def test_changed_stock_still_gets_detail_verification(self):
         sku = "3478496"
