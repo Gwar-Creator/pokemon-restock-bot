@@ -1,5 +1,14 @@
 # AGENTS.md
 
+## Proshop Reader-adgang — valgfri officiel autentificering (19. november 2026)
+
+- Den primære Proshop-reader er `r.jina.ai`, ikke en officiel Proshop-API. Loggene viser periodisk Jina HTTP 401/tomme svar og direkte Proshop HTTP 403, mens enkelte gyldige katalogsvar stadig går igennem. Dette er **ikke** bevis for en bestemt rodårsag; kun en autentificeret live-test kan afgøre om Jina-nøglen hjælper.
+- Jina dokumenterer anonym Reader-kvote **20 RPM** pr. IP og **500 RPM** med gratis API-nøgle pr. nøgle, også under tokenbegrænsninger: https://jina.ai/en-US/reader/. Dette er tjenestens dokumentation, ikke målt faktisk kapacitet for Proshop.
+- `JINA_API_KEY` er en **valgfri GitHub Actions secret**. Kun når den er oprettet, sendes `Authorization: Bearer …` til Jina Reader fra både hovedscanner, HOT-bredde-/primærkatalog og kendte SKU-detaljer. Uden den fortsættes anonymt uændret. Nøgle må aldrig stå i kode, commits, issues eller logninger.
+- HTTP 401 i HOT behandles som midlertidig kildeblokering med eksisterende rate-limit-backoff; ingen aggressiv retry. Ingen omgåelse af Proshops direkte 403, ingen proxyrotation, captcha-løsning eller uofficielle sessioner.
+- Denne ændring ændrer **ikke** 5-minutters workflows / HOT-minutcadence, produktfilter, stock-verifikation, historisk baseline, Discord-webhooks/alerts eller købssignal. Før der oprettes en Jina secret, er adfærd for Reader autentificering uændret.
+- Efter aktivering kontrolleres faktiske produktionstal (Reader 401/429, kilde-OK, `proshop_last_usable_at`, alarmer/false restocks). Forvent ikke at en Jina-nøgle løser Proshops egen HTTP 403, men hovedscanneren har allerede en bounded offentlig side-fallback.
+
 ## AKTIV BESLUTNING — Proshop er sund ved få relevante produkter (18. november 2026)
 
 - Brugerens aktuelle observation: Proshop har meget Pokémon-legetøj/tilbehør, der bevidst falder uden for vores filtre. Nye relevante TCG-produkter kan forsvinde hurtigt. **1–3 relevante SKU'er på en valid side kan derfor være helt normalt.** Et fast mål på 3 eller 6 matchende varer er ikke dokumentation for, at scanneren fejler.
