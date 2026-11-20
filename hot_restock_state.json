@@ -128,7 +128,7 @@
         "price": 329.0,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
-        "fetch_via": "jina_verified_detail"
+        "fetch_via": "preserved_previous_scan"
       },
       "3417744": {
         "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
@@ -292,7 +292,7 @@
         "is_exposed": true,
         "store_count": 32,
         "kolding_stock": 242,
-        "esbjerg_stock": 87,
+        "esbjerg_stock": 85,
         "quantity_limit": 6,
         "sku": "11398799-EA",
         "url": "https://www.br.dk/produkter/pokemon-mega-evolution-delta-reign-samlekort-booster-pakke/200397054/"
@@ -966,10 +966,10 @@
     "proshop": {
       "backoff_level": 0,
       "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-20T09:41:32.158216+00:00",
-      "last_success_at": "2026-11-20T09:44:16.754164+00:00"
+      "generic_failures": 1,
+      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details | primary Reader: Jina Reader returned too little raw Proshop data (0 product links)",
+      "last_failure_at": "2026-11-20T10:14:30.815673+00:00",
+      "last_success_at": "2026-11-20T10:13:51.555749+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -1005,14 +1005,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1795169637.8268137,
+      "next_allowed_at": 1795169891.3072853,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-20T10:09:57.826786+00:00"
+      "last_success_at": "2026-11-20T10:14:11.307261+00:00"
     }
   },
-  "updated_at": "2026-11-20T10:09:57.826828+00:00",
+  "updated_at": "2026-11-20T10:14:46.472746+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -1037,7 +1037,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-20T10:09:57.062097+00:00"
+          "last_checked": "2026-11-20T10:14:10.107146+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -1047,7 +1047,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1795169396.137372,
+      "last_discovery_epoch": 1795169648.5868776,
       "last_full_discovery_epoch": 1795149349.5093558,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -1105,17 +1105,17 @@
     "3530352": 1795169029.5472562,
     "3530353": 1795169377.639181,
     "3421827": 1795169377.639181,
-    "3447590": 1795168535.3365211,
+    "3447590": 1795169450.3287125,
     "3478501": 1795169159.0764844,
     "3502023": 1795169029.5472562,
     "3519996": 1795168974.643813,
     "3530348": 1795169159.0764844,
     "3530349": 1795169270.9988523,
-    "3519993": 1795168535.3365211,
+    "3519993": 1795169450.3287125,
     "3519997": 1795169212.0396261,
     "3519992": 1795169114.0530565
   },
-  "proshop_broad_attempt_at": 1795169266.6173117,
+  "proshop_broad_attempt_at": 1795169615.2446418,
   "proshop_radar_alerts": {
     "3519996:BESTILLINGSVARE": 1794402448.8076684,
     "3519997:BESTILLINGSVARE": 1795095861.5824559,
@@ -1135,10 +1135,10 @@
     "transport_status": "unavailable",
     "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-20T10:09:37.639095+00:00",
-    "details_or_listings_count": 1
+    "checked_at": "2026-11-20T10:14:30.815585+00:00",
+    "details_or_listings_count": 0
   },
   "proshop_last_usable_count": 1,
-  "proshop_last_usable_at": "2026-11-20T10:09:41.313558+00:00",
-  "proshop_broad_next_index": 2
+  "proshop_last_usable_at": "2026-11-20T10:13:51.555761+00:00",
+  "proshop_broad_next_index": 0
 }
