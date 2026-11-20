@@ -135,7 +135,7 @@
         "price": 329.0,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
-        "fetch_via": "jina_verified_detail"
+        "fetch_via": "preserved_previous_scan"
       },
       "3417744": {
         "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
@@ -965,11 +965,11 @@
     },
     "proshop": {
       "backoff_level": 1,
-      "next_allowed_at": 1795196678.0570214,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-20T17:36:42.714815+00:00",
-      "last_success_at": "2026-11-20T17:42:38.057002+00:00"
+      "next_allowed_at": 1795196976.0963383,
+      "generic_failures": 2,
+      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details | primary Reader: Jina Reader returned too little raw Proshop data (0 product links)",
+      "last_failure_at": "2026-11-20T17:47:36.096303+00:00",
+      "last_success_at": "2026-11-20T17:45:47.307292+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -1005,14 +1005,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1795196719.1152005,
+      "next_allowed_at": 1795197006.0826817,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-20T17:41:19.115171+00:00"
+      "last_success_at": "2026-11-20T17:46:06.082653+00:00"
     }
   },
-  "updated_at": "2026-11-20T17:44:38.450332+00:00",
+  "updated_at": "2026-11-20T17:49:36.148043+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -1037,7 +1037,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-20T17:41:11.538254+00:00"
+          "last_checked": "2026-11-20T17:46:04.744821+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -1047,7 +1047,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1795196470.6278534,
+      "last_discovery_epoch": 1795196763.400579,
       "last_full_discovery_epoch": 1795192856.8157904,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -1096,22 +1096,22 @@
   "proshop_detail_checks": {
     "3417744": 1795196038.948492,
     "3447592": 1795195462.2872765,
-    "3478496": 1795194760.1675875,
+    "3478496": 1795196743.635492,
     "3478497": 1795195002.4568124,
     "3478498": 1795196038.948492,
-    "3519999": 1795194815.1181052,
+    "3519999": 1795196796.9730878,
     "3530350": 1795195297.2513013,
-    "3530351": 1795194870.6298945,
+    "3530351": 1795196851.2426627,
     "3530352": 1795194946.668844,
     "3530353": 1795196554.712937,
     "3421827": 1795196554.712937,
     "3447590": 1795194815.1181052,
     "3478501": 1795195060.627321,
-    "3502023": 1795194946.668844,
-    "3519996": 1795194870.6298945,
+    "3502023": 1795196851.2426627,
+    "3519996": 1795196796.9730878,
     "3530348": 1795195060.627321,
     "3530349": 1795195462.2872765,
-    "3519993": 1795194760.1675875,
+    "3519993": 1795196743.635492,
     "3519997": 1795195297.2513013,
     "3519992": 1795195002.4568124
   },
@@ -1130,15 +1130,15 @@
   ],
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
-    "status": "ok",
+    "status": "degraded",
     "coverage_status": "unverified",
-    "transport_status": "available",
-    "primary_count": 2,
-    "broad_count": 1,
-    "checked_at": "2026-11-20T17:42:34.712724+00:00",
-    "details_or_listings_count": 3
+    "transport_status": "unavailable",
+    "primary_count": 0,
+    "broad_count": 0,
+    "checked_at": "2026-11-20T17:47:31.242572+00:00",
+    "details_or_listings_count": 0
   },
-  "proshop_last_usable_count": 3,
-  "proshop_last_usable_at": "2026-11-20T17:42:38.057041+00:00",
+  "proshop_last_usable_count": 2,
+  "proshop_last_usable_at": "2026-11-20T17:45:47.307322+00:00",
   "proshop_broad_next_index": 1
 }
