@@ -88,27 +88,6 @@
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Tin-Fall-ex-assorted/3478501",
         "fetch_via": "jina_reader"
       },
-      "3478497": {
-        "name": "Pokemon TCG 2-pack Booster",
-        "price": null,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2-pack-Booster/3478497",
-        "fetch_via": "jina_verified_detail"
-      },
-      "3478496": {
-        "name": "Pokemon TCG Mega Greninja ex Premium Collection",
-        "price": 499.0,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
-        "fetch_via": "preserved_previous_scan"
-      },
-      "3421827": {
-        "name": "Pokemon TCG 2024 World Championships Deck",
-        "price": 329.0,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
-        "fetch_via": "preserved_previous_scan"
-      },
       "3519997": {
         "name": "Pokemon Ditto Premium Collection 30th Celebration",
         "price": null,
@@ -128,6 +107,27 @@
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-ex-Box-Sylveon-30th-Celebration/3530348",
+        "fetch_via": "preserved_previous_scan"
+      },
+      "3478497": {
+        "name": "Pokemon TCG 2-pack Booster",
+        "price": null,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2-pack-Booster/3478497",
+        "fetch_via": "preserved_previous_scan"
+      },
+      "3478496": {
+        "name": "Pokemon TCG Mega Greninja ex Premium Collection",
+        "price": 499.0,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
+        "fetch_via": "preserved_previous_scan"
+      },
+      "3421827": {
+        "name": "Pokemon TCG 2024 World Championships Deck",
+        "price": 329.0,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
         "fetch_via": "preserved_previous_scan"
       },
       "3417744": {
@@ -924,10 +924,10 @@
     "proshop": {
       "backoff_level": 0,
       "next_allowed_at": 0.0,
-      "generic_failures": 1,
-      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details | primary Reader: Jina Reader returned too little raw Proshop data (0 product links)",
+      "generic_failures": 0,
+      "last_error": null,
       "last_failure_at": "2026-11-20T02:54:21.055139+00:00",
-      "last_success_at": "2026-11-20T02:53:27.605126+00:00"
+      "last_success_at": "2026-11-20T02:59:11.052301+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -963,14 +963,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1795143301.6492486,
+      "next_allowed_at": 1795143590.3166432,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-20T02:51:01.649220+00:00"
+      "last_success_at": "2026-11-20T02:55:50.316602+00:00"
     }
   },
-  "updated_at": "2026-11-20T02:54:36.243958+00:00",
+  "updated_at": "2026-11-20T02:59:27.825405+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -995,7 +995,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-20T02:51:00.421638+00:00"
+          "last_checked": "2026-11-20T02:55:49.079948+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -1005,7 +1005,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1795143059.559571,
+      "last_discovery_epoch": 1795143348.0923479,
       "last_full_discovery_epoch": 1795127748.4018576,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -1044,27 +1044,27 @@
   },
   "proshop_detail_checks": {
     "3417744": 1795142655.105787,
-    "3447592": 1795142437.841054,
+    "3447592": 1795143384.9671898,
     "3478496": 1795142959.8594892,
     "3478497": 1795143204.2084212,
-    "3478498": 1795142599.4412882,
+    "3478498": 1795143548.8633802,
     "3519999": 1795142959.8594892,
     "3530350": 1795143258.3449974,
     "3530351": 1795143038.1233506,
     "3530352": 1795143148.2059104,
-    "3530353": 1795142546.5888312,
+    "3530353": 1795143493.9727461,
     "3421827": 1795142795.3170753,
     "3447590": 1795142655.105787,
     "3478501": 1795143096.9378936,
     "3502023": 1795143148.2059104,
     "3519996": 1795143038.1233506,
-    "3530348": 1795142437.841054,
-    "3530349": 1795142492.673288,
+    "3530348": 1795143384.9671898,
+    "3530349": 1795143440.5872338,
     "3519993": 1795142795.3170753,
-    "3519997": 1795142492.673288,
+    "3519997": 1795143440.5872338,
     "3519992": 1795143204.2084212
   },
-  "proshop_broad_attempt_at": 1795143094.2023447,
+  "proshop_broad_attempt_at": 1795143438.7382748,
   "proshop_radar_alerts": {
     "3519996:BESTILLINGSVARE": 1794402448.8076684,
     "3519997:BESTILLINGSVARE": 1795095861.5824559,
@@ -1079,15 +1079,15 @@
   ],
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
-    "status": "degraded",
+    "status": "ok",
     "coverage_status": "unverified",
-    "transport_status": "unavailable",
-    "primary_count": 0,
+    "transport_status": "available",
+    "primary_count": 2,
     "broad_count": 0,
-    "checked_at": "2026-11-20T02:54:18.344911+00:00",
-    "details_or_listings_count": 0
+    "checked_at": "2026-11-20T02:59:08.863315+00:00",
+    "details_or_listings_count": 2
   },
-  "proshop_last_usable_count": 3,
-  "proshop_last_usable_at": "2026-11-20T02:53:27.605154+00:00",
-  "proshop_broad_next_index": 0
+  "proshop_last_usable_count": 2,
+  "proshop_last_usable_at": "2026-11-20T02:59:11.052324+00:00",
+  "proshop_broad_next_index": 1
 }
