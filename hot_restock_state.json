@@ -135,7 +135,7 @@
         "price": 299.0,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Tin-Fall-ex-assorted/3478501",
-        "fetch_via": "jina_verified_detail"
+        "fetch_via": "preserved_previous_scan"
       },
       "3478497": {
         "name": "Pokemon TCG 2-pack Booster",
@@ -965,11 +965,11 @@
     },
     "proshop": {
       "backoff_level": 1,
-      "next_allowed_at": 1795203083.481561,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-20T19:07:43.192916+00:00",
-      "last_success_at": "2026-11-20T19:29:23.481543+00:00"
+      "next_allowed_at": 1795203351.2060795,
+      "generic_failures": 2,
+      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details | primary Reader: Jina Reader returned too little raw Proshop data (0 product links)",
+      "last_failure_at": "2026-11-20T19:33:51.206042+00:00",
+      "last_success_at": "2026-11-20T19:31:56.958251+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -1005,14 +1005,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1795202992.551424,
+      "next_allowed_at": 1795203314.2200582,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-20T19:25:52.551398+00:00"
+      "last_success_at": "2026-11-20T19:31:14.220030+00:00"
     }
   },
-  "updated_at": "2026-11-20T19:29:38.507463+00:00",
+  "updated_at": "2026-11-20T19:34:49.768023+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -1037,7 +1037,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-20T19:25:51.213834+00:00"
+          "last_checked": "2026-11-20T19:31:13.060822+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -1047,7 +1047,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1795202749.5954037,
+      "last_discovery_epoch": 1795203071.1813602,
       "last_full_discovery_epoch": 1795192856.8157904,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -1095,24 +1095,24 @@
   },
   "proshop_detail_checks": {
     "3417744": 1795200100.999242,
-    "3447592": 1795200047.9099638,
+    "3447592": 1795203223.1838524,
     "3478496": 1795200346.1431293,
     "3478497": 1795202617.2824605,
     "3478498": 1795200100.999242,
     "3519999": 1795200701.0033233,
-    "3530350": 1795199903.2009296,
+    "3530350": 1795203169.9727662,
     "3530351": 1795201657.302282,
     "3530352": 1795202617.2824605,
     "3530353": 1795200156.1822126,
     "3421827": 1795200156.1822126,
-    "3447590": 1795199737.9552534,
+    "3447590": 1795203111.8393831,
     "3478501": 1795202956.7314882,
     "3502023": 1795201657.302282,
     "3519996": 1795200701.0033233,
-    "3530348": 1795199677.6116202,
-    "3530349": 1795200047.9099638,
+    "3530348": 1795203111.8393831,
+    "3530349": 1795203223.1838524,
     "3519993": 1795200346.1431293,
-    "3519997": 1795199903.2009296,
+    "3519997": 1795203169.9727662,
     "3519992": 1795202956.7314882
   },
   "proshop_broad_attempt_at": 1795202954.3212585,
@@ -1130,15 +1130,15 @@
   ],
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
-    "status": "ok",
+    "status": "degraded",
     "coverage_status": "unverified",
-    "transport_status": "available",
-    "primary_count": 2,
+    "transport_status": "unavailable",
+    "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-20T19:29:16.731287+00:00",
-    "details_or_listings_count": 3
+    "checked_at": "2026-11-20T19:33:43.183787+00:00",
+    "details_or_listings_count": 0
   },
-  "proshop_last_usable_count": 3,
-  "proshop_last_usable_at": "2026-11-20T19:29:23.481578+00:00",
+  "proshop_last_usable_count": 2,
+  "proshop_last_usable_at": "2026-11-20T19:31:56.958287+00:00",
   "proshop_broad_next_index": 2
 }
