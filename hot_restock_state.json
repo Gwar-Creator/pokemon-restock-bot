@@ -82,18 +82,25 @@
     },
     "proshop": {
       "3478501": {
-        "name": "Pokemon Tin Fall ex - assorted",
+        "name": "Pokemon Tin Fall ex assorted",
         "price": 299.0,
         "stock": "PÅ LAGER",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Tin-Fall-ex-assorted/3478501",
-        "fetch_via": "jina_verified_detail"
+        "fetch_via": "jina_broad_reader"
+      },
+      "3530348": {
+        "name": "Pokemon ex Box Sylveon 30th Celebration",
+        "price": null,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-ex-Box-Sylveon-30th-Celebration/3530348",
+        "fetch_via": "preserved_previous_scan"
       },
       "3478497": {
         "name": "Pokemon TCG 2-pack Booster",
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2-pack-Booster/3478497",
-        "fetch_via": "jina_verified_detail"
+        "fetch_via": "preserved_previous_scan"
       },
       "3478496": {
         "name": "Pokemon TCG Mega Greninja ex Premium Collection",
@@ -121,13 +128,6 @@
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Ex-Box-Greninja-30th-Celebration/3530349",
-        "fetch_via": "preserved_previous_scan"
-      },
-      "3530348": {
-        "name": "Pokemon ex Box Sylveon 30th Celebration",
-        "price": null,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-ex-Box-Sylveon-30th-Celebration/3530348",
         "fetch_via": "preserved_previous_scan"
       },
       "3417744": {
@@ -963,14 +963,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1795144197.0926602,
+      "next_allowed_at": 1795144503.6420894,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-20T03:05:57.092633+00:00"
+      "last_success_at": "2026-11-20T03:11:03.642051+00:00"
     }
   },
-  "updated_at": "2026-11-20T03:09:35.370147+00:00",
+  "updated_at": "2026-11-20T03:14:33.344772+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -995,7 +995,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-20T03:05:55.704446+00:00"
+          "last_checked": "2026-11-20T03:11:02.540897+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -1005,7 +1005,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1795143954.2002761,
+      "last_discovery_epoch": 1795144261.4431214,
       "last_full_discovery_epoch": 1795127748.4018576,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -1044,27 +1044,27 @@
   },
   "proshop_detail_checks": {
     "3417744": 1795143663.265154,
-    "3447592": 1795143384.9671898,
+    "3447592": 1795144289.3459008,
     "3478496": 1795143883.3721642,
     "3478497": 1795144155.4281566,
-    "3478498": 1795143548.8633802,
+    "3478498": 1795144456.9344244,
     "3519999": 1795143883.3721642,
-    "3530350": 1795143258.3449974,
+    "3530350": 1795144234.6512582,
     "3530351": 1795143990.2344913,
     "3530352": 1795144118.2333963,
-    "3530353": 1795143493.9727461,
+    "3530353": 1795144399.9404275,
     "3421827": 1795143717.592273,
     "3447590": 1795143663.265154,
     "3478501": 1795144155.4281566,
     "3502023": 1795144118.2333963,
     "3519996": 1795143990.2344913,
-    "3530348": 1795143384.9671898,
-    "3530349": 1795143440.5872338,
+    "3530348": 1795144289.3459008,
+    "3530349": 1795144344.2182384,
     "3519993": 1795143717.592273,
-    "3519997": 1795143440.5872338,
-    "3519992": 1795143204.2084212
+    "3519997": 1795144344.2182384,
+    "3519992": 1795144234.6512582
   },
-  "proshop_broad_attempt_at": 1795144100.9840968,
+  "proshop_broad_attempt_at": 1795144454.7852845,
   "proshop_radar_alerts": {
     "3519996:BESTILLINGSVARE": 1794402448.8076684,
     "3519997:BESTILLINGSVARE": 1795095861.5824559,
@@ -1083,11 +1083,11 @@
     "coverage_status": "unverified",
     "transport_status": "unavailable",
     "primary_count": 0,
-    "broad_count": 0,
-    "checked_at": "2026-11-20T03:09:15.428082+00:00",
+    "broad_count": 2,
+    "checked_at": "2026-11-20T03:14:16.934355+00:00",
     "details_or_listings_count": 2
   },
   "proshop_last_usable_count": 2,
-  "proshop_last_usable_at": "2026-11-20T03:09:18.221397+00:00",
-  "proshop_broad_next_index": 0
+  "proshop_last_usable_at": "2026-11-20T03:14:18.990718+00:00",
+  "proshop_broad_next_index": 1
 }
