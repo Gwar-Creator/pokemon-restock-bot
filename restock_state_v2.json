@@ -331,11 +331,11 @@
       "url": "https://www.proshop.dk/Pokemon/Pokemon-Ultra-Premium-Collection-30th-Celebration-assorted/3519996",
       "fetch_via": "jina_reader"
     },
-    "3417744": {
-      "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
+    "3478496": {
+      "name": "Pokemon TCG Mega Greninja ex Premium Collection",
       "price": null,
       "stock": "UDSOLGT",
-      "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
+      "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
       "fetch_via": "jina_verified_detail"
     }
   },
@@ -67920,14 +67920,6 @@
         "preorder": false,
         "url": "https://www.hyggeonkel.dk/produkt/lorcana-archazias-island-single-player-deck-amethyst-steel"
       },
-      "dca60fc8fe10b112ea70": {
-        "name": "Disney Lorcana: Azurite Sea (Set 6) - Emerald & Sapphire - Starter Deck",
-        "game": "LORCANA",
-        "price": 149.95,
-        "in_stock": false,
-        "preorder": false,
-        "url": "https://www.hyggeonkel.dk/produkt/lorcana-azurite-sea-single-player-deck-emerald-sapphire"
-      },
       "1a4ecc7767041a1bea2d": {
         "name": "Disney Lorcana: Azurite Sea (Set 6) - Booster Pack",
         "game": "LORCANA",
@@ -67935,6 +67927,14 @@
         "in_stock": false,
         "preorder": false,
         "url": "https://www.hyggeonkel.dk/produkt/lorcana-azurite-sea-booster-pack"
+      },
+      "dca60fc8fe10b112ea70": {
+        "name": "Disney Lorcana: Azurite Sea (Set 6) - Emerald & Sapphire - Starter Deck",
+        "game": "LORCANA",
+        "price": 149.95,
+        "in_stock": false,
+        "preorder": false,
+        "url": "https://www.hyggeonkel.dk/produkt/lorcana-azurite-sea-single-player-deck-emerald-sapphire"
       },
       "2b48c63681cb42bfb44d": {
         "name": "Disney Lorcana: Azurite Sea (Set 6) - Booster Display",
@@ -87934,7 +87934,7 @@
         "last_seen": "2026-11-21T00:19:14.685033+01:00"
       }
     },
-    "updated_at": "2026-11-21T10:59:00.123530+01:00"
+    "updated_at": "2026-11-21T11:04:07.545704+01:00"
   },
   "_elgiganten_key_cache": {
     "api_key": null,
@@ -102004,8 +102004,8 @@
     },
     "pokemonportalen": {
       "status": "failed",
-      "last_attempt": "2026-11-21T09:57:43.096626+00:00",
-      "consecutive_failures": 715,
+      "last_attempt": "2026-11-21T10:03:12.667643+00:00",
+      "consecutive_failures": 716,
       "last_error": "mistænkeligt lavt produktantal: 0 < 10",
       "observed_count": 0,
       "last_success": "2026-11-18T21:57:31.988646+00:00",
@@ -102013,8 +102013,8 @@
     },
     "tcgbruus": {
       "status": "failed",
-      "last_attempt": "2026-11-21T09:57:44.403640+00:00",
-      "consecutive_failures": 7290,
+      "last_attempt": "2026-11-21T10:03:14.328322+00:00",
+      "consecutive_failures": 7291,
       "last_error": "mistænkeligt lavt produktantal: 3 < 5",
       "observed_count": 3,
       "last_success": "2026-10-26T15:12:41.350111+00:00",
@@ -102037,13 +102037,13 @@
       "observed_count": 0
     },
     "kelz0r": {
-      "status": "ok",
-      "last_attempt": "2026-11-21T08:53:31.911318+00:00",
+      "status": "failed",
+      "last_attempt": "2026-11-21T10:03:47.326324+00:00",
       "last_success": "2026-11-21T08:53:31.911334+00:00",
       "last_count": 2273,
-      "observed_count": 2273,
-      "consecutive_failures": 0,
-      "last_error": ""
+      "observed_count": null,
+      "consecutive_failures": 1,
+      "last_error": "HTTPSConnectionPool(host='www.kelz0r.dk', port=443): Max retries exceeded with url: /magic/pokemon-boosters-c-187_191.html?currency=DKK (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.kelz0r.dk', port=443) at 0x74454aa13b10>, 'Connection to www.kelz0r.dk timed out. (connect timeout=30)'))"
     },
     "faraos": {
       "status": "ok",
@@ -114335,13 +114335,13 @@
     "fff940439ebc8fbda0afe0b985ab8c51",
     "fffcef15b6da7fe5087a520dad6f7197"
   ],
-  "_last_full_scan_epoch": 1795255140,
+  "_last_full_scan_epoch": 1795255447,
   "proshop_detail_checks": {
     "3417744": 1795254966.346091,
     "3447592": 1795254386.5000525,
-    "3478496": 1795253483.2659469,
+    "3478496": 1795255300.5601497,
     "3478497": 1795254966.346091,
-    "3478498": 1795253171.4159093,
+    "3478498": 1795255300.5601497,
     "3519999": 1795254386.5000525,
     "3530351": 1795098062.9486427,
     "3530352": 1795095981.44834,
