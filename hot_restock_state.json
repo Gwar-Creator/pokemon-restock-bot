@@ -964,11 +964,11 @@
       "last_success_at": "2026-11-21T16:54:19.497118+00:00"
     },
     "proshop": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-21T18:10:39.981574+00:00",
+      "backoff_level": 2,
+      "next_allowed_at": 1795286378.2234218,
+      "generic_failures": 3,
+      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details | primary Reader: Jina Reader returned too little raw Proshop data (0 product links)",
+      "last_failure_at": "2026-11-21T18:34:38.223395+00:00",
       "last_success_at": "2026-11-21T18:14:19.409099+00:00"
     },
     "br": {
@@ -992,8 +992,8 @@
       "next_allowed_at": 0.0,
       "generic_failures": 0,
       "last_error": null,
-      "last_failure_at": "2026-11-14T01:01:38.150792+00:00",
-      "last_success_at": "2026-11-14T01:05:03.784434+00:00"
+      "last_failure_at": "2026-11-21T18:31:25.985308+00:00",
+      "last_success_at": "2026-11-21T18:34:48.837760+00:00"
     },
     "boozt": {
       "backoff_level": 0,
@@ -1005,14 +1005,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1795285803.9892132,
+      "next_allowed_at": 1795286132.7282503,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-21T18:26:03.989153+00:00"
+      "last_success_at": "2026-11-21T18:31:32.728227+00:00"
     }
   },
-  "updated_at": "2026-11-21T18:29:38.519611+00:00",
+  "updated_at": "2026-11-21T18:34:52.263284+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -1037,7 +1037,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-21T18:26:03.092836+00:00"
+          "last_checked": "2026-11-21T18:31:31.702460+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -1047,7 +1047,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1795285562.0385342,
+      "last_discovery_epoch": 1795285889.932388,
       "last_full_discovery_epoch": 1795280158.6917121,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -1099,9 +1099,9 @@
     "3478496": 1795285299.327433,
     "3478497": 1795285409.622935,
     "3478498": 1795285299.327433,
-    "3519999": 1795284995.255842,
+    "3519999": 1795285908.6455593,
     "3530350": 1795285160.1878483,
-    "3530351": 1795285051.9162896,
+    "3530351": 1795286074.8395572,
     "3530352": 1795285106.9299643,
     "3530353": 1795285370.8501136,
     "3421827": 1795285245.4431043,
@@ -1109,13 +1109,13 @@
     "3478501": 1795285464.9753613,
     "3502023": 1795285370.8501136,
     "3519996": 1795285464.9753613,
-    "3530348": 1795284995.255842,
-    "3530349": 1795285106.9299643,
+    "3530348": 1795285908.6455593,
+    "3530349": 1795286074.8395572,
     "3519993": 1795285409.622935,
     "3519997": 1795285706.6465135,
     "3519992": 1795285706.6465135
   },
-  "proshop_broad_attempt_at": 1795285705.2101586,
+  "proshop_broad_attempt_at": 1795286073.0868597,
   "proshop_radar_alerts": {
     "3519996:BESTILLINGSVARE": 1795178627.036411,
     "3519997:BESTILLINGSVARE": 1795095861.5824559,
@@ -1130,15 +1130,15 @@
   ],
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
-    "status": "ok",
+    "status": "degraded",
     "coverage_status": "unverified",
-    "transport_status": "available",
-    "primary_count": 2,
+    "transport_status": "unavailable",
+    "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-21T18:29:21.152502+00:00",
-    "details_or_listings_count": 2
+    "checked_at": "2026-11-21T18:34:34.839480+00:00",
+    "details_or_listings_count": 0
   },
   "proshop_last_usable_count": 2,
   "proshop_last_usable_at": "2026-11-21T18:29:21.153662+00:00",
-  "proshop_broad_next_index": 1
+  "proshop_broad_next_index": 2
 }
