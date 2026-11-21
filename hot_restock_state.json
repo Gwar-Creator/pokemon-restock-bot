@@ -23,19 +23,19 @@
         "online_stock": true,
         "url": "https://www.coolshop.dk/produkt/pokemon-30th-celebration-ultra-premium-collection-pok10448-101/23Z4NS/"
       },
-      "https://www.coolshop.dk/produkt/pokemon-pokeball-tin-pok10273-104/23XH6F/": {
-        "name": "Pokémon - Pokeball Tin (POK10273-104)",
-        "game": "POKÉMON",
-        "price": 249.0,
-        "online_stock": true,
-        "url": "https://www.coolshop.dk/produkt/pokemon-pokeball-tin-pok10273-104/23XH6F/"
-      },
       "https://www.coolshop.dk/produkt/pokemon-mega-evolution-me06-delta-reign-elite-trainer-box-pok10438-101/23Z8YK/": {
         "name": "Pokémon - Mega Evolution ME06: Delta Reign - Elite Trainer Box (POK10438-101)",
         "game": "POKÉMON",
         "price": 699.0,
         "online_stock": true,
         "url": "https://www.coolshop.dk/produkt/pokemon-mega-evolution-me06-delta-reign-elite-trainer-box-pok10438-101/23Z8YK/"
+      },
+      "https://www.coolshop.dk/produkt/pokemon-pokeball-tin-pok10273-104/23XH6F/": {
+        "name": "Pokémon - Pokeball Tin (POK10273-104)",
+        "game": "POKÉMON",
+        "price": 249.0,
+        "online_stock": true,
+        "url": "https://www.coolshop.dk/produkt/pokemon-pokeball-tin-pok10273-104/23XH6F/"
       },
       "https://www.coolshop.dk/produkt/pokemon-sv10-destined-rivals-elite-trainer-box-pok10652/23R8NJ/": {
         "name": "Pokémon - SV10 Destined Rivals - Elite Trainer Box (POK10652)",
@@ -65,19 +65,19 @@
         "online_stock": true,
         "url": "https://www.coolshop.dk/produkt/pokemon-deck-pro-poke-mega-charizard-y/23UF9A/"
       },
-      "https://www.coolshop.dk/produkt/pokemon-30th-celebration-figure-collection-pok10452-101/23Z4NP/": {
-        "name": "Pokémon - 30th Celebration - Figure Collection (POK10452-101)",
-        "game": "POKÉMON",
-        "price": 569.0,
-        "online_stock": true,
-        "url": "https://www.coolshop.dk/produkt/pokemon-30th-celebration-figure-collection-pok10452-101/23Z4NP/"
-      },
       "https://www.coolshop.dk/produkt/pokemon-30th-celebration-ex-box-pok10463-101/23Y9WZ/": {
         "name": "Pokémon - 30th Celebration - ex Box (POK10463-101)",
         "game": "POKÉMON",
         "price": 499.0,
         "online_stock": true,
         "url": "https://www.coolshop.dk/produkt/pokemon-30th-celebration-ex-box-pok10463-101/23Y9WZ/"
+      },
+      "https://www.coolshop.dk/produkt/pokemon-30th-celebration-figure-collection-pok10452-101/23Z4NP/": {
+        "name": "Pokémon - 30th Celebration - Figure Collection (POK10452-101)",
+        "game": "POKÉMON",
+        "price": 569.0,
+        "online_stock": true,
+        "url": "https://www.coolshop.dk/produkt/pokemon-30th-celebration-figure-collection-pok10452-101/23Z4NP/"
       },
       "https://www.coolshop.dk/produkt/pokemon-mega-evolution-me06-delta-reign-booster-box-pok10446-101/23Z8YQ/": {
         "name": "Pokémon - Mega Evolution ME06: Delta Reign Booster Box (POK10446-101)",
@@ -123,19 +123,26 @@
       }
     },
     "proshop": {
+      "3478496": {
+        "name": "Pokemon TCG Mega Greninja ex Premium Collection",
+        "price": 499.0,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
+        "fetch_via": "jina_verified_detail"
+      },
       "3519996": {
         "name": "Pokemon Ultra Premium Collection 30th Celebration assorted",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Ultra-Premium-Collection-30th-Celebration-assorted/3519996",
-        "fetch_via": "jina_reader"
+        "fetch_via": "preserved_previous_scan"
       },
       "3421827": {
         "name": "Pokemon TCG 2024 World Championships Deck",
         "price": 329.0,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
-        "fetch_via": "jina_verified_detail"
+        "fetch_via": "preserved_previous_scan"
       },
       "3417744": {
         "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
@@ -163,13 +170,6 @@
         "price": 299.0,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Tin-Fall-ex-assorted/3478501",
-        "fetch_via": "preserved_previous_scan"
-      },
-      "3478496": {
-        "name": "Pokemon TCG Mega Greninja ex Premium Collection",
-        "price": 499.0,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
         "fetch_via": "preserved_previous_scan"
       },
       "3519997": {
@@ -968,8 +968,8 @@
       "next_allowed_at": 0.0,
       "generic_failures": 0,
       "last_error": null,
-      "last_failure_at": "2026-11-21T19:58:23.012320+00:00",
-      "last_success_at": "2026-11-21T20:09:20.452195+00:00"
+      "last_failure_at": "2026-11-21T20:18:28.160635+00:00",
+      "last_success_at": "2026-11-21T20:19:27.145464+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -1005,14 +1005,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1795292114.8714476,
+      "next_allowed_at": 1795292400.4859734,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-21T20:11:14.871424+00:00"
+      "last_success_at": "2026-11-21T20:16:00.485951+00:00"
     }
   },
-  "updated_at": "2026-11-21T20:14:48.844741+00:00",
+  "updated_at": "2026-11-21T20:19:41.552588+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -1037,7 +1037,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-21T20:11:13.985044+00:00"
+          "last_checked": "2026-11-21T20:15:59.261446+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -1047,7 +1047,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1795291872.6782894,
+      "last_discovery_epoch": 1795292157.995556,
       "last_full_discovery_epoch": 1795280158.6917121,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -1096,9 +1096,9 @@
   "proshop_detail_checks": {
     "3417744": 1795291955.1028953,
     "3447592": 1795292066.1854851,
-    "3478496": 1795291440.5359838,
+    "3478496": 1795292362.355014,
     "3478497": 1795291643.5981853,
-    "3478498": 1795291440.5359838,
+    "3478498": 1795292362.355014,
     "3519999": 1795291845.4566507,
     "3530350": 1795292008.6925025,
     "3530351": 1795291898.462404,
@@ -1130,15 +1130,15 @@
   ],
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
-    "status": "ok",
+    "status": "degraded",
     "coverage_status": "unverified",
-    "transport_status": "available",
-    "primary_count": 2,
+    "transport_status": "unavailable",
+    "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-21T20:14:26.185416+00:00",
-    "details_or_listings_count": 3
+    "checked_at": "2026-11-21T20:19:22.354946+00:00",
+    "details_or_listings_count": 1
   },
-  "proshop_last_usable_count": 3,
-  "proshop_last_usable_at": "2026-11-21T20:14:29.797664+00:00",
+  "proshop_last_usable_count": 1,
+  "proshop_last_usable_at": "2026-11-21T20:19:27.145483+00:00",
   "proshop_broad_next_index": 2
 }
