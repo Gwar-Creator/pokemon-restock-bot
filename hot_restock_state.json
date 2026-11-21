@@ -123,26 +123,19 @@
       }
     },
     "proshop": {
-      "3478501": {
-        "name": "Pokemon Tin Fall ex - assorted",
-        "price": 299.0,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-Tin-Fall-ex-assorted/3478501",
-        "fetch_via": "jina_verified_detail"
-      },
       "3519996": {
         "name": "Pokemon Ultra Premium Collection 30th Celebration assorted",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Ultra-Premium-Collection-30th-Celebration-assorted/3519996",
-        "fetch_via": "preserved_previous_scan"
+        "fetch_via": "jina_reader"
       },
       "3421827": {
         "name": "Pokemon TCG 2024 World Championships Deck",
         "price": 329.0,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
-        "fetch_via": "preserved_previous_scan"
+        "fetch_via": "jina_verified_detail"
       },
       "3417744": {
         "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
@@ -156,6 +149,13 @@
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Ex-Box-Greninja-30th-Celebration/3530349",
+        "fetch_via": "preserved_previous_scan"
+      },
+      "3478501": {
+        "name": "Pokemon Tin Fall ex - assorted",
+        "price": 299.0,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-Tin-Fall-ex-assorted/3478501",
         "fetch_via": "preserved_previous_scan"
       },
       "3530348": {
@@ -964,12 +964,12 @@
       "last_success_at": "2026-11-21T04:14:27.608052+00:00"
     },
     "proshop": {
-      "backoff_level": 1,
-      "next_allowed_at": 1795255881.8894844,
-      "generic_failures": 2,
-      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details | primary Reader: Jina Reader returned too little raw Proshop data (0 product links)",
+      "backoff_level": 0,
+      "next_allowed_at": 0.0,
+      "generic_failures": 0,
+      "last_error": null,
       "last_failure_at": "2026-11-21T10:09:21.889450+00:00",
-      "last_success_at": "2026-11-21T10:07:30.395632+00:00"
+      "last_success_at": "2026-11-21T10:14:26.584857+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -1005,14 +1005,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1795255794.905036,
+      "next_allowed_at": 1795256101.6802163,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-21T10:05:54.905007+00:00"
+      "last_success_at": "2026-11-21T10:11:01.680191+00:00"
     }
   },
-  "updated_at": "2026-11-21T10:09:36.748111+00:00",
+  "updated_at": "2026-11-21T10:14:45.414132+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -1037,7 +1037,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-21T10:05:54.052552+00:00"
+          "last_checked": "2026-11-21T10:11:00.631318+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -1047,7 +1047,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1795255552.9911747,
+      "last_discovery_epoch": 1795255859.456609,
       "last_full_discovery_epoch": 1795236370.5297737,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -1094,28 +1094,28 @@
     "coolshop:https://www.coolshop.dk/produkt/pokemon-tin-fall-ex-pok10411-101/23XF7K/": 1795164803.3685203
   },
   "proshop_detail_checks": {
-    "3417744": 1795253618.1996381,
-    "3447592": 1795253673.4268367,
+    "3417744": 1795256007.1524715,
+    "3447592": 1795256062.5012753,
     "3478496": 1795254210.8493793,
     "3478497": 1795255498.0088282,
     "3478498": 1795254210.8493793,
     "3519999": 1795255757.0997057,
-    "3530350": 1795253618.1996381,
-    "3530351": 1795253511.8567548,
-    "3530352": 1795253563.4977434,
+    "3530350": 1795256007.1524715,
+    "3530351": 1795255899.3818867,
+    "3530352": 1795255951.7509835,
     "3530353": 1795255179.5684557,
-    "3421827": 1795253673.4268367,
-    "3447590": 1795253302.772028,
+    "3421827": 1795256062.5012753,
+    "3447590": 1795255899.3818867,
     "3478501": 1795255646.7992842,
     "3502023": 1795255179.5684557,
     "3519996": 1795255646.7992842,
     "3530348": 1795255757.0997057,
-    "3530349": 1795253563.4977434,
+    "3530349": 1795255951.7509835,
     "3519993": 1795255498.0088282,
     "3519997": 1795255701.7124667,
     "3519992": 1795255701.7124667
   },
-  "proshop_broad_attempt_at": 1795255496.2973075,
+  "proshop_broad_attempt_at": 1795255897.9574451,
   "proshop_radar_alerts": {
     "3519996:BESTILLINGSVARE": 1795178627.036411,
     "3519997:BESTILLINGSVARE": 1795095861.5824559,
@@ -1130,15 +1130,15 @@
   ],
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
-    "status": "degraded",
+    "status": "ok",
     "coverage_status": "unverified",
-    "transport_status": "unavailable",
-    "primary_count": 0,
+    "transport_status": "available",
+    "primary_count": 2,
     "broad_count": 0,
-    "checked_at": "2026-11-21T10:09:17.099637+00:00",
-    "details_or_listings_count": 0
+    "checked_at": "2026-11-21T10:14:22.501200+00:00",
+    "details_or_listings_count": 3
   },
-  "proshop_last_usable_count": 1,
-  "proshop_last_usable_at": "2026-11-21T10:07:30.395663+00:00",
-  "proshop_broad_next_index": 1
+  "proshop_last_usable_count": 3,
+  "proshop_last_usable_at": "2026-11-21T10:14:26.584879+00:00",
+  "proshop_broad_next_index": 2
 }
