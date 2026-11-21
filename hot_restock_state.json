@@ -123,19 +123,33 @@
       }
     },
     "proshop": {
+      "3478501": {
+        "name": "Pokemon Tin Fall ex - assorted",
+        "price": 299.0,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-Tin-Fall-ex-assorted/3478501",
+        "fetch_via": "jina_verified_detail"
+      },
       "3519996": {
         "name": "Pokemon Ultra Premium Collection 30th Celebration assorted",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Ultra-Premium-Collection-30th-Celebration-assorted/3519996",
-        "fetch_via": "jina_reader"
+        "fetch_via": "preserved_previous_scan"
+      },
+      "3478497": {
+        "name": "Pokemon TCG 2-pack Booster",
+        "price": null,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2-pack-Booster/3478497",
+        "fetch_via": "preserved_previous_scan"
       },
       "3478496": {
         "name": "Pokemon TCG Mega Greninja ex Premium Collection",
         "price": 499.0,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
-        "fetch_via": "jina_verified_detail"
+        "fetch_via": "preserved_previous_scan"
       },
       "3421827": {
         "name": "Pokemon TCG 2024 World Championships Deck",
@@ -170,20 +184,6 @@
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Ditto-Premium-Collection-30th-Celebration/3519997",
-        "fetch_via": "preserved_previous_scan"
-      },
-      "3478501": {
-        "name": "Pokemon Tin Fall ex - assorted",
-        "price": 299.0,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-Tin-Fall-ex-assorted/3478501",
-        "fetch_via": "preserved_previous_scan"
-      },
-      "3478497": {
-        "name": "Pokemon TCG 2-pack Booster",
-        "price": null,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2-pack-Booster/3478497",
         "fetch_via": "preserved_previous_scan"
       },
       "3519993": {
@@ -968,8 +968,8 @@
       "next_allowed_at": 0.0,
       "generic_failures": 0,
       "last_error": null,
-      "last_failure_at": "2026-11-21T06:43:28.606095+00:00",
-      "last_success_at": "2026-11-21T06:54:41.390604+00:00"
+      "last_failure_at": "2026-11-21T07:37:32.840161+00:00",
+      "last_success_at": "2026-11-21T07:39:18.955024+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -1005,14 +1005,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1795246517.10586,
+      "next_allowed_at": 1795246800.2697434,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-21T07:31:17.105834+00:00"
+      "last_success_at": "2026-11-21T07:36:00.269722+00:00"
     }
   },
-  "updated_at": "2026-11-21T07:34:51.698722+00:00",
+  "updated_at": "2026-11-21T07:39:33.654513+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -1037,7 +1037,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-21T07:31:16.122872+00:00"
+          "last_checked": "2026-11-21T07:35:59.281629+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -1047,7 +1047,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1795246274.8768146,
+      "last_discovery_epoch": 1795246557.936247,
       "last_full_discovery_epoch": 1795236370.5297737,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -1097,7 +1097,7 @@
     "3417744": 1795246169.8124595,
     "3447592": 1795246169.8124595,
     "3478496": 1795246471.5703833,
-    "3478497": 1795245749.1375303,
+    "3478497": 1795246701.7864885,
     "3478498": 1795246250.4656825,
     "3519999": 1795245859.9617834,
     "3530350": 1795246099.3285043,
@@ -1106,12 +1106,12 @@
     "3530353": 1795246471.5703833,
     "3421827": 1795246250.4656825,
     "3447590": 1795245806.9226644,
-    "3478501": 1795245806.9226644,
-    "3502023": 1795245694.0948691,
-    "3519996": 1795245749.1375303,
+    "3478501": 1795246757.5551317,
+    "3502023": 1795246647.425352,
+    "3519996": 1795246701.7864885,
     "3530348": 1795246042.9449124,
     "3530349": 1795246099.3285043,
-    "3519993": 1795245694.0948691,
+    "3519993": 1795246647.425352,
     "3519997": 1795245988.8530822,
     "3519992": 1795245859.9617834
   },
@@ -1130,15 +1130,15 @@
   ],
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
-    "status": "ok",
+    "status": "degraded",
     "coverage_status": "unverified",
-    "transport_status": "available",
-    "primary_count": 2,
-    "broad_count": 1,
-    "checked_at": "2026-11-21T07:34:31.570314+00:00",
-    "details_or_listings_count": 3
+    "transport_status": "unavailable",
+    "primary_count": 0,
+    "broad_count": 0,
+    "checked_at": "2026-11-21T07:39:17.555066+00:00",
+    "details_or_listings_count": 1
   },
-  "proshop_last_usable_count": 3,
-  "proshop_last_usable_at": "2026-11-21T07:34:34.905135+00:00",
+  "proshop_last_usable_count": 1,
+  "proshop_last_usable_at": "2026-11-21T07:39:18.955048+00:00",
   "proshop_broad_next_index": 1
 }
