@@ -87957,7 +87957,7 @@
         "last_seen": "2026-11-21T00:19:14.685033+01:00"
       }
     },
-    "updated_at": "2026-11-22T00:43:50.877264+01:00"
+    "updated_at": "2026-11-22T00:47:53.435264+01:00"
   },
   "_elgiganten_key_cache": {
     "api_key": null,
@@ -101721,11 +101721,11 @@
       "last_error": ""
     },
     "proshop": {
-      "status": "ok",
-      "last_attempt": "2026-11-21T23:41:12.114980+00:00",
-      "consecutive_failures": 0,
-      "last_error": "",
-      "observed_count": 3,
+      "status": "failed",
+      "last_attempt": "2026-11-21T23:46:02.790462+00:00",
+      "consecutive_failures": 1,
+      "last_error": "Proshop utilgængelig (Jina Reader: 401 Client Error: Unauthorized for url: https://r.jina.ai/https://www.proshop.dk/pokemon-kort; pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403)",
+      "observed_count": null,
       "last_success": "2026-11-21T23:41:12.115011+00:00",
       "last_count": 3,
       "transport_status": "available",
@@ -102027,8 +102027,8 @@
     },
     "pokemonportalen": {
       "status": "failed",
-      "last_attempt": "2026-11-21T23:42:35.785024+00:00",
-      "consecutive_failures": 880,
+      "last_attempt": "2026-11-21T23:47:02.261978+00:00",
+      "consecutive_failures": 881,
       "last_error": "mistænkeligt lavt produktantal: 0 < 10",
       "observed_count": 0,
       "last_success": "2026-11-18T21:57:31.988646+00:00",
@@ -102036,8 +102036,8 @@
     },
     "tcgbruus": {
       "status": "failed",
-      "last_attempt": "2026-11-21T23:42:36.497798+00:00",
-      "consecutive_failures": 7455,
+      "last_attempt": "2026-11-21T23:47:05.058683+00:00",
+      "consecutive_failures": 7456,
       "last_error": "mistænkeligt lavt produktantal: 3 < 5",
       "observed_count": 3,
       "last_success": "2026-10-26T15:12:41.350111+00:00",
@@ -102060,13 +102060,13 @@
       "observed_count": 0
     },
     "kelz0r": {
-      "status": "ok",
-      "last_attempt": "2026-11-21T22:43:46.322159+00:00",
+      "status": "failed",
+      "last_attempt": "2026-11-21T23:47:37.899818+00:00",
       "last_success": "2026-11-21T22:43:46.322178+00:00",
       "last_count": 2273,
-      "observed_count": 2273,
-      "consecutive_failures": 0,
-      "last_error": ""
+      "observed_count": null,
+      "consecutive_failures": 1,
+      "last_error": "HTTPSConnectionPool(host='www.kelz0r.dk', port=443): Read timed out. (read timeout=30)"
     },
     "faraos": {
       "status": "ok",
@@ -114843,7 +114843,7 @@
     "fff940439ebc8fbda0afe0b985ab8c51",
     "fffcef15b6da7fe5087a520dad6f7197"
   ],
-  "_last_full_scan_epoch": 1795304631,
+  "_last_full_scan_epoch": 1795304873,
   "proshop_detail_checks": {
     "3417744": 1795303887.0928147,
     "3447592": 1795303285.4909518,
