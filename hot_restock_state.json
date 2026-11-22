@@ -72,19 +72,19 @@
         "online_stock": true,
         "url": "https://www.coolshop.dk/produkt/pokemon-30th-celebration-figure-collection-pok10452-101/23Z4NP/"
       },
-      "https://www.coolshop.dk/produkt/pokemon-30th-celebration-ex-box-pok10463-101/23Y9WZ/": {
-        "name": "Pokémon - 30th Celebration - ex Box (POK10463-101)",
-        "game": "POKÉMON",
-        "price": 499.0,
-        "online_stock": true,
-        "url": "https://www.coolshop.dk/produkt/pokemon-30th-celebration-ex-box-pok10463-101/23Y9WZ/"
-      },
       "https://www.coolshop.dk/produkt/pokemon-30th-celebration-ex-box-sylveon-ex-collection-pok10463-108/23Z8YH/": {
         "name": "Pokémon - 30th Celebration - Ex Box: Sylveon ex Collection (POK10463-108)",
         "game": "POKÉMON",
         "price": 469.0,
         "online_stock": true,
         "url": "https://www.coolshop.dk/produkt/pokemon-30th-celebration-ex-box-sylveon-ex-collection-pok10463-108/23Z8YH/"
+      },
+      "https://www.coolshop.dk/produkt/pokemon-30th-celebration-ex-box-pok10463-101/23Y9WZ/": {
+        "name": "Pokémon - 30th Celebration - ex Box (POK10463-101)",
+        "game": "POKÉMON",
+        "price": 499.0,
+        "online_stock": true,
+        "url": "https://www.coolshop.dk/produkt/pokemon-30th-celebration-ex-box-pok10463-101/23Y9WZ/"
       },
       "https://www.coolshop.dk/produkt/pokemon-mega-evolution-me06-delta-reign-booster-box-pok10446-101/23Z8YQ/": {
         "name": "Pokémon - Mega Evolution ME06: Delta Reign Booster Box (POK10446-101)",
@@ -135,7 +135,7 @@
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Ex-Box-Greninja-30th-Celebration/3530349",
-        "fetch_via": "jina_verified_detail"
+        "fetch_via": "preserved_previous_scan"
       },
       "3530348": {
         "name": "Pokemon ex Box Sylveon 30th Celebration",
@@ -966,10 +966,10 @@
     "proshop": {
       "backoff_level": 0,
       "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-22T10:07:31.310444+00:00",
-      "last_success_at": "2026-11-22T10:34:39.722436+00:00"
+      "generic_failures": 1,
+      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details | primary Reader: Jina Reader returned too little raw Proshop data (0 product links)",
+      "last_failure_at": "2026-11-22T10:44:17.116565+00:00",
+      "last_success_at": "2026-11-22T10:43:21.553770+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -1005,14 +1005,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1795344005.77728,
+      "next_allowed_at": 1795344300.7694175,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-22T10:36:05.777245+00:00"
+      "last_success_at": "2026-11-22T10:41:00.769391+00:00"
     }
   },
-  "updated_at": "2026-11-22T10:39:37.715675+00:00",
+  "updated_at": "2026-11-22T10:44:33.282170+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -1037,7 +1037,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-22T10:36:04.466483+00:00"
+          "last_checked": "2026-11-22T10:40:59.764199+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -1047,7 +1047,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1795343763.4773123,
+      "last_discovery_epoch": 1795344058.8850732,
       "last_full_discovery_epoch": 1795323961.1566534,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -1115,7 +1115,7 @@
     "3519997": 1795343791.743856,
     "3519992": 1795343902.740564
   },
-  "proshop_broad_attempt_at": 1795343674.0159295,
+  "proshop_broad_attempt_at": 1795344038.7431862,
   "proshop_radar_alerts": {
     "3519996:BESTILLINGSVARE": 1795178627.036411,
     "3519997:BESTILLINGSVARE": 1795095861.5824559,
@@ -1130,15 +1130,15 @@
   ],
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
-    "status": "ok",
+    "status": "degraded",
     "coverage_status": "unverified",
-    "transport_status": "available",
-    "primary_count": 2,
+    "transport_status": "unavailable",
+    "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-22T10:39:17.518729+00:00",
-    "details_or_listings_count": 3
+    "checked_at": "2026-11-22T10:44:17.116485+00:00",
+    "details_or_listings_count": 0
   },
-  "proshop_last_usable_count": 3,
-  "proshop_last_usable_at": "2026-11-22T10:39:20.702443+00:00",
-  "proshop_broad_next_index": 1
+  "proshop_last_usable_count": 2,
+  "proshop_last_usable_at": "2026-11-22T10:43:21.553780+00:00",
+  "proshop_broad_next_index": 2
 }
