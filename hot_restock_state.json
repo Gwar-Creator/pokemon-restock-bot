@@ -130,6 +130,27 @@
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Ultra-Premium-Collection-30th-Celebration-assorted/3519996",
         "fetch_via": "jina_reader"
       },
+      "3530348": {
+        "name": "Pokemon ex Box Sylveon 30th Celebration",
+        "price": null,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-ex-Box-Sylveon-30th-Celebration/3530348",
+        "fetch_via": "jina_verified_detail"
+      },
+      "3519997": {
+        "name": "Pokemon Ditto Premium Collection 30th Celebration",
+        "price": null,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-Ditto-Premium-Collection-30th-Celebration/3519997",
+        "fetch_via": "preserved_previous_scan"
+      },
+      "3478501": {
+        "name": "Pokemon Tin Fall ex - assorted",
+        "price": 299.0,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-Tin-Fall-ex-assorted/3478501",
+        "fetch_via": "preserved_previous_scan"
+      },
       "3478497": {
         "name": "Pokemon TCG 2-pack Booster",
         "price": null,
@@ -156,27 +177,6 @@
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Ex-Box-Greninja-30th-Celebration/3530349",
-        "fetch_via": "preserved_previous_scan"
-      },
-      "3530348": {
-        "name": "Pokemon ex Box Sylveon 30th Celebration",
-        "price": null,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-ex-Box-Sylveon-30th-Celebration/3530348",
-        "fetch_via": "preserved_previous_scan"
-      },
-      "3519997": {
-        "name": "Pokemon Ditto Premium Collection 30th Celebration",
-        "price": null,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-Ditto-Premium-Collection-30th-Celebration/3519997",
-        "fetch_via": "preserved_previous_scan"
-      },
-      "3478501": {
-        "name": "Pokemon Tin Fall ex - assorted",
-        "price": 299.0,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-Tin-Fall-ex-assorted/3478501",
         "fetch_via": "preserved_previous_scan"
       },
       "3421827": {
@@ -966,10 +966,10 @@
     "proshop": {
       "backoff_level": 0,
       "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-22T08:53:31.486516+00:00",
-      "last_success_at": "2026-11-22T09:04:54.317919+00:00"
+      "generic_failures": 1,
+      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details | primary Reader: Jina Reader returned too little raw Proshop data (0 product links)",
+      "last_failure_at": "2026-11-22T09:34:42.093240+00:00",
+      "last_success_at": "2026-11-22T09:33:46.761034+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -1005,14 +1005,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1795339795.1673682,
+      "next_allowed_at": 1795340128.6501737,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-22T09:25:55.167343+00:00"
+      "last_success_at": "2026-11-22T09:31:28.650148+00:00"
     }
   },
-  "updated_at": "2026-11-22T09:29:27.041532+00:00",
+  "updated_at": "2026-11-22T09:34:57.099863+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -1037,7 +1037,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-22T09:25:53.970682+00:00"
+          "last_checked": "2026-11-22T09:31:27.951905+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -1047,7 +1047,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1795339552.7783222,
+      "last_discovery_epoch": 1795339887.1557853,
       "last_full_discovery_epoch": 1795323961.1566534,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -1099,23 +1099,23 @@
     "3478496": 1795339403.8496075,
     "3478497": 1795339532.8509133,
     "3478498": 1795339457.5649164,
-    "3519999": 1795339165.1152484,
+    "3519999": 1795340078.1864514,
     "3530350": 1795339349.5673888,
     "3530351": 1795339239.1280208,
     "3530352": 1795339293.046481,
-    "3530353": 1795338861.2049868,
+    "3530353": 1795339858.178283,
     "3421827": 1795339349.5673888,
     "3447590": 1795339457.5649164,
-    "3478501": 1795338861.2049868,
+    "3478501": 1795339858.178283,
     "3502023": 1795339532.8509133,
-    "3519996": 1795339104.3650532,
-    "3530348": 1795339104.3650532,
+    "3519996": 1795340022.6300673,
+    "3530348": 1795340022.6300673,
     "3530349": 1795339239.1280208,
-    "3519993": 1795339048.9421058,
-    "3519997": 1795339048.9421058,
-    "3519992": 1795339165.1152484
+    "3519993": 1795339966.7017832,
+    "3519997": 1795339966.7017832,
+    "3519992": 1795340078.1864514
   },
-  "proshop_broad_attempt_at": 1795339696.1279821,
+  "proshop_broad_attempt_at": 1795340020.984526,
   "proshop_radar_alerts": {
     "3519996:BESTILLINGSVARE": 1795178627.036411,
     "3519997:BESTILLINGSVARE": 1795095861.5824559,
@@ -1130,15 +1130,15 @@
   ],
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
-    "status": "ok",
+    "status": "degraded",
     "coverage_status": "unverified",
-    "transport_status": "available",
-    "primary_count": 2,
+    "transport_status": "unavailable",
+    "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-22T09:29:11.936083+00:00",
-    "details_or_listings_count": 2
+    "checked_at": "2026-11-22T09:34:38.186381+00:00",
+    "details_or_listings_count": 0
   },
-  "proshop_last_usable_count": 2,
-  "proshop_last_usable_at": "2026-11-22T09:29:11.936831+00:00",
-  "proshop_broad_next_index": 0
+  "proshop_last_usable_count": 3,
+  "proshop_last_usable_at": "2026-11-22T09:33:46.761059+00:00",
+  "proshop_broad_next_index": 1
 }
