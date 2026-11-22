@@ -123,12 +123,26 @@
       }
     },
     "proshop": {
+      "3530348": {
+        "name": "Pokemon ex Box Sylveon 30th Celebration",
+        "price": null,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-ex-Box-Sylveon-30th-Celebration/3530348",
+        "fetch_via": "jina_verified_detail"
+      },
       "3519996": {
         "name": "Pokemon Ultra Premium Collection 30th Celebration assorted",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Ultra-Premium-Collection-30th-Celebration-assorted/3519996",
-        "fetch_via": "jina_reader"
+        "fetch_via": "preserved_previous_scan"
+      },
+      "3478501": {
+        "name": "Pokemon Tin Fall ex - assorted",
+        "price": 299.0,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-Tin-Fall-ex-assorted/3478501",
+        "fetch_via": "preserved_previous_scan"
       },
       "3478496": {
         "name": "Pokemon TCG Mega Greninja ex Premium Collection",
@@ -158,25 +172,11 @@
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Ex-Box-Greninja-30th-Celebration/3530349",
         "fetch_via": "preserved_previous_scan"
       },
-      "3530348": {
-        "name": "Pokemon ex Box Sylveon 30th Celebration",
-        "price": null,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-ex-Box-Sylveon-30th-Celebration/3530348",
-        "fetch_via": "preserved_previous_scan"
-      },
       "3519997": {
         "name": "Pokemon Ditto Premium Collection 30th Celebration",
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Ditto-Premium-Collection-30th-Celebration/3519997",
-        "fetch_via": "preserved_previous_scan"
-      },
-      "3478501": {
-        "name": "Pokemon Tin Fall ex - assorted",
-        "price": 299.0,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-Tin-Fall-ex-assorted/3478501",
         "fetch_via": "preserved_previous_scan"
       },
       "3478497": {
@@ -966,10 +966,10 @@
     "proshop": {
       "backoff_level": 0,
       "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-22T10:48:30.965600+00:00",
-      "last_success_at": "2026-11-22T10:59:16.262161+00:00"
+      "generic_failures": 1,
+      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details | primary Reader: Jina Reader returned too little raw Proshop data (0 product links)",
+      "last_failure_at": "2026-11-22T11:04:50.179059+00:00",
+      "last_success_at": "2026-11-22T11:03:52.988982+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -1005,14 +1005,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1795345193.5749314,
+      "next_allowed_at": 1795345530.648216,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-22T10:55:53.574905+00:00"
+      "last_success_at": "2026-11-22T11:01:30.648187+00:00"
     }
   },
-  "updated_at": "2026-11-22T10:59:34.706897+00:00",
+  "updated_at": "2026-11-22T11:05:05.107539+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -1037,7 +1037,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-22T10:55:52.720865+00:00"
+          "last_checked": "2026-11-22T11:01:29.901168+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -1047,7 +1047,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1795344951.2580917,
+      "last_discovery_epoch": 1795345288.861426,
       "last_full_discovery_epoch": 1795323961.1566534,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -1097,25 +1097,25 @@
     "3417744": 1795344879.6259134,
     "3447592": 1795345104.2489402,
     "3478496": 1795345104.2489402,
-    "3478497": 1795343676.4621663,
+    "3478497": 1795345267.6449702,
     "3478498": 1795345152.8019073,
-    "3519999": 1795343902.740564,
+    "3519999": 1795345485.861388,
     "3530350": 1795345042.648857,
     "3530351": 1795343957.5188615,
     "3530352": 1795344879.6259134,
-    "3530353": 1795343739.3802717,
+    "3530353": 1795345320.0563304,
     "3421827": 1795345042.648857,
     "3447590": 1795345152.8019073,
-    "3478501": 1795343739.3802717,
-    "3502023": 1795343676.4621663,
-    "3519996": 1795343847.8622582,
-    "3530348": 1795343847.8622582,
+    "3478501": 1795345320.0563304,
+    "3502023": 1795345267.6449702,
+    "3519996": 1795345430.1813817,
+    "3530348": 1795345430.1813817,
     "3530349": 1795343957.5188615,
-    "3519993": 1795343791.743856,
-    "3519997": 1795343791.743856,
-    "3519992": 1795343902.740564
+    "3519993": 1795345375.765073,
+    "3519997": 1795345375.765073,
+    "3519992": 1795345485.861388
   },
-  "proshop_broad_attempt_at": 1795344863.8873718,
+  "proshop_broad_attempt_at": 1795345265.49908,
   "proshop_radar_alerts": {
     "3519996:BESTILLINGSVARE": 1795178627.036411,
     "3519997:BESTILLINGSVARE": 1795095861.5824559,
@@ -1130,15 +1130,15 @@
   ],
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
-    "status": "ok",
+    "status": "degraded",
     "coverage_status": "unverified",
-    "transport_status": "available",
-    "primary_count": 2,
+    "transport_status": "unavailable",
+    "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-22T10:59:12.801836+00:00",
-    "details_or_listings_count": 2
+    "checked_at": "2026-11-22T11:04:45.861301+00:00",
+    "details_or_listings_count": 0
   },
-  "proshop_last_usable_count": 2,
-  "proshop_last_usable_at": "2026-11-22T10:59:16.262186+00:00",
-  "proshop_broad_next_index": 0
+  "proshop_last_usable_count": 1,
+  "proshop_last_usable_at": "2026-11-22T11:03:52.989008+00:00",
+  "proshop_broad_next_index": 1
 }
