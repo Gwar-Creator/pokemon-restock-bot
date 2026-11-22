@@ -964,12 +964,12 @@
       "last_success_at": "2026-11-22T20:14:17.384976+00:00"
     },
     "proshop": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 1,
+      "backoff_level": 1,
+      "next_allowed_at": 1795384822.840509,
+      "generic_failures": 2,
       "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details | primary Reader: Jina Reader returned too little raw Proshop data (0 product links)",
-      "last_failure_at": "2026-11-22T21:54:49.564766+00:00",
-      "last_success_at": "2026-11-22T21:53:40.838586+00:00"
+      "last_failure_at": "2026-11-22T21:58:22.840494+00:00",
+      "last_success_at": "2026-11-22T21:56:32.261028+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -1005,14 +1005,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1795384517.3998091,
+      "next_allowed_at": 1795384812.1839368,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-22T21:51:17.399781+00:00"
+      "last_success_at": "2026-11-22T21:56:12.183911+00:00"
     }
   },
-  "updated_at": "2026-11-22T21:55:07.342810+00:00",
+  "updated_at": "2026-11-22T21:59:30.795668+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -1037,7 +1037,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-22T21:51:16.004005+00:00"
+          "last_checked": "2026-11-22T21:55:56.253211+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -1047,7 +1047,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1795384274.7845864,
+      "last_discovery_epoch": 1795384555.0993495,
       "last_full_discovery_epoch": 1795367465.803959,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -1135,10 +1135,10 @@
     "transport_status": "unavailable",
     "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-22T21:54:49.564663+00:00",
+    "checked_at": "2026-11-22T21:58:22.840396+00:00",
     "details_or_listings_count": 0
   },
   "proshop_last_usable_count": 2,
-  "proshop_last_usable_at": "2026-11-22T21:53:40.838612+00:00",
+  "proshop_last_usable_at": "2026-11-22T21:56:32.261044+00:00",
   "proshop_broad_next_index": 0
 }
