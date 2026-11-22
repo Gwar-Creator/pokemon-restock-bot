@@ -128,7 +128,21 @@
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Ultra-Premium-Collection-30th-Celebration-assorted/3519996",
-        "fetch_via": "preserved_previous_scan"
+        "fetch_via": "jina_reader"
+      },
+      "3519993": {
+        "name": "Pokemon TCG Figure Collection 30th Celebration assorted",
+        "price": null,
+        "stock": "BESTILLINGSVARE",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Figure-Collection-30th-Celebration-assorted/3519993",
+        "fetch_via": "jina_reader"
+      },
+      "3530349": {
+        "name": "Pokemon Ex Box - Greninja 30th Celebration",
+        "price": null,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-Ex-Box-Greninja-30th-Celebration/3530349",
+        "fetch_via": "jina_verified_detail"
       },
       "3530348": {
         "name": "Pokemon ex Box Sylveon 30th Celebration",
@@ -165,13 +179,6 @@
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
         "fetch_via": "preserved_previous_scan"
       },
-      "3530349": {
-        "name": "Pokemon Ex Box - Greninja 30th Celebration",
-        "price": null,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-Ex-Box-Greninja-30th-Celebration/3530349",
-        "fetch_via": "preserved_previous_scan"
-      },
       "3478497": {
         "name": "Pokemon TCG 2-pack Booster",
         "price": null,
@@ -184,13 +191,6 @@
         "price": 499.0,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
-        "fetch_via": "preserved_previous_scan"
-      },
-      "3519993": {
-        "name": "Pokemon TCG Figure Collection 30th Celebration assorted",
-        "price": 399.0,
-        "stock": "PÅ LAGER",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Figure-Collection-30th-Celebration-assorted/3519993",
         "fetch_via": "preserved_previous_scan"
       },
       "3530351": {
@@ -964,12 +964,12 @@
       "last_success_at": "2026-11-22T09:24:16.069430+00:00"
     },
     "proshop": {
-      "backoff_level": 3,
-      "next_allowed_at": 1795342951.3104517,
-      "generic_failures": 2,
-      "last_error": "Proshop Reader temporarily blocked: 401 Client Error: Unauthorized for url: https://r.jina.ai/https://www.proshop.dk/pokemon-kort",
+      "backoff_level": 2,
+      "next_allowed_at": 1795343311.638118,
+      "generic_failures": 0,
+      "last_error": null,
       "last_failure_at": "2026-11-22T10:07:31.310444+00:00",
-      "last_success_at": "2026-11-22T09:59:23.751275+00:00"
+      "last_success_at": "2026-11-22T10:23:31.638099+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -1005,14 +1005,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1795342816.3154979,
+      "next_allowed_at": 1795343097.5827446,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-22T10:16:16.315453+00:00"
+      "last_success_at": "2026-11-22T10:20:57.582714+00:00"
     }
   },
-  "updated_at": "2026-11-22T10:19:36.413955+00:00",
+  "updated_at": "2026-11-22T10:24:34.136835+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -1037,7 +1037,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-22T10:16:14.926397+00:00"
+          "last_checked": "2026-11-22T10:20:56.730620+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -1047,7 +1047,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1795342573.9601707,
+      "last_discovery_epoch": 1795342855.4385297,
       "last_full_discovery_epoch": 1795323961.1566534,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -1101,7 +1101,7 @@
     "3478498": 1795340443.6697805,
     "3519999": 1795341559.8243723,
     "3530350": 1795340296.6089358,
-    "3530351": 1795340185.6106799,
+    "3530351": 1795343008.2877772,
     "3530352": 1795340241.8828394,
     "3530353": 1795340793.917343,
     "3421827": 1795340296.6089358,
@@ -1110,12 +1110,12 @@
     "3502023": 1795340498.7963324,
     "3519996": 1795340961.279105,
     "3530348": 1795340961.279105,
-    "3530349": 1795340185.6106799,
+    "3530349": 1795343008.2877772,
     "3519993": 1795340905.532365,
     "3519997": 1795340905.532365,
     "3519992": 1795341559.8243723
   },
-  "proshop_broad_attempt_at": 1795341558.0857792,
+  "proshop_broad_attempt_at": 1795343006.512869,
   "proshop_radar_alerts": {
     "3519996:BESTILLINGSVARE": 1795178627.036411,
     "3519997:BESTILLINGSVARE": 1795095861.5824559,
@@ -1130,14 +1130,15 @@
   ],
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
-    "status": "degraded",
+    "status": "ok",
     "coverage_status": "unverified",
-    "transport_status": "unavailable",
-    "primary_count": 0,
+    "transport_status": "available",
+    "primary_count": 3,
     "broad_count": 0,
-    "checked_at": "2026-11-22T10:07:31.310404+00:00"
+    "checked_at": "2026-11-22T10:23:28.287526+00:00",
+    "details_or_listings_count": 4
   },
-  "proshop_last_usable_count": 1,
-  "proshop_last_usable_at": "2026-11-22T09:59:23.751311+00:00",
-  "proshop_broad_next_index": 1
+  "proshop_last_usable_count": 4,
+  "proshop_last_usable_at": "2026-11-22T10:23:31.638143+00:00",
+  "proshop_broad_next_index": 2
 }
