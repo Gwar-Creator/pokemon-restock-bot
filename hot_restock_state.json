@@ -128,6 +128,20 @@
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Ultra-Premium-Collection-30th-Celebration-assorted/3519996",
+        "fetch_via": "jina_reader"
+      },
+      "3417744": {
+        "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
+        "price": null,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
+        "fetch_via": "preserved_previous_scan"
+      },
+      "3530349": {
+        "name": "Pokemon Ex Box - Greninja 30th Celebration",
+        "price": null,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-Ex-Box-Greninja-30th-Celebration/3530349",
         "fetch_via": "preserved_previous_scan"
       },
       "3530348": {
@@ -165,25 +179,11 @@
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
         "fetch_via": "preserved_previous_scan"
       },
-      "3530349": {
-        "name": "Pokemon Ex Box - Greninja 30th Celebration",
-        "price": null,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-Ex-Box-Greninja-30th-Celebration/3530349",
-        "fetch_via": "preserved_previous_scan"
-      },
       "3519997": {
         "name": "Pokemon Ditto Premium Collection 30th Celebration",
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Ditto-Premium-Collection-30th-Celebration/3519997",
-        "fetch_via": "preserved_previous_scan"
-      },
-      "3417744": {
-        "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
-        "price": null,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
         "fetch_via": "preserved_previous_scan"
       },
       "3519993": {
@@ -964,12 +964,12 @@
       "last_success_at": "2026-11-22T20:14:17.384976+00:00"
     },
     "proshop": {
-      "backoff_level": 1,
-      "next_allowed_at": 1795383937.1619136,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-22T21:38:19.420638+00:00",
-      "last_success_at": "2026-11-22T21:43:37.161897+00:00"
+      "backoff_level": 0,
+      "next_allowed_at": 0.0,
+      "generic_failures": 1,
+      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details | primary Reader: Jina Reader returned too little raw Proshop data (0 product links)",
+      "last_failure_at": "2026-11-22T21:49:33.466575+00:00",
+      "last_success_at": "2026-11-22T21:48:34.469916+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -1005,14 +1005,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1795383903.3660445,
+      "next_allowed_at": 1795384209.2299197,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-22T21:41:03.366017+00:00"
+      "last_success_at": "2026-11-22T21:46:09.229889+00:00"
     }
   },
-  "updated_at": "2026-11-22T21:44:38.628229+00:00",
+  "updated_at": "2026-11-22T21:49:50.138791+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -1037,7 +1037,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-22T21:41:02.534449+00:00"
+          "last_checked": "2026-11-22T21:46:08.421106+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -1047,7 +1047,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1795383661.432821,
+      "last_discovery_epoch": 1795383967.2753365,
       "last_full_discovery_epoch": 1795367465.803959,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -1094,28 +1094,28 @@
     "coolshop:https://www.coolshop.dk/produkt/pokemon-tin-fall-ex-pok10411-101/23XF7K/": 1795164803.3685203
   },
   "proshop_detail_checks": {
-    "3417744": 1795382607.240009,
-    "3447592": 1795382843.6723995,
-    "3478496": 1795382789.487764,
+    "3417744": 1795383999.080336,
+    "3447592": 1795384168.3830945,
+    "3478496": 1795384108.992034,
     "3478497": 1795382899.409553,
-    "3478498": 1795382843.6723995,
-    "3519999": 1795382550.9325805,
-    "3530350": 1795382789.487764,
-    "3530351": 1795382607.240009,
-    "3530352": 1795382660.8980758,
+    "3478498": 1795384168.3830945,
+    "3519999": 1795383944.7829459,
+    "3530350": 1795384108.992034,
+    "3530351": 1795383999.080336,
+    "3530352": 1795384052.43909,
     "3530353": 1795383074.507309,
-    "3421827": 1795382660.8980758,
+    "3421827": 1795384052.43909,
     "3447590": 1795382899.409553,
     "3478501": 1795382954.201375,
     "3502023": 1795382954.201375,
     "3519996": 1795383812.811951,
     "3530348": 1795383276.5331724,
-    "3530349": 1795382550.9325805,
+    "3530349": 1795383944.7829459,
     "3519993": 1795383276.5331724,
     "3519997": 1795383074.507309,
     "3519992": 1795383812.811951
   },
-  "proshop_broad_attempt_at": 1795383810.576637,
+  "proshop_broad_attempt_at": 1795384164.2347488,
   "proshop_radar_alerts": {
     "3519996:BESTILLINGSVARE": 1795178627.036411,
     "3519997:BESTILLINGSVARE": 1795095861.5824559,
@@ -1134,11 +1134,11 @@
     "coverage_status": "unverified",
     "transport_status": "unavailable",
     "primary_count": 0,
-    "broad_count": 1,
-    "checked_at": "2026-11-22T21:43:32.811724+00:00",
-    "details_or_listings_count": 1
+    "broad_count": 0,
+    "checked_at": "2026-11-22T21:49:28.383009+00:00",
+    "details_or_listings_count": 0
   },
-  "proshop_last_usable_count": 1,
-  "proshop_last_usable_at": "2026-11-22T21:43:37.161935+00:00",
-  "proshop_broad_next_index": 1
+  "proshop_last_usable_count": 2,
+  "proshop_last_usable_at": "2026-11-22T21:48:34.469946+00:00",
+  "proshop_broad_next_index": 2
 }
