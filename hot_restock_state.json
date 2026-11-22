@@ -480,7 +480,7 @@
           },
           "1659": {
             "name": "Bilka Esbjerg",
-            "stock": 104
+            "stock": 101
           }
         },
         "quantity_limit": 6,
@@ -964,11 +964,11 @@
       "last_success_at": "2026-11-22T14:44:19.926043+00:00"
     },
     "proshop": {
-      "backoff_level": 2,
-      "next_allowed_at": 1795368210.0783646,
-      "generic_failures": 2,
+      "backoff_level": 3,
+      "next_allowed_at": 1795369112.2700877,
+      "generic_failures": 3,
       "last_error": "Proshop Reader temporarily blocked: 401 Client Error: Unauthorized for url: https://r.jina.ai/https://www.proshop.dk/pokemon-kort",
-      "last_failure_at": "2026-11-22T17:18:30.078356+00:00",
+      "last_failure_at": "2026-11-22T17:23:32.270079+00:00",
       "last_success_at": "2026-11-22T17:14:29.663970+00:00"
     },
     "br": {
@@ -1005,14 +1005,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1795367997.1087723,
+      "next_allowed_at": 1795368307.171338,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-22T17:15:57.108740+00:00"
+      "last_success_at": "2026-11-22T17:21:07.171309+00:00"
     }
   },
-  "updated_at": "2026-11-22T17:19:34.856625+00:00",
+  "updated_at": "2026-11-22T17:24:41.455190+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -1037,7 +1037,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-22T17:15:56.044478+00:00"
+          "last_checked": "2026-11-22T17:21:06.197476+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -1047,7 +1047,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1795367755.2567577,
+      "last_discovery_epoch": 1795368064.8326118,
       "last_full_discovery_epoch": 1795367465.803959,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -1135,7 +1135,7 @@
     "transport_status": "unavailable",
     "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-22T17:18:30.078315+00:00"
+    "checked_at": "2026-11-22T17:23:32.270042+00:00"
   },
   "proshop_last_usable_count": 3,
   "proshop_last_usable_at": "2026-11-22T17:14:29.663994+00:00",
