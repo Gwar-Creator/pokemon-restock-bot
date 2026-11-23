@@ -65,19 +65,19 @@
         "online_stock": true,
         "url": "https://www.coolshop.dk/produkt/pokemon-mega-evolution-me06-delta-reign-booster-box-pok10446-101/23Z8YQ/"
       },
-      "https://www.coolshop.dk/produkt/pokemon-30th-celebration-figure-collection-pok10452-101/23Z4NP/": {
-        "name": "Pokémon - 30th Celebration - Figure Collection (POK10452-101)",
-        "game": "POKÉMON",
-        "price": 569.0,
-        "online_stock": true,
-        "url": "https://www.coolshop.dk/produkt/pokemon-30th-celebration-figure-collection-pok10452-101/23Z4NP/"
-      },
       "https://www.coolshop.dk/produkt/pokemon-30th-celebration-ex-box-sylveon-ex-collection-pok10463-108/23Z8YH/": {
         "name": "Pokémon - 30th Celebration - Ex Box: Sylveon ex Collection (POK10463-108)",
         "game": "POKÉMON",
         "price": 469.0,
         "online_stock": true,
         "url": "https://www.coolshop.dk/produkt/pokemon-30th-celebration-ex-box-sylveon-ex-collection-pok10463-108/23Z8YH/"
+      },
+      "https://www.coolshop.dk/produkt/pokemon-30th-celebration-figure-collection-pok10452-101/23Z4NP/": {
+        "name": "Pokémon - 30th Celebration - Figure Collection (POK10452-101)",
+        "game": "POKÉMON",
+        "price": 569.0,
+        "online_stock": true,
+        "url": "https://www.coolshop.dk/produkt/pokemon-30th-celebration-figure-collection-pok10452-101/23Z4NP/"
       },
       "https://www.coolshop.dk/produkt/pokemon-30th-celebration-ex-box-pok10463-101/23Y9WZ/": {
         "name": "Pokémon - 30th Celebration - ex Box (POK10463-101)",
@@ -123,18 +123,18 @@
       }
     },
     "proshop": {
-      "3530349": {
-        "name": "Pokemon Ex Box - Greninja 30th Celebration",
-        "price": null,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-Ex-Box-Greninja-30th-Celebration/3530349",
-        "fetch_via": "jina_verified_detail"
-      },
       "3519993": {
         "name": "Pokemon TCG Figure Collection 30th Celebration assorted",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Figure-Collection-30th-Celebration-assorted/3519993",
+        "fetch_via": "jina_reader"
+      },
+      "3530349": {
+        "name": "Pokemon Ex Box - Greninja 30th Celebration",
+        "price": null,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-Ex-Box-Greninja-30th-Celebration/3530349",
         "fetch_via": "preserved_previous_scan"
       },
       "3530348": {
@@ -1018,14 +1018,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1795470003.338736,
+      "next_allowed_at": 1795470324.7300842,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-23T21:36:03.338683+00:00"
+      "last_success_at": "2026-11-23T21:41:24.730053+00:00"
     }
   },
-  "updated_at": "2026-11-23T21:39:38.835150+00:00",
+  "updated_at": "2026-11-23T21:44:57.769924+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -1050,7 +1050,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-23T21:36:02.145637+00:00"
+          "last_checked": "2026-11-23T21:41:22.880452+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -1060,7 +1060,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1795469760.883877,
+      "last_discovery_epoch": 1795470081.5175092,
       "last_full_discovery_epoch": 1795454783.9117064,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -1112,7 +1112,7 @@
     "3478496": 1795469578.8847237,
     "3478497": 1795469695.545915,
     "3478498": 1795469738.976108,
-    "3519999": 1795469358.0013473,
+    "3519999": 1795470266.102203,
     "3530350": 1795469695.545915,
     "3530351": 1795469522.439471,
     "3530352": 1795469633.7485955,
@@ -1126,9 +1126,9 @@
     "3530349": 1795469959.671846,
     "3519993": 1795469959.671846,
     "3519997": 1795469794.2239907,
-    "3519992": 1795469358.0013473
+    "3519992": 1795470266.102203
   },
-  "proshop_broad_attempt_at": 1795469688.4289975,
+  "proshop_broad_attempt_at": 1795470047.4544728,
   "proshop_radar_alerts": {
     "3519996:BESTILLINGSVARE": 1795178627.036411,
     "3519997:BESTILLINGSVARE": 1795095861.5824559,
@@ -1143,15 +1143,15 @@
   ],
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
-    "status": "degraded",
+    "status": "ok",
     "coverage_status": "unverified",
-    "transport_status": "unavailable",
-    "primary_count": 0,
+    "transport_status": "available",
+    "primary_count": 2,
     "broad_count": 0,
-    "checked_at": "2026-11-23T21:39:19.671783+00:00",
-    "details_or_listings_count": 1
+    "checked_at": "2026-11-23T21:44:26.102127+00:00",
+    "details_or_listings_count": 2
   },
-  "proshop_last_usable_count": 1,
-  "proshop_last_usable_at": "2026-11-23T21:39:23.332684+00:00",
-  "proshop_broad_next_index": 2
+  "proshop_last_usable_count": 2,
+  "proshop_last_usable_at": "2026-11-23T21:44:29.443055+00:00",
+  "proshop_broad_next_index": 0
 }
