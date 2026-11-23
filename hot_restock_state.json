@@ -123,12 +123,19 @@
       }
     },
     "proshop": {
+      "3478501": {
+        "name": "Pokemon Tin Fall ex - assorted",
+        "price": 299.0,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-Tin-Fall-ex-assorted/3478501",
+        "fetch_via": "jina_verified_detail"
+      },
       "3478497": {
         "name": "Pokemon TCG 2-pack Booster",
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2-pack-Booster/3478497",
-        "fetch_via": "jina_verified_detail"
+        "fetch_via": "preserved_previous_scan"
       },
       "3421827": {
         "name": "Pokemon TCG 2024 World Championships Deck",
@@ -177,13 +184,6 @@
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Ditto-Premium-Collection-30th-Celebration/3519997",
-        "fetch_via": "preserved_previous_scan"
-      },
-      "3478501": {
-        "name": "Pokemon Tin Fall ex - assorted",
-        "price": 299.0,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-Tin-Fall-ex-assorted/3478501",
         "fetch_via": "preserved_previous_scan"
       },
       "3519993": {
@@ -404,7 +404,7 @@
       "200385297": {
         "name": "Pokémon Tin Fall ex",
         "price": 279.0,
-        "online_count": 81,
+        "online_count": 80,
         "online_stock": true,
         "is_exposed": true,
         "store_count": 0,
@@ -566,7 +566,7 @@
       "200385297": {
         "name": "Pokémon Tin Fall ex",
         "price": 279.0,
-        "online_count": 81,
+        "online_count": 80,
         "online_stock": true,
         "is_exposed": true,
         "store_count": 0,
@@ -977,12 +977,12 @@
       "last_success_at": "2026-11-23T06:19:15.641909+00:00"
     },
     "proshop": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-23T14:58:27.012109+00:00",
-      "last_success_at": "2026-11-23T14:59:23.637359+00:00"
+      "backoff_level": 1,
+      "next_allowed_at": 1795446415.4982076,
+      "generic_failures": 2,
+      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details | primary Reader: Jina Reader returned too little raw Proshop data (0 product links)",
+      "last_failure_at": "2026-11-23T15:04:55.498191+00:00",
+      "last_success_at": "2026-11-23T15:02:59.155667+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -1018,14 +1018,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1795445995.5631142,
+      "next_allowed_at": 1795446334.7491376,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-23T14:55:55.563088+00:00"
+      "last_success_at": "2026-11-23T15:01:34.749110+00:00"
     }
   },
-  "updated_at": "2026-11-23T14:59:38.862862+00:00",
+  "updated_at": "2026-11-23T15:05:10.464455+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -1050,7 +1050,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-23T14:55:54.840956+00:00"
+          "last_checked": "2026-11-23T15:01:33.108173+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -1060,7 +1060,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1795445754.0504918,
+      "last_discovery_epoch": 1795446091.721541,
       "last_full_discovery_epoch": 1795432860.281064,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -1111,24 +1111,24 @@
     "3447592": 1795445900.3290536,
     "3478496": 1795445843.8095598,
     "3478497": 1795445958.228747,
-    "3478498": 1795444952.187008,
+    "3478498": 1795446069.2636585,
     "3519999": 1795445789.942366,
     "3530350": 1795445958.228747,
     "3530351": 1795445789.942366,
     "3530352": 1795445900.3290536,
     "3530353": 1795445610.2480538,
     "3421827": 1795445843.8095598,
-    "3447590": 1795444758.725618,
-    "3478501": 1795445256.4578898,
+    "3447590": 1795446069.2636585,
+    "3478501": 1795446175.0521414,
     "3502023": 1795445445.751653,
     "3519996": 1795445610.2480538,
     "3530348": 1795445445.751653,
     "3530349": 1795445734.9013376,
     "3519993": 1795445663.9377818,
-    "3519997": 1795445256.4578898,
+    "3519997": 1795446175.0521414,
     "3519992": 1795445734.9013376
   },
-  "proshop_broad_attempt_at": 1795445955.5762005,
+  "proshop_broad_attempt_at": 1795446286.6573908,
   "proshop_radar_alerts": {
     "3519996:BESTILLINGSVARE": 1795178627.036411,
     "3519997:BESTILLINGSVARE": 1795095861.5824559,
@@ -1148,10 +1148,10 @@
     "transport_status": "unavailable",
     "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-23T14:59:18.228667+00:00",
-    "details_or_listings_count": 1
+    "checked_at": "2026-11-23T15:04:55.498088+00:00",
+    "details_or_listings_count": 0
   },
-  "proshop_last_usable_count": 1,
-  "proshop_last_usable_at": "2026-11-23T14:59:23.637382+00:00",
-  "proshop_broad_next_index": 1
+  "proshop_last_usable_count": 2,
+  "proshop_last_usable_at": "2026-11-23T15:02:59.155696+00:00",
+  "proshop_broad_next_index": 2
 }
