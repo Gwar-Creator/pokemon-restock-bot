@@ -128,7 +128,7 @@
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
-        "fetch_via": "jina_verified_detail"
+        "fetch_via": "preserved_previous_scan"
       },
       "3478501": {
         "name": "Pokemon Tin Fall ex - assorted",
@@ -977,12 +977,12 @@
       "last_success_at": "2026-11-23T17:09:24.677768+00:00"
     },
     "proshop": {
-      "backoff_level": 1,
-      "next_allowed_at": 1795457209.175703,
-      "generic_failures": 2,
+      "backoff_level": 0,
+      "next_allowed_at": 0.0,
+      "generic_failures": 1,
       "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details | primary Reader: Jina Reader returned too little raw Proshop data (0 product links)",
-      "last_failure_at": "2026-11-23T18:04:49.175688+00:00",
-      "last_success_at": "2026-11-23T18:03:07.377018+00:00"
+      "last_failure_at": "2026-11-23T18:09:20.969539+00:00",
+      "last_success_at": "2026-11-23T18:08:25.886865+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -1018,14 +1018,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1795457131.2566514,
+      "next_allowed_at": 1795457398.9755678,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-23T18:01:31.256626+00:00"
+      "last_success_at": "2026-11-23T18:05:58.975542+00:00"
     }
   },
-  "updated_at": "2026-11-23T18:05:04.979498+00:00",
+  "updated_at": "2026-11-23T18:09:37.686050+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -1050,7 +1050,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-23T18:01:30.573349+00:00"
+          "last_checked": "2026-11-23T18:05:57.691716+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -1060,7 +1060,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1795456889.7649064,
+      "last_discovery_epoch": 1795457156.7934215,
       "last_full_discovery_epoch": 1795454783.9117064,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -1123,12 +1123,12 @@
     "3502023": 1795456923.3752353,
     "3519996": 1795456768.4948657,
     "3530348": 1795456868.0592005,
-    "3530349": 1795456298.8089538,
+    "3530349": 1795457249.1231987,
     "3519993": 1795456983.3586516,
     "3519997": 1795456768.4948657,
-    "3519992": 1795456298.8089538
+    "3519992": 1795457249.1231987
   },
-  "proshop_broad_attempt_at": 1795456979.8429077,
+  "proshop_broad_attempt_at": 1795457304.4084826,
   "proshop_radar_alerts": {
     "3519996:BESTILLINGSVARE": 1795178627.036411,
     "3519997:BESTILLINGSVARE": 1795095861.5824559,
@@ -1148,10 +1148,10 @@
     "transport_status": "unavailable",
     "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-23T18:04:49.175593+00:00",
+    "checked_at": "2026-11-23T18:09:20.969445+00:00",
     "details_or_listings_count": 0
   },
   "proshop_last_usable_count": 1,
-  "proshop_last_usable_at": "2026-11-23T18:03:07.377043+00:00",
-  "proshop_broad_next_index": 0
+  "proshop_last_usable_at": "2026-11-23T18:08:25.886882+00:00",
+  "proshop_broad_next_index": 1
 }
