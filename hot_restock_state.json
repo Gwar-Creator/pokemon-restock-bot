@@ -135,7 +135,7 @@
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-ex-Box-Sylveon-30th-Celebration/3530348",
-        "fetch_via": "jina_verified_detail"
+        "fetch_via": "preserved_previous_scan"
       },
       "3519997": {
         "name": "Pokemon Ditto Premium Collection 30th Celebration",
@@ -964,12 +964,12 @@
       "last_success_at": "2026-11-22T23:04:48.923429+00:00"
     },
     "proshop": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-23T01:12:41.907066+00:00",
-      "last_success_at": "2026-11-23T01:14:46.829791+00:00"
+      "backoff_level": 1,
+      "next_allowed_at": 1795397191.0304222,
+      "generic_failures": 2,
+      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details | primary Reader: Jina Reader returned too little raw Proshop data (0 product links)",
+      "last_failure_at": "2026-11-23T01:24:31.030391+00:00",
+      "last_success_at": "2026-11-23T01:22:34.153652+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -1005,14 +1005,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1795396814.4431098,
+      "next_allowed_at": 1795397106.5479264,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-23T01:16:14.443078+00:00"
+      "last_success_at": "2026-11-23T01:21:06.547897+00:00"
     }
   },
-  "updated_at": "2026-11-23T01:19:45.235553+00:00",
+  "updated_at": "2026-11-23T01:24:47.517988+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -1037,7 +1037,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-23T01:16:13.556032+00:00"
+          "last_checked": "2026-11-23T01:21:05.620514+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -1047,7 +1047,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1795396572.5069122,
+      "last_discovery_epoch": 1795396864.3650997,
       "last_full_discovery_epoch": 1795389357.3908324,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -1108,14 +1108,14 @@
     "3447590": 1795396596.2100794,
     "3478501": 1795396652.5541766,
     "3502023": 1795396652.5541766,
-    "3519996": 1795396159.2058487,
+    "3519996": 1795397065.3005338,
     "3530348": 1795396762.9042423,
     "3530349": 1795396301.0903666,
     "3519993": 1795396762.9042423,
     "3519997": 1795396706.4051309,
-    "3519992": 1795396159.2058487
+    "3519992": 1795397065.3005338
   },
-  "proshop_broad_attempt_at": 1795396465.8614342,
+  "proshop_broad_attempt_at": 1795396845.6538484,
   "proshop_radar_alerts": {
     "3519996:BESTILLINGSVARE": 1795178627.036411,
     "3519997:BESTILLINGSVARE": 1795095861.5824559,
@@ -1130,15 +1130,15 @@
   ],
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
-    "status": "ok",
+    "status": "degraded",
     "coverage_status": "unverified",
-    "transport_status": "available",
-    "primary_count": 2,
+    "transport_status": "unavailable",
+    "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-23T01:19:22.904162+00:00",
-    "details_or_listings_count": 3
+    "checked_at": "2026-11-23T01:24:25.300468+00:00",
+    "details_or_listings_count": 0
   },
-  "proshop_last_usable_count": 3,
-  "proshop_last_usable_at": "2026-11-23T01:19:27.307266+00:00",
-  "proshop_broad_next_index": 0
+  "proshop_last_usable_count": 2,
+  "proshop_last_usable_at": "2026-11-23T01:22:34.153662+00:00",
+  "proshop_broad_next_index": 1
 }
