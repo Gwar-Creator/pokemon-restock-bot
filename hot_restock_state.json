@@ -971,10 +971,10 @@
     "coolshop": {
       "backoff_level": 0,
       "next_allowed_at": 0.0,
-      "generic_failures": 1,
-      "last_error": "HTTPSConnectionPool(host='www.coolshop.dk', port=443): Read timed out. (read timeout=20)",
+      "generic_failures": 0,
+      "last_error": null,
       "last_failure_at": "2026-11-23T17:05:00.041874+00:00",
-      "last_success_at": "2026-11-23T17:03:48.531922+00:00"
+      "last_success_at": "2026-11-23T17:09:24.677768+00:00"
     },
     "proshop": {
       "backoff_level": 3,
@@ -1018,14 +1018,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1795453529.2752886,
+      "next_allowed_at": 1795453802.9787705,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-23T17:01:29.275260+00:00"
+      "last_success_at": "2026-11-23T17:06:02.978739+00:00"
     }
   },
-  "updated_at": "2026-11-23T17:05:17.250690+00:00",
+  "updated_at": "2026-11-23T17:09:38.746190+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -1050,7 +1050,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-23T17:01:27.616129+00:00"
+          "last_checked": "2026-11-23T17:06:02.279347+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -1060,7 +1060,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1795453286.753083,
+      "last_discovery_epoch": 1795453561.4404714,
       "last_full_discovery_epoch": 1795432860.281064,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
