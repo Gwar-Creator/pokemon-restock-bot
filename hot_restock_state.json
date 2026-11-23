@@ -123,33 +123,12 @@
       }
     },
     "proshop": {
-      "3478496": {
-        "name": "Pokemon TCG Mega Greninja ex Premium Collection",
-        "price": 499.0,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
-        "fetch_via": "jina_verified_detail"
-      },
-      "3417744": {
-        "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
-        "price": null,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
-        "fetch_via": "preserved_previous_scan"
-      },
-      "3530349": {
-        "name": "Pokemon Ex Box - Greninja 30th Celebration",
-        "price": null,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-Ex-Box-Greninja-30th-Celebration/3530349",
-        "fetch_via": "preserved_previous_scan"
-      },
       "3519996": {
         "name": "Pokemon Ultra Premium Collection 30th Celebration - assorted",
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Ultra-Premium-Collection-30th-Celebration-assorted/3519996",
-        "fetch_via": "preserved_previous_scan"
+        "fetch_via": "jina_verified_detail"
       },
       "3530348": {
         "name": "Pokemon ex Box Sylveon 30th Celebration",
@@ -177,6 +156,27 @@
         "price": 299.0,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Tin-Fall-ex-assorted/3478501",
+        "fetch_via": "preserved_previous_scan"
+      },
+      "3478496": {
+        "name": "Pokemon TCG Mega Greninja ex Premium Collection",
+        "price": 499.0,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
+        "fetch_via": "preserved_previous_scan"
+      },
+      "3417744": {
+        "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
+        "price": null,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
+        "fetch_via": "preserved_previous_scan"
+      },
+      "3530349": {
+        "name": "Pokemon Ex Box - Greninja 30th Celebration",
+        "price": null,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-Ex-Box-Greninja-30th-Celebration/3530349",
         "fetch_via": "preserved_previous_scan"
       },
       "3421827": {
@@ -977,12 +977,12 @@
       "last_success_at": "2026-11-23T06:19:15.641909+00:00"
     },
     "proshop": {
-      "backoff_level": 1,
-      "next_allowed_at": 1795433079.2108295,
+      "backoff_level": 0,
+      "next_allowed_at": 0.0,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-11-23T11:01:09.669215+00:00",
-      "last_success_at": "2026-11-23T11:22:39.210814+00:00"
+      "last_success_at": "2026-11-23T11:29:19.286823+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -1018,14 +1018,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1795433102.941928,
+      "next_allowed_at": 1795433403.2705176,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-23T11:21:02.941894+00:00"
+      "last_success_at": "2026-11-23T11:26:03.270489+00:00"
     }
   },
-  "updated_at": "2026-11-23T11:24:39.136682+00:00",
+  "updated_at": "2026-11-23T11:29:38.037540+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -1050,7 +1050,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-23T11:21:02.190300+00:00"
+          "last_checked": "2026-11-23T11:26:02.392018+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -1060,7 +1060,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1795432860.281064,
+      "last_discovery_epoch": 1795433161.488713,
       "last_full_discovery_epoch": 1795432860.281064,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -1108,27 +1108,27 @@
   },
   "proshop_detail_checks": {
     "3417744": 1795427661.2206383,
-    "3447592": 1795426541.2482731,
+    "3447592": 1795433137.8650658,
     "3478496": 1795432954.5280848,
-    "3478497": 1795426611.7442844,
-    "3478498": 1795426541.2482731,
+    "3478497": 1795433192.0968428,
+    "3478498": 1795433137.8650658,
     "3519999": 1795430360.2209828,
     "3530350": 1795432954.5280848,
     "3530351": 1795430360.2209828,
     "3530352": 1795432597.8265953,
-    "3530353": 1795427007.942976,
+    "3530353": 1795433303.0466785,
     "3421827": 1795432597.8265953,
     "3447590": 1795429068.3990119,
-    "3478501": 1795426611.7442844,
-    "3502023": 1795426844.0947325,
-    "3519996": 1795427065.1601377,
-    "3530348": 1795427007.942976,
+    "3478501": 1795433192.0968428,
+    "3502023": 1795433246.4571066,
+    "3519996": 1795433356.4318686,
+    "3530348": 1795433303.0466785,
     "3530349": 1795427661.2206383,
-    "3519993": 1795427065.1601377,
-    "3519997": 1795426844.0947325,
+    "3519993": 1795433356.4318686,
+    "3519997": 1795433246.4571066,
     "3519992": 1795429068.3990119
   },
-  "proshop_broad_attempt_at": 1795432952.2584937,
+  "proshop_broad_attempt_at": 1795433301.2490153,
   "proshop_radar_alerts": {
     "3519996:BESTILLINGSVARE": 1795178627.036411,
     "3519997:BESTILLINGSVARE": 1795095861.5824559,
@@ -1148,10 +1148,10 @@
     "transport_status": "available",
     "primary_count": 1,
     "broad_count": 0,
-    "checked_at": "2026-11-23T11:22:34.527802+00:00",
+    "checked_at": "2026-11-23T11:29:16.431793+00:00",
     "details_or_listings_count": 2
   },
   "proshop_last_usable_count": 2,
-  "proshop_last_usable_at": "2026-11-23T11:22:39.210849+00:00",
-  "proshop_broad_next_index": 0
+  "proshop_last_usable_at": "2026-11-23T11:29:19.286849+00:00",
+  "proshop_broad_next_index": 1
 }
