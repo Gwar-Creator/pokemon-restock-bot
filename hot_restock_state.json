@@ -977,11 +977,11 @@
       "last_success_at": "2026-11-23T06:19:15.641909+00:00"
     },
     "proshop": {
-      "backoff_level": 2,
-      "next_allowed_at": 1795429373.5020783,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-23T10:01:58.768577+00:00",
+      "backoff_level": 3,
+      "next_allowed_at": 1795430304.753326,
+      "generic_failures": 1,
+      "last_error": "Proshop Reader temporarily blocked: 401 Client Error: Unauthorized for url: https://r.jina.ai/https://www.proshop.dk/pokemon-kort",
+      "last_failure_at": "2026-11-23T10:23:24.753317+00:00",
       "last_success_at": "2026-11-23T10:17:53.502056+00:00"
     },
     "br": {
@@ -1009,23 +1009,23 @@
       "last_success_at": "2026-11-21T18:34:48.837760+00:00"
     },
     "boozt": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-23T04:36:51.358892+00:00",
+      "backoff_level": 2,
+      "next_allowed_at": 1795429716.2424057,
+      "generic_failures": 2,
+      "last_error": "BOOZT fejlede: Reader: 401 Client Error: Unauthorized for url: https://r.jina.ai/https://www.boozt.com/dk/da/pokemon-trading-cards/born | direct: 429 Client Error: Too Many Requests for url: https://www.boozt.com/dk/da/pokemon-trading-cards/born",
+      "last_failure_at": "2026-11-23T10:23:36.242390+00:00",
       "last_success_at": "2026-11-23T04:39:37.562517+00:00"
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1795429197.9315393,
+      "next_allowed_at": 1795429495.9089217,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-23T10:15:57.931511+00:00"
+      "last_success_at": "2026-11-23T10:20:55.908893+00:00"
     }
   },
-  "updated_at": "2026-11-23T10:19:35.944111+00:00",
+  "updated_at": "2026-11-23T10:24:31.230153+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -1050,7 +1050,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-23T10:15:57.115928+00:00"
+          "last_checked": "2026-11-23T10:20:54.271660+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -1060,7 +1060,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1795428956.2624602,
+      "last_discovery_epoch": 1795429253.4905095,
       "last_full_discovery_epoch": 1795410962.2538192,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -1143,13 +1143,12 @@
   ],
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
-    "status": "ok",
+    "status": "degraded",
     "coverage_status": "unverified",
-    "transport_status": "available",
-    "primary_count": 1,
+    "transport_status": "unavailable",
+    "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-23T10:17:48.398817+00:00",
-    "details_or_listings_count": 1
+    "checked_at": "2026-11-23T10:23:24.753292+00:00"
   },
   "proshop_last_usable_count": 1,
   "proshop_last_usable_at": "2026-11-23T10:17:53.502097+00:00",
