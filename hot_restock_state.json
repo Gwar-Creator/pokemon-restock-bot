@@ -123,6 +123,34 @@
       }
     },
     "proshop": {
+      "3417744": {
+        "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
+        "price": null,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
+        "fetch_via": "jina_verified_detail"
+      },
+      "3530348": {
+        "name": "Pokemon ex Box Sylveon 30th Celebration",
+        "price": null,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-ex-Box-Sylveon-30th-Celebration/3530348",
+        "fetch_via": "preserved_previous_scan"
+      },
+      "3519996": {
+        "name": "Pokemon Ultra Premium Collection 30th Celebration - assorted",
+        "price": null,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-Ultra-Premium-Collection-30th-Celebration-assorted/3519996",
+        "fetch_via": "preserved_previous_scan"
+      },
+      "3519997": {
+        "name": "Pokemon Ditto Premium Collection 30th Celebration",
+        "price": null,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-Ditto-Premium-Collection-30th-Celebration/3519997",
+        "fetch_via": "preserved_previous_scan"
+      },
       "3478501": {
         "name": "Pokemon Tin Fall ex - assorted",
         "price": 299.0,
@@ -156,34 +184,6 @@
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Ex-Box-Greninja-30th-Celebration/3530349",
-        "fetch_via": "preserved_previous_scan"
-      },
-      "3417744": {
-        "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
-        "price": null,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
-        "fetch_via": "preserved_previous_scan"
-      },
-      "3530348": {
-        "name": "Pokemon ex Box Sylveon 30th Celebration",
-        "price": null,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-ex-Box-Sylveon-30th-Celebration/3530348",
-        "fetch_via": "preserved_previous_scan"
-      },
-      "3519996": {
-        "name": "Pokemon Ultra Premium Collection 30th Celebration - assorted",
-        "price": null,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-Ultra-Premium-Collection-30th-Celebration-assorted/3519996",
-        "fetch_via": "preserved_previous_scan"
-      },
-      "3519997": {
-        "name": "Pokemon Ditto Premium Collection 30th Celebration",
-        "price": null,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-Ditto-Premium-Collection-30th-Celebration/3519997",
         "fetch_via": "preserved_previous_scan"
       },
       "3519993": {
@@ -675,7 +675,7 @@
           },
           "1370": {
             "name": "føtex Kolding Syd",
-            "stock": 16
+            "stock": 10
           },
           "1223": {
             "name": "føtex Esbjerg Broen",
@@ -971,10 +971,10 @@
     "coolshop": {
       "backoff_level": 0,
       "next_allowed_at": 0.0,
-      "generic_failures": 1,
-      "last_error": "HTTPSConnectionPool(host='www.coolshop.dk', port=443): Read timed out. (read timeout=20)",
+      "generic_failures": 0,
+      "last_error": null,
       "last_failure_at": "2026-11-24T06:49:38.834590+00:00",
-      "last_success_at": "2026-11-24T06:48:32.542242+00:00"
+      "last_success_at": "2026-11-24T06:54:23.032025+00:00"
     },
     "proshop": {
       "backoff_level": 0,
@@ -1018,14 +1018,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1795503005.0462809,
+      "next_allowed_at": 1795503301.2824547,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-24T06:46:05.046255+00:00"
+      "last_success_at": "2026-11-24T06:51:01.282429+00:00"
     }
   },
-  "updated_at": "2026-11-24T06:49:57.009106+00:00",
+  "updated_at": "2026-11-24T06:54:44.038724+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -1050,7 +1050,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-24T06:46:03.391435+00:00"
+          "last_checked": "2026-11-24T06:51:00.337303+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -1060,7 +1060,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1795502762.310294,
+      "last_discovery_epoch": 1795503059.2373798,
       "last_full_discovery_epoch": 1795498552.9045115,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -1107,7 +1107,7 @@
     "coolshop:https://www.coolshop.dk/produkt/pokemon-tin-fall-ex-pok10411-101/23XF7K/": 1795164803.3685203
   },
   "proshop_detail_checks": {
-    "3417744": 1795502357.8271074,
+    "3417744": 1795503265.4890811,
     "3447592": 1795502799.649541,
     "3478496": 1795502671.3308856,
     "3478497": 1795502857.2680826,
@@ -1116,19 +1116,19 @@
     "3530350": 1795502857.2680826,
     "3530351": 1795502615.854327,
     "3530352": 1795502799.649541,
-    "3530353": 1795502357.8271074,
+    "3530353": 1795503265.4890811,
     "3421827": 1795502615.854327,
     "3447590": 1795502671.3308856,
     "3478501": 1795502914.3774433,
-    "3502023": 1795502303.34038,
-    "3519996": 1795502192.5282416,
-    "3530348": 1795502303.34038,
+    "3502023": 1795503209.8819034,
+    "3519996": 1795503115.5805519,
+    "3530348": 1795503209.8819034,
     "3530349": 1795502454.2137852,
     "3519993": 1795502454.2137852,
-    "3519997": 1795502192.5282416,
+    "3519997": 1795503115.5805519,
     "3519992": 1795502506.0938392
   },
-  "proshop_broad_attempt_at": 1795502797.92056,
+  "proshop_broad_attempt_at": 1795503099.5283694,
   "proshop_radar_alerts": {
     "3519996:BESTILLINGSVARE": 1795178627.036411,
     "3519997:BESTILLINGSVARE": 1795095861.5824559,
@@ -1148,10 +1148,10 @@
     "transport_status": "available",
     "primary_count": 1,
     "broad_count": 0,
-    "checked_at": "2026-11-24T06:49:40.725953+00:00",
-    "details_or_listings_count": 1
+    "checked_at": "2026-11-24T06:54:25.489005+00:00",
+    "details_or_listings_count": 2
   },
-  "proshop_last_usable_count": 1,
-  "proshop_last_usable_at": "2026-11-24T06:49:40.726712+00:00",
-  "proshop_broad_next_index": 2
+  "proshop_last_usable_count": 2,
+  "proshop_last_usable_at": "2026-11-24T06:54:30.077381+00:00",
+  "proshop_broad_next_index": 0
 }
