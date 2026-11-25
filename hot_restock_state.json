@@ -137,6 +137,27 @@
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Figure-Collection-30th-Celebration-assorted/3519993",
         "fetch_via": "jina_reader"
       },
+      "3478501": {
+        "name": "Pokemon Tin Fall ex - assorted",
+        "price": null,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-Tin-Fall-ex-assorted/3478501",
+        "fetch_via": "jina_verified_detail"
+      },
+      "3478497": {
+        "name": "Pokemon TCG 2-pack Booster",
+        "price": null,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2-pack-Booster/3478497",
+        "fetch_via": "preserved_previous_scan"
+      },
+      "3478496": {
+        "name": "Pokemon TCG Mega Greninja ex Premium Collection",
+        "price": 499.0,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
+        "fetch_via": "preserved_previous_scan"
+      },
       "3421827": {
         "name": "Pokemon TCG 2024 World Championships Deck",
         "price": 329.0,
@@ -170,27 +191,6 @@
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Ditto-Premium-Collection-30th-Celebration/3519997",
-        "fetch_via": "preserved_previous_scan"
-      },
-      "3478501": {
-        "name": "Pokemon Tin Fall ex - assorted",
-        "price": null,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-Tin-Fall-ex-assorted/3478501",
-        "fetch_via": "preserved_previous_scan"
-      },
-      "3478497": {
-        "name": "Pokemon TCG 2-pack Booster",
-        "price": null,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2-pack-Booster/3478497",
-        "fetch_via": "preserved_previous_scan"
-      },
-      "3478496": {
-        "name": "Pokemon TCG Mega Greninja ex Premium Collection",
-        "price": 499.0,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
         "fetch_via": "preserved_previous_scan"
       },
       "3530351": {
@@ -979,10 +979,10 @@
     "proshop": {
       "backoff_level": 0,
       "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-25T03:38:27.097376+00:00",
-      "last_success_at": "2026-11-25T03:39:18.225282+00:00"
+      "generic_failures": 1,
+      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details | primary Reader: Jina Reader returned too little raw Proshop data (0 product links)",
+      "last_failure_at": "2026-11-25T04:04:44.485289+00:00",
+      "last_success_at": "2026-11-25T04:03:49.068688+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -1018,14 +1018,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1795579202.7566857,
+      "next_allowed_at": 1795579516.1588855,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-25T03:56:02.756655+00:00"
+      "last_success_at": "2026-11-25T04:01:16.158854+00:00"
     }
   },
-  "updated_at": "2026-11-25T03:59:38.637042+00:00",
+  "updated_at": "2026-11-25T04:04:57.878238+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -1050,7 +1050,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-25T03:56:01.485323+00:00"
+          "last_checked": "2026-11-25T04:01:15.447083+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -1060,7 +1060,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1795578960.5734181,
+      "last_discovery_epoch": 1795579274.5695872,
       "last_full_discovery_epoch": 1795563876.0278456,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -1108,18 +1108,18 @@
   },
   "proshop_detail_checks": {
     "3417744": 1795578754.8454368,
-    "3447592": 1795578564.9790528,
-    "3478496": 1795578400.1181123,
-    "3478497": 1795578455.999853,
+    "3447592": 1795579481.12206,
+    "3478496": 1795579317.7017758,
+    "3478497": 1795579368.1373456,
     "3478498": 1795578809.5465267,
-    "3519999": 1795578400.1181123,
+    "3519999": 1795579317.7017758,
     "3530350": 1795578700.0539515,
-    "3530351": 1795578564.9790528,
+    "3530351": 1795579481.12206,
     "3530352": 1795578660.3643641,
-    "3530353": 1795578509.8965213,
+    "3530353": 1795579425.5405707,
     "3421827": 1795579107.9814138,
-    "3447590": 1795578455.999853,
-    "3478501": 1795578509.8965213,
+    "3447590": 1795579368.1373456,
+    "3478501": 1795579425.5405707,
     "3502023": 1795578809.5465267,
     "3519996": 1795578660.3643641,
     "3530348": 1795578754.8454368,
@@ -1128,7 +1128,7 @@
     "3519997": 1795578700.0539515,
     "3519992": 1795578864.721902
   },
-  "proshop_broad_attempt_at": 1795578997.7224689,
+  "proshop_broad_attempt_at": 1795579315.6015391,
   "proshop_radar_alerts": {
     "3519996:BESTILLINGSVARE": 1795178627.036411,
     "3519997:BESTILLINGSVARE": 1795095861.5824559,
@@ -1143,15 +1143,15 @@
   ],
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
-    "status": "ok",
+    "status": "degraded",
     "coverage_status": "unverified",
-    "transport_status": "available",
-    "primary_count": 3,
+    "transport_status": "unavailable",
+    "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-25T03:59:23.274398+00:00",
-    "details_or_listings_count": 3
+    "checked_at": "2026-11-25T04:04:41.121978+00:00",
+    "details_or_listings_count": 0
   },
-  "proshop_last_usable_count": 3,
-  "proshop_last_usable_at": "2026-11-25T03:59:23.275333+00:00",
-  "proshop_broad_next_index": 1
+  "proshop_last_usable_count": 4,
+  "proshop_last_usable_at": "2026-11-25T04:03:49.068714+00:00",
+  "proshop_broad_next_index": 2
 }
