@@ -135,7 +135,7 @@
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Ex-Box-Greninja-30th-Celebration/3530349",
-        "fetch_via": "jina_verified_detail"
+        "fetch_via": "preserved_previous_scan"
       },
       "3530348": {
         "name": "Pokemon ex Box Sylveon 30th Celebration",
@@ -1016,19 +1016,19 @@
   "source_controls": {
     "coolshop": {
       "backoff_level": 3,
-      "next_allowed_at": 1795634049.9181828,
-      "generic_failures": 93,
+      "next_allowed_at": 1795634958.6872494,
+      "generic_failures": 94,
       "last_error": "403 Client Error: Forbidden for url: https://www.coolshop.dk/api/search",
-      "last_failure_at": "2026-11-25T18:59:09.918157+00:00",
+      "last_failure_at": "2026-11-25T19:14:18.687223+00:00",
       "last_success_at": "2026-11-24T19:13:25.061152+00:00"
     },
     "proshop": {
-      "backoff_level": 3,
-      "next_allowed_at": 1795633758.679344,
-      "generic_failures": 3,
-      "last_error": "Proshop Reader temporarily blocked: 401 Client Error: Unauthorized for url: https://r.jina.ai/https://www.proshop.dk/pokemon-kort",
+      "backoff_level": 2,
+      "next_allowed_at": 1795634161.778777,
+      "generic_failures": 0,
+      "last_error": null,
       "last_failure_at": "2026-11-25T18:54:18.679335+00:00",
-      "last_success_at": "2026-11-25T18:34:40.661824+00:00"
+      "last_success_at": "2026-11-25T19:11:01.778761+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -1064,14 +1064,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1795633790.43745,
+      "next_allowed_at": 1795634122.1449602,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-25T19:05:50.437417+00:00"
+      "last_success_at": "2026-11-25T19:11:22.144931+00:00"
     }
   },
-  "updated_at": "2026-11-25T19:09:27.497908+00:00",
+  "updated_at": "2026-11-25T19:14:46.367275+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -1096,7 +1096,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-25T19:05:49.236122+00:00"
+          "last_checked": "2026-11-25T19:11:21.212448+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -1106,7 +1106,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1795633548.30948,
+      "last_discovery_epoch": 1795633880.3472862,
       "last_full_discovery_epoch": 1795629054.0110707,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -1157,7 +1157,7 @@
     "3447592": 1795631970.0797536,
     "3478496": 1795631790.9807403,
     "3478497": 1795631844.3480742,
-    "3478498": 1795631511.3184144,
+    "3478498": 1795633857.3611064,
     "3519999": 1795631844.3480742,
     "3530350": 1795632263.9981313,
     "3530351": 1795632042.3268766,
@@ -1166,7 +1166,7 @@
     "3421827": 1795631676.293175,
     "3447590": 1795632151.497552,
     "3478501": 1795631900.6266031,
-    "3502023": 1795631511.3184144,
+    "3502023": 1795633857.3611064,
     "3519996": 1795631970.0797536,
     "3530348": 1795632207.6584406,
     "3530349": 1795632263.9981313,
@@ -1174,7 +1174,7 @@
     "3519997": 1795632042.3268766,
     "3519992": 1795631676.293175
   },
-  "proshop_broad_attempt_at": 1795632261.5279825,
+  "proshop_broad_attempt_at": 1795633848.173444,
   "proshop_radar_alerts": {
     "3519996:BESTILLINGSVARE": 1795598501.1474705,
     "3519997:BESTILLINGSVARE": 1795095861.5824559,
@@ -1189,14 +1189,15 @@
   ],
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
-    "status": "degraded",
+    "status": "ok",
     "coverage_status": "unverified",
-    "transport_status": "unavailable",
-    "primary_count": 0,
+    "transport_status": "available",
+    "primary_count": 2,
     "broad_count": 0,
-    "checked_at": "2026-11-25T18:54:18.679296+00:00"
+    "checked_at": "2026-11-25T19:10:57.360899+00:00",
+    "details_or_listings_count": 2
   },
-  "proshop_last_usable_count": 3,
-  "proshop_last_usable_at": "2026-11-25T18:44:27.471067+00:00",
-  "proshop_broad_next_index": 1
+  "proshop_last_usable_count": 2,
+  "proshop_last_usable_at": "2026-11-25T19:11:01.778793+00:00",
+  "proshop_broad_next_index": 2
 }
