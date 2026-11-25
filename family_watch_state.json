@@ -1,5 +1,13 @@
 {
   "events": {
+    "coop_direct|4D2hjtey|1111305": {
+      "name": "Arla proteindrik*",
+      "source": "coop_direct",
+      "store": "Kvickly",
+      "upcoming_sent_at": "2026-11-25T03:34:50.789377Z",
+      "valid_from": "2026-11-26T23:00:00Z",
+      "valid_until": "2026-12-03T22:59:59Z"
+    },
     "coop_direct|AWkJ1rgM|1103220": {
       "current_sent_at": "2026-11-06T06:47:23.337199Z",
       "name": "Cheasy skyr",
@@ -364,14 +372,21 @@
       "valid_from": "2026-11-05T23:00:00Z",
       "valid_until": "2026-11-12T22:59:59Z"
     },
-    "etilbudsavis|VE4dDRAN|cSp_0cLuDV3fRLQrAvpgu": {
-      "current_sent_at": "2026-10-03T23:05:11.446584Z",
-      "name": "ROSE Kyllingestrimler",
+    "etilbudsavis|UBqv25rF|O0H2SWvudfbU_acKcwuAD": {
+      "name": "Vådservietter",
       "source": "etilbudsavis",
-      "store": "Lidl",
-      "upcoming_sent_at": "2026-09-30T05:33:59.254769Z",
-      "valid_from": "2026-10-03T22:00:00Z",
-      "valid_until": "2026-10-10T21:59:59Z"
+      "store": "Bilka",
+      "upcoming_sent_at": "2026-11-25T03:34:50.789377Z",
+      "valid_from": "2026-11-26T23:00:00Z",
+      "valid_until": "2026-12-03T22:59:59Z"
+    },
+    "etilbudsavis|UBqv25rF|ry5pc2-1sOzTWdDrib8dQ": {
+      "name": "XXL kyllingestrimler",
+      "source": "etilbudsavis",
+      "store": "Bilka",
+      "upcoming_sent_at": "2026-11-25T03:34:50.789377Z",
+      "valid_from": "2026-11-26T23:00:00Z",
+      "valid_until": "2026-12-03T22:59:59Z"
     },
     "etilbudsavis|_zOzG3Rp|DUR04oZbGACjqIFRAUcAF": {
       "current_sent_at": "2026-10-15T23:05:54.397352Z",
@@ -516,13 +531,13 @@
       "valid_from": "2026-11-07T23:00:00Z",
       "valid_until": "2026-11-14T22:59:59Z"
     },
-    "etilbudsavis|ta8mAXfO|QQcgq_V7IXtVAQFrc6spv": {
-      "current_sent_at": "2026-10-06T01:19:49.650655Z",
-      "name": "ROSE Kyllingestrimler",
+    "etilbudsavis|rychyFmb|J4_aVloNYRX8XUEERxpLd": {
+      "name": "LUPILU Vådservietter",
       "source": "etilbudsavis",
       "store": "Lidl",
-      "valid_from": "2026-10-03T22:00:00Z",
-      "valid_until": "2026-10-10T21:59:59Z"
+      "upcoming_sent_at": "2026-11-25T03:34:50.789377Z",
+      "valid_from": "2026-11-28T23:00:00Z",
+      "valid_until": "2026-12-05T22:59:59Z"
     },
     "etilbudsavis|v-BKAzfh|S3VwE8sYH5CY0Yr2n0gg8": {
       "current_sent_at": "2026-11-22T06:49:30.531318Z",
@@ -673,6 +688,14 @@
       "valid_from": "2026-11-19T23:00:00Z",
       "valid_until": "2026-11-26T22:59:59Z"
     },
+    "family_watch_aggregate|grouped|bornetoj:bilka:2026-11-26T23:00:00+00:00:2026-12-03T22:59:59+00:00": {
+      "name": "Børnetøj i tilbudsavisen",
+      "source": "family_watch_aggregate",
+      "store": "Bilka",
+      "upcoming_sent_at": "2026-11-25T03:34:50.789377Z",
+      "valid_from": "2026-11-26T23:00:00Z",
+      "valid_until": "2026-12-03T22:59:59Z"
+    },
     "family_watch_aggregate|grouped|bornetoj:kvickly:2026-10-08T22:00:00+00:00:2026-10-22T21:59:59+00:00": {
       "current_sent_at": "2026-10-09T06:10:15.768005Z",
       "name": "Børnetøj i tilbudsavisen",
@@ -726,6 +749,14 @@
       "upcoming_sent_at": "2026-11-17T23:31:54.109625Z",
       "valid_from": "2026-11-19T23:00:00Z",
       "valid_until": "2026-11-26T22:59:59Z"
+    },
+    "family_watch_aggregate|grouped|bornetoj:kvickly:2026-11-26T23:00:00+00:00:2026-12-03T22:59:59+00:00": {
+      "name": "Børnetøj i tilbudsavisen",
+      "source": "family_watch_aggregate",
+      "store": "Kvickly",
+      "upcoming_sent_at": "2026-11-25T03:34:50.789377Z",
+      "valid_from": "2026-11-26T23:00:00Z",
+      "valid_until": "2026-12-03T22:59:59Z"
     },
     "family_watch_aggregate|grouped|bornetoj:superbrugsen:2026-10-08T22:00:00+00:00:2026-10-22T21:59:59+00:00": {
       "current_sent_at": "2026-10-09T06:10:15.768005Z",
@@ -870,10 +901,10 @@
       "valid_until": "2026-10-15T21:59:59Z"
     }
   },
-  "last_alert_count": 0,
-  "last_match_count": 13,
+  "last_alert_count": 6,
+  "last_match_count": 17,
   "last_new_count": 0,
-  "last_run_at": "2026-11-24T19:33:20.268747Z",
+  "last_run_at": "2026-11-25T03:34:50.789377Z",
   "seen": {},
   "version": 2
 }
