@@ -291,7 +291,7 @@
         "online_stock": false,
         "is_exposed": true,
         "store_count": 31,
-        "kolding_stock": 163,
+        "kolding_stock": 162,
         "esbjerg_stock": 0,
         "quantity_limit": 6,
         "sku": "11398799-EA",
@@ -1016,18 +1016,18 @@
   "source_controls": {
     "coolshop": {
       "backoff_level": 3,
-      "next_allowed_at": 1795614141.0982015,
-      "generic_failures": 73,
+      "next_allowed_at": 1795615046.791354,
+      "generic_failures": 74,
       "last_error": "403 Client Error: Forbidden for url: https://www.coolshop.dk/api/search",
-      "last_failure_at": "2026-11-25T13:27:21.098168+00:00",
+      "last_failure_at": "2026-11-25T13:42:26.791328+00:00",
       "last_success_at": "2026-11-24T19:13:25.061152+00:00"
     },
     "proshop": {
-      "backoff_level": 1,
-      "next_allowed_at": 1795614017.330508,
-      "generic_failures": 2,
+      "backoff_level": 2,
+      "next_allowed_at": 1795614344.879956,
+      "generic_failures": 3,
       "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details | primary Reader: Jina Reader returned too little raw Proshop data (0 product links)",
-      "last_failure_at": "2026-11-25T13:38:17.330495+00:00",
+      "last_failure_at": "2026-11-25T13:40:44.879923+00:00",
       "last_success_at": "2026-11-25T13:36:32.560421+00:00"
     },
     "br": {
@@ -1064,14 +1064,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1795613989.062164,
+      "next_allowed_at": 1795614304.5345087,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-25T13:35:49.062132+00:00"
+      "last_success_at": "2026-11-25T13:41:04.534455+00:00"
     }
   },
-  "updated_at": "2026-11-25T13:39:24.101345+00:00",
+  "updated_at": "2026-11-25T13:44:31.436892+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -1096,7 +1096,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-25T13:35:48.264672+00:00"
+          "last_checked": "2026-11-25T13:41:03.517250+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -1106,7 +1106,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1795613746.8676336,
+      "last_discovery_epoch": 1795614062.2157683,
       "last_full_discovery_epoch": 1795607164.902233,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -1153,7 +1153,7 @@
     "coolshop:https://www.coolshop.dk/produkt/pokemon-tin-fall-ex-pok10411-101/23XF7K/": 1795164803.3685203
   },
   "proshop_detail_checks": {
-    "3417744": 1795613086.3758495,
+    "3417744": 1795614040.186253,
     "3447592": 1795613568.049193,
     "3478496": 1795613353.610307,
     "3478497": 1795613459.6159692,
@@ -1168,7 +1168,7 @@
     "3478501": 1795613512.8885047,
     "3502023": 1795613132.7546706,
     "3519996": 1795613624.625872,
-    "3530348": 1795613086.3758495,
+    "3530348": 1795614040.186253,
     "3530349": 1795613245.780279,
     "3519993": 1795613298.819476,
     "3519997": 1795613678.278817,
@@ -1194,7 +1194,7 @@
     "transport_status": "unavailable",
     "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-25T13:38:17.330414+00:00",
+    "checked_at": "2026-11-25T13:40:40.186052+00:00",
     "details_or_listings_count": 0
   },
   "proshop_last_usable_count": 1,
