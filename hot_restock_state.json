@@ -989,7 +989,7 @@
         "availability_known": true,
         "preorder": false,
         "url": "https://www.magasin.dk/poke-binder-coll-30th/BTBH31-0008.html",
-        "fetch_via": "direct_product"
+        "fetch_via": "stale_after_error"
       },
       "https://www.magasin.dk/poke-box/BTBH32-0008.html": {
         "name": "Poke Box",
@@ -1009,7 +1009,7 @@
         "availability_known": true,
         "preorder": false,
         "url": "https://www.magasin.dk/poke-elite-trainer-box-30/BTBH30-0008.html",
-        "fetch_via": "direct_product"
+        "fetch_via": "stale_after_error"
       }
     }
   },
@@ -1023,11 +1023,11 @@
       "last_success_at": "2026-11-24T19:13:25.061152+00:00"
     },
     "proshop": {
-      "backoff_level": 2,
-      "next_allowed_at": 1795637230.779502,
-      "generic_failures": 3,
+      "backoff_level": 3,
+      "next_allowed_at": 1795638162.471005,
+      "generic_failures": 4,
       "last_error": "Proshop Reader temporarily blocked: 401 Client Error: Unauthorized for url: https://r.jina.ai/https://www.proshop.dk/pokemon-kort",
-      "last_failure_at": "2026-11-25T20:02:10.779493+00:00",
+      "last_failure_at": "2026-11-25T20:07:42.470997+00:00",
       "last_success_at": "2026-11-25T19:57:31.285251+00:00"
     },
     "br": {
@@ -1064,14 +1064,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1795637136.424954,
+      "next_allowed_at": 1795637442.990057,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-25T20:01:36.424925+00:00"
+      "last_success_at": "2026-11-25T20:06:42.990022+00:00"
     }
   },
-  "updated_at": "2026-11-25T20:05:11.708428+00:00",
+  "updated_at": "2026-11-25T20:09:47.667401+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -1096,7 +1096,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-25T20:01:35.523887+00:00"
+          "last_checked": "2026-11-25T20:06:11.716704+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -1106,7 +1106,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1795636894.1286995,
+      "last_discovery_epoch": 1795637170.5794754,
       "last_full_discovery_epoch": 1795629054.0110707,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -1194,7 +1194,7 @@
     "transport_status": "unavailable",
     "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-25T20:02:10.779456+00:00"
+    "checked_at": "2026-11-25T20:07:42.470959+00:00"
   },
   "proshop_last_usable_count": 2,
   "proshop_last_usable_at": "2026-11-25T19:57:31.285289+00:00",
