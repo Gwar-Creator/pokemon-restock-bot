@@ -128,7 +128,7 @@
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Tin-Fall-ex-assorted/3478501",
-        "fetch_via": "jina_verified_detail"
+        "fetch_via": "preserved_previous_scan"
       },
       "3478497": {
         "name": "Pokemon TCG 2-pack Booster",
@@ -979,10 +979,10 @@
     "proshop": {
       "backoff_level": 0,
       "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-25T08:14:21.997544+00:00",
-      "last_success_at": "2026-11-25T08:19:22.302839+00:00"
+      "generic_failures": 1,
+      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details | primary Reader: Jina Reader returned too little raw Proshop data (0 product links)",
+      "last_failure_at": "2026-11-25T08:29:14.566212+00:00",
+      "last_success_at": "2026-11-25T08:28:19.901651+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -1018,14 +1018,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1795595098.2277162,
+      "next_allowed_at": 1795595408.1257834,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-25T08:20:58.227689+00:00"
+      "last_success_at": "2026-11-25T08:26:08.125752+00:00"
     }
   },
-  "updated_at": "2026-11-25T08:24:34.436279+00:00",
+  "updated_at": "2026-11-25T08:29:31.129838+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -1050,7 +1050,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-25T08:20:57.295417+00:00"
+          "last_checked": "2026-11-25T08:26:07.367625+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -1060,7 +1060,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1795594856.5713587,
+      "last_discovery_epoch": 1795595166.4502978,
       "last_full_discovery_epoch": 1795585550.74234,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -1108,13 +1108,13 @@
   },
   "proshop_detail_checks": {
     "3417744": 1795594703.808722,
-    "3447592": 1795594146.674815,
+    "3447592": 1795595132.8799198,
     "3478496": 1795594947.6403139,
     "3478497": 1795595001.2054484,
     "3478498": 1795594758.5641458,
     "3519999": 1795594947.6403139,
     "3530350": 1795594649.02737,
-    "3530351": 1795594146.674815,
+    "3530351": 1795595132.8799198,
     "3530352": 1795594539.5006385,
     "3530353": 1795595056.0323303,
     "3421827": 1795594891.433098,
@@ -1128,7 +1128,7 @@
     "3519997": 1795594649.02737,
     "3519992": 1795594836.482897
   },
-  "proshop_broad_attempt_at": 1795594946.176963,
+  "proshop_broad_attempt_at": 1795595297.7741208,
   "proshop_radar_alerts": {
     "3519996:BESTILLINGSVARE": 1795178627.036411,
     "3519997:BESTILLINGSVARE": 1795095861.5824559,
@@ -1143,15 +1143,15 @@
   ],
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
-    "status": "ok",
+    "status": "degraded",
     "coverage_status": "unverified",
-    "transport_status": "available",
-    "primary_count": 1,
+    "transport_status": "unavailable",
+    "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-25T08:24:16.032257+00:00",
-    "details_or_listings_count": 2
+    "checked_at": "2026-11-25T08:29:14.566130+00:00",
+    "details_or_listings_count": 0
   },
-  "proshop_last_usable_count": 2,
-  "proshop_last_usable_at": "2026-11-25T08:24:19.724232+00:00",
-  "proshop_broad_next_index": 1
+  "proshop_last_usable_count": 1,
+  "proshop_last_usable_at": "2026-11-25T08:28:19.901660+00:00",
+  "proshop_broad_next_index": 2
 }
