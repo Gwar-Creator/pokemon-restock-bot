@@ -142,7 +142,7 @@
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Ditto-Premium-Collection-30th-Celebration/3519997",
-        "fetch_via": "jina_verified_detail"
+        "fetch_via": "preserved_previous_scan"
       },
       "3478501": {
         "name": "Pokemon Tin Fall ex - assorted",
@@ -970,19 +970,19 @@
   "source_controls": {
     "coolshop": {
       "backoff_level": 3,
-      "next_allowed_at": 1795566750.0937512,
-      "generic_failures": 22,
+      "next_allowed_at": 1795567657.3732653,
+      "generic_failures": 23,
       "last_error": "403 Client Error: Forbidden for url: https://www.coolshop.dk/api/search",
-      "last_failure_at": "2026-11-25T00:17:30.093727+00:00",
+      "last_failure_at": "2026-11-25T00:32:37.373238+00:00",
       "last_success_at": "2026-11-24T19:13:25.061152+00:00"
     },
     "proshop": {
       "backoff_level": 0,
       "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-25T00:21:47.839385+00:00",
-      "last_success_at": "2026-11-25T00:24:23.072665+00:00"
+      "generic_failures": 1,
+      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details | primary Reader: Jina Reader returned too little raw Proshop data (0 product links)",
+      "last_failure_at": "2026-11-25T00:34:35.768303+00:00",
+      "last_success_at": "2026-11-25T00:33:34.859035+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -1018,14 +1018,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1795566595.3701968,
+      "next_allowed_at": 1795566924.8549988,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-25T00:25:55.370164+00:00"
+      "last_success_at": "2026-11-25T00:31:24.854965+00:00"
     }
   },
-  "updated_at": "2026-11-25T00:29:28.065650+00:00",
+  "updated_at": "2026-11-25T00:34:49.628903+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -1050,7 +1050,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-25T00:25:54.172200+00:00"
+          "last_checked": "2026-11-25T00:31:23.827941+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -1060,7 +1060,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1795566352.782198,
+      "last_discovery_epoch": 1795566682.7453241,
       "last_full_discovery_epoch": 1795563876.0278456,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -1107,7 +1107,7 @@
     "coolshop:https://www.coolshop.dk/produkt/pokemon-tin-fall-ex-pok10411-101/23XF7K/": 1795164803.3685203
   },
   "proshop_detail_checks": {
-    "3417744": 1795565963.0933914,
+    "3417744": 1795566869.2361963,
     "3447592": 1795566441.3113165,
     "3478496": 1795566334.684452,
     "3478497": 1795566386.2427661,
@@ -1122,13 +1122,13 @@
     "3478501": 1795566441.3113165,
     "3502023": 1795566104.1656811,
     "3519996": 1795566497.0295854,
-    "3530348": 1795565963.0933914,
+    "3530348": 1795566869.2361963,
     "3530349": 1795566151.21542,
     "3519993": 1795566205.6658444,
     "3519997": 1795566551.573615,
     "3519992": 1795566151.21542
   },
-  "proshop_broad_attempt_at": 1795566332.8354344,
+  "proshop_broad_attempt_at": 1795566649.7798274,
   "proshop_radar_alerts": {
     "3519996:BESTILLINGSVARE": 1795178627.036411,
     "3519997:BESTILLINGSVARE": 1795095861.5824559,
@@ -1143,15 +1143,15 @@
   ],
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
-    "status": "ok",
+    "status": "degraded",
     "coverage_status": "unverified",
-    "transport_status": "available",
-    "primary_count": 3,
+    "transport_status": "unavailable",
+    "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-25T00:29:11.573537+00:00",
-    "details_or_listings_count": 4
+    "checked_at": "2026-11-25T00:34:29.236109+00:00",
+    "details_or_listings_count": 0
   },
-  "proshop_last_usable_count": 4,
-  "proshop_last_usable_at": "2026-11-25T00:29:14.927848+00:00",
-  "proshop_broad_next_index": 2
+  "proshop_last_usable_count": 3,
+  "proshop_last_usable_at": "2026-11-25T00:33:34.859052+00:00",
+  "proshop_broad_next_index": 0
 }
