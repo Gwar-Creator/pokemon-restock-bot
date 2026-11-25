@@ -5,9 +5,7 @@
     "price_disagreements": [],
     "shared_handles": 1,
     "shared_skus_or_barcodes": 1,
-    "stock_disagreements": [
-      "pokemon-play-n-display-case-3403180"
-    ]
+    "stock_disagreements": []
   },
   "last_alerts": {},
   "last_verified_scan": "2026-11-25T13:04:46.388720+00:00",
@@ -2491,7 +2489,7 @@
           "price": null,
           "retailers": {
             "bogide": {
-              "in_stock": false,
+              "in_stock": true,
               "label": "BOG & IDÉ",
               "preorder": false,
               "price": null,
@@ -2518,11 +2516,12 @@
   "sources": {
     "bogide": {
       "health": {
-        "consecutive_failures": 0,
-        "last_error": "",
+        "consecutive_failures": 1,
+        "last_error": "mistænkeligt lille varekatalog",
+        "last_failure": "2026-11-25T13:09:25.155004+00:00",
         "last_success": "2026-11-25T13:04:46.388720+00:00",
         "observed_count": 1,
-        "status": "ok"
+        "status": "failed"
       },
       "label": "BOG & IDÉ",
       "mode": "shadow",
@@ -2531,7 +2530,7 @@
           "barcodes": [],
           "game": "POKÉMON",
           "handle": "pokemon-play-n-display-case-3403180",
-          "in_stock": false,
+          "in_stock": true,
           "name": "POKEMON PLAY N DISPLAY CASE",
           "preorder": false,
           "price": null,
@@ -2540,7 +2539,7 @@
           "skus": [
             "3403180"
           ],
-          "updated_at": "2026-11-25T14:04:47+01:00",
+          "updated_at": "2026-11-25T14:09:26+01:00",
           "url": "https://www.bog-ide.dk/products/pokemon-play-n-display-case-3403180",
           "variant_id": ""
         }
@@ -2548,11 +2547,12 @@
     },
     "legekaeden": {
       "health": {
-        "consecutive_failures": 0,
-        "last_error": "",
+        "consecutive_failures": 1,
+        "last_error": "mistænkeligt lille varekatalog",
+        "last_failure": "2026-11-25T13:09:25.155004+00:00",
         "last_success": "2026-11-25T13:04:46.388720+00:00",
         "observed_count": 1,
-        "status": "ok"
+        "status": "failed"
       },
       "label": "LEGEKÆDEN",
       "mode": "shadow",
@@ -2570,13 +2570,13 @@
           "skus": [
             "3403180"
           ],
-          "updated_at": "2026-11-25T14:04:46+01:00",
+          "updated_at": "2026-11-25T14:09:25+01:00",
           "url": "https://www.legekaeden.dk/products/pokemon-play-n-display-case-3403180",
           "variant_id": ""
         }
       }
     }
   },
-  "updated_at": "2026-11-25T13:04:46.388720+00:00",
+  "updated_at": "2026-11-25T13:09:25.155004+00:00",
   "version": 5
 }
