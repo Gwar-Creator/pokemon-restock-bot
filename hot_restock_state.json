@@ -142,7 +142,7 @@
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Ditto-Premium-Collection-30th-Celebration/3519997",
-        "fetch_via": "jina_verified_detail"
+        "fetch_via": "preserved_previous_scan"
       },
       "3478501": {
         "name": "Pokemon Tin Fall ex - assorted",
@@ -1071,10 +1071,10 @@
     "proshop": {
       "backoff_level": 0,
       "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-26T21:56:34.234623+00:00",
-      "last_success_at": "2026-11-26T22:04:44.711468+00:00"
+      "generic_failures": 1,
+      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details | primary Reader: Jina Reader returned too little raw Proshop data (0 product links)",
+      "last_failure_at": "2026-11-26T22:14:19.824348+00:00",
+      "last_success_at": "2026-11-26T22:13:24.144233+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -1110,14 +1110,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1795730992.9863253,
+      "next_allowed_at": 1795731303.786677,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-26T22:05:52.986295+00:00"
+      "last_success_at": "2026-11-26T22:11:03.786641+00:00"
     }
   },
-  "updated_at": "2026-11-26T22:09:28.998913+00:00",
+  "updated_at": "2026-11-26T22:14:38.267179+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -1142,7 +1142,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-26T22:05:51.776671+00:00"
+          "last_checked": "2026-11-26T22:11:02.533163+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -1152,7 +1152,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1795730750.863635,
+      "last_discovery_epoch": 1795731061.7110298,
       "last_full_discovery_epoch": 1795716083.0970337,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -1200,28 +1200,28 @@
     "proshop:3502023": 1795701832.885783
   },
   "proshop_detail_checks": {
-    "3417744": 1795729408.9033728,
-    "3447592": 1795729460.4103677,
-    "3478496": 1795730058.991026,
+    "3417744": 1795731038.8091688,
+    "3447592": 1795731094.673979,
+    "3478496": 1795731150.8370552,
     "3478497": 1795730679.725924,
     "3478498": 1795730786.7393012,
     "3519999": 1795730952.0554397,
     "3530350": 1795730679.725924,
     "3530351": 1795730517.9191337,
     "3530352": 1795730733.0153925,
-    "3530353": 1795729408.9033728,
-    "3421827": 1795729460.4103677,
+    "3530353": 1795731038.8091688,
+    "3421827": 1795731094.673979,
     "3447590": 1795730844.444768,
     "3478501": 1795730786.7393012,
     "3502023": 1795730733.0153925,
     "3519996": 1795730844.444768,
-    "3530348": 1795730058.991026,
+    "3530348": 1795731150.8370552,
     "3530349": 1795730517.9191337,
     "3519993": 1795730896.7552476,
     "3519997": 1795730952.0554397,
     "3519992": 1795730896.7552476
   },
-  "proshop_broad_attempt_at": 1795730842.8989189,
+  "proshop_broad_attempt_at": 1795731149.4043248,
   "proshop_radar_alerts": {
     "3519996:BESTILLINGSVARE": 1795598501.1474705,
     "3519997:BESTILLINGSVARE": 1795095861.5824559,
@@ -1236,15 +1236,15 @@
   ],
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
-    "status": "ok",
+    "status": "degraded",
     "coverage_status": "unverified",
-    "transport_status": "available",
-    "primary_count": 3,
+    "transport_status": "unavailable",
+    "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-26T22:09:12.055363+00:00",
-    "details_or_listings_count": 4
+    "checked_at": "2026-11-26T22:14:19.824255+00:00",
+    "details_or_listings_count": 0
   },
-  "proshop_last_usable_count": 4,
-  "proshop_last_usable_at": "2026-11-26T22:09:15.175011+00:00",
-  "proshop_broad_next_index": 1
+  "proshop_last_usable_count": 3,
+  "proshop_last_usable_at": "2026-11-26T22:13:24.144248+00:00",
+  "proshop_broad_next_index": 2
 }
