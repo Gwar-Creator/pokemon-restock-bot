@@ -123,19 +123,26 @@
       }
     },
     "proshop": {
+      "3530349": {
+        "name": "Pokemon Ex Box - Greninja 30th Celebration",
+        "price": null,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-Ex-Box-Greninja-30th-Celebration/3530349",
+        "fetch_via": "preserved_previous_scan"
+      },
       "3417744": {
         "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
-        "fetch_via": "jina_verified_detail"
+        "fetch_via": "preserved_previous_scan"
       },
       "3530348": {
         "name": "Pokemon ex Box Sylveon 30th Celebration",
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-ex-Box-Sylveon-30th-Celebration/3530348",
-        "fetch_via": "jina_verified_detail"
+        "fetch_via": "preserved_previous_scan"
       },
       "3519997": {
         "name": "Pokemon Ditto Premium Collection 30th Celebration",
@@ -177,13 +184,6 @@
         "price": 329.0,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
-        "fetch_via": "preserved_previous_scan"
-      },
-      "3530349": {
-        "name": "Pokemon Ex Box - Greninja 30th Celebration",
-        "price": null,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-Ex-Box-Greninja-30th-Celebration/3530349",
         "fetch_via": "preserved_previous_scan"
       },
       "3519993": {
@@ -1025,10 +1025,10 @@
     "proshop": {
       "backoff_level": 0,
       "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-26T06:08:26.166429+00:00",
-      "last_success_at": "2026-11-26T06:19:30.664745+00:00"
+      "generic_failures": 1,
+      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details | primary Reader: Jina Reader returned too little raw Proshop data (0 product links)",
+      "last_failure_at": "2026-11-26T06:44:21.506395+00:00",
+      "last_success_at": "2026-11-26T06:43:25.508450+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -1064,14 +1064,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1795675212.4463828,
+      "next_allowed_at": 1795675503.4015667,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-26T06:36:12.446359+00:00"
+      "last_success_at": "2026-11-26T06:41:03.401533+00:00"
     }
   },
-  "updated_at": "2026-11-26T06:39:54.206794+00:00",
+  "updated_at": "2026-11-26T06:44:36.650531+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -1096,7 +1096,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-26T06:36:11.543705+00:00"
+          "last_checked": "2026-11-26T06:41:02.503251+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -1106,7 +1106,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1795674970.3280938,
+      "last_discovery_epoch": 1795675261.6550944,
       "last_full_discovery_epoch": 1795672548.171187,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -1161,7 +1161,7 @@
     "3519999": 1795674943.15157,
     "3530350": 1795674666.4779303,
     "3530351": 1795675106.8153024,
-    "3530352": 1795674331.8107877,
+    "3530352": 1795675240.9283295,
     "3530353": 1795674998.5391245,
     "3421827": 1795674758.7656622,
     "3447590": 1795674666.4779303,
@@ -1169,12 +1169,12 @@
     "3502023": 1795674813.9054098,
     "3519996": 1795675051.9484873,
     "3530348": 1795675161.7418647,
-    "3530349": 1795674331.8107877,
+    "3530349": 1795675240.9283295,
     "3519993": 1795674943.15157,
     "3519997": 1795675106.8153024,
     "3519992": 1795674868.8571613
   },
-  "proshop_broad_attempt_at": 1795674996.692448,
+  "proshop_broad_attempt_at": 1795675351.0711951,
   "proshop_radar_alerts": {
     "3519996:BESTILLINGSVARE": 1795598501.1474705,
     "3519997:BESTILLINGSVARE": 1795095861.5824559,
@@ -1189,15 +1189,15 @@
   ],
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
-    "status": "ok",
+    "status": "degraded",
     "coverage_status": "unverified",
-    "transport_status": "available",
-    "primary_count": 1,
+    "transport_status": "unavailable",
+    "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-26T06:39:21.741797+00:00",
-    "details_or_listings_count": 3
+    "checked_at": "2026-11-26T06:44:21.506289+00:00",
+    "details_or_listings_count": 0
   },
-  "proshop_last_usable_count": 3,
-  "proshop_last_usable_at": "2026-11-26T06:39:24.390661+00:00",
-  "proshop_broad_next_index": 1
+  "proshop_last_usable_count": 1,
+  "proshop_last_usable_at": "2026-11-26T06:43:25.508462+00:00",
+  "proshop_broad_next_index": 2
 }
