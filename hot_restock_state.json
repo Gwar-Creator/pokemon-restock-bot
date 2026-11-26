@@ -128,7 +128,7 @@
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Ex-Box-Greninja-30th-Celebration/3530349",
-        "fetch_via": "jina_verified_detail"
+        "fetch_via": "preserved_previous_scan"
       },
       "3417744": {
         "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
@@ -1025,10 +1025,10 @@
     "proshop": {
       "backoff_level": 0,
       "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-26T12:20:45.135723+00:00",
-      "last_success_at": "2026-11-26T12:24:25.595311+00:00"
+      "generic_failures": 1,
+      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details | primary Reader: Jina Reader returned too little raw Proshop data (0 product links)",
+      "last_failure_at": "2026-11-26T12:39:15.743635+00:00",
+      "last_success_at": "2026-11-26T12:38:17.277935+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -1064,14 +1064,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1795696521.8168294,
+      "next_allowed_at": 1795696788.2236085,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-26T12:31:21.816801+00:00"
+      "last_success_at": "2026-11-26T12:35:48.223577+00:00"
     }
   },
-  "updated_at": "2026-11-26T12:35:03.737083+00:00",
+  "updated_at": "2026-11-26T12:39:30.229265+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -1096,7 +1096,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-26T12:31:20.857329+00:00"
+          "last_checked": "2026-11-26T12:35:47.024360+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -1106,7 +1106,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1795696279.8799636,
+      "last_discovery_epoch": 1795696546.3129869,
       "last_full_discovery_epoch": 1795694151.77789,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -1159,11 +1159,11 @@
     "3478497": 1795695940.7662058,
     "3478498": 1795695862.1324487,
     "3519999": 1795696049.1387298,
-    "3530350": 1795695643.026397,
+    "3530350": 1795696587.1570776,
     "3530351": 1795696371.8767219,
     "3530352": 1795696484.6341555,
     "3530353": 1795696104.2716677,
-    "3421827": 1795695822.24688,
+    "3421827": 1795696752.9249725,
     "3447590": 1795695822.24688,
     "3478501": 1795696104.2716677,
     "3502023": 1795695940.7662058,
@@ -1189,15 +1189,15 @@
   ],
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
-    "status": "ok",
+    "status": "degraded",
     "coverage_status": "unverified",
-    "transport_status": "available",
-    "primary_count": 1,
+    "transport_status": "unavailable",
+    "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-26T12:34:44.634087+00:00",
-    "details_or_listings_count": 2
+    "checked_at": "2026-11-26T12:39:12.924897+00:00",
+    "details_or_listings_count": 0
   },
-  "proshop_last_usable_count": 2,
-  "proshop_last_usable_at": "2026-11-26T12:34:47.779587+00:00",
+  "proshop_last_usable_count": 1,
+  "proshop_last_usable_at": "2026-11-26T12:38:17.277950+00:00",
   "proshop_broad_next_index": 2
 }
