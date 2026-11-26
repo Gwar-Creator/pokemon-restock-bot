@@ -123,32 +123,18 @@
       }
     },
     "proshop": {
-      "3519993": {
-        "name": "Pokemon TCG Figure Collection 30th Celebration assorted",
-        "price": null,
-        "stock": "BESTILLINGSVARE",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Figure-Collection-30th-Celebration-assorted/3519993",
-        "fetch_via": "jina_reader"
-      },
-      "3478497": {
-        "name": "Pokemon TCG 2-pack Booster",
-        "price": null,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2-pack-Booster/3478497",
-        "fetch_via": "preserved_previous_scan"
-      },
-      "3421827": {
-        "name": "Pokemon TCG 2024 World Championships Deck",
-        "price": 329.0,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
-        "fetch_via": "preserved_previous_scan"
-      },
       "3530349": {
         "name": "Pokemon Ex Box - Greninja 30th Celebration",
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Ex-Box-Greninja-30th-Celebration/3530349",
+        "fetch_via": "jina_verified_detail"
+      },
+      "3519993": {
+        "name": "Pokemon TCG Figure Collection 30th Celebration assorted",
+        "price": null,
+        "stock": "BESTILLINGSVARE",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Figure-Collection-30th-Celebration-assorted/3519993",
         "fetch_via": "preserved_previous_scan"
       },
       "3417744": {
@@ -184,6 +170,20 @@
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Tin-Fall-ex-assorted/3478501",
+        "fetch_via": "preserved_previous_scan"
+      },
+      "3478497": {
+        "name": "Pokemon TCG 2-pack Booster",
+        "price": null,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2-pack-Booster/3478497",
+        "fetch_via": "preserved_previous_scan"
+      },
+      "3421827": {
+        "name": "Pokemon TCG 2024 World Championships Deck",
+        "price": 329.0,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
         "fetch_via": "preserved_previous_scan"
       },
       "3478496": {
@@ -1016,10 +1016,10 @@
   "source_controls": {
     "coolshop": {
       "backoff_level": 3,
-      "next_allowed_at": 1795659152.175405,
-      "generic_failures": 120,
+      "next_allowed_at": 1795660104.9328284,
+      "generic_failures": 121,
       "last_error": "403 Client Error: Forbidden for url: https://www.coolshop.dk/api/search",
-      "last_failure_at": "2026-11-26T01:57:32.175382+00:00",
+      "last_failure_at": "2026-11-26T02:13:24.932804+00:00",
       "last_success_at": "2026-11-24T19:13:25.061152+00:00"
     },
     "proshop": {
@@ -1064,14 +1064,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1795658989.6939187,
+      "next_allowed_at": 1795659311.4631898,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-26T02:05:49.693884+00:00"
+      "last_success_at": "2026-11-26T02:11:11.463161+00:00"
     }
   },
-  "updated_at": "2026-11-26T02:09:34.023314+00:00",
+  "updated_at": "2026-11-26T02:14:50.526156+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -1096,7 +1096,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-26T02:05:48.900477+00:00"
+          "last_checked": "2026-11-26T02:11:05.244257+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -1106,7 +1106,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1795658747.7561965,
+      "last_discovery_epoch": 1795659064.237807,
       "last_full_discovery_epoch": 1795650656.4795165,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -1153,28 +1153,28 @@
     "coolshop:https://www.coolshop.dk/produkt/pokemon-tin-fall-ex-pok10411-101/23XF7K/": 1795164803.3685203
   },
   "proshop_detail_checks": {
-    "3417744": 1795658001.5287495,
-    "3447592": 1795657463.0245724,
+    "3417744": 1795659206.2198763,
+    "3447592": 1795659096.3098133,
     "3478496": 1795658842.7452528,
     "3478497": 1795658898.4636889,
     "3478498": 1795658788.4241295,
     "3519999": 1795658954.0662367,
     "3530350": 1795658643.9785187,
-    "3530351": 1795657838.8292916,
-    "3530352": 1795658056.930769,
-    "3530353": 1795655918.2617934,
+    "3530351": 1795659151.151339,
+    "3530352": 1795659264.001968,
+    "3530353": 1795659042.2344322,
     "3421827": 1795658788.4241295,
     "3447590": 1795658643.9785187,
-    "3478501": 1795655918.2617934,
+    "3478501": 1795659042.2344322,
     "3502023": 1795658842.7452528,
-    "3519996": 1795657463.0245724,
-    "3530348": 1795658001.5287495,
-    "3530349": 1795658056.930769,
+    "3519996": 1795659096.3098133,
+    "3530348": 1795659206.2198763,
+    "3530349": 1795659264.001968,
     "3519993": 1795658954.0662367,
-    "3519997": 1795657838.8292916,
+    "3519997": 1795659151.151339,
     "3519992": 1795658898.4636889
   },
-  "proshop_broad_attempt_at": 1795658952.3145585,
+  "proshop_broad_attempt_at": 1795659261.8104806,
   "proshop_radar_alerts": {
     "3519996:BESTILLINGSVARE": 1795598501.1474705,
     "3519997:BESTILLINGSVARE": 1795095861.5824559,
@@ -1189,15 +1189,15 @@
   ],
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
-    "status": "ok",
+    "status": "degraded",
     "coverage_status": "unverified",
-    "transport_status": "available",
-    "primary_count": 2,
-    "broad_count": 1,
-    "checked_at": "2026-11-26T02:09:14.066168+00:00",
-    "details_or_listings_count": 2
+    "transport_status": "unavailable",
+    "primary_count": 0,
+    "broad_count": 0,
+    "checked_at": "2026-11-26T02:14:24.001849+00:00",
+    "details_or_listings_count": 1
   },
-  "proshop_last_usable_count": 2,
-  "proshop_last_usable_at": "2026-11-26T02:09:18.879075+00:00",
-  "proshop_broad_next_index": 1
+  "proshop_last_usable_count": 1,
+  "proshop_last_usable_at": "2026-11-26T02:14:33.930836+00:00",
+  "proshop_broad_next_index": 2
 }
