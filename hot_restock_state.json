@@ -151,6 +151,13 @@
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Mega-Evolution-Delta-reign-Elite-Trainer-Box/3530350",
         "fetch_via": "jina_reader"
       },
+      "3417744": {
+        "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
+        "price": null,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
+        "fetch_via": "preserved_previous_scan"
+      },
       "3502023": {
         "name": "Pokemon TCG Sylveon/Greninja ex Box 30th Celebration - assorted",
         "price": null,
@@ -191,13 +198,6 @@
         "price": 499.0,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
-        "fetch_via": "preserved_previous_scan"
-      },
-      "3417744": {
-        "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
-        "price": null,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
         "fetch_via": "preserved_previous_scan"
       },
       "3530352": {
@@ -378,7 +378,7 @@
       "200385299": {
         "name": "Pokémon Tin Fall ex",
         "price": 279.0,
-        "online_count": 198,
+        "online_count": 196,
         "online_stock": true,
         "is_exposed": true,
         "store_count": 0,
@@ -545,7 +545,7 @@
       "200385299": {
         "name": "Pokémon Tin Fall ex",
         "price": 279.0,
-        "online_count": 198,
+        "online_count": 196,
         "online_stock": true,
         "is_exposed": true,
         "store_count": 0,
@@ -785,7 +785,7 @@
       "200385299": {
         "name": "Pokémon Tin Fall ex",
         "price": 279.0,
-        "online_count": 198,
+        "online_count": 196,
         "online_stock": true,
         "is_exposed": true,
         "store_count": 0,
@@ -1041,19 +1041,19 @@
   "source_controls": {
     "coolshop": {
       "backoff_level": 3,
-      "next_allowed_at": 1795817655.321834,
-      "generic_failures": 290,
+      "next_allowed_at": 1795818556.275183,
+      "generic_failures": 291,
       "last_error": "403 Client Error: Forbidden for url: https://www.coolshop.dk/api/search",
-      "last_failure_at": "2026-11-27T21:59:15.321817+00:00",
+      "last_failure_at": "2026-11-27T22:14:16.275158+00:00",
       "last_success_at": "2026-11-24T19:13:25.061152+00:00"
     },
     "proshop": {
       "backoff_level": 1,
-      "next_allowed_at": 1795817485.2179718,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-27T22:03:52.934126+00:00",
-      "last_success_at": "2026-11-27T22:09:25.217955+00:00"
+      "next_allowed_at": 1795817777.0240545,
+      "generic_failures": 1,
+      "last_error": "Proshop Reader temporarily blocked: 503 Server Error: Service Unavailable for url: https://r.jina.ai/https://www.proshop.dk/pokemon-kort",
+      "last_failure_at": "2026-11-27T22:14:17.024045+00:00",
+      "last_success_at": "2026-11-27T22:13:29.758683+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -1089,14 +1089,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1795817394.3359845,
+      "next_allowed_at": 1795817699.2476165,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-27T22:05:54.335955+00:00"
+      "last_success_at": "2026-11-27T22:10:59.247586+00:00"
     }
   },
-  "updated_at": "2026-11-27T22:09:38.823809+00:00",
+  "updated_at": "2026-11-27T22:14:33.796375+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -1121,7 +1121,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-27T22:05:53.127323+00:00"
+          "last_checked": "2026-11-27T22:10:58.367071+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -1131,7 +1131,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1795817152.2418647,
+      "last_discovery_epoch": 1795817456.6754441,
       "last_full_discovery_epoch": 1795803053.2880754,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -1179,7 +1179,7 @@
     "proshop:3502023": 1795701832.885783
   },
   "proshop_detail_checks": {
-    "3417744": 1795815639.901831,
+    "3417744": 1795817548.3582056,
     "3447592": 1795816647.5266914,
     "3478496": 1795815710.3709338,
     "3478497": 1795816647.5266914,
@@ -1190,15 +1190,15 @@
     "3530352": 1795816758.4770474,
     "3530353": 1795816593.5987215,
     "3421827": 1795815710.3709338,
-    "3447590": 1795815555.7810805,
+    "3447590": 1795817602.4666119,
     "3478501": 1795816758.4770474,
     "3502023": 1795816701.8281147,
-    "3519996": 1795815501.2626932,
+    "3519996": 1795817492.5889785,
     "3530348": 1795816458.5745056,
     "3530349": 1795816593.5987215,
-    "3519993": 1795815639.901831,
-    "3519997": 1795815501.2626932,
-    "3519992": 1795815555.7810805
+    "3519993": 1795817602.4666119,
+    "3519997": 1795817492.5889785,
+    "3519992": 1795817548.3582056
   },
   "proshop_broad_attempt_at": 1795817358.9363031,
   "proshop_radar_alerts": {
@@ -1215,15 +1215,14 @@
   ],
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
-    "status": "ok",
+    "status": "degraded",
     "coverage_status": "unverified",
-    "transport_status": "available",
-    "primary_count": 5,
+    "transport_status": "unavailable",
+    "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-27T22:09:21.287835+00:00",
-    "details_or_listings_count": 5
+    "checked_at": "2026-11-27T22:14:17.024010+00:00"
   },
   "proshop_last_usable_count": 5,
-  "proshop_last_usable_at": "2026-11-27T22:09:25.217994+00:00",
+  "proshop_last_usable_at": "2026-11-27T22:13:29.758707+00:00",
   "proshop_broad_next_index": 0
 }
