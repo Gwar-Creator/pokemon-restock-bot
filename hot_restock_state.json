@@ -1062,18 +1062,18 @@
   "source_controls": {
     "coolshop": {
       "backoff_level": 3,
-      "next_allowed_at": 1795744949.4830601,
-      "generic_failures": 212,
+      "next_allowed_at": 1795745866.2986832,
+      "generic_failures": 213,
       "last_error": "403 Client Error: Forbidden for url: https://www.coolshop.dk/api/search",
-      "last_failure_at": "2026-11-27T01:47:29.483034+00:00",
+      "last_failure_at": "2026-11-27T02:02:46.298659+00:00",
       "last_success_at": "2026-11-24T19:13:25.061152+00:00"
     },
     "proshop": {
-      "backoff_level": 2,
-      "next_allowed_at": 1795744995.2886996,
-      "generic_failures": 3,
+      "backoff_level": 3,
+      "next_allowed_at": 1795745921.5719094,
+      "generic_failures": 4,
       "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details | primary Reader: 500 Server Error: Internal Server Error for url: https://r.jina.ai/https://www.proshop.dk/pokemon-kort",
-      "last_failure_at": "2026-11-27T01:58:15.288689+00:00",
+      "last_failure_at": "2026-11-27T02:03:41.571882+00:00",
       "last_success_at": "2026-11-27T01:53:35.473447+00:00"
     },
     "br": {
@@ -1101,23 +1101,23 @@
       "last_success_at": "2026-11-21T18:34:48.837760+00:00"
     },
     "boozt": {
-      "backoff_level": 2,
-      "next_allowed_at": 1795744897.8300755,
-      "generic_failures": 2,
+      "backoff_level": 3,
+      "next_allowed_at": 1795745824.0364354,
+      "generic_failures": 3,
       "last_error": "BOOZT fejlede: Reader: 500 Server Error: Internal Server Error for url: https://r.jina.ai/https://www.boozt.com/dk/da/pokemon-trading-cards/born | direct: 429 Client Error: Too Many Requests for url: https://www.boozt.com/dk/da/pokemon-trading-cards/born",
-      "last_failure_at": "2026-11-27T01:56:37.830051+00:00",
+      "last_failure_at": "2026-11-27T02:02:04.036413+00:00",
       "last_success_at": "2026-11-27T01:53:01.360829+00:00"
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1795744786.0294807,
+      "next_allowed_at": 1795745113.0692034,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-27T01:55:46.029442+00:00"
+      "last_success_at": "2026-11-27T02:01:13.069168+00:00"
     }
   },
-  "updated_at": "2026-11-27T01:59:22.792666+00:00",
+  "updated_at": "2026-11-27T02:04:48.501484+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -1142,7 +1142,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-27T01:55:44.974171+00:00"
+          "last_checked": "2026-11-27T02:01:12.130296+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -1152,7 +1152,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1795744543.888761,
+      "last_discovery_epoch": 1795744870.4992,
       "last_full_discovery_epoch": 1795737697.7235,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -1218,10 +1218,10 @@
     "3530348": 1795744162.3106885,
     "3530349": 1795744250.4178052,
     "3519993": 1795743999.0648909,
-    "3519997": 1795743859.4112191,
-    "3519992": 1795743859.4112191
+    "3519997": 1795745021.3637648,
+    "3519992": 1795745021.3637648
   },
-  "proshop_broad_attempt_at": 1795744695.160709,
+  "proshop_broad_attempt_at": 1795745021.270597,
   "proshop_radar_alerts": {
     "3519996:BESTILLINGSVARE": 1795598501.1474705,
     "3519997:BESTILLINGSVARE": 1795095861.5824559,
@@ -1241,10 +1241,10 @@
     "transport_status": "unavailable",
     "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-27T01:58:15.288580+00:00",
+    "checked_at": "2026-11-27T02:03:41.363488+00:00",
     "details_or_listings_count": 0
   },
   "proshop_last_usable_count": 4,
   "proshop_last_usable_at": "2026-11-27T01:53:35.473471+00:00",
-  "proshop_broad_next_index": 1
+  "proshop_broad_next_index": 2
 }
