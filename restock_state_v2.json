@@ -340,21 +340,31 @@
   "proshop": {
     "3447590": {
       "name": "Pokemon TCG Mega Lucario ex League Battle Deck",
-      "price": null,
+      "price": 369.0,
       "stock": "PÅ LAGER",
-      "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Lucario-ex-League-Battle-Deck/3447590"
+      "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Lucario-ex-League-Battle-Deck/3447590",
+      "fetch_via": "jina_reader"
     },
     "3519993": {
       "name": "Pokemon TCG Figure Collection 30th Celebration assorted",
       "price": null,
       "stock": "BESTILLINGSVARE",
-      "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Figure-Collection-30th-Celebration-assorted/3519993"
+      "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Figure-Collection-30th-Celebration-assorted/3519993",
+      "fetch_via": "jina_reader"
     },
     "3530350": {
       "name": "Pokemon Mega Evolution Delta reign Elite Trainer Box",
       "price": null,
       "stock": "BESTILLINGSVARE",
-      "url": "https://www.proshop.dk/Pokemon/Pokemon-Mega-Evolution-Delta-reign-Elite-Trainer-Box/3530350"
+      "url": "https://www.proshop.dk/Pokemon/Pokemon-Mega-Evolution-Delta-reign-Elite-Trainer-Box/3530350",
+      "fetch_via": "jina_reader"
+    },
+    "3478496": {
+      "name": "Pokemon TCG Mega Greninja ex Premium Collection",
+      "price": null,
+      "stock": "UDSOLGT",
+      "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Greninja-ex-Premium-Collection/3478496",
+      "fetch_via": "jina_verified_detail"
     }
   },
   "br": {
@@ -634,7 +644,7 @@
     "200385298": {
       "name": "Pokemon Tin Fall ex",
       "price": 279.0,
-      "online_count": 209,
+      "online_count": 208,
       "online_stock": true,
       "is_exposed": true,
       "store_count": 1,
@@ -935,7 +945,7 @@
     "200385298": {
       "name": "Pokemon Tin Fall ex",
       "price": 279.0,
-      "online_count": 209,
+      "online_count": 208,
       "online_stock": true,
       "is_exposed": true,
       "store_count": 0,
@@ -1379,7 +1389,7 @@
     "200385298": {
       "name": "Pokemon Tin Fall ex",
       "price": 279.0,
-      "online_count": 209,
+      "online_count": 208,
       "online_stock": true,
       "is_exposed": true,
       "store_count": 0,
@@ -24411,14 +24421,6 @@
         "preorder": false,
         "url": "https://pbcards.dk/products/pokemon-tcg-mega-evolution-storm-emeralda-m6-booster-pack-japanese"
       },
-      "10736151986515": {
-        "name": "Pokemon TCG - Scarlet & Violet - Stellar Crystal (CSV9C) - Booster Pack (Forenklet Kinesisk)",
-        "game": "POKÉMON",
-        "price": 19.95,
-        "in_stock": true,
-        "preorder": false,
-        "url": "https://pbcards.dk/products/pokemon-tcg-scarlet-violet-stellar-crystal-csv9c-booster-pack-simplified-chinese"
-      },
       "10739625525587": {
         "name": "Pokemon TCG - Mega Evolution - Pitch Black (ME5) - Booster Pack (Engelsk)",
         "game": "POKÉMON",
@@ -25554,6 +25556,14 @@
         "in_stock": false,
         "preorder": false,
         "url": "https://pbcards.dk/products/pokemon-tcg-scarlet-violet-pokemon-151-sv2a-booster-box-japanese"
+      },
+      "10736151986515": {
+        "name": "Pokemon TCG - Scarlet & Violet - Stellar Crystal (CSV9C) - Booster Pack (Forenklet Kinesisk)",
+        "game": "POKÉMON",
+        "price": 19.95,
+        "in_stock": false,
+        "preorder": false,
+        "url": "https://pbcards.dk/products/pokemon-tcg-scarlet-violet-stellar-crystal-csv9c-booster-pack-simplified-chinese"
       },
       "10736142909779": {
         "name": "Pokemon TCG - Scarlet & Violet - Gem Pack Vol. 5 (CBB5C) - Booster Box (Forenklet Kinesisk)",
@@ -33678,7 +33688,7 @@
         "name": "Booster Bundle (6 stk. booster packs) – ME04 Chaos Rising",
         "game": "POKÉMON",
         "price": 399.95,
-        "in_stock": true,
+        "in_stock": false,
         "preorder": true,
         "url": "https://pokecards.dk/vare/forudbestilling-booster-bundle-6-stk-booster-packs-me04-chaos-rising/"
       },
@@ -41040,7 +41050,7 @@
         "name": "Booster Bundle (6 stk. booster packs) – ME04 Chaos Rising",
         "game": "POKÉMON",
         "price": 399.95,
-        "in_stock": true,
+        "in_stock": false,
         "preorder": false,
         "url": "https://www.pokemons.dk/product/booster-bundle-6-stk-booster-packs-me04-chaos-rising/"
       },
@@ -90771,7 +90781,7 @@
         "last_seen": "2026-11-25T23:34:01.244175+01:00"
       }
     },
-    "updated_at": "2026-11-27T13:38:21.752507+01:00"
+    "updated_at": "2026-11-27T13:48:28.466860+01:00"
   },
   "_elgiganten_key_cache": {
     "api_key": null,
@@ -92649,12 +92659,13 @@
       },
       "POKÉMON|BOOSTER PACK|EN|prismatic evolutions": {
         "name": "Prismatic Evolutions",
-        "current_best": 149.0,
+        "current_best": 130.0,
         "current_shops": [
-          "ROGERZ"
+          "POKECARDS.DK",
+          "POKEMONS.DK"
         ],
-        "current_shop": "ROGERZ",
-        "current_url": "https://rogerz.dk/products/pokemon-prismatic-evolutions-booster-pack",
+        "current_shop": "POKECARDS.DK",
+        "current_url": "https://pokecards.dk/vare/booster-pack-sv08-5-prismatic-evolutions/",
         "historical_low": 125.0,
         "historical_low_shops": [
           "POKEMONS.DK"
@@ -92662,13 +92673,13 @@
         "historical_low_date": "2026-11-23",
         "historical_low_url": "https://www.pokemons.dk/product/booster-pack-sv08-5-prismatic-evolutions/",
         "first_seen": "2026-08-16T15:27:14.261074+02:00",
-        "last_seen": "2026-11-27T13:38:21.823267+01:00",
+        "last_seen": "2026-11-27T13:48:28.600269+01:00",
         "baseline_price": 149.0,
-        "price_changes": 251,
+        "price_changes": 252,
         "observation_days": 105,
         "last_observation_date": "2026-11-27",
-        "previous_best": 130.0,
-        "last_change_pct": 14.615384615384608,
+        "previous_best": 149.0,
+        "last_change_pct": -12.751677852348998,
         "last_change_date": "2026-11-27",
         "last_daily_signal_date": "2026-09-04"
       },
@@ -95423,10 +95434,11 @@
         "name": "Shimmering Skies",
         "current_best": 50.0,
         "current_shops": [
+          "NEXT LEVEL GAMES",
           "ROGERZ"
         ],
-        "current_shop": "ROGERZ",
-        "current_url": "https://rogerz.dk/products/disney-lorcana-shimmering-skies-booster-pack",
+        "current_shop": "NEXT LEVEL GAMES",
+        "current_url": "https://www.nextlevelgames.dk/shimmering-skies/6369-shimmering-skies-booster-disney-lorcana-tcg-4050368983909.html",
         "historical_low": 45.0,
         "historical_low_shops": [
           "MATRAWS"
@@ -95434,7 +95446,7 @@
         "historical_low_date": "2026-10-23",
         "historical_low_url": "https://matraws.dk/products/disney-lorcana-tcg-set-5-shimmering-skies-booster-pack",
         "first_seen": "2026-08-16T15:27:14.261074+02:00",
-        "last_seen": "2026-11-27T13:38:21.823267+01:00",
+        "last_seen": "2026-11-27T13:48:28.600269+01:00",
         "baseline_price": 50.0,
         "price_changes": 12,
         "observation_days": 105,
@@ -105203,21 +105215,21 @@
   "_source_health": {
     "coolshop": {
       "status": "failed",
-      "last_attempt": "2026-11-27T12:36:19.222604+00:00",
+      "last_attempt": "2026-11-27T12:41:10.800656+00:00",
       "last_success": "2026-11-24T14:41:52.970565+00:00",
       "last_count": 48,
       "observed_count": null,
-      "consecutive_failures": 771,
+      "consecutive_failures": 772,
       "last_error": "403 Client Error: Forbidden for url: https://www.coolshop.dk/api/search"
     },
     "proshop": {
       "status": "ok",
-      "last_attempt": "2026-11-27T12:36:19.777867+00:00",
+      "last_attempt": "2026-11-27T12:41:18.390708+00:00",
       "consecutive_failures": 0,
       "last_error": "",
-      "observed_count": 3,
-      "last_success": "2026-11-27T12:36:19.777884+00:00",
-      "last_count": 3,
+      "observed_count": 4,
+      "last_success": "2026-11-27T12:41:18.390726+00:00",
+      "last_count": 4,
       "transport_status": "available",
       "coverage_status": "unverified",
       "category_count": 3
@@ -105311,31 +105323,31 @@
       "last_error": ""
     },
     "nostalgic": {
-      "status": "failed",
-      "last_attempt": "2026-11-27T12:36:55.754596+00:00",
-      "last_success": "2026-11-27T12:32:06.059656+00:00",
+      "status": "ok",
+      "last_attempt": "2026-11-27T12:42:00.024487+00:00",
+      "last_success": "2026-11-27T12:42:00.024505+00:00",
       "last_count": 45,
-      "observed_count": null,
-      "consecutive_failures": 1,
-      "last_error": "403 Client Error: Forbidden for url: https://nostalgiccollectibles.dk/wp-json/wc/store/v1/products?category=15&per_page=100&page=1&orderby=id&order=desc"
+      "observed_count": 45,
+      "consecutive_failures": 0,
+      "last_error": ""
     },
     "andcards": {
       "status": "failed",
-      "last_attempt": "2026-11-27T12:37:27.839491+00:00",
+      "last_attempt": "2026-11-27T12:42:28.945686+00:00",
       "last_success": "2026-11-27T12:18:42.792369+00:00",
       "last_count": 282,
       "observed_count": null,
-      "consecutive_failures": 4,
+      "consecutive_failures": 5,
       "last_error": "429 Client Error: Too Many Requests for url: https://www.andcards.dk/wp-json/wc/store/v1/products?category=21&per_page=100&page=11&orderby=id&order=desc"
     },
     "pokecards": {
-      "status": "failed",
-      "last_attempt": "2026-11-27T12:37:28.676774+00:00",
-      "last_success": "2026-11-27T12:32:50.525642+00:00",
+      "status": "ok",
+      "last_attempt": "2026-11-27T12:42:41.901478+00:00",
+      "last_success": "2026-11-27T12:42:41.901501+00:00",
       "last_count": 1001,
-      "observed_count": null,
-      "consecutive_failures": 1,
-      "last_error": "403 Client Error: Forbidden for url: https://pokecards.dk/wp-json/wc/store/v1/products?category=16&per_page=100&page=1&orderby=id&order=desc"
+      "observed_count": 1001,
+      "consecutive_failures": 0,
+      "last_error": ""
     },
     "epicpanda": {
       "status": "ok",
@@ -105356,13 +105368,13 @@
       "last_error": ""
     },
     "nextlevel": {
-      "status": "failed",
-      "last_attempt": "2026-11-27T12:38:20.963696+00:00",
-      "last_success": "2026-11-27T12:34:52.146218+00:00",
+      "status": "ok",
+      "last_attempt": "2026-11-27T12:48:26.945398+00:00",
+      "last_success": "2026-11-27T12:48:26.945417+00:00",
       "last_count": 29,
-      "observed_count": 0,
-      "consecutive_failures": 1,
-      "last_error": "mistænkeligt lavt produktantal: 0 < 5"
+      "observed_count": 29,
+      "consecutive_failures": 0,
+      "last_error": ""
     },
     "symbizon": {
       "status": "ok",
@@ -105428,13 +105440,13 @@
       "last_error": ""
     },
     "pokemonsdk": {
-      "status": "failed",
-      "last_attempt": "2026-11-27T12:37:29.935387+00:00",
-      "last_success": "2026-11-27T12:32:57.773389+00:00",
+      "status": "ok",
+      "last_attempt": "2026-11-27T12:42:48.542078+00:00",
+      "last_success": "2026-11-27T12:42:48.542099+00:00",
       "last_count": 822,
-      "observed_count": null,
-      "consecutive_failures": 1,
-      "last_error": "403 Client Error: Forbidden for url: https://www.pokemons.dk/wp-json/wc/store/v1/products?search=booster&per_page=100&page=1&orderby=id&order=desc"
+      "observed_count": 822,
+      "consecutive_failures": 0,
+      "last_error": ""
     },
     "pocketmonster": {
       "status": "ok",
@@ -105517,8 +105529,8 @@
     },
     "pokemonportalen": {
       "status": "failed",
-      "last_attempt": "2026-11-27T12:37:46.634910+00:00",
-      "consecutive_failures": 2458,
+      "last_attempt": "2026-11-27T12:43:17.499053+00:00",
+      "consecutive_failures": 2459,
       "last_error": "mistænkeligt lavt produktantal: 0 < 10",
       "observed_count": 0,
       "last_success": "2026-11-18T21:57:31.988646+00:00",
@@ -105526,8 +105538,8 @@
     },
     "tcgbruus": {
       "status": "failed",
-      "last_attempt": "2026-11-27T12:37:47.488987+00:00",
-      "consecutive_failures": 9033,
+      "last_attempt": "2026-11-27T12:43:19.171412+00:00",
+      "consecutive_failures": 9034,
       "last_error": "mistænkeligt lavt produktantal: 3 < 5",
       "observed_count": 3,
       "last_success": "2026-10-26T15:12:41.350111+00:00",
@@ -105551,12 +105563,12 @@
     },
     "kelz0r": {
       "status": "failed",
-      "last_attempt": "2026-11-27T12:37:52.129287+00:00",
+      "last_attempt": "2026-11-27T12:48:05.376103+00:00",
       "last_success": "2026-11-27T12:34:31.555598+00:00",
       "last_count": 2273,
-      "observed_count": 0,
-      "consecutive_failures": 1,
-      "last_error": "mistænkeligt lavt produktantal: 0 < 20"
+      "observed_count": null,
+      "consecutive_failures": 2,
+      "last_error": "HTTPSConnectionPool(host='www.kelz0r.dk', port=443): Read timed out. (read timeout=30)"
     },
     "faraos": {
       "status": "ok",
@@ -118715,11 +118727,11 @@
     "fff940439ebc8fbda0afe0b985ab8c51",
     "fffcef15b6da7fe5087a520dad6f7197"
   ],
-  "_last_full_scan_epoch": 1795783101,
+  "_last_full_scan_epoch": 1795783708,
   "proshop_detail_checks": {
     "3417744": 1795782681.711918,
-    "3447592": 1795781770.3146296,
-    "3478496": 1795782074.5043392,
+    "3447592": 1795783273.4593828,
+    "3478496": 1795783273.4593828,
     "3478497": 1795782382.6709461,
     "3478498": 1795782681.711918,
     "3519999": 1795782074.5043392,
