@@ -638,7 +638,7 @@
     "200385299": {
       "name": "Pokémon Tin Fall ex",
       "price": 279.0,
-      "online_count": 200,
+      "online_count": 199,
       "online_stock": true,
       "is_exposed": true,
       "store_count": 0,
@@ -931,7 +931,7 @@
     "200385299": {
       "name": "Pokémon Tin Fall ex",
       "price": 279.0,
-      "online_count": 200,
+      "online_count": 199,
       "online_stock": true,
       "is_exposed": true,
       "store_count": 0,
@@ -1371,7 +1371,7 @@
     "200385299": {
       "name": "Pokémon Tin Fall ex",
       "price": 279.0,
-      "online_count": 200,
+      "online_count": 199,
       "online_stock": true,
       "is_exposed": true,
       "store_count": 0,
@@ -90778,7 +90778,7 @@
         "last_seen": "2026-11-25T23:34:01.244175+01:00"
       }
     },
-    "updated_at": "2026-11-27T22:33:19.501785+01:00"
+    "updated_at": "2026-11-27T22:37:40.175425+01:00"
   },
   "_elgiganten_key_cache": {
     "api_key": null,
@@ -105234,19 +105234,19 @@
   "_source_health": {
     "coolshop": {
       "status": "failed",
-      "last_attempt": "2026-11-27T21:31:30.178042+00:00",
+      "last_attempt": "2026-11-27T21:36:00.991876+00:00",
       "last_success": "2026-11-24T14:41:52.970565+00:00",
       "last_count": 48,
       "observed_count": null,
-      "consecutive_failures": 877,
+      "consecutive_failures": 878,
       "last_error": "403 Client Error: Forbidden for url: https://www.coolshop.dk/api/search"
     },
     "proshop": {
-      "status": "ok",
-      "last_attempt": "2026-11-27T21:26:11.267612+00:00",
-      "consecutive_failures": 0,
-      "last_error": "",
-      "observed_count": 5,
+      "status": "failed",
+      "last_attempt": "2026-11-27T21:36:01.391889+00:00",
+      "consecutive_failures": 1,
+      "last_error": "Proshop utilgængelig (Jina Reader: 401 Client Error: Unauthorized for url: https://r.jina.ai/https://www.proshop.dk/pokemon-kort; pokemon-kort: HTTP 403; Pokemon fallback: 200 men ingen TCG-produkter parsed)",
+      "observed_count": null,
       "last_success": "2026-11-27T21:26:11.267623+00:00",
       "last_count": 5,
       "transport_status": "available",
@@ -105343,29 +105343,29 @@
     },
     "nostalgic": {
       "status": "failed",
-      "last_attempt": "2026-11-27T21:32:13.346778+00:00",
+      "last_attempt": "2026-11-27T21:36:37.131956+00:00",
       "last_success": "2026-11-27T20:41:53.704422+00:00",
       "last_count": 44,
       "observed_count": null,
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_error": "403 Client Error: Forbidden for url: https://nostalgiccollectibles.dk/wp-json/wc/store/v1/products?category=15&per_page=100&page=1&orderby=id&order=desc"
     },
     "andcards": {
       "status": "failed",
-      "last_attempt": "2026-11-27T21:32:39.092095+00:00",
+      "last_attempt": "2026-11-27T21:37:00.032594+00:00",
       "last_success": "2026-11-27T21:17:20.874997+00:00",
       "last_count": 281,
       "observed_count": null,
-      "consecutive_failures": 3,
+      "consecutive_failures": 4,
       "last_error": "429 Client Error: Too Many Requests for url: https://www.andcards.dk/wp-json/wc/store/v1/products?category=21&per_page=100&page=11&orderby=id&order=desc"
     },
     "pokecards": {
       "status": "failed",
-      "last_attempt": "2026-11-27T21:32:39.859516+00:00",
+      "last_attempt": "2026-11-27T21:37:00.493249+00:00",
       "last_success": "2026-11-27T20:42:34.587156+00:00",
       "last_count": 1001,
       "observed_count": null,
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_error": "403 Client Error: Forbidden for url: https://pokecards.dk/wp-json/wc/store/v1/products?category=16&per_page=100&page=1&orderby=id&order=desc"
     },
     "epicpanda": {
@@ -105388,11 +105388,11 @@
     },
     "nextlevel": {
       "status": "failed",
-      "last_attempt": "2026-11-27T21:33:18.557340+00:00",
+      "last_attempt": "2026-11-27T21:37:39.383838+00:00",
       "last_success": "2026-11-27T20:44:10.602260+00:00",
       "last_count": 29,
       "observed_count": 0,
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_error": "mistænkeligt lavt produktantal: 0 < 5"
     },
     "symbizon": {
@@ -105460,11 +105460,11 @@
     },
     "pokemonsdk": {
       "status": "failed",
-      "last_attempt": "2026-11-27T21:32:41.348885+00:00",
+      "last_attempt": "2026-11-27T21:37:01.307034+00:00",
       "last_success": "2026-11-27T20:42:43.421064+00:00",
       "last_count": 822,
       "observed_count": null,
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_error": "403 Client Error: Forbidden for url: https://www.pokemons.dk/wp-json/wc/store/v1/products?search=booster&per_page=100&page=1&orderby=id&order=desc"
     },
     "pocketmonster": {
@@ -105548,8 +105548,8 @@
     },
     "pokemonportalen": {
       "status": "failed",
-      "last_attempt": "2026-11-27T21:32:53.720443+00:00",
-      "consecutive_failures": 2564,
+      "last_attempt": "2026-11-27T21:37:14.724464+00:00",
+      "consecutive_failures": 2565,
       "last_error": "mistænkeligt lavt produktantal: 0 < 10",
       "observed_count": 0,
       "last_success": "2026-11-18T21:57:31.988646+00:00",
@@ -105557,8 +105557,8 @@
     },
     "tcgbruus": {
       "status": "failed",
-      "last_attempt": "2026-11-27T21:32:54.637995+00:00",
-      "consecutive_failures": 9139,
+      "last_attempt": "2026-11-27T21:37:15.546085+00:00",
+      "consecutive_failures": 9140,
       "last_error": "mistænkeligt lavt produktantal: 3 < 5",
       "observed_count": 3,
       "last_success": "2026-10-26T15:12:41.350111+00:00",
@@ -105582,11 +105582,11 @@
     },
     "kelz0r": {
       "status": "failed",
-      "last_attempt": "2026-11-27T21:32:58.262831+00:00",
+      "last_attempt": "2026-11-27T21:37:18.466552+00:00",
       "last_success": "2026-11-27T20:43:52.102090+00:00",
       "last_count": 2273,
       "observed_count": 0,
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_error": "mistænkeligt lavt produktantal: 0 < 20"
     },
     "faraos": {
@@ -118766,7 +118766,7 @@
     "fff940439ebc8fbda0afe0b985ab8c51",
     "fffcef15b6da7fe5087a520dad6f7197"
   ],
-  "_last_full_scan_epoch": 1795815199,
+  "_last_full_scan_epoch": 1795815460,
   "proshop_detail_checks": {
     "3417744": 1795814765.7838504,
     "3447592": 1795815092.0082371,
