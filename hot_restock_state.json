@@ -128,28 +128,28 @@
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Figure-Collection-30th-Celebration-assorted/3519993",
-        "fetch_via": "jina_reader"
+        "fetch_via": "preserved_previous_scan"
       },
       "3530350": {
         "name": "Pokemon Mega Evolution Delta reign Elite Trainer Box",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Mega-Evolution-Delta-reign-Elite-Trainer-Box/3530350",
-        "fetch_via": "jina_reader"
+        "fetch_via": "preserved_previous_scan"
       },
       "3478501": {
         "name": "Pokemon Tin Fall ex assorted",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Tin-Fall-ex-assorted/3478501",
-        "fetch_via": "jina_reader"
+        "fetch_via": "preserved_previous_scan"
       },
       "3530349": {
         "name": "Pokemon Ex Box - Greninja 30th Celebration",
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Ex-Box-Greninja-30th-Celebration/3530349",
-        "fetch_via": "jina_verified_detail"
+        "fetch_via": "preserved_previous_scan"
       },
       "3530348": {
         "name": "Pokemon ex Box Sylveon 30th Celebration",
@@ -304,7 +304,7 @@
         "online_stock": false,
         "is_exposed": true,
         "store_count": 23,
-        "kolding_stock": 30,
+        "kolding_stock": 29,
         "esbjerg_stock": 1,
         "quantity_limit": 6,
         "sku": "11398798-EA",
@@ -313,7 +313,7 @@
       "200279925": {
         "name": "Pokémon Battle Academy 2024",
         "price": 299.0,
-        "online_count": 179,
+        "online_count": 178,
         "online_stock": true,
         "is_exposed": true,
         "store_count": 32,
@@ -482,7 +482,7 @@
       "200279925": {
         "name": "Pokémon Battle Academy 2024",
         "price": 299.0,
-        "online_count": 179,
+        "online_count": 178,
         "online_stock": true,
         "is_exposed": true,
         "store_count": 19,
@@ -610,7 +610,7 @@
       "200279925": {
         "name": "Pokémon Battle Academy 2024",
         "price": 299.0,
-        "online_count": 179,
+        "online_count": 178,
         "online_stock": true,
         "is_exposed": true,
         "store_count": 1,
@@ -1041,19 +1041,19 @@
   "source_controls": {
     "coolshop": {
       "backoff_level": 3,
-      "next_allowed_at": 1795791447.6227033,
-      "generic_failures": 262,
+      "next_allowed_at": 1795792398.164343,
+      "generic_failures": 263,
       "last_error": "403 Client Error: Forbidden for url: https://www.coolshop.dk/api/search",
-      "last_failure_at": "2026-11-27T14:42:27.622679+00:00",
+      "last_failure_at": "2026-11-27T14:58:18.164315+00:00",
       "last_success_at": "2026-11-24T19:13:25.061152+00:00"
     },
     "proshop": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-27T14:48:28.762411+00:00",
-      "last_success_at": "2026-11-27T14:49:21.668734+00:00"
+      "backoff_level": 1,
+      "next_allowed_at": 1795791620.6205223,
+      "generic_failures": 2,
+      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details | primary Reader: Jina Reader returned too little raw Proshop data (0 product links)",
+      "last_failure_at": "2026-11-27T14:58:20.620507+00:00",
+      "last_success_at": "2026-11-27T14:56:35.348269+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -1089,14 +1089,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1795791299.527377,
+      "next_allowed_at": 1795791595.7191145,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-27T14:50:59.527347+00:00"
+      "last_success_at": "2026-11-27T14:55:55.719081+00:00"
     }
   },
-  "updated_at": "2026-11-27T14:54:36.072325+00:00",
+  "updated_at": "2026-11-27T14:59:30.374487+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -1121,7 +1121,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-27T14:50:58.319299+00:00"
+          "last_checked": "2026-11-27T14:55:54.610762+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -1131,7 +1131,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1795791057.6059494,
+      "last_discovery_epoch": 1795791353.661269,
       "last_full_discovery_epoch": 1795781164.256075,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -1200,7 +1200,7 @@
     "3519997": 1795790957.6865036,
     "3519992": 1795790957.6865036
   },
-  "proshop_broad_attempt_at": 1795791038.4399774,
+  "proshop_broad_attempt_at": 1795791393.7582376,
   "proshop_radar_alerts": {
     "3519996:BESTILLINGSVARE": 1795757061.9851942,
     "3519997:BESTILLINGSVARE": 1795095861.5824559,
@@ -1215,15 +1215,15 @@
   ],
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
-    "status": "ok",
+    "status": "degraded",
     "coverage_status": "unverified",
-    "transport_status": "available",
-    "primary_count": 4,
+    "transport_status": "unavailable",
+    "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-27T14:54:18.307216+00:00",
-    "details_or_listings_count": 5
+    "checked_at": "2026-11-27T14:58:20.620406+00:00",
+    "details_or_listings_count": 0
   },
-  "proshop_last_usable_count": 5,
-  "proshop_last_usable_at": "2026-11-27T14:54:22.649214+00:00",
-  "proshop_broad_next_index": 0
+  "proshop_last_usable_count": 1,
+  "proshop_last_usable_at": "2026-11-27T14:56:35.348284+00:00",
+  "proshop_broad_next_index": 1
 }
