@@ -365,13 +365,6 @@
       "stock": "BESTILLINGSVARE",
       "url": "https://www.proshop.dk/Pokemon/Pokemon-Tin-Fall-ex-assorted/3478501",
       "fetch_via": "jina_reader"
-    },
-    "3417744": {
-      "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
-      "price": null,
-      "stock": "UDSOLGT",
-      "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
-      "fetch_via": "jina_verified_detail"
     }
   },
   "br": {
@@ -70447,14 +70440,6 @@
         "preorder": false,
         "url": "https://www.hyggeonkel.dk/produkt/lorcana-archazias-island-single-player-deck-amethyst-steel"
       },
-      "dca60fc8fe10b112ea70": {
-        "name": "Disney Lorcana: Azurite Sea (Set 6) - Emerald & Sapphire - Starter Deck",
-        "game": "LORCANA",
-        "price": 149.95,
-        "in_stock": false,
-        "preorder": false,
-        "url": "https://www.hyggeonkel.dk/produkt/lorcana-azurite-sea-single-player-deck-emerald-sapphire"
-      },
       "1a4ecc7767041a1bea2d": {
         "name": "Disney Lorcana: Azurite Sea (Set 6) - Booster Pack",
         "game": "LORCANA",
@@ -70462,6 +70447,14 @@
         "in_stock": false,
         "preorder": false,
         "url": "https://www.hyggeonkel.dk/produkt/lorcana-azurite-sea-booster-pack"
+      },
+      "dca60fc8fe10b112ea70": {
+        "name": "Disney Lorcana: Azurite Sea (Set 6) - Emerald & Sapphire - Starter Deck",
+        "game": "LORCANA",
+        "price": 149.95,
+        "in_stock": false,
+        "preorder": false,
+        "url": "https://www.hyggeonkel.dk/produkt/lorcana-azurite-sea-single-player-deck-emerald-sapphire"
       },
       "2b48c63681cb42bfb44d": {
         "name": "Disney Lorcana: Azurite Sea (Set 6) - Booster Display",
@@ -90811,7 +90804,7 @@
         "last_seen": "2026-11-25T23:34:01.244175+01:00"
       }
     },
-    "updated_at": "2026-11-27T14:50:21.112223+01:00"
+    "updated_at": "2026-11-27T14:53:36.429127+01:00"
   },
   "_elgiganten_key_cache": {
     "api_key": null,
@@ -95463,11 +95456,10 @@
         "name": "Shimmering Skies",
         "current_best": 50.0,
         "current_shops": [
-          "NEXT LEVEL GAMES",
           "ROGERZ"
         ],
-        "current_shop": "NEXT LEVEL GAMES",
-        "current_url": "https://www.nextlevelgames.dk/shimmering-skies/6369-shimmering-skies-booster-disney-lorcana-tcg-4050368983909.html",
+        "current_shop": "ROGERZ",
+        "current_url": "https://rogerz.dk/products/disney-lorcana-shimmering-skies-booster-pack",
         "historical_low": 45.0,
         "historical_low_shops": [
           "MATRAWS"
@@ -95475,7 +95467,7 @@
         "historical_low_date": "2026-10-23",
         "historical_low_url": "https://matraws.dk/products/disney-lorcana-tcg-set-5-shimmering-skies-booster-pack",
         "first_seen": "2026-08-16T15:27:14.261074+02:00",
-        "last_seen": "2026-11-27T14:03:04.558246+01:00",
+        "last_seen": "2026-11-27T14:53:36.527886+01:00",
         "baseline_price": 50.0,
         "price_changes": 12,
         "observation_days": 105,
@@ -105265,21 +105257,21 @@
   "_source_health": {
     "coolshop": {
       "status": "failed",
-      "last_attempt": "2026-11-27T13:45:37.858838+00:00",
+      "last_attempt": "2026-11-27T13:51:30.529057+00:00",
       "last_success": "2026-11-24T14:41:52.970565+00:00",
       "last_count": 48,
       "observed_count": null,
-      "consecutive_failures": 784,
+      "consecutive_failures": 785,
       "last_error": "403 Client Error: Forbidden for url: https://www.coolshop.dk/api/search"
     },
     "proshop": {
-      "status": "failed",
-      "last_attempt": "2026-11-27T13:45:39.943776+00:00",
-      "consecutive_failures": 1,
-      "last_error": "Proshop utilgængelig (Jina Reader: Jina Reader returned too little raw Proshop data (0 product links); pokemon-kort: HTTP 403; Pokemon fallback: HTTP 403)",
-      "observed_count": null,
-      "last_success": "2026-11-27T13:30:26.696431+00:00",
-      "last_count": 5,
+      "status": "ok",
+      "last_attempt": "2026-11-27T13:51:36.441405+00:00",
+      "consecutive_failures": 0,
+      "last_error": "",
+      "observed_count": 4,
+      "last_success": "2026-11-27T13:51:36.441419+00:00",
+      "last_count": 4,
       "transport_status": "available",
       "coverage_status": "unverified",
       "category_count": 4
@@ -105373,31 +105365,31 @@
       "last_error": ""
     },
     "nostalgic": {
-      "status": "ok",
-      "last_attempt": "2026-11-27T12:59:37.480537+00:00",
+      "status": "failed",
+      "last_attempt": "2026-11-27T13:52:19.549154+00:00",
       "last_success": "2026-11-27T12:59:37.480553+00:00",
       "last_count": 45,
-      "observed_count": 45,
-      "consecutive_failures": 0,
-      "last_error": ""
+      "observed_count": null,
+      "consecutive_failures": 1,
+      "last_error": "403 Client Error: Forbidden for url: https://nostalgiccollectibles.dk/wp-json/wc/store/v1/products?category=15&per_page=100&page=1&orderby=id&order=desc"
     },
     "andcards": {
       "status": "failed",
-      "last_attempt": "2026-11-27T13:46:52.260364+00:00",
+      "last_attempt": "2026-11-27T13:52:51.031848+00:00",
       "last_success": "2026-11-27T12:18:42.792369+00:00",
       "last_count": 282,
       "observed_count": null,
-      "consecutive_failures": 17,
+      "consecutive_failures": 18,
       "last_error": "429 Client Error: Too Many Requests for url: https://www.andcards.dk/wp-json/wc/store/v1/products?category=21&per_page=100&page=11&orderby=id&order=desc"
     },
     "pokecards": {
-      "status": "ok",
-      "last_attempt": "2026-11-27T13:00:24.166840+00:00",
+      "status": "failed",
+      "last_attempt": "2026-11-27T13:52:51.811988+00:00",
       "last_success": "2026-11-27T13:00:24.166862+00:00",
       "last_count": 1001,
-      "observed_count": 1001,
-      "consecutive_failures": 0,
-      "last_error": ""
+      "observed_count": null,
+      "consecutive_failures": 1,
+      "last_error": "403 Client Error: Forbidden for url: https://pokecards.dk/wp-json/wc/store/v1/products?category=16&per_page=100&page=1&orderby=id&order=desc"
     },
     "epicpanda": {
       "status": "ok",
@@ -105418,13 +105410,13 @@
       "last_error": ""
     },
     "nextlevel": {
-      "status": "ok",
-      "last_attempt": "2026-11-27T13:03:02.938789+00:00",
+      "status": "failed",
+      "last_attempt": "2026-11-27T13:53:35.145809+00:00",
       "last_success": "2026-11-27T13:03:02.938808+00:00",
       "last_count": 29,
-      "observed_count": 29,
-      "consecutive_failures": 0,
-      "last_error": ""
+      "observed_count": 0,
+      "consecutive_failures": 1,
+      "last_error": "mistænkeligt lavt produktantal: 0 < 5"
     },
     "symbizon": {
       "status": "ok",
@@ -105490,13 +105482,13 @@
       "last_error": ""
     },
     "pokemonsdk": {
-      "status": "ok",
-      "last_attempt": "2026-11-27T13:00:34.347537+00:00",
+      "status": "failed",
+      "last_attempt": "2026-11-27T13:52:52.996398+00:00",
       "last_success": "2026-11-27T13:00:34.347557+00:00",
       "last_count": 822,
-      "observed_count": 822,
-      "consecutive_failures": 0,
-      "last_error": ""
+      "observed_count": null,
+      "consecutive_failures": 1,
+      "last_error": "403 Client Error: Forbidden for url: https://www.pokemons.dk/wp-json/wc/store/v1/products?search=booster&per_page=100&page=1&orderby=id&order=desc"
     },
     "pocketmonster": {
       "status": "ok",
@@ -105579,8 +105571,8 @@
     },
     "pokemonportalen": {
       "status": "failed",
-      "last_attempt": "2026-11-27T13:47:47.110347+00:00",
-      "consecutive_failures": 2471,
+      "last_attempt": "2026-11-27T13:53:09.662622+00:00",
+      "consecutive_failures": 2472,
       "last_error": "mistænkeligt lavt produktantal: 0 < 10",
       "observed_count": 0,
       "last_success": "2026-11-18T21:57:31.988646+00:00",
@@ -105588,8 +105580,8 @@
     },
     "tcgbruus": {
       "status": "failed",
-      "last_attempt": "2026-11-27T13:47:48.685000+00:00",
-      "consecutive_failures": 9046,
+      "last_attempt": "2026-11-27T13:53:11.121750+00:00",
+      "consecutive_failures": 9047,
       "last_error": "mistænkeligt lavt produktantal: 3 < 5",
       "observed_count": 3,
       "last_success": "2026-10-26T15:12:41.350111+00:00",
@@ -105612,13 +105604,13 @@
       "observed_count": 0
     },
     "kelz0r": {
-      "status": "ok",
-      "last_attempt": "2026-11-27T13:02:43.193262+00:00",
+      "status": "failed",
+      "last_attempt": "2026-11-27T13:53:14.967704+00:00",
       "last_success": "2026-11-27T13:02:43.193281+00:00",
       "last_count": 2273,
-      "observed_count": 2273,
-      "consecutive_failures": 0,
-      "last_error": ""
+      "observed_count": 0,
+      "consecutive_failures": 1,
+      "last_error": "mistænkeligt lavt produktantal: 0 < 20"
     },
     "faraos": {
       "status": "ok",
@@ -118791,10 +118783,10 @@
     "fff940439ebc8fbda0afe0b985ab8c51",
     "fffcef15b6da7fe5087a520dad6f7197"
   ],
-  "_last_full_scan_epoch": 1795787421,
+  "_last_full_scan_epoch": 1795787616,
   "proshop_detail_checks": {
     "3417744": 1795786825.557744,
-    "3447592": 1795785885.6031954,
+    "3447592": 1795787492.1131337,
     "3478496": 1795786223.6087875,
     "3478497": 1795786553.4073963,
     "3478498": 1795785885.6031954,
@@ -118805,7 +118797,7 @@
     "3421827": 1794599166.5642803,
     "3447590": 1795782979.6359448,
     "3478501": 1795786553.4073963,
-    "3530350": 1795785547.0079374,
+    "3530350": 1795787492.1131337,
     "3519993": 1795786223.6087875,
     "3519997": 1795119075.9466813,
     "3519996": 1795781770.3146296,
