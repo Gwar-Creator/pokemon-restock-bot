@@ -128,34 +128,34 @@
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Figure-Collection-30th-Celebration-assorted/3519993",
-        "fetch_via": "jina_broad_reader"
+        "fetch_via": "jina_reader"
       },
       "3530349": {
         "name": "Pokemon Ex Box Greninja 30th Celebration",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Ex-Box-Greninja-30th-Celebration/3530349",
-        "fetch_via": "jina_broad_reader"
-      },
-      "3421827": {
-        "name": "Pokemon TCG 2024 World Championships Deck",
-        "price": 329.0,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
-        "fetch_via": "jina_verified_detail"
+        "fetch_via": "jina_reader"
       },
       "3478501": {
         "name": "Pokemon Tin Fall ex assorted",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Tin-Fall-ex-assorted/3478501",
-        "fetch_via": "preserved_previous_scan"
+        "fetch_via": "jina_reader"
       },
       "3530350": {
         "name": "Pokemon Mega Evolution Delta reign Elite Trainer Box",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Mega-Evolution-Delta-reign-Elite-Trainer-Box/3530350",
+        "fetch_via": "jina_reader"
+      },
+      "3421827": {
+        "name": "Pokemon TCG 2024 World Championships Deck",
+        "price": 329.0,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
         "fetch_via": "preserved_previous_scan"
       },
       "3417744": {
@@ -935,7 +935,7 @@
         "name": "Pokémon Trading Cards Poke Elite Trainer Box 30th - Pokémon Trading Cards - GOLD / gold",
         "game": "POKÉMON",
         "price": 1599.0,
-        "in_stock": true,
+        "in_stock": false,
         "availability_known": true,
         "url": "https://www.boozt.com/dk/da/pokmon-trading-cards/poke-elite-trainer-box-30th_33202388/233321286",
         "fetch_via": "jina_reader_category"
@@ -1041,19 +1041,19 @@
   "source_controls": {
     "coolshop": {
       "backoff_level": 3,
-      "next_allowed_at": 1795861342.005557,
-      "generic_failures": 337,
+      "next_allowed_at": 1795862253.5571969,
+      "generic_failures": 338,
       "last_error": "403 Client Error: Forbidden for url: https://www.coolshop.dk/api/search",
-      "last_failure_at": "2026-11-28T10:07:22.005530+00:00",
+      "last_failure_at": "2026-11-28T10:22:33.557175+00:00",
       "last_success_at": "2026-11-24T19:13:25.061152+00:00"
     },
     "proshop": {
-      "backoff_level": 2,
-      "next_allowed_at": 1795861369.2090223,
+      "backoff_level": 1,
+      "next_allowed_at": 1795861536.2838793,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-11-28T10:01:59.549717+00:00",
-      "last_success_at": "2026-11-28T10:17:49.209013+00:00"
+      "last_success_at": "2026-11-28T10:23:36.283860+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -1089,14 +1089,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1795861193.5278783,
+      "next_allowed_at": 1795861499.5555098,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-28T10:15:53.527851+00:00"
+      "last_success_at": "2026-11-28T10:20:59.555462+00:00"
     }
   },
-  "updated_at": "2026-11-28T10:19:29.588619+00:00",
+  "updated_at": "2026-11-28T10:24:36.575293+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -1121,7 +1121,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-28T10:15:52.797862+00:00"
+          "last_checked": "2026-11-28T10:20:58.727653+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -1131,7 +1131,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1795860951.5966818,
+      "last_discovery_epoch": 1795861257.6673813,
       "last_full_discovery_epoch": 1795846370.5571153,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -1196,11 +1196,11 @@
     "3519996": 1795861063.9894638,
     "3530348": 1795858416.2044992,
     "3530349": 1795858471.7260725,
-    "3519993": 1795858361.186893,
+    "3519993": 1795861412.5873733,
     "3519997": 1795859060.3368278,
-    "3519992": 1795858361.186893
+    "3519992": 1795861412.5873733
   },
-  "proshop_broad_attempt_at": 1795861048.071229,
+  "proshop_broad_attempt_at": 1795861409.923339,
   "proshop_radar_alerts": {
     "3519996:BESTILLINGSVARE": 1795757061.9851942,
     "3519997:BESTILLINGSVARE": 1795095861.5824559,
@@ -1215,15 +1215,15 @@
   ],
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
-    "status": "degraded",
+    "status": "ok",
     "coverage_status": "unverified",
-    "transport_status": "unavailable",
-    "primary_count": 0,
-    "broad_count": 2,
-    "checked_at": "2026-11-28T10:17:43.989331+00:00",
-    "details_or_listings_count": 3
+    "transport_status": "available",
+    "primary_count": 5,
+    "broad_count": 0,
+    "checked_at": "2026-11-28T10:23:32.587144+00:00",
+    "details_or_listings_count": 5
   },
-  "proshop_last_usable_count": 3,
-  "proshop_last_usable_at": "2026-11-28T10:17:49.209037+00:00",
-  "proshop_broad_next_index": 0
+  "proshop_last_usable_count": 5,
+  "proshop_last_usable_at": "2026-11-28T10:23:36.283899+00:00",
+  "proshop_broad_next_index": 1
 }
