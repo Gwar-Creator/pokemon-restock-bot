@@ -128,35 +128,42 @@
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Figure-Collection-30th-Celebration-assorted/3519993",
-        "fetch_via": "jina_reader"
+        "fetch_via": "jina_broad_reader"
       },
       "3530349": {
         "name": "Pokemon Ex Box Greninja 30th Celebration",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Ex-Box-Greninja-30th-Celebration/3530349",
-        "fetch_via": "jina_reader"
+        "fetch_via": "jina_broad_reader"
+      },
+      "3421827": {
+        "name": "Pokemon TCG 2024 World Championships Deck",
+        "price": 329.0,
+        "stock": "UDSOLGT",
+        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
+        "fetch_via": "jina_verified_detail"
       },
       "3478501": {
         "name": "Pokemon Tin Fall ex assorted",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Tin-Fall-ex-assorted/3478501",
-        "fetch_via": "jina_reader"
+        "fetch_via": "preserved_previous_scan"
       },
       "3530350": {
         "name": "Pokemon Mega Evolution Delta reign Elite Trainer Box",
         "price": null,
         "stock": "BESTILLINGSVARE",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-Mega-Evolution-Delta-reign-Elite-Trainer-Box/3530350",
-        "fetch_via": "jina_reader"
+        "fetch_via": "preserved_previous_scan"
       },
       "3417744": {
         "name": "Pokemon TCG Mega Charizard X ex Ultra-Premium Collection",
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-Mega-Charizard-X-ex-Ultra-Premium-Collection/3417744",
-        "fetch_via": "jina_verified_detail"
+        "fetch_via": "preserved_previous_scan"
       },
       "3530352": {
         "name": "Pokemon Mega Evolution Delta Reign Blister 3-pack",
@@ -198,13 +205,6 @@
         "price": null,
         "stock": "UDSOLGT",
         "url": "https://www.proshop.dk/Pokemon/Pokemon-ex-Box-Sylveon-30th-Celebration/3530348",
-        "fetch_via": "preserved_previous_scan"
-      },
-      "3421827": {
-        "name": "Pokemon TCG 2024 World Championships Deck",
-        "price": 329.0,
-        "stock": "UDSOLGT",
-        "url": "https://www.proshop.dk/Pokemon/Pokemon-TCG-2024-World-Championships-Deck/3421827",
         "fetch_via": "preserved_previous_scan"
       },
       "3519996": {
@@ -1048,12 +1048,12 @@
       "last_success_at": "2026-11-24T19:13:25.061152+00:00"
     },
     "proshop": {
-      "backoff_level": 3,
-      "next_allowed_at": 1795861019.549726,
-      "generic_failures": 2,
-      "last_error": "Proshop Reader temporarily blocked: 401 Client Error: Unauthorized for url: https://r.jina.ai/https://www.proshop.dk/pokemon-kort",
+      "backoff_level": 2,
+      "next_allowed_at": 1795861369.2090223,
+      "generic_failures": 0,
+      "last_error": null,
       "last_failure_at": "2026-11-28T10:01:59.549717+00:00",
-      "last_success_at": "2026-11-28T09:54:20.127184+00:00"
+      "last_success_at": "2026-11-28T10:17:49.209013+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -1089,14 +1089,14 @@
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1795860899.7259982,
+      "next_allowed_at": 1795861193.5278783,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-28T10:10:59.725965+00:00"
+      "last_success_at": "2026-11-28T10:15:53.527851+00:00"
     }
   },
-  "updated_at": "2026-11-28T10:14:35.188038+00:00",
+  "updated_at": "2026-11-28T10:19:29.588619+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -1121,7 +1121,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-28T10:10:58.370290+00:00"
+          "last_checked": "2026-11-28T10:15:52.797862+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -1131,7 +1131,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1795860657.2924423,
+      "last_discovery_epoch": 1795860951.5966818,
       "last_full_discovery_epoch": 1795846370.5571153,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -1189,18 +1189,18 @@
     "3530351": 1795858948.8976414,
     "3530352": 1795859004.0264323,
     "3530353": 1795858839.3444881,
-    "3421827": 1795858306.5204675,
+    "3421827": 1795861063.9894638,
     "3447590": 1795858948.8976414,
     "3478501": 1795859060.3368278,
     "3502023": 1795858897.0099704,
-    "3519996": 1795858306.5204675,
+    "3519996": 1795861063.9894638,
     "3530348": 1795858416.2044992,
     "3530349": 1795858471.7260725,
     "3519993": 1795858361.186893,
     "3519997": 1795859060.3368278,
     "3519992": 1795858361.186893
   },
-  "proshop_broad_attempt_at": 1795859655.8456864,
+  "proshop_broad_attempt_at": 1795861048.071229,
   "proshop_radar_alerts": {
     "3519996:BESTILLINGSVARE": 1795757061.9851942,
     "3519997:BESTILLINGSVARE": 1795095861.5824559,
@@ -1219,10 +1219,11 @@
     "coverage_status": "unverified",
     "transport_status": "unavailable",
     "primary_count": 0,
-    "broad_count": 0,
-    "checked_at": "2026-11-28T10:01:59.549683+00:00"
+    "broad_count": 2,
+    "checked_at": "2026-11-28T10:17:43.989331+00:00",
+    "details_or_listings_count": 3
   },
-  "proshop_last_usable_count": 6,
-  "proshop_last_usable_at": "2026-11-28T09:54:20.127224+00:00",
-  "proshop_broad_next_index": 2
+  "proshop_last_usable_count": 3,
+  "proshop_last_usable_at": "2026-11-28T10:17:49.209037+00:00",
+  "proshop_broad_next_index": 0
 }
