@@ -1050,10 +1050,10 @@
     "proshop": {
       "backoff_level": 0,
       "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-28T00:27:31.411835+00:00",
-      "last_success_at": "2026-11-28T00:29:18.482862+00:00"
+      "generic_failures": 1,
+      "last_error": "Proshop has neither fresh catalogue cards nor verified SKU details | primary Reader: Jina Reader returned too little raw Proshop data (0 product links)",
+      "last_failure_at": "2026-11-28T01:44:22.611051+00:00",
+      "last_success_at": "2026-11-28T01:43:41.496330+00:00"
     },
     "br": {
       "backoff_level": 0,
@@ -1080,23 +1080,23 @@
       "last_success_at": "2026-11-21T18:34:48.837760+00:00"
     },
     "boozt": {
-      "backoff_level": 0,
-      "next_allowed_at": 0.0,
-      "generic_failures": 0,
-      "last_error": null,
-      "last_failure_at": "2026-11-27T14:35:58.740972+00:00",
-      "last_success_at": "2026-11-27T14:39:36.509203+00:00"
+      "backoff_level": 1,
+      "next_allowed_at": 1795830358.7899945,
+      "generic_failures": 1,
+      "last_error": "BOOZT fejlede: Reader: 503 Server Error: Service Unavailable for url: https://r.jina.ai/https://www.boozt.com/dk/da/pokemon-trading-cards/born | direct: 429 Client Error: Too Many Requests for url: https://www.boozt.com/dk/da/pokemon-trading-cards/born",
+      "last_failure_at": "2026-11-28T01:43:58.789974+00:00",
+      "last_success_at": "2026-11-28T01:42:48.815957+00:00"
     },
     "magasin": {
       "backoff_level": 0,
-      "next_allowed_at": 1795829994.9007983,
+      "next_allowed_at": 1795830293.3642871,
       "generic_failures": 0,
       "last_error": null,
       "last_failure_at": "2026-10-22T00:55:45.659222+00:00",
-      "last_success_at": "2026-11-28T01:35:54.900765+00:00"
+      "last_success_at": "2026-11-28T01:40:53.364259+00:00"
     }
   },
-  "updated_at": "2026-11-28T01:39:31.924429+00:00",
+  "updated_at": "2026-11-28T01:44:33.308944+00:00",
   "proshop_discovery_version": 6,
   "retail_discovery_versions": {
     "boozt": 4,
@@ -1121,7 +1121,7 @@
           "etag": "",
           "last_modified": "",
           "candidates": [],
-          "last_checked": "2026-11-28T01:35:53.619243+00:00"
+          "last_checked": "2026-11-28T01:40:52.520095+00:00"
         },
         "https://www.magasin.dk/sitemap_3-product.xml": {
           "etag": "",
@@ -1131,7 +1131,7 @@
         }
       },
       "initialized": true,
-      "last_discovery_epoch": 1795829752.5930436,
+      "last_discovery_epoch": 1795830051.5311327,
       "last_full_discovery_epoch": 1795824655.8185534,
       "product_sitemaps": [
         "https://www.magasin.dk/sitemap_0-product.xml",
@@ -1179,7 +1179,7 @@
     "proshop:3502023": 1795701832.885783
   },
   "proshop_detail_checks": {
-    "3417744": 1795829353.4607093,
+    "3417744": 1795830257.1522272,
     "3447592": 1795829674.9286075,
     "3478496": 1795829509.4229667,
     "3478497": 1795829674.9286075,
@@ -1193,14 +1193,14 @@
     "3447590": 1795829454.6057463,
     "3478501": 1795829844.0475047,
     "3502023": 1795829792.4584694,
-    "3519996": 1795829260.1558244,
+    "3519996": 1795830218.0595555,
     "3530348": 1795829580.034819,
     "3530349": 1795829619.5211334,
     "3519993": 1795829454.6057463,
-    "3519997": 1795829260.1558244,
-    "3519992": 1795829353.4607093
+    "3519997": 1795830218.0595555,
+    "3519992": 1795830257.1522272
   },
-  "proshop_broad_attempt_at": 1795829899.1935015,
+  "proshop_broad_attempt_at": 1795830202.2659364,
   "proshop_radar_alerts": {
     "3519996:BESTILLINGSVARE": 1795757061.9851942,
     "3519997:BESTILLINGSVARE": 1795095861.5824559,
@@ -1215,15 +1215,15 @@
   ],
   "proshop_broad_discovery_version": 1,
   "proshop_primary_health": {
-    "status": "ok",
+    "status": "degraded",
     "coverage_status": "unverified",
-    "transport_status": "available",
-    "primary_count": 5,
+    "transport_status": "unavailable",
+    "primary_count": 0,
     "broad_count": 0,
-    "checked_at": "2026-11-28T01:39:14.337464+00:00",
-    "details_or_listings_count": 5
+    "checked_at": "2026-11-28T01:44:17.152158+00:00",
+    "details_or_listings_count": 0
   },
   "proshop_last_usable_count": 5,
-  "proshop_last_usable_at": "2026-11-28T01:39:14.338439+00:00",
-  "proshop_broad_next_index": 2
+  "proshop_last_usable_at": "2026-11-28T01:43:41.496354+00:00",
+  "proshop_broad_next_index": 0
 }
